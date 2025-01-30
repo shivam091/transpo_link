@@ -36,6 +36,10 @@ RSpec.describe Role, type: :model do
     end
   end
 
+  describe "associations" do
+    it { is_expected.to have_many(:users).dependent(:restrict_with_exception) }
+  end
+
   describe "validations" do
     describe "#name" do
       it { is_expected.to validate_presence_of(:name).with_message("is required") }

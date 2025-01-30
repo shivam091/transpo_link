@@ -12,4 +12,6 @@ class Role < ApplicationRecord
             uniqueness: true,
             length: {in: 2..55},
             reduce: true
+
+  has_many :users, dependent: :restrict_with_exception
 end
