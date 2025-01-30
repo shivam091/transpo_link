@@ -20,6 +20,8 @@
     = render_if_exists("layouts/secondary_navigation")
     .clearfix
     %main.container-fluid.my-2
+      = turbo_frame_tag :flash do
+        = render_if_exists("shared/flash_messages")
       = yield
     .clearfix
     = render_if_exists("layouts/footer")
