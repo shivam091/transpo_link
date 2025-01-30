@@ -7,10 +7,10 @@
 #
 module FlashMessagesHelper
   FLASH_TYPES = {
-    notice: {color: :success, icon: "face-smile"},
-    alert: {color: :danger, icon: "face-frown"},
-    warning: {color: :warning, icon: "exclamation-triangle"},
-    info: {color: :info, icon: "info-circle"}
+    notice: {variant: :success, icon: "face-smile"},
+    alert: {variant: :danger, icon: "face-frown"},
+    warning: {variant: :warning, icon: "exclamation-triangle"},
+    info: {variant: :info, icon: "info-circle"}
   }.with_indifferent_access.freeze
 
   def flash_messages(options = {})
@@ -26,7 +26,7 @@ module FlashMessagesHelper
   private
 
   def build_flash_message(msg_type, message)
-    tag.div(class: "alert alert-#{FLASH_TYPES[msg_type][:color]} d-flex align-items-center alert-dismissible fade show") do
+    tag.div(class: "alert alert-#{FLASH_TYPES[msg_type][:variant]} d-flex align-items-center alert-dismissible fade show") do
       concat(external_svg_tag("svgs/#{FLASH_TYPES[msg_type][:icon]}.svg", width: "24px", height: "24px", fill: "currentColor", class: "flex-shrink-0 me-2"))
       concat(tag.div(message))
       concat(tag.button("", class: "btn-close", "data-bs-dismiss" => "alert", "aria-label" => "Close"))
