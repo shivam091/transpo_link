@@ -1,0 +1,48 @@
+.devise-section {
+  padding: 1rem;
+  margin: 0.5rem;
+  background-color: rgba(var(--bs-tertiary-bg-rgb), 1) !important;
+  border: var(--bs-border-width) var(--bs-border-style) var(--bs-border-color-translucent) !important;
+  border-radius: 0.5rem;
+  display: flex;
+  width: 100%;
+  flex-flow: column;
+  .form-floating {
+    &:focus-within {
+      z-index: 2;
+    }
+  }
+  footer {
+    margin-top: 0.5rem;
+    font-weight: bold;
+    color: var(--bs-body-color);
+    text-align: center;
+  }
+}
+.login-form input[name="user[email]"] {
+  margin-bottom: -1px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.password-reset-form input[name="user[password]"] {
+  margin-bottom: -1px;
+  border-top-right-radius: var(--bs-border-radius) !important;
+  border-bottom-left-radius: 0;
+}
+.login-form input[name="user[password]"], .password-reset-form input[name="user[password_confirmation]"] {
+  border-bottom-right-radius: var(--bs-border-radius) !important;
+  border-top-left-radius: 0;
+}
+@media (min-width: 992px) {
+  .devise-section {
+    max-width: 500px;
+  }
+}
+@media (max-width: 991px) {
+  .devise-section {
+    max-width: 450px;
+  }
+}
+.devise-section #icon-eye-visible, .devise-section #icon-eye-hidden {
+  fill: rgba(var(--bs-primary-rgb), 1) !important;
+}

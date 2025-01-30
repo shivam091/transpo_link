@@ -6,6 +6,9 @@
 
 TranspoLink::Application.configure do
   config.to_prepare do
+    User::SessionsController.layout          "devise"
+    User::PasswordsController.layout         "devise"
+
     ApplicationController.layout             "application"
   end
 end
