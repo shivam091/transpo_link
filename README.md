@@ -16,6 +16,10 @@ Requirements
 - Ruby: Ruby 3.3+
 - Rails: Rails 8.0+
 
+Installation
+-----------------
+    rake transpo_link:configure
+
 Author
 -----------------
 [Harshal LADHE](https://shivam091.github.io/)
