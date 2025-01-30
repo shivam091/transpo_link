@@ -1,0 +1,20 @@
+%li.nav-item.dropdown
+  = link_to "javascript:void(0)", class: "nav-link dropdown-toggle",
+    aria: {expanded: false}, data: {bs_toggle: "dropdown"} do
+    = t(".hello_username", username: "FirstName LastName")
+  %ul.dropdown-menu.dropdown-menu-lg-end
+    %li
+      %h6.dropdown-header.fw-bold= t(".your_account")
+    %li
+      = link_to "javascript:void(0)", class: "dropdown-item" do
+        = external_svg_tag("svgs/user.svg")
+        = t(".your_profile")
+    %li
+      = link_to "javascript:void(0)", class: "dropdown-item" do
+        = external_svg_tag("svgs/cog.svg")
+        = t(".your_preferences")
+    %li.dropdown-divider
+    %li
+      = link_to "javascript:void(0)", class: "dropdown-item", data: {turbo_method: :delete} do
+        = external_svg_tag("svgs/sign-out.svg")
+        = t(".sign_out")

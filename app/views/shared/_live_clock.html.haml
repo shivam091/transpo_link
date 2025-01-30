@@ -1,0 +1,9 @@
+#current-date-time
+  .date.middle-dot-divider
+    = external_svg_tag("svgs/calendar.svg")
+    %span
+      = Date.current.strftime("%a, %B %-d, %Y")
+  .time.middle-dot-divider
+    = external_svg_tag("svgs/clock.svg")
+    %span
+      = Time.zone.now.strftime("%T")

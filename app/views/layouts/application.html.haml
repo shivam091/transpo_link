@@ -1,5 +1,5 @@
 !!!5
-%html{dir: t("direction"), lang: I18n.locale}
+%html{dir: t("direction"), lang: I18n.locale, data: {bs_theme: "dark"}}
   %head
     %title
       = content_for?(:title) ? yield(:title) : t(".title")
@@ -16,4 +16,10 @@
     = javascript_importmap_tags
     = yield(:javascript) if content_for?(:javascript)
   %body
-    = yield
+    = render_if_exists("layouts/main_navigation")
+    = render_if_exists("layouts/secondary_navigation")
+    .clearfix
+    %main.container-fluid.my-2
+      = yield
+    .clearfix
+    = render_if_exists("layouts/footer")
