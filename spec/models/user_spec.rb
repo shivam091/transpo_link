@@ -55,6 +55,7 @@ RSpec.describe User, type: :model do
 
   describe "included modules" do
     it { is_expected.to include_module(Toggleable) }
+    it { is_expected.to include_module(CaseSensitivity) }
   end
 
   describe "default values" do
