@@ -8,6 +8,9 @@ class DeviseFailureApp < Devise::FailureApp
     store_location!
 
     case warden_message
+    when :suspended
+      flash[:alert] = devise_failure_message_for(warden_message)
+      redirect_to warden_options[:attempted_path]
     when :not_found_in_database
       email = params[warden_options[:scope]][:email]
       if params[warden_options[:scope]][:password].present?
