@@ -15,6 +15,6 @@
         = t(".your_preferences")
     %li.dropdown-divider
     %li
-      = link_to "javascript:void(0)", class: "dropdown-item", data: {turbo_method: :delete} do
+      = link_to destroy_user_session_path, class: "dropdown-item", data: {turbo_method: :delete} do
         = external_svg_tag("svgs/sign-out.svg")
         = t(".sign_out")

@@ -18,6 +18,9 @@ gem "dartsass-rails"
 # The modern asset pipeline for Rails [https://github.com/rails/propshaft]
 gem "propshaft"
 
+# Flexible authentication solution for Rails with Warden
+gem "devise", "4.9.4"
+
 # Use postgresql as the database for Active Record
 gem "pg", "~> 1.5"
 

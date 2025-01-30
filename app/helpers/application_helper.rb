@@ -67,9 +67,20 @@ module ApplicationHelper
     args.any? { |v| TranspoLink::Utils.safe_downcase!(v.to_s) == action_name }
   end
 
+  def secret_reveal_button(for_devise_views: false)
+    tag.button(type: :button, class: "btn-secret-reveal") do
+      concat(external_svg_tag("svgs/eye-visible.svg"))
+      concat(external_svg_tag("svgs/eye-hidden.svg", class: "d-none"))
+    end
+  end
+
   # <% title @post.title %>
   def title(*text)
     title_text = [text, t("title")]
     content_for :title, title_text.join(" &middot; ").html_safe
+  end
+
+  def button_text(key)
+    t(key, scope: "button_texts")
   end
 end
