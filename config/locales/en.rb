@@ -8,6 +8,10 @@
     title: "TranspoLink",
     activerecord: {
       attributes: {
+        role: {
+          name: "Name",
+          is_active: "Is active",
+        },
       },
       errors: {
         format: "%{attribute} %{message}",
