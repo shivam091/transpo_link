@@ -1,0 +1,11 @@
+.required::after {
+  color: rgba(var(--bs-danger-rgb), 1) !important;
+  content: "\002A";
+  margin-left: .25rem;
+  top: -2px;
+  font-weight: bolder;
+}
+.form-floating > .form-control:focus ~ label::after, .form-floating > .form-control:not(:placeholder-shown) ~ label::after, .form-floating > .form-control-plaintext ~ label::after, .form-floating > .form-select ~ label::after {
+  content: "\002A";
+  inset: initial;
+}

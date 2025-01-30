@@ -7,6 +7,11 @@
 pin "@hotwired/turbo-rails", to: "turbo.min.js", preload: true
 pin "@hotwired/stimulus", to: "stimulus.min.js", preload: true
 pin "@hotwired/stimulus-loading", to: "stimulus-loading.js", preload: true
+pin "popper", to: "popper.js", preload: true
+pin "bootstrap", to: "bootstrap.min.js", preload: true
+pin "moment", to: "https://ga.jspm.io/npm:moment@2.30.1/moment.js"
+pin "moment-timezone", to: "https://ga.jspm.io/npm:moment-timezone@0.5.43/index.js"
 
+pin_all_from "app/javascript/transpo_link", under: "transpo_link"
 pin_all_from "app/javascript/controllers", under: "controllers"
 pin "application", preload: true

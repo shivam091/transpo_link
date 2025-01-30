@@ -10,4 +10,6 @@ Rails.application.routes.draw do
   end
   get "favicon.png", to: favicon_redirect
   get "favicon.ico", to: favicon_redirect
+
+  root to: "dashboards#show"
 end

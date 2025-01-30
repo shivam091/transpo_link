@@ -1,6 +1,11 @@
-#!/usr/bin/env ruby
+#!/usr/bin/env sh
 # -*- encoding: utf-8 -*-
 # -*- frozen_string_literal: true -*-
 # -*- warn_indent: true -*-
 
-exec "./bin/rails", "server", *ARGV
+if ! gem list foreman -i --silent; then
+  echo "Installing foreman..."
+  gem install foreman
+fi
+
+exec foreman start -f Procfile.dev "$@"

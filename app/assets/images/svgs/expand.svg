@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="icon-expand" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24">
+  <path fill-rule="evenodd" d="M13 5a1 1 0 0 0 1 1h2.586l-3.293 3.293a1 1 0 0 0 1.414 1.414L18 7.414V10a1 1 0 1 0 2 0V5a1 1 0 0 0-1-1h-5a1 1 0 0 0-1 1zM5 20h5a1 1 0 1 0 0-2H7.414l3.293-3.293a1 1 0 0 0-1.414-1.414L6 16.586V14a1 1 0 1 0-2 0v5a1 1 0 0 0 1 1z" clip-rule="evenodd" />
+</svg>

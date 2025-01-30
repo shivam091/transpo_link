@@ -66,6 +66,7 @@ RSpec.configure do |config|
   config.shared_context_metadata_behavior = :apply_to_host_groups
 
   # Include support classes and modules.
+  config.include RailsHelpers
 
   config.around do |example|
     ActiveRecord::Base.transaction do
