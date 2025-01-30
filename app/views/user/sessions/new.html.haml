@@ -1,0 +1,29 @@
+= title(t(".title"))
+.text-center
+  %h4.fw-bold.mb-4.fw-normal= t(".welcome_sign_in_to_your_account")
+= form_with model: resource, as: resource_name, url: session_path(resource_name),
+  data: {turbo: false}, html: {class: "login-form"} do |form|
+  .col-12
+    .form-floating
+      = form.text_field :email, autofocus: true, autocomplete: "new-email", class: "form-control",
+        placeholder: ::User.human_attribute_name(:email)
+      = form.label :email, class: "form-label required"
+  .col-12
+    .input-group
+      .form-floating.mb-2
+        = form.password_field :password, autocomplete: "new-password", class: "form-control",
+          placeholder: ::User.human_attribute_name(:password)
+        = form.label :password, class: "form-label required"
+      = secret_reveal_button(for_devise_views: true)
+  .col-12
+    .d-flex.justify-content-between.align-items-center.mb-2
+      - if devise_mapping.rememberable?
+        .form-check
+          = form.check_box :remember_me, class: "form-check-input"
+          = form.label :remember_me, class: "form-check-label"
+      - if devise_mapping.recoverable? && %w(passwords registrations).exclude?(controller_name)
+        = link_to t(".forget_password"), new_password_path(resource_name), class: "d-flex justify-content-end"
+  .col-12
+    = form.submit button_text(:sign_in), class: "w-100 btn btn-primary"
+  %p.text-muted.my-2
+    = t(".sign_in_disclaimer")
