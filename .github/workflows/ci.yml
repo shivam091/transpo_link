@@ -1,0 +1,55 @@
+name: Ruby on Rails CI
+on:
+  pull_request:
+  push:
+    branches: [ main ]
+jobs:
+  scan_rb:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:11-alpine
+        ports:
+          - "5432:5432"
+        env:
+          POSTGRES_DB: rails_test
+          POSTGRES_USER: rails
+          POSTGRES_PASSWORD: password
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+    env:
+      RAILS_ENV: test
+      DATABASE_URL: "postgres://rails:password@localhost:5432/rails_test"
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Install prerequisites
+        run: |
+          sudo apt-get install -yqq libpq-dev
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: .ruby-version
+          bundler-cache: true
+      - name: Set up Rails credentials
+        env:
+          RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
+        run: echo "${RAILS_MASTER_KEY}" > config/master.key
+      - name: Set up database schema
+        run: bin/rails db:migrate
+      - name: Scan for common Rails security vulnerabilities using static analysis
+        run: bin/brakeman --no-pager
+      - name: Run tests
+        run: bin/rake
+
+  scan_js:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: .ruby-version
+          bundler-cache: true
+      - name: Scan for security vulnerabilities in JavaScript dependencies
+        run: bin/importmap audit

@@ -1,0 +1,25 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  reconnect: false
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 20 } %>
+
+development:
+  <<: *default
+  host: localhost
+  port: 5432
+  database: transpo-link-dev
+  username:
+  password:
+
+test:
+  <<: *default
+  host: localhost
+  port: 5432
+  database: transpo-link-test
+  username:
+  password:
+
+production:
+  <<: *default
+  url: <%= ENV["DATABASE_URL"] %>
