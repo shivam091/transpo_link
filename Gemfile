@@ -63,6 +63,24 @@ group :development, :test do
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
+
+  # Alternative testing tool for Ruby on Rails
+  gem "rspec-rails", "~> 7.0"
+
+  # Provides one-liners to test common Rails functionality
+  gem "shoulda-matchers", "~> 6.4"
+
+  # Clean your ActiveRecord databases with database cleaner.
+  gem "database_cleaner", "~> 2.1"
+
+  # Fixtures replacement with a straightforward definition syntax.
+  gem "factory_bot_rails", "~> 6.4"
+
+  # Code coverage analysis tool for Ruby.
+  gem "simplecov", require: false
+
+  # Support simple parameterized test syntax in RSpec.
+  gem "rspec-parameterized"
 end
 
 group :development do
