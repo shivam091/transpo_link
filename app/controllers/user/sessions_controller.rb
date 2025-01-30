@@ -26,4 +26,16 @@ class User::SessionsController < Devise::SessionsController
   # def configure_sign_in_params
   #   devise_parameter_sanitizer.permit(:sign_in, keys: [:attribute])
   # end
+
+  protected
+
+  def after_sign_in_path_for(resource)
+    redirect_location = stored_location_for(:redirect)
+    redirect_location ||= stored_location_for(resource) if resource.present?
+    redirect_location || root_path
+  end
+
+  def after_sign_out_path_for(resource)
+    new_session_path(resource)
+  end
 end
