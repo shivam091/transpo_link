@@ -39,6 +39,9 @@ gem "stimulus-rails", "~> 1.3"
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem "jbuilder"
 
+# IP address lookup
+gem "IPinfo", "~> 2"
+
 # HTML Abstraction Markup Language. Use Haml as Templating Language
 gem "haml", "~> 6.3"
 
