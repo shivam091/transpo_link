@@ -69,7 +69,9 @@ RSpec.describe User, type: :model do
   end
 
   describe "associations" do
-    it { is_expected.to belong_to(:role) }
+    it { is_expected.to have_many(:request_logs).inverse_of(:user).dependent(:nullify) }
+
+    it { is_expected.to belong_to(:role).inverse_of(:users) }
   end
 
   describe "delegates" do

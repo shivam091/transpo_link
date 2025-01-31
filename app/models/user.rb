@@ -11,7 +11,9 @@ class User < ApplicationRecord
   attribute :is_active, default: false
   attribute :is_banned, default: false
 
-  belongs_to :role
+  has_many :request_logs, inverse_of: :user, dependent: :nullify
+
+  belongs_to :role, inverse_of: :users
 
   delegate :name, to: :role, prefix: true
 

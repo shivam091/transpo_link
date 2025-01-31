@@ -13,5 +13,5 @@ class Role < ApplicationRecord
             length: {in: 2..55},
             reduce: true
 
-  has_many :users, dependent: :restrict_with_exception
+  has_many :users, inverse_of: :role, dependent: :restrict_with_exception
 end

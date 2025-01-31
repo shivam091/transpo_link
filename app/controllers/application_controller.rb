@@ -10,6 +10,8 @@ class ApplicationController < ActionController::Base
   # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
   allow_browser versions: :modern
 
+  include Trackable
+
   rescue_from ActionController::InvalidAuthenticityToken do |exception|
     if user_signed_in?
       sign_out(current_user)
