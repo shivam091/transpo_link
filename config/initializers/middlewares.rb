@@ -4,6 +4,8 @@
 
 # Be sure to restart your server when you modify this file.
 
+require_relative "../../app/middlewares/request_time_recorder.rb"
 require_relative "../../app/middlewares/ip_info.rb"
 
-TranspoLink::Application.config.middleware.insert 0, IpInfo, {ttl: 30, maxsize: 30}
+TranspoLink::Application.config.middleware.insert 0, RequestTimeRecorder
+TranspoLink::Application.config.middleware.use IpInfo, {ttl: 30, maxsize: 30}
