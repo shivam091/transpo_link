@@ -18,6 +18,7 @@ class User < ApplicationRecord
   belongs_to :role, inverse_of: :users
 
   delegate :name, to: :role, prefix: true
+  delegate :full_name, to: :user_detail
 
   class << self
     def with_email(email)
