@@ -7,13 +7,13 @@
 require "spec_helper"
 
 RSpec.describe User, type: :model do
-  subject(:user) { build(:admin, :confirmed) }
+subject(:user) { build(:admin, :confirmed) }
 
   describe "valid factory" do
     it { is_expected.to have_a_valid_factory(:admin) }
   end
 
-  describe "attributes, indexes, and foreign keys" do
+  describe "attributes, indexes, foreign keys, and check constraints" do
     it { is_expected.to have_db_column(:id).of_type(:uuid) }
     it { is_expected.to have_db_column(:email).of_type(:string) }
     it { is_expected.to have_db_column(:encrypted_password).of_type(:string) }
@@ -69,6 +69,8 @@ RSpec.describe User, type: :model do
   end
 
   describe "associations" do
+    it { is_expected.to have_one(:user_detail).inverse_of(:user).dependent(:destroy) }
+    it { is_expected.to have_one(:user_preference).inverse_of(:user).dependent(:destroy) }
     it { is_expected.to have_many(:request_logs).inverse_of(:user).dependent(:nullify) }
 
     it { is_expected.to belong_to(:role).inverse_of(:users) }
@@ -77,5 +79,10 @@ RSpec.describe User, type: :model do
   describe "delegates" do
     it { is_expected.to delegate_method(:name).to(:role).with_prefix }
     it { is_expected.to delegate_method(:full_name).to(:user_detail) }
+    it { is_expected.to delegate_method(:preferred_locale).to(:user_preference) }
+    it { is_expected.to delegate_method(:preferred_time_zone).to(:user_preference) }
+    it { is_expected.to delegate_method(:preferred_color_scheme).to(:user_preference) }
+    it { is_expected.to delegate_method(:preferred_currency).to(:user_preference) }
+    it { is_expected.to delegate_method(:are_notifications_enabled).to(:user_preference) }
   end
 end

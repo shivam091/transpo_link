@@ -20,6 +20,12 @@ class User < ApplicationRecord
 
   delegate :name, to: :role, prefix: true
   delegate :full_name, to: :user_detail
+  delegate :preferred_locale, :preferred_locale=,
+           :preferred_time_zone, :preferred_time_zone=,
+           :preferred_color_scheme, :preferred_color_scheme=,
+           :preferred_currency, :preferred_currency=,
+           :are_notifications_enabled, :are_notifications_enabled=,
+           to: :user_preference
 
   class << self
     def with_email(email)
@@ -31,5 +37,13 @@ class User < ApplicationRecord
       email = conditions.delete(:email)
       where(conditions).with_email(email)
     end
+  end
+
+  def user_detail
+    super.presence || build_user_detail
+  end
+
+  def user_preference
+    super.presence || build_user_preference
   end
 end
