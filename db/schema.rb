@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_01_31_030439) do
+ActiveRecord::Schema[8.0].define(version: 2025_01_31_162913) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -57,6 +57,25 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_31_030439) do
     t.check_constraint "name IS NOT NULL AND name::text <> ''::text", name: "check_roles_name_presence"
   end
 
+  create_table "user_details", primary_key: "user_id", id: :uuid, default: nil, force: :cascade do |t|
+    t.string "first_name"
+    t.string "last_name"
+    t.string "mobile_number"
+    t.string "alternate_contact_number"
+    t.string "alternate_email"
+    t.timestamptz "created_at", null: false
+    t.timestamptz "updated_at", null: false
+    t.index ["mobile_number"], name: "index_user_details_on_mobile_number", unique: true
+    t.index ["user_id"], name: "index_user_details_on_user_id", unique: true
+    t.check_constraint "char_length(alternate_contact_number::text) <= 55 AND char_length(alternate_contact_number::text) >= 2", name: "check_user_details_alternate_contact_number_length"
+    t.check_constraint "char_length(alternate_email::text) <= 55 AND char_length(alternate_email::text) >= 2", name: "check_user_details_alternate_email_length"
+    t.check_constraint "char_length(first_name::text) <= 55 AND char_length(first_name::text) >= 2", name: "check_user_details_first_name_length"
+    t.check_constraint "char_length(last_name::text) <= 55 AND char_length(last_name::text) >= 2", name: "check_user_details_last_name_length"
+    t.check_constraint "char_length(mobile_number::text) <= 55 AND char_length(mobile_number::text) >= 2", name: "check_user_details_mobile_number_length"
+    t.check_constraint "first_name IS NOT NULL AND first_name::text <> ''::text", name: "check_user_details_first_name_presence"
+    t.check_constraint "last_name IS NOT NULL AND last_name::text <> ''::text", name: "check_user_details_last_name_presence"
+  end
+
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "email"
     t.string "encrypted_password"
@@ -93,5 +112,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_31_030439) do
   end
 
   add_foreign_key "request_logs", "users", name: "fk_request_logs_user_id_on_users", on_delete: :nullify
+  add_foreign_key "user_details", "users", name: "fk_user_details_user_id_on_users", on_delete: :cascade
   add_foreign_key "users", "roles", name: "fk_users_role_id_on_roles", on_delete: :restrict
 end

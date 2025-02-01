@@ -21,6 +21,14 @@
           is_banned: "Is banned",
           is_active: "Is active",
         },
+        user_detail: {
+          user_id: "User",
+          first_name: "First name",
+          last_name: "Last name",
+          mobile_number: "Mobile number",
+          alternate_contact_number: "Alternate contact number",
+          alternate_email: "Alternate email",
+        },
       },
       errors: {
         format: "%{attribute} %{message}",

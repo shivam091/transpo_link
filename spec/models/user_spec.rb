@@ -75,6 +75,6 @@ RSpec.describe User, type: :model do
   end
 
   describe "delegates" do
-    it { is_expected.to delegate_method(:name).to(:role).with_prefix(true) }
+    it { is_expected.to delegate_method(:name).to(:role).with_prefix }
   end
 end
