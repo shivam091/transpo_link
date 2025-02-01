@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_02_01_095137) do
+ActiveRecord::Schema[8.0].define(version: 2025_02_01_103133) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -80,6 +80,22 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_01_095137) do
     t.check_constraint "last_name IS NOT NULL AND last_name::text <> ''::text", name: "check_user_details_last_name_presence"
   end
 
+  create_table "user_preferences", primary_key: "user_id", id: :uuid, default: nil, force: :cascade do |t|
+    t.string "preferred_locale"
+    t.string "preferred_time_zone"
+    t.string "preferred_currency"
+    t.enum "preferred_color_scheme", enum_type: "color_schemes"
+    t.boolean "are_notifications_enabled"
+    t.timestamptz "created_at", null: false
+    t.timestamptz "updated_at", null: false
+    t.index ["user_id"], name: "index_user_preferences_on_user_id", unique: true
+    t.check_constraint "preferred_color_scheme = ANY (ARRAY['auto'::color_schemes, 'dark'::color_schemes, 'light'::color_schemes])", name: "check_user_preferences_preferred_color_scheme_inclusion"
+    t.check_constraint "preferred_color_scheme IS NOT NULL", name: "check_user_preferences_preferred_color_scheme_presence"
+    t.check_constraint "preferred_currency IS NOT NULL AND preferred_currency::text <> ''::text", name: "check_user_preferences_preferred_currency_presence"
+    t.check_constraint "preferred_locale IS NOT NULL AND preferred_locale::text <> ''::text", name: "check_user_preferences_preferred_locale_presence"
+    t.check_constraint "preferred_time_zone IS NOT NULL AND preferred_time_zone::text <> ''::text", name: "check_user_preferences_preferred_time_zone_presence"
+  end
+
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "email"
     t.string "encrypted_password"
@@ -117,5 +133,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_01_095137) do
 
   add_foreign_key "request_logs", "users", name: "fk_request_logs_user_id_on_users", on_delete: :nullify
   add_foreign_key "user_details", "users", name: "fk_user_details_user_id_on_users", on_delete: :cascade
+  add_foreign_key "user_preferences", "users", name: "fk_user_preferences_user_id_on_users", on_delete: :cascade
   add_foreign_key "users", "roles", name: "fk_users_role_id_on_roles", on_delete: :restrict
 end

@@ -12,6 +12,7 @@ class User < ApplicationRecord
   attribute :is_banned, default: false
 
   has_one :user_detail, inverse_of: :user, dependent: :destroy, autosave: true
+  has_one :user_preference, inverse_of: :user, dependent: :destroy, autosave: true
 
   has_many :request_logs, inverse_of: :user, dependent: :nullify
 
