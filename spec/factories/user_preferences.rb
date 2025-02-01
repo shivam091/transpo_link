@@ -9,5 +9,6 @@ FactoryBot.define do
     preferred_time_zone { "Asia/Kolkata" }
     preferred_currency { "INR" }
     are_notifications_enabled { true }
+    association :user
   end
 end
