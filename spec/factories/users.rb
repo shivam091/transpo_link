@@ -26,6 +26,10 @@ FactoryBot.define do
       create(:user_detail, user: user)
     end
 
+    after(:create) do |user|
+      create(:user_preference, user: user)
+    end
+
     trait :confirmed do
       unconfirmed_email { "" }
       confirmation_token { nil }
