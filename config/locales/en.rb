@@ -155,7 +155,7 @@
         updated_but_not_signed_in: "Your account has been updated successfully, but since your password was changed, you need to sign in again.",
       },
       sessions: {
-        signed_in: "Hi, welcome to TranspoLink!",
+        signed_in: "Hi %{user_name}, welcome to TranspoLink!",
         signed_out: "You are successfully signed out.",
         already_signed_out: "You are already signed out of your account. Please sign in again.",
         missing_email_or_password: "Please enter your email and password",
