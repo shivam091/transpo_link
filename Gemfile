@@ -39,6 +39,9 @@ gem "stimulus-rails", "~> 1.3"
 # Library for dealing with money and currency conversion
 gem "money", "6.19"
 
+# Collection of all sorts of useful information for every country in the ISO 3166 standard
+gem "countries"
+
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem "jbuilder"
 
