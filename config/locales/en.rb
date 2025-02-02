@@ -29,6 +29,21 @@
           alternate_contact_number: "Alternate contact number",
           alternate_email: "Alternate email",
         },
+        user_preference: {
+          preferred_locale: "Preferred language",
+          preferred_time_zone: "Preferred time zone",
+          preferred_currency: "Preferred currency",
+          preferred_color_scheme: "Preferred color scheme",
+          are_notifications_enabled: "Are notifications enabled",
+        },
+        address: {
+          address1: "Flat, House no., Building, Company, Apartment, P.O. box, c/o",
+          address2: "Area, Street, Sector, Village, Suite, or Floor",
+          city: "Town, City, Suburb, or Area",
+          state: "State, Province, County, or Territory",
+          country: "Country or region",
+          postal_code: "Postal code, Postcode, or PIN code",
+        },
       },
       errors: {
         format: "%{attribute} %{message}",
