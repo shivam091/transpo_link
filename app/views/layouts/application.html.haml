@@ -1,5 +1,5 @@
 !!!5
-%html{dir: t("direction"), lang: I18n.locale, data: {bs_theme: "dark"}}
+%html{dir: t("direction"), lang: I18n.locale, data: {bs_theme: current_user.preferred_color_scheme}}
   %head
     %title
       = content_for?(:title) ? yield(:title) : t(".title")

@@ -27,7 +27,7 @@
           last_name: "Last name",
           mobile_number: "Mobile number",
           alternate_contact_number: "Alternate contact number",
-          alternate_email: "Alternate email",
+          alternate_email: "Alternate email address",
         },
         user_preference: {
           preferred_locale: "Preferred language",
@@ -104,6 +104,7 @@
       sign_in: "Sign in",
       continue: "Continue",
       save_changes: "Save changes",
+      edit: "Edit",
     },
     devise: {
       confirmations: {
@@ -227,6 +228,7 @@
         vehicles: "Vehicles",
         routes: "Routes",
         warehouses: "Warehouses",
+        reports: "Reports",
         feedbacks: "Feedbacks",
       },
       menu: {
@@ -273,6 +275,16 @@
     dashboards: {
       show: {
         title: "Dashboard",
+      },
+    },
+    profiles: {
+      show: {
+        title: "Your profile",
+        your_profile: "Your profile",
+        edit_profile_details: "Edit your profile details viz., first name, last name, address, etc.",
+        full_name: "Full name",
+        address: "Address",
+        mobile_number_help_text: "Quickly receive security notifications with this mobile number.",
       },
     },
   },
