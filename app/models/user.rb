@@ -39,6 +39,10 @@ class User < ApplicationRecord
     end
   end
 
+  def active_for_authentication?
+    super && is_active?
+  end
+
   def user_detail
     super.presence || build_user_detail
   end
