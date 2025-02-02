@@ -19,7 +19,9 @@ class User < ApplicationRecord
   belongs_to :role, inverse_of: :users
 
   delegate :name, to: :role, prefix: true
-  delegate :full_name, to: :user_detail
+  delegate :full_name, :mobile_number,
+           :alternate_email, :alternate_contact_number,
+           to: :user_detail
   delegate :preferred_locale, :preferred_locale=,
            :preferred_time_zone, :preferred_time_zone=,
            :preferred_color_scheme, :preferred_color_scheme=,

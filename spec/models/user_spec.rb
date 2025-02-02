@@ -79,6 +79,9 @@ subject(:user) { build(:admin, :confirmed) }
   describe "delegates" do
     it { is_expected.to delegate_method(:name).to(:role).with_prefix }
     it { is_expected.to delegate_method(:full_name).to(:user_detail) }
+    it { is_expected.to delegate_method(:mobile_number).to(:user_detail) }
+    it { is_expected.to delegate_method(:alternate_contact_number).to(:user_detail) }
+    it { is_expected.to delegate_method(:alternate_email).to(:user_detail) }
     it { is_expected.to delegate_method(:preferred_locale).to(:user_preference) }
     it { is_expected.to delegate_method(:preferred_time_zone).to(:user_preference) }
     it { is_expected.to delegate_method(:preferred_color_scheme).to(:user_preference) }
