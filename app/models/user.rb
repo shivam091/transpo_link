@@ -13,6 +13,7 @@ class User < ApplicationRecord
 
   has_one :user_detail, inverse_of: :user, dependent: :destroy, autosave: true
   has_one :user_preference, inverse_of: :user, dependent: :destroy, autosave: true
+  has_one :address, as: :addressable, inverse_of: :addressable, dependent: :destroy
 
   has_many :request_logs, inverse_of: :user, dependent: :nullify
 
@@ -51,5 +52,9 @@ class User < ApplicationRecord
 
   def user_preference
     super.presence || build_user_preference
+  end
+
+  def address
+    super.presence || build_address
   end
 end

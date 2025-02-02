@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_02_01_103133) do
+ActiveRecord::Schema[8.0].define(version: 2025_02_02_072334) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -18,6 +18,25 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_01_103133) do
   # Custom types defined in this database.
   # Note that some types may not work with other database engines. Be careful if changing database.
   create_enum "color_schemes", ["auto", "dark", "light"]
+
+  create_table "addresses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "addressable_type"
+    t.uuid "addressable_id"
+    t.string "address1"
+    t.string "address2"
+    t.string "city"
+    t.string "state"
+    t.string "country"
+    t.string "postal_code"
+    t.timestamptz "created_at", null: false
+    t.timestamptz "updated_at", null: false
+    t.index ["addressable_type", "addressable_id"], name: "index_addresses_on_addressable"
+    t.check_constraint "address1 IS NOT NULL AND address1::text <> ''::text", name: "check_addresses_address1_presence"
+    t.check_constraint "char_length(address1::text) <= 100", name: "check_addresses_address1_length"
+    t.check_constraint "char_length(address2::text) <= 100", name: "check_addresses_address2_length"
+    t.check_constraint "char_length(postal_code::text) <= 20", name: "check_addresses_postal_code_length"
+    t.check_constraint "country IS NOT NULL AND country::text <> ''::text", name: "check_addresses_country_presence"
+  end
 
   create_table "request_logs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "uuid"
