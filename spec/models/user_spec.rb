@@ -7,7 +7,7 @@
 require "spec_helper"
 
 RSpec.describe User, type: :model do
-subject(:user) { build(:admin, :confirmed) }
+  subject(:user) { build(:admin, :confirmed) }
 
   describe "valid factory" do
     it { is_expected.to have_a_valid_factory(:admin) }
@@ -71,6 +71,7 @@ subject(:user) { build(:admin, :confirmed) }
   describe "associations" do
     it { is_expected.to have_one(:user_detail).inverse_of(:user).dependent(:destroy) }
     it { is_expected.to have_one(:user_preference).inverse_of(:user).dependent(:destroy) }
+    it { is_expected.to have_one(:address).inverse_of(:addressable).dependent(:destroy) }
     it { is_expected.to have_many(:request_logs).inverse_of(:user).dependent(:nullify) }
 
     it { is_expected.to belong_to(:role).inverse_of(:users) }
