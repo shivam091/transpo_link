@@ -6,19 +6,19 @@
 = form_with model: resource, as: resource_name, url: password_path(resource_name), method: :put,
   data: {turbo: false}, class: "password-reset-form" do |form|
   = form.hidden_field :reset_password_token
-  .col-12
+  .col-12{data: {controller: "secret-reveal", secret_reveal_hidden_class: "d-none"}}
     .input-group
       .form-floating
         = form.password_field :password, autofocus: true, autocomplete: "new-password",
-          class: "form-control", placeholder: ::User.human_attribute_name(:password)
+          class: "form-control", placeholder: ::User.human_attribute_name(:password), data: {secret_reveal_target: "input"}
         = form.label :password, class: "form-label required"
-      = secret_reveal_button(for_devise_views: true)
-  .col-12
+      = secret_reveal_button
+  .col-12{data: {controller: "secret-reveal", secret_reveal_hidden_class: "d-none"}}
     .input-group
       .form-floating.mb-3
         = form.password_field :password_confirmation, autocomplete: "confirm-new-password",
-          class: "form-control", placeholder: ::User.human_attribute_name(:password_confirmation)
+          class: "form-control", placeholder: ::User.human_attribute_name(:password_confirmation), data: {secret_reveal_target: "input"}
         = form.label :password_confirmation, class: "form-label required"
-      = secret_reveal_button(for_devise_views: true)
+      = secret_reveal_button
   .col-12
     = form.submit button_text(:save_changes), class: "w-100 btn btn-primary"

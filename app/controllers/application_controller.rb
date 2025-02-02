@@ -3,8 +3,22 @@
 # -*- warn_indent: true -*-
 
 class ApplicationController < ActionController::Base
+  protect_from_forgery with: :exception, prepend: true
+
+  layout proc { false if request.xhr? }
+
   # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
   allow_browser versions: :modern
+
+  include Trackable
+
+  rescue_from ActionController::InvalidAuthenticityToken do |exception|
+    if user_signed_in?
+      sign_out(current_user)
+    else
+      redirect_to new_user_session_path
+    end
+  end
 
   before_action :authenticate_user!
 

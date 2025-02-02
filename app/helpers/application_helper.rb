@@ -67,10 +67,10 @@ module ApplicationHelper
     args.any? { |v| TranspoLink::Utils.safe_downcase!(v.to_s) == action_name }
   end
 
-  def secret_reveal_button(for_devise_views: false)
-    tag.button(type: :button, class: "btn-secret-reveal") do
-      concat(external_svg_tag("svgs/eye-visible.svg"))
-      concat(external_svg_tag("svgs/eye-hidden.svg", class: "d-none"))
+  def secret_reveal_button
+    tag.button(type: :button, class: "btn-secret-reveal", data: {action: "click->secret-reveal#toggle"}) do
+      concat(external_svg_tag("svgs/eye-visible.svg", data: {secret_reveal_target: "icon"}))
+      concat(external_svg_tag("svgs/eye-hidden.svg", class: "d-none", data: {secret_reveal_target: "icon"}))
     end
   end
 

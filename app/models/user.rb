@@ -3,7 +3,7 @@
 # -*- warn_indent: true -*-
 
 class User < ApplicationRecord
-  include Toggleable
+  include Toggleable, CaseSensitivity
 
   devise :database_authenticatable, :registerable, :confirmable, :lockable,
          :recoverable, :rememberable, :validatable, :timeoutable, :trackable
@@ -11,7 +11,21 @@ class User < ApplicationRecord
   attribute :is_active, default: false
   attribute :is_banned, default: false
 
-  belongs_to :role
+  has_many :request_logs, inverse_of: :user, dependent: :nullify
+
+  belongs_to :role, inverse_of: :users
 
   delegate :name, to: :role, prefix: true
+
+  class << self
+    def with_email(email)
+      iwhere(email: email.strip).first
+    end
+
+    def find_for_database_authentication(warden_conditions)
+      conditions = warden_conditions.dup
+      email = conditions.delete(:email)
+      where(conditions).with_email(email)
+    end
+  end
 end

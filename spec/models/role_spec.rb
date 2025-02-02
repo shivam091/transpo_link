@@ -37,7 +37,7 @@ RSpec.describe Role, type: :model do
   end
 
   describe "associations" do
-    it { is_expected.to have_many(:users).dependent(:restrict_with_exception) }
+    it { is_expected.to have_many(:users).inverse_of(:role).dependent(:restrict_with_exception) }
   end
 
   describe "validations" do
