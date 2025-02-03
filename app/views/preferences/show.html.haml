@@ -1,0 +1,33 @@
+= title(t(".title"))
+.card.card-primary.border.border-primary
+  .card-body
+    .widget
+      .widget-header.d-flex.align-items-center.justify-content-between
+        .d-block
+          .widget-title
+            = t(".your_preferences")
+          .widget-help= t(".edit_preferences")
+        = link_to "javascript:void(0)", class: "btn btn-secondary" do
+          = external_svg_tag("svgs/pencil.svg")
+          = button_text("edit")
+      .widget-body
+        .widget-row.d-flex
+          .flex-auto
+            .widget-row-title= UserPreference.human_attribute_name(:preferred_locale)
+            .widget-row-body= TranspoLink::I18n.trimmed_language_name(current_user.preferred_locale)
+        .widget-row.d-flex
+          .flex-auto
+            .widget-row-title= UserPreference.human_attribute_name(:preferred_time_zone)
+            .widget-row-body= formatted_time_zone(current_user.preferred_time_zone)
+        .widget-row.d-flex
+          .flex-auto
+            .widget-row-title= UserPreference.human_attribute_name(:preferred_currency)
+            .widget-row-body= formatted_currency(current_user.preferred_currency)
+        .widget-row.d-flex
+          .flex-auto
+            .widget-row-title= UserPreference.human_attribute_name(:preferred_color_scheme)
+            .widget-row-body= enum_i18n(UserPreference, :preferred_color_schemes, current_user.preferred_color_scheme)
+        .widget-row.d-flex
+          .flex-auto
+            .widget-row-title= UserPreference.human_attribute_name(:are_notifications_enabled)
+            .widget-row-body= humanize_boolean(current_user.are_notifications_enabled)
