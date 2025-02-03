@@ -1,7 +1,7 @@
 %li.nav-item.dropdown
   = link_to "javascript:void(0)", class: "nav-link dropdown-toggle",
     aria: {expanded: false}, data: {bs_toggle: "dropdown"} do
-    = t(".hello_username", username: "FirstName LastName")
+    = t(".hello_username", username: current_user.full_name)
   %ul.dropdown-menu.dropdown-menu-lg-end
     %li
       %h6.dropdown-header.fw-bold= t(".your_account")

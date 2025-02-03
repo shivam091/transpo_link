@@ -21,6 +21,29 @@
           is_banned: "Is banned",
           is_active: "Is active",
         },
+        user_detail: {
+          user_id: "User",
+          first_name: "First name",
+          last_name: "Last name",
+          mobile_number: "Mobile number",
+          alternate_contact_number: "Alternate contact number",
+          alternate_email: "Alternate email",
+        },
+        user_preference: {
+          preferred_locale: "Preferred language",
+          preferred_time_zone: "Preferred time zone",
+          preferred_currency: "Preferred currency",
+          preferred_color_scheme: "Preferred color scheme",
+          are_notifications_enabled: "Are notifications enabled",
+        },
+        address: {
+          address1: "Flat, House no., Building, Company, Apartment, P.O. box, c/o",
+          address2: "Area, Street, Sector, Village, Suite, or Floor",
+          city: "Town, City, Suburb, or Area",
+          state: "State, Province, County, or Territory",
+          country: "Country or region",
+          postal_code: "Postal code, Postcode, or PIN code",
+        },
       },
       errors: {
         format: "%{attribute} %{message}",
@@ -147,7 +170,7 @@
         updated_but_not_signed_in: "Your account has been updated successfully, but since your password was changed, you need to sign in again.",
       },
       sessions: {
-        signed_in: "Hi, welcome to TranspoLink!",
+        signed_in: "Hi %{user_name}, welcome to TranspoLink!",
         signed_out: "You are successfully signed out.",
         already_signed_out: "You are already signed out of your account. Please sign in again.",
         missing_email_or_password: "Please enter your email and password",

@@ -1,0 +1,21 @@
+# -*- encoding: utf-8 -*-
+# -*- frozen_string_literal: true -*-
+# -*- warn_indent: true -*-
+
+class UserPreference < ApplicationRecord
+  self.primary_key = :user_id
+
+  enum :preferred_color_scheme, {
+    auto: "auto",
+    dark: "dark",
+    light: "light"
+  }
+
+  attribute :preferred_color_scheme, :enum, default: preferred_color_schemes[:auto]
+  attribute :preferred_locale, default: I18n.default_locale
+  attribute :preferred_time_zone, default: Time.zone.tzinfo.name
+  attribute :preferred_currency, default: Money.default_currency.iso_code
+  attribute :are_notifications_enabled, default: true
+
+  belongs_to :user, inverse_of: :user_preference
+end

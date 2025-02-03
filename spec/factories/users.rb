@@ -22,6 +22,14 @@ FactoryBot.define do
       role { ::Role.find_by(name: "supplier") || create(:supplier_role, :active) }
     end
 
+    after(:create) do |user|
+      create(:user_detail, user: user)
+    end
+
+    after(:create) do |user|
+      create(:user_preference, user: user)
+    end
+
     trait :confirmed do
       unconfirmed_email { "" }
       confirmation_token { nil }
