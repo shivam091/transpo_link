@@ -6,6 +6,11 @@
   en: {
     direction: "en",
     title: "TranspoLink",
+    boolean: {
+      "yes": "Yes",
+      "no": "No",
+      nil: "Nothing",
+    },
     activerecord: {
       attributes: {
         role: {
@@ -195,6 +200,15 @@
         },
       },
     },
+    enumerations: {
+      user_preference: {
+        preferred_color_schemes: {
+          auto: "Auto",
+          light: "Light",
+          dark: "Dark"
+        },
+      },
+    },
     layouts: {
       devise: {
         title: "TranspoLink",
@@ -285,6 +299,13 @@
         full_name: "Full name",
         address: "Address",
         mobile_number_help_text: "Quickly receive security notifications with this mobile number.",
+      },
+    },
+    preferences: {
+      show: {
+        title: "Your preferences",
+        your_preferences: "Your preferences",
+        edit_preferences: "Edit your preferences viz. color scheme, time zone, language, etc.",
       },
     },
   },

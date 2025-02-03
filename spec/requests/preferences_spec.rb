@@ -2,14 +2,14 @@
 # -*- frozen_string_literal: true -*-
 # -*- warn_indent: true -*-
 
-# spec/requests/profiles_spec.rb
+# spec/requests/preferences_spec.rb
 
 require "spec_helper"
 
-RSpec.describe "Profiles", type: :request do
+RSpec.describe "Preferences", type: :request do
   context "when user is not logged in" do
-    describe "GET /profile" do
-      subject { get profile_path }
+    describe "GET /preference" do
+      subject { get preference_path }
 
       it { is_expected.to require_login }
     end
@@ -18,8 +18,8 @@ RSpec.describe "Profiles", type: :request do
   context "when user is logged in" do
     include_context "login as admin"
 
-    describe "GET /profile" do
-      before { get profile_path }
+    describe "GET /preference" do
+      before { get preference_path }
 
       it "returns :ok status" do
         expect(response).to have_http_status(:ok)

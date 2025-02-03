@@ -22,7 +22,27 @@ class ApplicationController < ActionController::Base
 
   before_action :authenticate_user!
 
+  around_action :set_locale, :set_time_zone
+
   def render_flash
     turbo_stream.update(:flash, partial: "shared/flash_messages")
+  end
+
+  private
+
+  def set_locale(&block)
+    if user_signed_in?
+      TranspoLink::I18n.with_user_locale(current_user, &block)
+    else
+      TranspoLink::I18n.with_default_locale(&block)
+    end
+  end
+
+  def set_time_zone(&block)
+    if user_signed_in?
+      Time.use_zone(current_user.preferred_time_zone, &block)
+    else
+      Time.use_zone(Time.zone_default, &block)
+    end
   end
 end
