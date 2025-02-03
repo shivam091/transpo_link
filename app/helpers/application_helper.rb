@@ -83,4 +83,13 @@ module ApplicationHelper
   def button_text(key)
     t(key, scope: "button_texts")
   end
+
+  def formatted_time_zone(time_zone)
+    "(GMT #{ActiveSupport::TimeZone.seconds_to_utc_offset(ActiveSupport::TimeZone[time_zone].utc_offset)}) #{time_zone}"
+  end
+
+  def formatted_currency(currency)
+    currency_obj = Money::Currency.new(currency)
+    "#{currency_obj.name} (#{currency_obj.symbol})"
+  end
 end
