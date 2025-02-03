@@ -8,7 +8,7 @@ require "spec_helper"
 
 RSpec.describe "Profiles", type: :request do
   context "when user is not logged in" do
-    describe "GET /" do
+    describe "GET /profile" do
       subject { get profile_path }
 
       it { is_expected.to require_login }
@@ -18,7 +18,7 @@ RSpec.describe "Profiles", type: :request do
   context "when user is logged in" do
     include_context "login as admin"
 
-    describe "GET /" do
+    describe "GET /profile" do
       before { get profile_path }
 
       it "returns :ok status" do
