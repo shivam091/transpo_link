@@ -92,4 +92,12 @@ module ApplicationHelper
     currency_obj = Money::Currency.new(currency)
     "#{currency_obj.name} (#{currency_obj.symbol})"
   end
+
+  def humanize_boolean(boolean)
+    case boolean
+    when true then t("boolean.yes")
+    when false then t("boolean.no")
+    else t("boolean.nil")
+    end
+  end
 end

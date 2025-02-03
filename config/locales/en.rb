@@ -6,6 +6,11 @@
   en: {
     direction: "en",
     title: "TranspoLink",
+    boolean: {
+      "yes": "Yes",
+      "no": "No",
+      nil: "Nothing",
+    },
     activerecord: {
       attributes: {
         role: {
