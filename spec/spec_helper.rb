@@ -19,6 +19,10 @@ def spec_root
   Pathname.new(File.expand_path(__dir__))
 end
 
+def test_directory_path
+  spec_root / "test"
+end
+
 require "./spec/simplecov_env"
 SimpleCovEnv.start!
 
@@ -40,7 +44,7 @@ RSpec.configure do |config|
   config.order = :defined
 
   config.before(:suite) do
-    FileUtils.mkdir_p spec_root / "test_migrations"
+    FileUtils.mkdir_p test_directory_path
   end
 
   config.fixture_paths = ["#{::Rails.root}/spec/fixtures"]
@@ -81,6 +85,6 @@ RSpec.configure do |config|
   end
 
   config.after(:suite) do
-    FileUtils.rm_rf spec_root / "test_migrations"
+    FileUtils.rm_rf test_directory_path
   end
 end

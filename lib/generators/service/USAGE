@@ -1,0 +1,12 @@
+Description:
+Stubs out a new service. Pass the service name, either camel case or snake case,
+and an optional list of its methods as arguments.
+
+It generates service class in `app/services` and spec class in `spec/services`.
+
+Example:
+  rails generate service MailerModule::Mailer send receive
+
+This will create:
+  app/services/mailer_module/mailer_service.rb
+  spec/services/mailer_module/mailer_service_spec.rb
