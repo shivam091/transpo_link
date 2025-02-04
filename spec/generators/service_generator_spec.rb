@@ -3,6 +3,7 @@
 # -*- warn_indent: true -*-
 
 require "spec_helper"
+require "generators/service/service_generator"
 
 RSpec.describe ServiceGenerator, type: :generator do
   destination test_directory_path
