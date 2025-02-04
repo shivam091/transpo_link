@@ -89,4 +89,9 @@ RSpec.describe User, type: :model do
     it { is_expected.to delegate_method(:preferred_currency).to(:user_preference) }
     it { is_expected.to delegate_method(:are_notifications_enabled).to(:user_preference) }
   end
+
+  describe "nested attributes" do
+    it { is_expected.to accept_nested_attributes_for(:address).update_only(true) }
+    it { is_expected.to accept_nested_attributes_for(:user_detail).update_only(true) }
+  end
 end

@@ -4,13 +4,17 @@
 @import "animators";
 @import "nav";
 @import "dropdowns";
+@import "alerts";
 @import "buttons";
 @import "cards";
 @import "form_elements";
 @import "widgets";
 @import "validations";
 @import "devise_layout";
-
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.5s;
+}
 html,
 body {
   -webkit-text-size-adjust: 100%;
@@ -36,20 +40,20 @@ a:link {
 }
 .logo {
   display: inline-flex;
-	span {
-		&:nth-of-type(1) {
-			color: #2a9d8f;
+  span {
+    &:nth-of-type(1) {
+      color: #2a9d8f;
       &:before {
         content: "Transpo";
       }
-		}
-		&:nth-of-type(2) {
-			color: #e76f51;
+    }
+    &:nth-of-type(2) {
+      color: #e76f51;
       &:before {
         content: "Link";
       }
-		}
-	}
+    }
+  }
 }
 svg:not(:root) {
   overflow: hidden;
@@ -104,4 +108,23 @@ p {
   word-wrap: break-word;
   word-spacing: normal;
   text-align: justify;
+}
+.subheader {
+  font-weight: 600;
+  padding-bottom: 0.5rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-start;
+  align-items: center;
+  border-bottom: 1px solid var(--bs-border-color);
+}
+.subheader:first-of-type {
+  margin-top: 0;
+}
+.modal-actions, .actions {
+  border-top: 1px solid var(--bs-border-color);
+  padding-top: 0.5rem;
 }
