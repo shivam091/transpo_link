@@ -23,5 +23,8 @@ Rails.application.routes.draw do
                registrations: "user/registrations"
              }
 
+  resource :profile, only: [:show, :edit, :update]
+  resource :preference, only: [:show, :edit, :update]
+
   root to: "dashboards#show"
 end

@@ -1,0 +1,29 @@
+# -*- encoding: utf-8 -*-
+# -*- frozen_string_literal: true -*-
+# -*- warn_indent: true -*-
+
+# spec/requests/profiles_spec.rb
+
+require "spec_helper"
+
+RSpec.describe "Profiles", type: :request do
+  context "when user is not logged in" do
+    describe "GET /profile" do
+      subject { get profile_path }
+
+      it { is_expected.to require_login }
+    end
+  end
+
+  context "when user is logged in" do
+    include_context "login as admin"
+
+    describe "GET /profile" do
+      before { get profile_path }
+
+      it "returns :ok status" do
+        expect(response).to have_http_status(:ok)
+      end
+    end
+  end
+end

@@ -6,6 +6,11 @@
   en: {
     direction: "en",
     title: "TranspoLink",
+    boolean: {
+      "yes": "Yes",
+      "no": "No",
+      nil: "Nothing",
+    },
     activerecord: {
       attributes: {
         role: {
@@ -27,7 +32,7 @@
           last_name: "Last name",
           mobile_number: "Mobile number",
           alternate_contact_number: "Alternate contact number",
-          alternate_email: "Alternate email",
+          alternate_email: "Alternate email address",
         },
         user_preference: {
           preferred_locale: "Preferred language",
@@ -104,6 +109,7 @@
       sign_in: "Sign in",
       continue: "Continue",
       save_changes: "Save changes",
+      edit: "Edit",
     },
     devise: {
       confirmations: {
@@ -194,6 +200,15 @@
         },
       },
     },
+    enumerations: {
+      user_preference: {
+        preferred_color_schemes: {
+          auto: "Auto",
+          light: "Light",
+          dark: "Dark"
+        },
+      },
+    },
     layouts: {
       devise: {
         title: "TranspoLink",
@@ -227,6 +242,7 @@
         vehicles: "Vehicles",
         routes: "Routes",
         warehouses: "Warehouses",
+        reports: "Reports",
         feedbacks: "Feedbacks",
       },
       menu: {
@@ -273,6 +289,23 @@
     dashboards: {
       show: {
         title: "Dashboard",
+      },
+    },
+    profiles: {
+      show: {
+        title: "Your profile",
+        your_profile: "Your profile",
+        edit_profile_details: "Edit your profile details viz., first name, last name, address, etc.",
+        full_name: "Full name",
+        address: "Address",
+        mobile_number_help_text: "Quickly receive security notifications with this mobile number.",
+      },
+    },
+    preferences: {
+      show: {
+        title: "Your preferences",
+        your_preferences: "Your preferences",
+        edit_preferences: "Edit your preferences viz. color scheme, time zone, language, etc.",
       },
     },
   },

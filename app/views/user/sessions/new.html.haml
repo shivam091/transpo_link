@@ -24,6 +24,6 @@
       - if devise_mapping.recoverable? && %w(passwords registrations).exclude?(controller_name)
         = link_to t(".forget_password"), new_password_path(resource_name), class: "d-flex justify-content-end"
   .col-12
-    = form.submit button_text(:sign_in), class: "w-100 btn btn-primary"
+    = form.submit button_text(:sign_in), class: "w-100 btn btn-primary justify-content-center"
   %p.text-muted.my-2
     = t(".sign_in_disclaimer")

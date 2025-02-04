@@ -23,6 +23,8 @@ RSpec.describe Address, type: :model do
     it { is_expected.to have_db_column(:postal_code).of_type(:string) }
     it { is_expected.to have_db_column(:addressable_id).of_type(:uuid) }
     it { is_expected.to have_db_column(:addressable_type).of_type(:string) }
+    it { is_expected.to have_db_column(:created_at).of_type(:timestamptz).with_options(null: false) }
+    it { is_expected.to have_db_column(:updated_at).of_type(:timestamptz).with_options(null: false) }
 
     it { is_expected.to have_check_constraint("check_addresses_address1_presence").with_expression("address1 IS NOT NULL AND address1::text <> ''::text") }
     it { is_expected.to have_check_constraint("check_addresses_country_presence").with_expression("country IS NOT NULL AND country::text <> ''::text") }

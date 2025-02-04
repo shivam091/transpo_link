@@ -1,0 +1,42 @@
+= title(t(".title"))
+.card.card-primary.border.border-primary
+  .card-body
+    .widget
+      .widget-header.d-flex.align-items-center.justify-content-between
+        .d-block
+          .widget-title
+            = t(".your_profile")
+          .widget-help= t(".edit_profile_details")
+        = link_to "javascript:void(0)", class: "btn btn-secondary" do
+          = external_svg_tag("svgs/pencil.svg")
+          = button_text("edit")
+      .widget-body
+        .widget-row.d-flex
+          .flex-auto
+            .widget-row-title= t(".full_name")
+            .widget-row-body= current_user.full_name
+        .widget-row.d-flex
+          .flex-auto
+            .widget-row-title= ::User.human_attribute_name(:email)
+            .widget-row-body= current_user.email
+        .widget-row.d-flex
+          .flex-auto
+            .widget-row-title= ::User.human_attribute_name(:password)
+            .widget-row-body ******
+        .widget-row.d-flex
+          .flex-auto
+            .widget-row-title= ::UserDetail.human_attribute_name(:mobile_number)
+            .widget-row-body= current_user.mobile_number
+            .widget-help= t(".mobile_number_help_text")
+        .widget-row.d-flex
+          .flex-auto
+            .widget-row-title= ::UserDetail.human_attribute_name(:alternate_contact_number)
+            .widget-row-body= current_user.alternate_contact_number
+        .widget-row.d-flex
+          .flex-auto
+            .widget-row-title= ::UserDetail.human_attribute_name(:alternate_email)
+            .widget-row-body= current_user.alternate_email
+        .widget-row.d-flex
+          .flex-auto
+            .widget-row-title= t(".address")
+            .widget-row-body= current_user.address.humanize
