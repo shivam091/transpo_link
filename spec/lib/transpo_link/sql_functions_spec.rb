@@ -6,5 +6,5 @@
 
 require "spec_helper"
 
-describe TranspoLink::SqlFunctions do
+RSpec.describe TranspoLink::SqlFunctions do
 end
