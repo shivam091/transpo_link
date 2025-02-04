@@ -6,5 +6,5 @@
 
 require "spec_helper"
 
-describe TranspoLink::Utils do
+RSpec.describe TranspoLink::Utils do
 end

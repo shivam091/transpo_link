@@ -44,7 +44,7 @@ module CaseSensitivity
     end
 
     def lower_value(value)
-      ::TranspoLink::SqlFunctions.lower(value)
+      TranspoLink::SqlFunctions.lower(value)
     end
 
     def lower_column(column)
