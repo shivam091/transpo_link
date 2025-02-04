@@ -98,6 +98,9 @@ group :development, :test do
 
   # Support simple parameterized test syntax in RSpec.
   gem "rspec-parameterized"
+
+  # Test Rails generators with RSpec using the standard Rails::Generators::TestCase assertion methods.
+  gem "generator_spec"
 end
 
 group :development do
