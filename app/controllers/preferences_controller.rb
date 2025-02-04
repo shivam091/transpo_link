@@ -4,7 +4,7 @@
 
 class PreferencesController < ApplicationController
 
-  # GET /preferences
+  # GET /preference
   def show
   end
 end
