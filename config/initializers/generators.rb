@@ -4,6 +4,8 @@
 
 # Be sure to restart your server when you modify this file.
 
+require Rails.root.join("lib", "generators", "service", "service_generator")
+
 TranspoLink::Application.config.generators do |generator|
   generator.orm :active_record, primary_key_type: :uuid
 end
