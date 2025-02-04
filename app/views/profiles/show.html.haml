@@ -14,11 +14,11 @@
         .widget-row.d-flex
           .flex-auto
             .widget-row-title= t(".full_name")
-            .widget-row-body= current_user.full_name
+            .widget-row-body= h(current_user.full_name)
         .widget-row.d-flex
           .flex-auto
             .widget-row-title= ::User.human_attribute_name(:email)
-            .widget-row-body= current_user.email
+            .widget-row-body= h(current_user.email)
         .widget-row.d-flex
           .flex-auto
             .widget-row-title= ::User.human_attribute_name(:password)
@@ -26,17 +26,17 @@
         .widget-row.d-flex
           .flex-auto
             .widget-row-title= ::UserDetail.human_attribute_name(:mobile_number)
-            .widget-row-body= current_user.mobile_number
+            .widget-row-body= h(current_user.mobile_number)
             .widget-help= t(".mobile_number_help_text")
         .widget-row.d-flex
           .flex-auto
             .widget-row-title= ::UserDetail.human_attribute_name(:alternate_contact_number)
-            .widget-row-body= current_user.alternate_contact_number
+            .widget-row-body= h(current_user.alternate_contact_number)
         .widget-row.d-flex
           .flex-auto
             .widget-row-title= ::UserDetail.human_attribute_name(:alternate_email)
-            .widget-row-body= current_user.alternate_email
+            .widget-row-body= h(current_user.alternate_email)
         .widget-row.d-flex
           .flex-auto
             .widget-row-title= t(".address")
-            .widget-row-body= current_user.address.humanize
+            .widget-row-body= h(current_user.address.humanize)
