@@ -30,6 +30,9 @@ class User < ApplicationRecord
            :are_notifications_enabled, :are_notifications_enabled=,
            to: :user_preference
 
+  accepts_nested_attributes_for :user_detail, update_only: true
+  accepts_nested_attributes_for :address, update_only: true
+
   class << self
     def with_email(email)
       iwhere(email: email.strip).first
