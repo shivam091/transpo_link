@@ -5,6 +5,7 @@
 class <%= normalized_class_name %>Service < ApplicationService
   def initialize
   end
+
   def call
 <% if methods.any? -%>
 <% methods.each do |method| -%>
@@ -13,8 +14,10 @@ class <%= normalized_class_name %>Service < ApplicationService
 <% end -%>
   end
 <% if methods.any? -%>
+
   private
 <% methods.each do |method| -%>
+
   def <%= method %>
   end
 <% end -%>
