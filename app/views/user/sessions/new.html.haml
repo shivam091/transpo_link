@@ -6,13 +6,13 @@
   .col-12
     .form-floating
       = form.text_field :email, autofocus: true, autocomplete: "new-email", class: "form-control",
-        placeholder: ::User.human_attribute_name(:email)
+        placeholder: User.human_attribute_name(:email)
       = form.label :email, class: "form-label required"
   .col-12{data: {controller: "secret-reveal", secret_reveal_hidden_class: "d-none"}}
     .input-group
       .form-floating.mb-2
         = form.password_field :password, autocomplete: "new-password", class: "form-control",
-          placeholder: ::User.human_attribute_name(:password), data: {secret_reveal_target: "input"}
+          placeholder: User.human_attribute_name(:password), data: {secret_reveal_target: "input"}
         = form.label :password, class: "form-label required"
       = secret_reveal_button
   .col-12

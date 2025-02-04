@@ -6,7 +6,7 @@
   .col-12
     .form-floating.mb-3
       = form.text_field :email, autofocus: true, autocomplete: "new-email", class: "form-control",
-        placeholder: ::User.human_attribute_name(:email), value: (params[:email] || resource.email)
+        placeholder: User.human_attribute_name(:email), value: (params[:email] || resource.email)
       = form.label :email, class: "form-label required"
   .col-12
     = form.submit button_text(:continue), class: "w-100 btn btn-primary justify-content-center"
