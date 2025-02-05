@@ -1,0 +1,10 @@
+= form_with model: current_user, url: preference_path, html: {enctype: "multipart/form-data"} do |form|
+  = form.fields_for :user_preference, include_id: false do |preference_form|
+    = render_if_exists("preferences/preference_form", locals: {form: preference_form})
+  .actions
+    = button_tag type: :submit, class: "btn btn-primary me-2" do
+      = external_svg_tag("svgs/floppy.svg")
+      = button_text("update")
+    = link_to preference_path, class: "btn btn-secondary" do
+      = external_svg_tag("svgs/cancel.svg")
+      = button_text("cancel")

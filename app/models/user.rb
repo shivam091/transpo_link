@@ -31,6 +31,7 @@ class User < ApplicationRecord
            to: :user_preference
 
   accepts_nested_attributes_for :user_detail, update_only: true
+  accepts_nested_attributes_for :user_preference, update_only: true
   accepts_nested_attributes_for :address, update_only: true
 
   class << self
