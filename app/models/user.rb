@@ -20,7 +20,7 @@ class User < ApplicationRecord
   belongs_to :role, inverse_of: :users
 
   delegate :name, to: :role, prefix: true
-  delegate :full_name, :mobile_number,
+  delegate :first_name, :last_name, :full_name, :mobile_number,
            :alternate_email, :alternate_contact_number,
            to: :user_detail
   delegate :preferred_locale, :preferred_locale=,

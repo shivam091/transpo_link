@@ -80,6 +80,8 @@ RSpec.describe User, type: :model do
   describe "delegates" do
     it { is_expected.to delegate_method(:name).to(:role).with_prefix }
     it { is_expected.to delegate_method(:full_name).to(:user_detail) }
+    it { is_expected.to delegate_method(:first_name).to(:user_detail) }
+    it { is_expected.to delegate_method(:last_name).to(:user_detail) }
     it { is_expected.to delegate_method(:mobile_number).to(:user_detail) }
     it { is_expected.to delegate_method(:alternate_contact_number).to(:user_detail) }
     it { is_expected.to delegate_method(:alternate_email).to(:user_detail) }
