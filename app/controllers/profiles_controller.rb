@@ -11,4 +11,41 @@ class ProfilesController < ApplicationController
   # GET /profile/edit
   def edit
   end
+
+  # PUT|PATCH /profile
+  def update
+    response = Profiles::UpdateService.(current_user, profile_params)
+    if response.success?
+      flash[:notice] = response.message
+      redirect_to profile_path, status: :see_other
+    else
+      flash.now[:alert] = response.message
+      render turbo_stream: [
+        turbo_stream.update(:profile_form, partial: "profiles/form"),
+        render_flash
+      ], status: :unprocessable_entity
+    end
+  end
+
+  private
+
+  def profile_params
+    params.require(:user).permit(
+      user_detail_attributes: [
+        :first_name,
+        :last_name,
+        :mobile_number,
+        :alternate_contact_number,
+        :alternate_email
+      ],
+      address_attributes: [
+        :address1,
+        :address2,
+        :city,
+        :state,
+        :country,
+        :postal_code
+      ]
+    )
+  end
 end
