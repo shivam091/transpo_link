@@ -5,7 +5,7 @@
       {include_blank: t(".select_preferred_language")}, {class: "form-select"}
   .col-sm-12.col-md-6.col-lg-4.mb-3
     = form.label :preferred_time_zone, class: "form-label required"
-    = form.select :preferred_time_zone, options_for_select(ActiveSupport::TimeZone.all.collect { |tz| ["(GMT #{ActiveSupport::TimeZone.seconds_to_utc_offset(tz.utc_offset)}) #{tz.name}", tz.tzinfo.name] }, form.object.preferred_time_zone),
+    = form.select :preferred_time_zone, TranspoLink::TimeZone.time_zone_options(form.object.preferred_time_zone),
       {include_blank: t(".select_time_zone")}, {class: "form-select"}
   .col-sm-12.col-md-6.col-lg-4.mb-3
     = form.label :preferred_currency, class: "form-label required"
