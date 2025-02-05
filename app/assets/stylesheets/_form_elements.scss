@@ -5,3 +5,13 @@
 .form-check-input {
   margin-top: 0.3em;
 }
+.form-control, .form-select {
+  font-size: 0.875rem !important;
+  border-radius: 0.25rem;
+}
+.form-select, input[list] {
+  background-image: url("svgs/select-list-arrow.svg");
+  background-repeat: no-repeat;
+  background-position: right .9rem center;
+  background-size: 16px;
+}
