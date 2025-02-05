@@ -6,7 +6,7 @@
 
 require "spec_helper"
 
-describe TranspoLink::Favicon do
+RSpec.describe TranspoLink::Favicon do
   describe ".main" do
     it "returns the URL of the favicon in development environment" do
       stub_rails_env("development")

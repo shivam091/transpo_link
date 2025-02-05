@@ -2,6 +2,12 @@
   display: inline-flex;
   align-items: center;
   gap: 0.25rem;
+  transition: 0.2s cubic-bezier(0.3, 0, 0.5, 1) !important;
+  transition-property: color,background-color,border-color,box-shadow !important;
+  touch-action: manipulation;
+  padding: 0.5rem 0.5rem;
+  font-size: 0.875rem;
+  border-radius: 0.25rem;
 }
 .btn-secret-reveal {
   position: absolute;

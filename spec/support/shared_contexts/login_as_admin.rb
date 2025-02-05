@@ -3,7 +3,7 @@
 # -*- warn_indent: true -*-
 
 RSpec.shared_context "login as admin" do
-  let(:admin) { create(:admin, :active, :with_address, :confirmed) }
+  let(:admin) { create(:admin, :active, :confirmed, :with_address) }
 
   before do
     sign_in(admin)

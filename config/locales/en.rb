@@ -4,7 +4,8 @@
 
 {
   en: {
-    direction: "en",
+    lang: "en",
+    direction: "ltr",
     title: "TranspoLink",
     boolean: {
       "yes": "Yes",
@@ -110,6 +111,8 @@
       continue: "Continue",
       save_changes: "Save changes",
       edit: "Edit",
+      cancel: "Cancel",
+      update: "Update",
     },
     devise: {
       confirmations: {
@@ -263,6 +266,26 @@
         about: "About",
       },
     },
+    shared: {
+      address_form_fields: {
+        select_country: "Select country",
+        select_state: "Select state",
+      },
+    },
+    flashes: {
+      profiles: {
+        update: {
+          success: "Your profile was successfully updated.",
+          error: "Your profile could not be updated."
+        },
+      },
+      preferences: {
+        update: {
+          success: "Your preferences were successfully updated.",
+          error: "Your preferences could not be updated."
+        }
+      },
+    },
     user: {
       sessions: {
         new: {
@@ -300,12 +323,30 @@
         address: "Address",
         mobile_number_help_text: "Quickly receive security notifications with this mobile number.",
       },
+      edit: {
+        title: "Edit profile",
+      },
+      form: {
+        profile_details: "Profile details",
+        address: "Address",
+      },
     },
     preferences: {
       show: {
         title: "Your preferences",
         your_preferences: "Your preferences",
         edit_preferences: "Edit your preferences viz. color scheme, time zone, language, etc.",
+      },
+      edit: {
+        title: "Edit preferences",
+      },
+      form: {
+      },
+      preference_form: {
+        select_preferred_language: "Select language",
+        select_time_zone: "Select time zone",
+        select_currency: "Select currency",
+        language_translation_percentage: "%{language} (%{percent_translated} translated)"
       },
     },
   },

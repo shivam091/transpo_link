@@ -7,4 +7,37 @@ class PreferencesController < ApplicationController
   # GET /preference
   def show
   end
+
+  # GET /preference/edit
+  def edit
+  end
+
+  # PUT|PATCH /preference
+  def update
+    response = Preferences::UpdateService.(current_user, preference_params)
+    if response.success?
+      flash[:notice] = response.message
+      redirect_to preference_path, status: :see_other
+    else
+      flash.now[:alert] = response.message
+      render turbo_stream: [
+        turbo_stream.update(:preference_form, partial: "preferences/form"),
+        render_flash
+      ], status: :unprocessable_entity
+    end
+  end
+
+  private
+
+  def preference_params
+    params.require(:user).permit(
+      user_preference_attributes: [
+        :preferred_locale,
+        :preferred_time_zone,
+        :preferred_currency,
+        :preferred_color_scheme,
+        :are_notifications_enabled
+      ]
+    )
+  end
 end
