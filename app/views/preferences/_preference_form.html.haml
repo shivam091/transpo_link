@@ -1,0 +1,25 @@
+.row
+  .col-sm-12.col-md-6.col-lg-4.mb-3
+    = form.label :preferred_locale, class: "form-label required"
+    = form.select :preferred_locale, options_for_select(selectable_locales_with_translation_level(2), form.object.preferred_locale),
+      {include_blank: t(".select_preferred_language")}, {class: "form-select"}
+  .col-sm-12.col-md-6.col-lg-4.mb-3
+    = form.label :preferred_time_zone, class: "form-label required"
+    = form.select :preferred_time_zone, options_for_select(ActiveSupport::TimeZone.all.collect { |tz| ["(GMT #{ActiveSupport::TimeZone.seconds_to_utc_offset(tz.utc_offset)}) #{tz.name}", tz.tzinfo.name] }, form.object.preferred_time_zone),
+      {include_blank: t(".select_time_zone")}, {class: "form-select"}
+  .col-sm-12.col-md-6.col-lg-4.mb-3
+    = form.label :preferred_currency, class: "form-label required"
+    = form.select :preferred_currency, options_for_select(currencies, form.object.preferred_currency),
+      {include_blank: t(".select_currency")}, {class: "form-select"}
+  .col-sm-12.col-md-6.col-lg-4.mb-3
+    = form.label :preferred_color_scheme, class: "form-label required"
+    .col
+      - enum_options_for_select(::UserPreference, :preferred_color_schemes).each do |label, value|
+        .form-check.form-check-inline
+          = form.radio_button :preferred_color_scheme, value, class: "form-check-input",
+            id: "preferred_color_scheme_#{value}", checked: (form.object.preferred_color_scheme == value)
+          = form.label :preferred_color_scheme, label, class: "form-check-label", for: "preferred_color_scheme_#{value}"
+  .col-sm-12.col-md-6.col-lg-4.mb-3
+    = form.label :are_notifications_enabled, class: "form-check-label required mb-2"
+    .form-switch
+      = form.check_box :are_notifications_enabled, class: "form-check-input", checked: form.object.are_notifications_enabled

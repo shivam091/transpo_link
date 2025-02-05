@@ -80,6 +80,8 @@ RSpec.describe User, type: :model do
   describe "delegates" do
     it { is_expected.to delegate_method(:name).to(:role).with_prefix }
     it { is_expected.to delegate_method(:full_name).to(:user_detail) }
+    it { is_expected.to delegate_method(:first_name).to(:user_detail) }
+    it { is_expected.to delegate_method(:last_name).to(:user_detail) }
     it { is_expected.to delegate_method(:mobile_number).to(:user_detail) }
     it { is_expected.to delegate_method(:alternate_contact_number).to(:user_detail) }
     it { is_expected.to delegate_method(:alternate_email).to(:user_detail) }
@@ -88,5 +90,11 @@ RSpec.describe User, type: :model do
     it { is_expected.to delegate_method(:preferred_color_scheme).to(:user_preference) }
     it { is_expected.to delegate_method(:preferred_currency).to(:user_preference) }
     it { is_expected.to delegate_method(:are_notifications_enabled).to(:user_preference) }
+  end
+
+  describe "nested attributes" do
+    it { is_expected.to accept_nested_attributes_for(:address).update_only(true) }
+    it { is_expected.to accept_nested_attributes_for(:user_detail).update_only(true) }
+    it { is_expected.to accept_nested_attributes_for(:user_preference).update_only(true) }
   end
 end

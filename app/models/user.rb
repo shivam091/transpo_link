@@ -20,7 +20,7 @@ class User < ApplicationRecord
   belongs_to :role, inverse_of: :users
 
   delegate :name, to: :role, prefix: true
-  delegate :full_name, :mobile_number,
+  delegate :first_name, :last_name, :full_name, :mobile_number,
            :alternate_email, :alternate_contact_number,
            to: :user_detail
   delegate :preferred_locale, :preferred_locale=,
@@ -29,6 +29,10 @@ class User < ApplicationRecord
            :preferred_currency, :preferred_currency=,
            :are_notifications_enabled, :are_notifications_enabled=,
            to: :user_preference
+
+  accepts_nested_attributes_for :user_detail, update_only: true
+  accepts_nested_attributes_for :user_preference, update_only: true
+  accepts_nested_attributes_for :address, update_only: true
 
   class << self
     def with_email(email)

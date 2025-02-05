@@ -93,6 +93,12 @@ module ApplicationHelper
     "#{currency_obj.name} (#{currency_obj.symbol})"
   end
 
+  def currencies
+    Money::Currency.all.collect do |currency|
+      ["#{currency.name} (#{currency.symbol})", currency.id.upcase.to_s]
+    end
+  end
+
   def humanize_boolean(boolean)
     case boolean
     when true then t("boolean.yes")

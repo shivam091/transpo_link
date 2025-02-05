@@ -7,7 +7,7 @@
           .widget-title
             = t(".your_profile")
           .widget-help= t(".edit_profile_details")
-        = link_to "javascript:void(0)", class: "btn btn-secondary" do
+        = link_to edit_profile_path, class: "btn btn-secondary" do
           = external_svg_tag("svgs/pencil.svg")
           = button_text("edit")
       .widget-body

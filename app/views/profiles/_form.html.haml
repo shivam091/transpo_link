@@ -1,0 +1,16 @@
+= form_with model: current_user, url: profile_path do |form|
+  .subheader
+    = t(".profile_details")
+  = form.fields_for :user_detail, include_id: false do |user_detail_form_fields|
+    = render_if_exists("profiles/user_detail_form_fields", locals: {form: user_detail_form_fields})
+  .subheader
+    = t(".address")
+  = form.fields_for :address, include_id: false do |address_form_fields|
+    = render_if_exists("shared/address_form_fields", locals: {form: address_form_fields})
+  .actions
+    = button_tag type: :submit, class: "btn btn-primary me-2" do
+      = external_svg_tag("svgs/floppy.svg")
+      = button_text("update")
+    = link_to profile_path, class: "btn btn-secondary" do
+      = external_svg_tag("svgs/cancel.svg")
+      = button_text("cancel")
