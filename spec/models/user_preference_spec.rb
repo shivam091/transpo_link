@@ -56,4 +56,24 @@ RSpec.describe UserPreference, type: :model do
   describe "associations" do
     it { is_expected.to belong_to(:user).inverse_of(:user_preference) }
   end
+
+  describe "validations" do
+    describe "#preferred_locale" do
+      it { is_expected.to validate_presence_of(:preferred_locale).with_message("is required") }
+      it { is_expected.to validate_inclusion_of(:preferred_locale).in_array(I18n.available_locales.map(&:to_s)).with_message("is not included in the list") }
+    end
+
+    describe "#preferred_time_zone" do
+      it { is_expected.to validate_presence_of(:preferred_time_zone).with_message("is required") }
+    end
+
+    describe "#preferred_currency" do
+      it { is_expected.to validate_presence_of(:preferred_currency).with_message("is required") }
+    end
+
+    describe "#preferred_color_scheme" do
+      it { is_expected.to validate_presence_of(:preferred_color_scheme).with_message("is required") }
+      it { is_expected.to validate_inclusion_of(:preferred_color_scheme).in_array(described_class.preferred_color_schemes.values).with_message("is not included in the list") }
+    end
+  end
 end
