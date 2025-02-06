@@ -8,7 +8,7 @@ class IpInfo
   def initialize(app, cache_options = {})
     @app = app
     token = Rails.application.credentials.config[:IP_LOOKUP_API_KEY]
-    @ipinfo = ::IPinfo.create(token, cache_options)
+    @ipinfo = IPinfo.create(token, cache_options)
   end
 
   def call(env)

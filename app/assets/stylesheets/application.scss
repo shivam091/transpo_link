@@ -11,10 +11,7 @@
 @import "widgets";
 @import "validations";
 @import "devise_layout";
-::view-transition-old(root),
-::view-transition-new(root) {
-  animation-duration: 0.5s;
-}
+
 html,
 body {
   -webkit-text-size-adjust: 100%;
