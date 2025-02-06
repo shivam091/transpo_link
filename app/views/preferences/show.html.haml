@@ -22,7 +22,7 @@
         .widget-row.d-flex
           .flex-auto
             .widget-row-title= UserPreference.human_attribute_name(:preferred_currency)
-            .widget-row-body= h(formatted_currency(current_user.preferred_currency))
+            .widget-row-body= h(TranspoLink::Currency.formatted_currency(current_user.preferred_currency))
         .widget-row.d-flex
           .flex-auto
             .widget-row-title= UserPreference.human_attribute_name(:preferred_color_scheme)
