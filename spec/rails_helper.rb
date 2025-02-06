@@ -4,4 +4,4 @@
 
 require "spec_helper"
 
-warn "WARNING: Using `require 'rake_helper'` has no effect. Use `require 'spec_helper'` instead."
+warn "WARNING: Using `require 'rails_helper'` has no effect. Use `require 'spec_helper'` instead."
