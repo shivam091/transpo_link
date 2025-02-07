@@ -14,7 +14,7 @@
   .col-sm-12.col-md-6.col-lg-4.mb-3
     = form.label :preferred_color_scheme, class: "form-label required"
     .col
-      - enum_options_for_select(::UserPreference, :preferred_color_schemes).each do |label, value|
+      - enum_options_for_select(UserPreference, :preferred_color_schemes).each do |label, value|
         .form-check.form-check-inline
           = form.radio_button :preferred_color_scheme, value, class: "form-check-input",
             id: "preferred_color_scheme_#{value}", checked: (form.object.preferred_color_scheme == value)

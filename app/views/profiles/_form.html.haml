@@ -1,4 +1,5 @@
 = form_with model: current_user, url: profile_path do |form|
+  = form_errors(current_user)
   .subheader
     = t(".profile_details")
   = form.fields_for :user_detail, include_id: false do |user_detail_form_fields|
