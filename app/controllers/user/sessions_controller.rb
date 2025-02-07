@@ -16,6 +16,10 @@ class User::SessionsController < Devise::SessionsController
     set_flash_message!(:notice, :signed_in, user_name: resource.full_name)
     sign_in(resource_name, resource, event: :authentication)
     yield resource if block_given?
+
+    if resource.reset_password_token.present?
+      resource.update_columns(reset_password_token: nil, reset_password_sent_at: nil)
+    end
     respond_with resource, location: after_sign_in_path_for(resource)
   end
 
