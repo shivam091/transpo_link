@@ -9,9 +9,11 @@ class User::PasswordsController < Devise::PasswordsController
   # end
 
   # POST /users/password
-  # def create
-  #   super
-  # end
+  def create
+    resource_class.without_timestamps do
+      super
+    end
+  end
 
   # GET /users/password/edit?reset_password_token=abcdef
   # def edit
