@@ -8,8 +8,24 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable, :confirmable, :lockable,
          :recoverable, :rememberable, :validatable, :timeoutable, :trackable
 
+  attr_accessor :password_required
+
   attribute :is_active, default: false
   attribute :is_banned, default: false
+
+  validates :email,
+            presence: true,
+            length: {in: 2..55},
+            email: true,
+            uniqueness: {case_sensitive: true},
+            reduce: true
+  validates :password,
+            presence: true,
+            password: true,
+            length: {in: 8..20},
+            confirmation: {case_sensitive: true},
+            reduce: true,
+            if: :password_required?
 
   has_one :user_detail, inverse_of: :user, dependent: :destroy, autosave: true
   has_one :user_preference, inverse_of: :user, dependent: :destroy, autosave: true
@@ -60,5 +76,9 @@ class User < ApplicationRecord
 
   def address
     super.presence || build_address
+  end
+
+  def password_required?
+    !!password_required
   end
 end

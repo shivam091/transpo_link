@@ -5,6 +5,15 @@
 class UserDetail < ApplicationRecord
   self.primary_key = :user_id
 
+  validates :first_name, :last_name,
+            presence: true,
+            length: {in: 2..55},
+            reduce: true
+  validates :mobile_number, :alternate_contact_number, :alternate_email,
+            length: {in: 2..55},
+            allow_blank: true,
+            reduce: true
+
   belongs_to :user, inverse_of: :user_detail
 
   def full_name

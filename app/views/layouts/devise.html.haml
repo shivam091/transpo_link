@@ -1,5 +1,5 @@
 !!!5
-%html{dir: t("direction"), lang: I18n.locale, data: {bs_theme: "dark"}}
+%html{dir: t("direction"), lang: I18n.locale}
   %head
     %title
       = content_for?(:title) ? yield(:title) : t(".title")
@@ -15,7 +15,7 @@
     = yield(:stylesheet) if content_for?(:stylesheet)
     = javascript_importmap_tags
     = yield(:javascript) if content_for?(:javascript)
-  %body.d-flex.align-items-center.justify-content-center
+  %body.d-flex.align-items-center.justify-content-center{data: {bs_theme: "dark"}}
     %main.devise-section
       = turbo_frame_tag :flash do
         = render_if_exists("shared/flash_messages")

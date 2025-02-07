@@ -1,0 +1,35 @@
+# -*- encoding: utf-8 -*-
+# -*- frozen_string_literal: true -*-
+# -*- warn_indent: true -*-
+
+module TranspoLink
+  module TimeZone
+    extend self
+
+    include ActionView::Helpers::FormOptionsHelper
+
+    def formatted_time_zone(time_zone)
+      offset = ActiveSupport::TimeZone[time_zone]&.utc_offset
+      return nil unless offset
+
+      "(GMT #{ActiveSupport::TimeZone.seconds_to_utc_offset(offset)}) #{time_zone}"
+    end
+
+    def time_zone_options(selected_zone = nil)
+      options_for_select(
+        ActiveSupport::TimeZone.all.map do |tz|
+          [formatted_time_zone(tz.name), tz.tzinfo.name]
+        end,
+        selected_zone
+      )
+    end
+
+    def with_user_time_zone(user, &block)
+      Time.use_zone(user&.preferred_time_zone, &block)
+    end
+
+    def with_default_time_zone(&block)
+      Time.use_zone(Time.zone_default, &block)
+    end
+  end
+end

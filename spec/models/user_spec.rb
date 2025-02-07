@@ -97,4 +97,34 @@ RSpec.describe User, type: :model do
     it { is_expected.to accept_nested_attributes_for(:user_detail).update_only(true) }
     it { is_expected.to accept_nested_attributes_for(:user_preference).update_only(true) }
   end
+
+  describe "validations" do
+    describe "#email" do
+      it { is_expected.to validate_presence_of(:email).with_message("is required") }
+      it { is_expected.to allow_value("abc@email.com").for(:email) }
+      it { is_expected.not_to allow_value("abc").for(:email) }
+
+      # it { is_expected.to validate_uniqueness_of(:email).with_message("is already in use") }
+      # it { is_expected.to validate_length_of(:email).is_at_least(2).with_message("is too short (minimum is 2 characters)") }
+      # it { is_expected.to validate_length_of(:email).is_at_most(55).with_message("is too long (maximum is 55 characters)") }
+    end
+
+    describe "#password" do
+      context "when password is required" do
+        before { allow(subject).to receive(:password_required?).and_return(true) }
+
+        it { is_expected.to validate_presence_of(:password).with_message("is required") }
+        it { is_expected.to validate_length_of(:password).is_at_least(8).with_message("is too short (minimum is 8 characters)") }
+        it { is_expected.to validate_length_of(:password).is_at_most(20).with_message("is too long (maximum is 20 characters)") }
+        it { is_expected.to validate_confirmation_of(:password) }
+      end
+
+      context "when password is not required" do
+        before { allow(subject).to receive(:password_required?).and_return(false) }
+
+        it { is_expected.not_to validate_presence_of(:password) }
+        it { is_expected.not_to validate_confirmation_of(:password) }
+      end
+    end
+  end
 end
