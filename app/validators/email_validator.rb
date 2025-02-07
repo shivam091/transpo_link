@@ -12,7 +12,7 @@
 #
 class EmailValidator < ActiveModel::EachValidator
   def validate_each(record, attribute, value)
-    unless value =~ ::TranspoLink::Regex.email_regex
+    unless value =~ TranspoLink::Regex.email_regex
       error_message = options[:message] || :invalid
 
       record.errors.add(attribute, error_message)
