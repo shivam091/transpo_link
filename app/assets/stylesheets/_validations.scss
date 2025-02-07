@@ -24,10 +24,8 @@
   }
   svg {
     vertical-align: -2px;
+    fill: var(--bs-body-color);
   }
-}
-#error-explanation svg {
-  fill: var(--bs-body-color);
 }
 .required::after {
   color: rgba(var(--bs-danger-rgb), 1) !important;
@@ -46,4 +44,10 @@
   background-repeat: no-repeat !important;
   background-position: right 0.5rem center, center right 2rem !important;
   background-size: 24px 24px, calc(0.75em + 0.375rem) calc(0.75em + 0.375rem) !important;
+}
+.field_with_errors label {
+  color: var(--bs-form-invalid-color);
+}
+label.is-invalid, .was-validated .form-check-input:invalid ~ .form-check-label, .form-check-input.is-invalid ~ .form-check-label {
+  color: var(--bs-form-invalid-color);
 }
