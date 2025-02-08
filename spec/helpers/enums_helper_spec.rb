@@ -7,5 +7,56 @@
 require "spec_helper"
 
 RSpec.describe EnumsHelper, type: :helper do
+  before do
+    class Preference
+      include ActiveModel::Model
+      attr_accessor :color_scheme
 
+      def self.color_schemes
+        {light: 0, dark: 1, auto: 2}
+      end
+
+      def self.model_name
+        ActiveModel::Name.new(self, nil, "Preference")
+      end
+    end
+
+    allow(I18n).to receive(:t).with("light", scope: "enumerations.preference.color_schemes").and_return("Light Mode")
+    allow(I18n).to receive(:t).with("dark", scope: "enumerations.preference.color_schemes").and_return("Dark Mode")
+    allow(I18n).to receive(:t).with("auto", scope: "enumerations.preference.color_schemes").and_return("Auto Mode")
+  end
+
+  describe "#enum_options_for_select" do
+    it "returns an array of translated enum options with their values" do
+      expected_result = [
+        ["Light Mode", 0],
+        ["Dark Mode", 1],
+        ["Auto Mode", 2]
+      ]
+      expect(helper.enum_options_for_select(Preference, :color_scheme)).to eq(expected_result)
+    end
+  end
+
+  describe "#enum_l" do
+    it "returns the translated string for the current enum value of a model" do
+      preference = Preference.new(color_scheme: :dark)
+      expect(helper.enum_l(preference, :color_scheme)).to eq("Dark Mode")
+    end
+  end
+
+  describe "#enum_i18n" do
+    it "returns the translated string for a given enum key" do
+      expect(helper.enum_i18n(Preference, :color_scheme, :auto)).to eq("Auto Mode")
+    end
+  end
+
+  describe "#enum_key" do
+    it "returns the enum key for a given value" do
+      expect(helper.enum_key(Preference, :color_scheme, 1)).to eq(:dark)
+    end
+
+    it "returns nil if the value does not exist" do
+      expect(helper.enum_key(Preference, :color_scheme, 99)).to be_nil
+    end
+  end
 end
