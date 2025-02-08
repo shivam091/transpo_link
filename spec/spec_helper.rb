@@ -76,6 +76,7 @@ RSpec.configure do |config|
 
   # Include support classes and modules.
   config.include RailsHelpers
+  config.include ControllerAssignsHelper
 
   config.around do |example|
     ActiveRecord::Base.transaction do
