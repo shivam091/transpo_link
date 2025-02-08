@@ -1,3 +1,32 @@
+#error-explanation {
+  border: 1.5px solid var(--bs-danger-border-subtle) !important;
+  border-radius: .25rem !important;
+  padding: 7px;
+  padding-bottom: 0;
+  background-color: var(--bs-danger-bg-subtle);
+  color: var(--bs-body-color);
+  margin-bottom: 0.5rem;
+  h6 {
+    text-align: left;
+    font-weight: bold;
+    padding: 3px 0px 3px 11px;
+    background-color: rgba(var(--bs-danger-rgb), 1)!important;
+    min-height: auto;
+    border-radius: 0.25rem;
+  }
+  dl {
+    margin-top: 12px;
+    margin-bottom: 12px;
+  }
+  dl dd {
+    font-size: 12px;
+    list-style: none;
+  }
+  svg {
+    vertical-align: -2px;
+    fill: var(--bs-body-color);
+  }
+}
 .required::after {
   color: rgba(var(--bs-danger-rgb), 1) !important;
   content: "\002A";
@@ -8,4 +37,17 @@
 .form-floating > .form-control:focus ~ label::after, .form-floating > .form-control:not(:placeholder-shown) ~ label::after, .form-floating > .form-control-plaintext ~ label::after, .form-floating > .form-select ~ label::after {
   content: "\002A";
   inset: initial;
+  background: transparent;
+}
+.form-control.is-invalid, .form-select.is-invalid {
+  background-image: url("svgs/error-circle.svg") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 0.5rem center, center right 2rem !important;
+  background-size: 24px 24px, calc(0.75em + 0.375rem) calc(0.75em + 0.375rem) !important;
+}
+.field_with_errors label {
+  color: var(--bs-form-invalid-color);
+}
+label.is-invalid, .was-validated .form-check-input:invalid ~ .form-check-label, .form-check-input.is-invalid ~ .form-check-label {
+  color: var(--bs-form-invalid-color);
 }

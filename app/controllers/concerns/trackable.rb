@@ -30,7 +30,7 @@ module Trackable
       ip_info: request.env["ipinfo"],
       user: current_user
     }
-    ::RequestLog.create!(log_data)
+    RequestLog.create!(log_data)
   rescue StandardError => e
     Rails.logger.error("Failed to log request: #{e.message}")
   end
