@@ -5,7 +5,7 @@
 # Asserts that the check constraint exists.
 #
 # ```
-# RSpec.describe TableName, type: :model do
+# RSpec.describe ModelName, type: :model do
 #   it { is_expected.to have_check_constraint("constraint_name") }
 #   it { is_expected.to have_check_constraint("constraint_name").with_expression("expression") }
 # end

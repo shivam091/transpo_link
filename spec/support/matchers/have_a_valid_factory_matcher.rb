@@ -5,7 +5,7 @@
 # Asserts that the model has a valid factory.
 #
 # ```
-# RSpec.describe TableName, type: :model do
+# RSpec.describe ModelName, type: :model do
 #   it { is_expected.to have_a_valid_factory(factory_name, *traits, **associations) }
 # end
 # ```
