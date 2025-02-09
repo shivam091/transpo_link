@@ -12,7 +12,11 @@ module TranspoLink
       offset = ActiveSupport::TimeZone[time_zone]&.utc_offset
       return nil unless offset
 
-      "(GMT #{ActiveSupport::TimeZone.seconds_to_utc_offset(offset)}) #{time_zone}"
+      "(GMT #{formatted_offset(offset)}) #{time_zone}"
+    end
+
+    def formatted_offset(offset)
+      ActiveSupport::TimeZone.seconds_to_utc_offset(offset)
     end
 
     def time_zone_options(selected_zone = nil)
