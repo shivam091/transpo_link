@@ -29,5 +29,5 @@ class UserPreference < ApplicationRecord
             presence: true,
             reduce: true
 
-  belongs_to :user, inverse_of: :user_preference
+  belongs_to :user, inverse_of: :user_preference, touch: true
 end
