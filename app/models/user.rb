@@ -35,6 +35,10 @@ class User < ApplicationRecord
 
   belongs_to :role, inverse_of: :users
 
+  scope :admins, -> { with_role("admin") }
+  scope :suppliers, -> { with_role("supplier") }
+  scope :buyers, -> { with_role("buyer") }
+
   delegate :name, to: :role, prefix: true
   delegate :first_name, :last_name, :full_name, :mobile_number,
            :alternate_email, :alternate_contact_number,
@@ -59,6 +63,19 @@ class User < ApplicationRecord
       conditions = warden_conditions.dup
       email = conditions.delete(:email)
       where(conditions).with_email(email)
+    end
+
+    def select_options
+      all.collect { |user| [user.full_name, user.id] }
+    end
+
+    def with_role(role_name)
+      role_table = Role.arel_table
+      user_table = User.arel_table
+      join = user_table.join(role_table)
+        .on(user_table[:role_id].eq(role_table[:id]))
+        .join_sources
+      joins(join).where(role_table[:name].eq(role_name))
     end
   end
 
