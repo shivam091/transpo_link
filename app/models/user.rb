@@ -8,6 +8,8 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable, :confirmable, :lockable,
          :recoverable, :rememberable, :validatable, :timeoutable, :trackable
 
+  LAST_ACTIVITY_AT_INTERVAL = 2.minutes.freeze
+
   attr_accessor :password_required
 
   attribute :is_active, default: false
@@ -97,5 +99,12 @@ class User < ApplicationRecord
 
   def password_required?
     !!password_required
+  end
+
+  def track_last_activity!
+    return if new_record?
+    return unless last_activity_at.to_i < (Time.now.utc - LAST_ACTIVITY_AT_INTERVAL).to_i
+
+    update_column(:last_activity_at, Time.now.utc)
   end
 end
