@@ -53,6 +53,10 @@ RSpec.describe User, type: :model do
     it { is_expected.to have_check_constraint("check_users_encrypted_password_presence").with_expression("encrypted_password IS NOT NULL AND encrypted_password::text <> ''::text") }
   end
 
+  describe "constants" do
+    it { expect(described_class).to have_constant(:LAST_ACTIVITY_AT_INTERVAL).with_value(2.minutes) }
+  end
+
   describe "included modules" do
     it { is_expected.to include_module(Toggleable) }
     it { is_expected.to include_module(CaseSensitivity) }
@@ -125,6 +129,94 @@ RSpec.describe User, type: :model do
 
         it { is_expected.not_to validate_presence_of(:password) }
         it { is_expected.not_to validate_confirmation_of(:password) }
+      end
+    end
+  end
+
+  describe "scopes" do
+    let(:admin) { create(:admin, :confirmed, :active) }
+    let(:buyer) { create(:buyer, :confirmed, :active) }
+    let(:supplier) { create(:supplier, :confirmed, :active) }
+
+    describe ".admins" do
+      it "returns array of admins" do
+        expect(admin).to be_one_of(described_class.admins)
+      end
+    end
+
+    describe ".suppliers" do
+      it "returns array of suppliers" do
+        expect(supplier).to be_one_of(described_class.suppliers)
+      end
+    end
+
+    describe ".buyers" do
+      it "returns array of buyers" do
+        expect(buyer).to be_one_of(described_class.buyers)
+      end
+    end
+  end
+
+  describe "class methods" do
+    describe ".select_options" do
+      it "should return array of users for select list" do
+        supplier = create(:supplier, :confirmed, :active)
+        expect(described_class.select_options).to eq([[supplier.full_name, supplier.id]])
+      end
+    end
+
+    describe ".with_role" do
+      let(:buyer) { create(:buyer, :confirmed, :active) }
+
+      it "returns array of users having given role" do
+        expect(buyer).to be_one_of(described_class.with_role("buyer"))
+      end
+    end
+  end
+
+  describe "instance methods" do
+    describe "#track_last_activity!" do
+      let(:user) { create(:admin, last_activity_at: last_activity_time) }
+
+      context "when the user is new (not saved in the database)" do
+        let(:user) { build(:admin) }
+
+        it "does not update last_activity_at" do
+          expect { user.track_last_activity! }.not_to change(user, :last_activity_at)
+        end
+      end
+
+      context "when last_activity_at is nil" do
+        let(:last_activity_time) { nil }
+
+        it "updates last_activity_at to current time" do
+          freeze_time do
+            expect { user.track_last_activity! }
+              .to change { user.reload.last_activity_at }
+              .from(nil).to(Time.now.utc)
+          end
+        end
+      end
+
+      context "when last_activity_at is older than the interval" do
+        let(:last_activity_time) { 5.minutes.ago }
+
+        it "updates last_activity_at to current time" do
+          freeze_time do
+            expect { user.track_last_activity! }
+              .to change { user.reload.last_activity_at }
+              .from(last_activity_time).to(Time.now.utc)
+          end
+        end
+      end
+
+      context "when last_activity_at is within the interval" do
+        let(:last_activity_time) { 1.minute.ago }
+
+        it "does not update last_activity_at" do
+          expect { user.track_last_activity! }
+            .not_to change { user.reload.last_activity_at }
+        end
       end
     end
   end
