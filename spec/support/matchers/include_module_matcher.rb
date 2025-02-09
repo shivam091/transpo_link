@@ -5,7 +5,7 @@
 # Asserts that the module is included within the class.
 #
 # ```
-# RSpec.describe TableName, type: :model do
+# RSpec.describe ModelName, type: :model do
 #   it { is_expected.to include_module(ModuleName) }
 # end
 # ```
