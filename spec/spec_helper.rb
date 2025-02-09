@@ -7,6 +7,7 @@ require "spec_helper"
 ENV["RAILS_ENV"] ||= "test"
 
 require_relative "../config/environment"
+require "active_support/testing/time_helpers"
 
 # Prevent database truncation if the environment is production
 abort("The Rails environment is running in production mode!") if Rails.env.production?
@@ -57,6 +58,7 @@ RSpec.configure do |config|
 
   config.include FactoryBot::Syntax::Methods
   config.include Rails.application.routes.url_helpers
+  config.include ActiveSupport::Testing::TimeHelpers
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.include Devise::Test::ControllerHelpers, type: :view
   config.include Devise::Test::IntegrationHelpers, type: :feature
