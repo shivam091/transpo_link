@@ -3,6 +3,21 @@
 # -*- warn_indent: true -*-
 
 class Address < ApplicationRecord
+
+  validates :address1,
+            presence: true,
+            length: {maximum: 100},
+            reduce: true
+  validates :address2,
+            length: {maximum: 100},
+            allow_blank: true,
+            reduce: true
+  validates :postal_code,
+            length: {maximum: 20},
+            allow_blank: true,
+            reduce: true
+  validates :country, presence: true, reduce: true
+
   belongs_to :addressable, polymorphic: true
 
   def country_data

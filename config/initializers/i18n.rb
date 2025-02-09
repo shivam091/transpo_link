@@ -8,7 +8,7 @@
 TranspoLink::Application.config.i18n.load_path += Dir[Rails.root.join("config", "locales", "**", "*.{rb,yml,yaml}")]
 
 # Whitelist locales available for the application
-TranspoLink::Application.config.i18n.available_locales = %i(en)
+TranspoLink::Application.config.i18n.available_locales = %i(en es)
 
 # Set default locale of the application
 # Rails will fallback to config.i18n.default_locale translation
