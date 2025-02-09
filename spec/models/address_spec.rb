@@ -38,4 +38,23 @@ RSpec.describe Address, type: :model do
   describe "associations" do
     it { is_expected.to belong_to(:addressable) }
   end
+
+  describe "validations" do
+    describe "#address1" do
+      it { is_expected.to validate_presence_of(:address1).with_message("is required") }
+      it { is_expected.to validate_length_of(:address1).is_at_most(100).with_message("is too long (maximum is 100 characters)") }
+    end
+
+    describe "#address2" do
+      it { is_expected.to validate_length_of(:address2).is_at_most(100).allow_blank.with_message("is too long (maximum is 100 characters)") }
+    end
+
+    describe "#postal_code" do
+      it { is_expected.to validate_length_of(:postal_code).is_at_most(20).allow_blank.with_message("is too long (maximum is 20 characters)") }
+    end
+
+    describe "#country" do
+      it { is_expected.to validate_presence_of(:country).with_message("is required") }
+    end
+  end
 end
