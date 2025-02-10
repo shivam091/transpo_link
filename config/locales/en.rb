@@ -298,7 +298,7 @@
         new: {
           title: "Password assistance",
           password_assistance: "Password assistance",
-          password_reset_note: "Enter the email address associated with your Invoika account.",
+          password_reset_note: "Enter the email address associated with your TranspoLink account.",
         },
         edit: {
           title: "Create new password",
