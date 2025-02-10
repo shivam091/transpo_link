@@ -96,7 +96,7 @@ class User < ApplicationRecord
     super.presence || build_address
   end
 
-  def track_last_activity!
+  def update_last_activity_at
     return if new_record?
     return unless last_activity_at.to_i < (Time.now.utc - LAST_ACTIVITY_AT_INTERVAL).to_i
 

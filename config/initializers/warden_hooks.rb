@@ -14,9 +14,9 @@ Warden::Manager.after_set_user except: :fetch do |user, auth, opts|
 end
 
 Warden::Manager.after_fetch do |user, auth, opts|
-  user.track_last_activity!
+  user.update_last_activity_at
 end
 
 Warden::Manager.before_logout do |user, auth, opts|
-  user.track_last_activity!
+  user.update_last_activity_at
 end
