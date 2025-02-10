@@ -9,6 +9,7 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable, :timeoutable, :trackable
 
   LAST_ACTIVITY_AT_INTERVAL = 2.minutes.freeze
+  THROTTLE_RESET_PERIOD = 2.minutes.freeze
 
   attribute :is_active, default: false
   attribute :is_banned, default: false
@@ -101,6 +102,10 @@ class User < ApplicationRecord
     return unless last_activity_at.to_i < (Time.now.utc - LAST_ACTIVITY_AT_INTERVAL).to_i
 
     update_column(:last_activity_at, Time.now.utc)
+  end
+
+  def recently_sent_password_reset_instructions?
+    reset_password_sent_at.present? && reset_password_sent_at >= (Time.current - THROTTLE_RESET_PERIOD)
   end
 
   private

@@ -3,14 +3,16 @@
 # -*- warn_indent: true -*-
 
 class Users::PasswordsController < Devise::PasswordsController
+  before_action :throttle_password_reset, only: :create
+
   # GET /users/password/new
-  # def new
-  #   super
-  # end
+  def new
+    super
+  end
 
   # POST /users/password
   def create
-    resource_class.without_timestamps do
+    User.without_timestamps do
       super
     end
   end
@@ -23,6 +25,21 @@ class Users::PasswordsController < Devise::PasswordsController
   # PUT /users/password
   def update
     super
+  end
+
+  private
+
+  def user_params
+    params.require(:user).permit(:email)
+  end
+
+  def throttle_password_reset
+    self.resource = User.with_email(user_params[:email])
+
+    if user&.recently_sent_password_reset_instructions?
+      flash[:alert] = t(:throttle_reset, scope: translation_scope, count: (User::THROTTLE_RESET_PERIOD / 60))
+      redirect_to new_session_path(resource) and return
+    end
   end
 
   # protected
