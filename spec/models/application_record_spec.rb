@@ -62,7 +62,7 @@ RSpec.describe ApplicationRecord, type: :model do
   end
 
   describe ".safe_find_or_create_by!" do
-    let(:attributes) { { email: "test@example.com" } }
+    let(:attributes) { {email: "test@example.com"} }
 
     context "when the record exists" do
       let!(:existing_user) { DummyModel.create!(attributes) }
@@ -83,7 +83,7 @@ RSpec.describe ApplicationRecord, type: :model do
   end
 
   describe ".safe_find_or_create_by" do
-    let(:attributes) { { email: "test@example.com" } }
+    let(:attributes) { {email: "test@example.com"} }
 
     context "when the record exists" do
       let!(:existing_user) { DummyModel.create!(attributes) }

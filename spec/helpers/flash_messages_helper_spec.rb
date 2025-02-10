@@ -13,7 +13,7 @@ RSpec.describe FlashMessagesHelper, type: :helper do
     end
 
     context "when flash messages are present" do
-      let(:flash_messages) { { notice: "Success!", alert: "Error occurred!", warning: "Be careful!", info: "Just so you know." } }
+      let(:flash_messages) { {notice: "Success!", alert: "Error occurred!", warning: "Be careful!", info: "Just so you know."} }
 
       it "returns the correct HTML for each flash type" do
         result = helper.flash_messages
@@ -44,7 +44,7 @@ RSpec.describe FlashMessagesHelper, type: :helper do
     end
 
     context "when flash message type is not in FLASH_TYPES" do
-      let(:flash_messages) { { unknown: "This should not be displayed." } }
+      let(:flash_messages) { {unknown: "This should not be displayed."} }
 
       it "does not render unknown flash types" do
         expect(helper.flash_messages).not_to include("This should not be displayed.")

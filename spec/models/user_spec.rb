@@ -8,6 +8,7 @@ require "spec_helper"
 
 RSpec.describe User, type: :model do
   subject { build(:admin, :confirmed) }
+  let(:dummy_password) { Rails.application.credentials.config[:TEST_PASSWORD] }
 
   describe "valid factory" do
     it { is_expected.to have_a_valid_factory(:admin) }
@@ -55,6 +56,7 @@ RSpec.describe User, type: :model do
 
   describe "constants" do
     it { expect(described_class).to have_constant(:LAST_ACTIVITY_AT_INTERVAL).with_value(2.minutes) }
+    it { expect(described_class).to have_constant(:THROTTLE_RESET_PERIOD).with_value(2.minutes) }
   end
 
   describe "included modules" do
@@ -134,15 +136,15 @@ RSpec.describe User, type: :model do
       end
 
       context "when password is present and not password_confirmation" do
-        before { allow(subject).to receive(:password).and_return("Test@1234") }
+        before { allow(subject).to receive(:password).and_return(dummy_password) }
         before { allow(subject).to receive(:password_confirmation).and_return("") }
 
         it { is_expected.to be_invalid }
       end
 
       context "when both password and password_confirmation are present" do
-        before { allow(subject).to receive(:password).and_return("Test@1234") }
-        before { allow(subject).to receive(:password_confirmation).and_return("Test@1234") }
+        before { allow(subject).to receive(:password).and_return(dummy_password) }
+        before { allow(subject).to receive(:password_confirmation).and_return(dummy_password) }
 
         it { is_expected.to be_valid }
       end
@@ -243,7 +245,7 @@ RSpec.describe User, type: :model do
         it "updates the password_updated_at timestamp" do
           original_timestamp = user.password_updated_at
 
-          user.update(password: "Test@1234", password_confirmation: "Test@1234")
+          user.update(password: dummy_password, password_confirmation: dummy_password)
           user.reload
 
           expect(user.password_updated_at).to be > original_timestamp
@@ -304,6 +306,10 @@ RSpec.describe User, type: :model do
             .not_to change { user.reload.last_activity_at }
         end
       end
+    end
+
+    describe "#recently_sent_password_reset_instructions?" do
+
     end
   end
 end
