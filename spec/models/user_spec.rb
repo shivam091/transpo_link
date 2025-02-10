@@ -82,6 +82,10 @@ RSpec.describe User, type: :model do
     it { is_expected.to belong_to(:role).inverse_of(:users) }
   end
 
+  describe "callbacks" do
+    it { is_expected.to have_callback(:after, :update, :update_password_updated_at) }
+  end
+
   describe "delegates" do
     it { is_expected.to delegate_method(:name).to(:role).with_prefix }
     it { is_expected.to delegate_method(:full_name).to(:user_detail) }
@@ -175,6 +179,31 @@ RSpec.describe User, type: :model do
   end
 
   describe "instance methods" do
+    describe "#update_password_updated_at" do
+      let(:user) { create(:admin, :confirmed, :active) }
+
+      context "when the password is updated" do
+        it "updates the password_updated_at timestamp" do
+          original_timestamp = user.password_updated_at
+
+          user.update(password: "NewPassword123", password_confirmation: "NewPassword123")
+          user.reload
+
+          expect(user.password_updated_at).to be > original_timestamp
+        end
+      end
+
+      context "when other attributes are updated" do
+        it "does not change the password_updated_at timestamp" do
+          original_timestamp = user.password_updated_at
+
+          user.update(email: "new_email@example.com")
+
+          expect(user.password_updated_at).to eq(original_timestamp)
+        end
+      end
+    end
+
     describe "#track_last_activity!" do
       let(:user) { create(:admin, last_activity_at: last_activity_time) }
 
