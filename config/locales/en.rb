@@ -130,8 +130,7 @@
         unauthenticated: "You need to sign in or sign up before continuing.",
         unconfirmed: "You need to verify your email address before sign in. Please check your inbox and spam folder for mail regarding email verification instructions and if you did not receive the instructions, please click on 'Didn't receive verification instructions' link on below side.",
         suspended: "Your account is suspended. If you believe your account was suspended by mistake, please communicate with administrator for further assistance.",
-        not_found_with_email_address: "We could not find an account with that email address.",
-        not_found_with_email_address_and_password: "We could not find an account with that email address and password.",
+        not_found_in_database: "We could not find an account with that email address.",
       },
       mailer: {
         confirmation_instructions: {
