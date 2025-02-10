@@ -37,6 +37,8 @@ class User < ApplicationRecord
 
   belongs_to :role, inverse_of: :users
 
+  after_update :update_password_updated_at, if: :saved_change_to_encrypted_password?
+
   scope :admins, -> { with_role("admin") }
   scope :suppliers, -> { with_role("supplier") }
   scope :buyers, -> { with_role("buyer") }
@@ -106,5 +108,11 @@ class User < ApplicationRecord
     return unless last_activity_at.to_i < (Time.now.utc - LAST_ACTIVITY_AT_INTERVAL).to_i
 
     update_column(:last_activity_at, Time.now.utc)
+  end
+
+  private
+
+  def update_password_updated_at
+    update_column(:password_updated_at, Time.now.utc)
   end
 end
