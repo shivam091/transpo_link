@@ -16,11 +16,11 @@ Rails.application.routes.draw do
                sign_in: "sign-in", sign_out: "sign-out", sign_up: "sign-up"
              },
              controllers: {
-               sessions: "user/sessions",
-               confirmations: "user/confirmations",
-               passwords: "user/passwords",
-               unlocks: "user/unlocks",
-               registrations: "user/registrations"
+               sessions: "users/sessions",
+               confirmations: "users/confirmations",
+               passwords: "users/passwords",
+               unlocks: "users/unlocks",
+               registrations: "users/registrations"
              }
 
   resource :profile, only: [:show, :edit, :update]

@@ -2,7 +2,7 @@
 # -*- frozen_string_literal: true -*-
 # -*- warn_indent: true -*-
 
-class User::UnlocksController < Devise::UnlocksController
+class Users::UnlocksController < Devise::UnlocksController
   # GET /users/unlock/new
   # def new
   #   super

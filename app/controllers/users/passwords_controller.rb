@@ -2,7 +2,7 @@
 # -*- frozen_string_literal: true -*-
 # -*- warn_indent: true -*-
 
-class User::PasswordsController < Devise::PasswordsController
+class Users::PasswordsController < Devise::PasswordsController
   # GET /users/password/new
   # def new
   #   super
@@ -21,9 +21,9 @@ class User::PasswordsController < Devise::PasswordsController
   # end
 
   # PUT /users/password
-  # def update
-  #   super
-  # end
+  def update
+    super
+  end
 
   # protected
 

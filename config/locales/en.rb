@@ -286,7 +286,7 @@
         }
       },
     },
-    user: {
+    users: {
       sessions: {
         new: {
           title: "Sign in",
