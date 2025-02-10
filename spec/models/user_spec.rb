@@ -7,7 +7,8 @@
 require "spec_helper"
 
 RSpec.describe User, type: :model do
-  subject(:user) { build(:admin, :confirmed) }
+  subject { build(:admin, :confirmed) }
+  let(:dummy_password) { Rails.application.credentials.config[:TEST_PASSWORD] }
 
   describe "valid factory" do
     it { is_expected.to have_a_valid_factory(:admin) }
@@ -53,18 +54,24 @@ RSpec.describe User, type: :model do
     it { is_expected.to have_check_constraint("check_users_encrypted_password_presence").with_expression("encrypted_password IS NOT NULL AND encrypted_password::text <> ''::text") }
   end
 
+  describe "constants" do
+    it { expect(described_class).to have_constant(:LAST_ACTIVITY_AT_INTERVAL).with_value(2.minutes) }
+    it { expect(described_class).to have_constant(:THROTTLE_RESET_PERIOD).with_value(2.minutes) }
+  end
+
   describe "included modules" do
     it { is_expected.to include_module(Toggleable) }
     it { is_expected.to include_module(CaseSensitivity) }
+    it { is_expected.to include_module(WithoutTimestamps) }
   end
 
   describe "default values" do
     it "should set false as default value for #is_banned" do
-      expect(user.is_banned).to be_falsy
+      expect(subject.is_banned).to be_falsy
     end
 
     it "should set false as default value for #is_active" do
-      expect(user.is_active).to be_falsy
+      expect(subject.is_active).to be_falsy
     end
   end
 
@@ -75,6 +82,10 @@ RSpec.describe User, type: :model do
     it { is_expected.to have_many(:request_logs).inverse_of(:user).dependent(:nullify) }
 
     it { is_expected.to belong_to(:role).inverse_of(:users) }
+  end
+
+  describe "callbacks" do
+    it { is_expected.to have_callback(:after, :update, :update_password_updated_at) }
   end
 
   describe "delegates" do
@@ -116,15 +127,189 @@ RSpec.describe User, type: :model do
         it { is_expected.to validate_presence_of(:password).with_message("is required") }
         it { is_expected.to validate_length_of(:password).is_at_least(8).with_message("is too short (minimum is 8 characters)") }
         it { is_expected.to validate_length_of(:password).is_at_most(20).with_message("is too long (maximum is 20 characters)") }
-        it { is_expected.to validate_confirmation_of(:password) }
       end
 
       context "when password is not required" do
         before { allow(subject).to receive(:password_required?).and_return(false) }
 
         it { is_expected.not_to validate_presence_of(:password) }
-        it { is_expected.not_to validate_confirmation_of(:password) }
       end
+
+      context "when password is present and not password_confirmation" do
+        before { allow(subject).to receive(:password).and_return(dummy_password) }
+        before { allow(subject).to receive(:password_confirmation).and_return("") }
+
+        it { is_expected.to be_invalid }
+      end
+
+      context "when both password and password_confirmation are present" do
+        before { allow(subject).to receive(:password).and_return(dummy_password) }
+        before { allow(subject).to receive(:password_confirmation).and_return(dummy_password) }
+
+        it { is_expected.to be_valid }
+      end
+    end
+  end
+
+  describe "scopes" do
+    let(:admin) { create(:admin, :confirmed, :active) }
+    let(:buyer) { create(:buyer, :confirmed, :active) }
+    let(:supplier) { create(:supplier, :confirmed, :active) }
+
+    describe ".admins" do
+      it "returns array of admins" do
+        expect(admin).to be_one_of(described_class.admins)
+      end
+    end
+
+    describe ".suppliers" do
+      it "returns array of suppliers" do
+        expect(supplier).to be_one_of(described_class.suppliers)
+      end
+    end
+
+    describe ".buyers" do
+      it "returns array of buyers" do
+        expect(buyer).to be_one_of(described_class.buyers)
+      end
+    end
+  end
+
+  describe "class methods" do
+    describe ".with_email" do
+      it "returns user with provided email" do
+        admin = create(:admin, :confirmed, :active)
+
+        expect(described_class.with_email("admin@transpo-link.com")).to eq(admin)
+      end
+    end
+
+    describe ".select_options" do
+      it "returns array of users for select list" do
+        supplier = create(:supplier, :confirmed, :active)
+
+        expect(described_class.select_options).to eq([[supplier.full_name, supplier.id]])
+      end
+    end
+
+    describe ".with_role" do
+      it "returns array of users having given role" do
+        buyer = create(:buyer, :confirmed, :active)
+
+        expect(buyer).to be_one_of(described_class.with_role("buyer"))
+      end
+    end
+
+    describe ".find_for_database_authentication" do
+      let!(:existing_user) { create(:admin) }
+
+      it "finds the user with matching email" do
+        found_user = described_class.find_for_database_authentication(email: "admin@transpo-link.com")
+        expect(found_user).to eq(existing_user)
+      end
+
+      it "returns nil if email does not match" do
+        found_user = described_class.find_for_database_authentication(email: "wrong@example.com")
+        expect(found_user).to be_nil
+      end
+
+      it "trims whitespace from email before searching" do
+        found_user = described_class.find_for_database_authentication(email: "  admin@transpo-link.com  ")
+        expect(found_user).to eq(existing_user)
+      end
+
+      it "ignores attributes other than email" do
+        found_user = described_class.find_for_database_authentication(email: "admin@transpo-link.com", is_active: false)
+        expect(found_user).to eq(existing_user)
+      end
+    end
+  end
+
+  describe "instance methods" do
+    describe "#active_for_authentication?" do
+      it "returns true if the user is active" do
+        subject.is_active = true
+        expect(subject.active_for_authentication?).to be_truthy
+      end
+
+      it "returns false if the user is not active" do
+        subject.is_active = false
+        expect(subject.active_for_authentication?).to be_falsey
+      end
+    end
+
+    describe "#update_password_updated_at" do
+      let(:user) { create(:admin, :confirmed, :active) }
+
+      context "when the password is updated" do
+        it "updates the password_updated_at timestamp" do
+          original_timestamp = user.password_updated_at
+
+          user.update(password: dummy_password, password_confirmation: dummy_password)
+          user.reload
+
+          expect(user.password_updated_at).to be > original_timestamp
+        end
+      end
+
+      context "when other attributes are updated" do
+        it "does not change the password_updated_at timestamp" do
+          original_timestamp = user.password_updated_at
+
+          user.update(email: "new_email@example.com")
+
+          expect(user.password_updated_at).to eq(original_timestamp)
+        end
+      end
+    end
+
+    describe "#update_last_activity_at" do
+      let(:user) { create(:admin, last_activity_at: last_activity_time) }
+
+      context "when the user is new (not saved in the database)" do
+        let(:user) { build(:admin) }
+
+        it "does not update last_activity_at" do
+          expect { user.update_last_activity_at }.not_to change(user, :last_activity_at)
+        end
+      end
+
+      context "when last_activity_at is nil" do
+        let(:last_activity_time) { nil }
+
+        it "updates last_activity_at to current time" do
+          freeze_time do
+            expect { user.update_last_activity_at }
+              .to change { user.reload.last_activity_at }
+              .from(nil).to(Time.now.utc)
+          end
+        end
+      end
+
+      context "when last_activity_at is older than the interval" do
+        let(:last_activity_time) { 5.minutes.ago }
+
+        it "updates last_activity_at to current time" do
+          freeze_time do
+            expect { user.update_last_activity_at }
+              .to change { user.reload.last_activity_at }
+              .from(last_activity_time).to(Time.now.utc)
+          end
+        end
+      end
+
+      context "when last_activity_at is within the interval" do
+        let(:last_activity_time) { 1.minute.ago }
+
+        it "does not update last_activity_at" do
+          expect { user.update_last_activity_at }
+            .not_to change { user.reload.last_activity_at }
+        end
+      end
+    end
+
+    describe "#recently_sent_password_reset_instructions?" do
+
     end
   end
 end

@@ -12,3 +12,11 @@ Warden::Manager.after_set_user except: :fetch do |user, auth, opts|
     throw(:warden, message: :suspended)
   end
 end
+
+Warden::Manager.after_fetch do |user, auth, opts|
+  user.update_last_activity_at
+end
+
+Warden::Manager.before_logout do |user, auth, opts|
+  user.update_last_activity_at
+end

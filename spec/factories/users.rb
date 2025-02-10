@@ -6,6 +6,8 @@ FactoryBot.define do
   factory :user do
     password { Rails.application.credentials.config[:TEST_PASSWORD] }
     password_confirmation { Rails.application.credentials.config[:TEST_PASSWORD] }
+    last_activity_at { nil }
+    password_updated_at { DateTime.now }
 
     factory :admin, parent: :user do
       email { "admin@transpo-link.com" }

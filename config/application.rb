@@ -15,5 +15,7 @@ module TranspoLink
     config.load_defaults 8.0
 
     config.autoload_paths += %W(#{config.root}/lib)
+
+    config.encoding = "utf-8"
   end
 end
