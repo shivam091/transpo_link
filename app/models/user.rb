@@ -10,8 +10,6 @@ class User < ApplicationRecord
 
   LAST_ACTIVITY_AT_INTERVAL = 2.minutes.freeze
 
-  attr_accessor :password_required
-
   attribute :is_active, default: false
   attribute :is_banned, default: false
 
@@ -25,7 +23,6 @@ class User < ApplicationRecord
             presence: true,
             password: true,
             length: {in: 8..20},
-            confirmation: {case_sensitive: true},
             reduce: true,
             if: :password_required?
 
@@ -97,10 +94,6 @@ class User < ApplicationRecord
 
   def address
     super.presence || build_address
-  end
-
-  def password_required?
-    !!password_required
   end
 
   def track_last_activity!
