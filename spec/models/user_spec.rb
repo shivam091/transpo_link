@@ -7,7 +7,7 @@
 require "spec_helper"
 
 RSpec.describe User, type: :model do
-  subject(:user) { build(:admin, :confirmed) }
+  subject { build(:admin, :confirmed) }
 
   describe "valid factory" do
     it { is_expected.to have_a_valid_factory(:admin) }
@@ -65,11 +65,11 @@ RSpec.describe User, type: :model do
 
   describe "default values" do
     it "should set false as default value for #is_banned" do
-      expect(user.is_banned).to be_falsy
+      expect(subject.is_banned).to be_falsy
     end
 
     it "should set false as default value for #is_active" do
-      expect(user.is_active).to be_falsy
+      expect(subject.is_active).to be_falsy
     end
   end
 
@@ -125,14 +125,26 @@ RSpec.describe User, type: :model do
         it { is_expected.to validate_presence_of(:password).with_message("is required") }
         it { is_expected.to validate_length_of(:password).is_at_least(8).with_message("is too short (minimum is 8 characters)") }
         it { is_expected.to validate_length_of(:password).is_at_most(20).with_message("is too long (maximum is 20 characters)") }
-        it { is_expected.to validate_confirmation_of(:password) }
       end
 
       context "when password is not required" do
         before { allow(subject).to receive(:password_required?).and_return(false) }
 
         it { is_expected.not_to validate_presence_of(:password) }
-        it { is_expected.not_to validate_confirmation_of(:password) }
+      end
+
+      context "when password is present and not password_confirmation" do
+        before { allow(subject).to receive(:password).and_return("Test@1234") }
+        before { allow(subject).to receive(:password_confirmation).and_return("") }
+
+        it { is_expected.to be_invalid }
+      end
+
+      context "when both password and password_confirmation are present" do
+        before { allow(subject).to receive(:password).and_return("Test@1234") }
+        before { allow(subject).to receive(:password_confirmation).and_return("Test@1234") }
+
+        it { is_expected.to be_valid }
       end
     end
   end
@@ -162,23 +174,68 @@ RSpec.describe User, type: :model do
   end
 
   describe "class methods" do
+    describe ".with_email" do
+      it "returns user with provided email" do
+        admin = create(:admin, :confirmed, :active)
+
+        expect(described_class.with_email("admin@transpo-link.com")).to eq(admin)
+      end
+    end
+
     describe ".select_options" do
-      it "should return array of users for select list" do
+      it "returns array of users for select list" do
         supplier = create(:supplier, :confirmed, :active)
+
         expect(described_class.select_options).to eq([[supplier.full_name, supplier.id]])
       end
     end
 
     describe ".with_role" do
-      let(:buyer) { create(:buyer, :confirmed, :active) }
-
       it "returns array of users having given role" do
+        buyer = create(:buyer, :confirmed, :active)
+
         expect(buyer).to be_one_of(described_class.with_role("buyer"))
+      end
+    end
+
+    describe ".find_for_database_authentication" do
+      let!(:existing_user) { create(:admin) }
+
+      it "finds the user with matching email" do
+        found_user = described_class.find_for_database_authentication(email: "admin@transpo-link.com")
+        expect(found_user).to eq(existing_user)
+      end
+
+      it "returns nil if email does not match" do
+        found_user = described_class.find_for_database_authentication(email: "wrong@example.com")
+        expect(found_user).to be_nil
+      end
+
+      it "trims whitespace from email before searching" do
+        found_user = described_class.find_for_database_authentication(email: "  admin@transpo-link.com  ")
+        expect(found_user).to eq(existing_user)
+      end
+
+      it "ignores attributes other than email" do
+        found_user = described_class.find_for_database_authentication(email: "admin@transpo-link.com", is_active: false)
+        expect(found_user).to eq(existing_user)
       end
     end
   end
 
   describe "instance methods" do
+    describe "#active_for_authentication?" do
+      it "returns true if the user is active" do
+        subject.is_active = true
+        expect(subject.active_for_authentication?).to be_truthy
+      end
+
+      it "returns false if the user is not active" do
+        subject.is_active = false
+        expect(subject.active_for_authentication?).to be_falsey
+      end
+    end
+
     describe "#update_password_updated_at" do
       let(:user) { create(:admin, :confirmed, :active) }
 
@@ -186,7 +243,7 @@ RSpec.describe User, type: :model do
         it "updates the password_updated_at timestamp" do
           original_timestamp = user.password_updated_at
 
-          user.update(password: "NewPassword123", password_confirmation: "NewPassword123")
+          user.update(password: "Test@1234", password_confirmation: "Test@1234")
           user.reload
 
           expect(user.password_updated_at).to be > original_timestamp
@@ -204,14 +261,14 @@ RSpec.describe User, type: :model do
       end
     end
 
-    describe "#track_last_activity!" do
+    describe "#update_last_activity_at" do
       let(:user) { create(:admin, last_activity_at: last_activity_time) }
 
       context "when the user is new (not saved in the database)" do
         let(:user) { build(:admin) }
 
         it "does not update last_activity_at" do
-          expect { user.track_last_activity! }.not_to change(user, :last_activity_at)
+          expect { user.update_last_activity_at }.not_to change(user, :last_activity_at)
         end
       end
 
@@ -220,7 +277,7 @@ RSpec.describe User, type: :model do
 
         it "updates last_activity_at to current time" do
           freeze_time do
-            expect { user.track_last_activity! }
+            expect { user.update_last_activity_at }
               .to change { user.reload.last_activity_at }
               .from(nil).to(Time.now.utc)
           end
@@ -232,7 +289,7 @@ RSpec.describe User, type: :model do
 
         it "updates last_activity_at to current time" do
           freeze_time do
-            expect { user.track_last_activity! }
+            expect { user.update_last_activity_at }
               .to change { user.reload.last_activity_at }
               .from(last_activity_time).to(Time.now.utc)
           end
@@ -243,7 +300,7 @@ RSpec.describe User, type: :model do
         let(:last_activity_time) { 1.minute.ago }
 
         it "does not update last_activity_at" do
-          expect { user.track_last_activity! }
+          expect { user.update_last_activity_at }
             .not_to change { user.reload.last_activity_at }
         end
       end
