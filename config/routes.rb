@@ -8,8 +8,8 @@ Rails.application.routes.draw do
   favicon_redirect = redirect do |_params, _request|
     ActionController::Base.helpers.asset_url(TranspoLink::Favicon.main)
   end
-  get "favicon.png", to: favicon_redirect
-  get "favicon.ico", to: favicon_redirect
+  get "favicon.png", to: favicon_redirect, as: :favicon_png
+  get "favicon.ico", to: favicon_redirect, as: :favicon_ico
 
   devise_for :users,
              path_names: {
