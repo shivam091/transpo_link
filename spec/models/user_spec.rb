@@ -7,7 +7,7 @@
 require "spec_helper"
 
 RSpec.describe User, type: :model do
-  subject { build(:admin, :confirmed) }
+  subject { create(:admin, :confirmed) }
   let(:dummy_password) { Rails.application.credentials.config[:TEST_PASSWORD] }
 
   describe "valid factory" do
@@ -239,26 +239,24 @@ RSpec.describe User, type: :model do
     end
 
     describe "#update_password_updated_at" do
-      let(:user) { create(:admin, :confirmed, :active) }
-
       context "when the password is updated" do
         it "updates the password_updated_at timestamp" do
-          original_timestamp = user.password_updated_at
+          original_timestamp = subject.password_updated_at
 
-          user.update(password: dummy_password, password_confirmation: dummy_password)
-          user.reload
+          subject.update(password: dummy_password, password_confirmation: dummy_password)
+          subject.reload
 
-          expect(user.password_updated_at).to be > original_timestamp
+          expect(subject.password_updated_at).to be > original_timestamp
         end
       end
 
       context "when other attributes are updated" do
         it "does not change the password_updated_at timestamp" do
-          original_timestamp = user.password_updated_at
+          original_timestamp = subject.password_updated_at
 
-          user.update(email: "new_email@example.com")
+          subject.update(email: "new_email@example.com")
 
-          expect(user.password_updated_at).to eq(original_timestamp)
+          expect(subject.password_updated_at).to eq(original_timestamp)
         end
       end
     end
@@ -309,7 +307,26 @@ RSpec.describe User, type: :model do
     end
 
     describe "#recently_sent_password_reset_instructions?" do
+      context "when reset_password_sent_at is nil" do
+        it "returns false" do
+          subject.reset_password_sent_at = nil
+          expect(subject.recently_sent_password_reset_instructions?).to be_falsey
+        end
+      end
 
+      context "when reset_password_sent_at is older than the throttle period" do
+        it "returns false" do
+          subject.reset_password_sent_at = 3.minutes.ago
+          expect(subject.recently_sent_password_reset_instructions?).to be_falsey
+        end
+      end
+
+      context "when reset_password_sent_at is within the throttle period" do
+        it "returns true" do
+          subject.reset_password_sent_at = 1.minute.ago
+          expect(subject.recently_sent_password_reset_instructions?).to be_truthy
+        end
+      end
     end
   end
 end
