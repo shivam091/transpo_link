@@ -95,18 +95,84 @@ RSpec.describe "Users::Sessions", type: :request do
         expect(response).to have_http_status(:ok)
       end
     end
+
+    context "when user is deactivated" do
+      it "does not allow deactivated user to sign in" do
+        user.toggle!(:is_active)
+
+        post user_session_path, params: {user: {email: user.email, password: dummy_password}}
+
+        expect(response).to redirect_to(new_user_session_path)
+        follow_redirect!
+        expect(flash[:alert]).to eq("Your account is not activated yet.")
+        expect(response).to have_http_status(:ok)
+      end
+    end
+
+    context "when user is already logged in" do
+      before { sign_in(user) }
+
+      it "redirects to root path if user is already signed in" do
+        get new_user_session_path
+
+        expect(response).to redirect_to(root_path)
+        follow_redirect!
+        expect(flash[:alert]).to eq("You are already signed in.")
+        expect(response).to have_http_status(:ok)
+      end
+    end
   end
 
   describe "DELETE /users/sign-out" do
     before { sign_in(user) }
 
-    it "signs out the user and redirects to sign-in page" do
-      delete destroy_user_session_path
+    context "when user is not signed out" do
+      it "signs out the user and redirects to sign-in page" do
+        delete destroy_user_session_path
 
-      expect(response).to redirect_to(new_user_session_path)
-      follow_redirect!
-      expect(flash[:notice]).to eq("You are successfully signed out.")
-      expect(response).to have_http_status(:ok)
+        expect(response).to redirect_to(new_user_session_path)
+        follow_redirect!
+        expect(flash[:notice]).to eq("You are successfully signed out.")
+        expect(response).to have_http_status(:ok)
+      end
     end
+
+    context "when user is already signed out" do
+      it "handles multiple sign-out attempts gracefully" do
+        sign_out(user)
+
+        delete destroy_user_session_path
+
+        expect(response).to redirect_to(new_user_session_path)
+        follow_redirect!
+        expect(flash[:notice]).to eq("You are already signed out of your account. Please sign in again.")
+        expect(response).to have_http_status(:ok)
+      end
+    end
+  end
+
+  describe "Session timeout" do
+    before { sign_in(user) }
+
+    context "when session has not timed out" do
+      it "keeps the user signed in" do
+        get root_path
+
+        expect(response).to have_http_status(:ok)
+      end
+    end
+
+    # context "when session has timed out" do
+    #   it "logs out the user after timeout" do
+    #     travel_to((Devise.timeout_in + 30.minute).from_now) do
+    #       get root_path
+    #
+    #       expect(response).to redirect_to(new_user_session_path)
+    #       follow_redirect!
+    #       expect(flash[:alert]).to include("Unfortunately your session is expired due to inactivity for a long time. Please sign in again to pickup from where you left off.")
+    #       expect(response).to have_http_status(:found)
+    #     end
+    #   end
+    # end
   end
 end
