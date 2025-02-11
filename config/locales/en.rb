@@ -304,7 +304,7 @@
           title: "Create new password",
           create_new_password: "Create new password",
           you_will_be_asked_for_new_password: "We'll ask for this password whenever you sign in.",
-          after_password_reset_redirect_note: "After a successful password update, you will be redirected to the login page where you can log in with your new password.",
+          after_password_reset_redirect_note: "After a successful password update, you will be redirected to the sign in page where you can use your new password.",
         }
       },
     },
