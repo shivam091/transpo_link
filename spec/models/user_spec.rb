@@ -49,9 +49,9 @@ RSpec.describe User, type: :model do
 
     it { is_expected.to have_foreign_key(:role_id).with_name(:fk_users_role_id_on_roles).on_delete(:restrict) }
 
-    it { is_expected.to have_check_constraint("check_users_email_presence").with_expression("email IS NOT NULL AND email::text <> ''::text") }
-    it { is_expected.to have_check_constraint("check_users_email_length").with_expression("char_length(email::text) <= 55 AND char_length(email::text) >= 2") }
-    it { is_expected.to have_check_constraint("check_users_encrypted_password_presence").with_expression("encrypted_password IS NOT NULL AND encrypted_password::text <> ''::text") }
+    it { is_expected.to have_check_constraint(:check_users_email_presence).with_expression("email IS NOT NULL AND email::text <> ''::text") }
+    it { is_expected.to have_check_constraint(:check_users_email_length).with_expression("char_length(email::text) <= 55 AND char_length(email::text) >= 2") }
+    it { is_expected.to have_check_constraint(:check_users_encrypted_password_presence).with_expression("encrypted_password IS NOT NULL AND encrypted_password::text <> ''::text") }
   end
 
   describe "constants" do
