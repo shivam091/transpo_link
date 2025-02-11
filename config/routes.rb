@@ -8,19 +8,19 @@ Rails.application.routes.draw do
   favicon_redirect = redirect do |_params, _request|
     ActionController::Base.helpers.asset_url(TranspoLink::Favicon.main)
   end
-  get "favicon.png", to: favicon_redirect
-  get "favicon.ico", to: favicon_redirect
+  get "favicon.png", to: favicon_redirect, as: :favicon_png
+  get "favicon.ico", to: favicon_redirect, as: :favicon_ico
 
   devise_for :users,
              path_names: {
                sign_in: "sign-in", sign_out: "sign-out", sign_up: "sign-up"
              },
              controllers: {
-               sessions: "user/sessions",
-               confirmations: "user/confirmations",
-               passwords: "user/passwords",
-               unlocks: "user/unlocks",
-               registrations: "user/registrations"
+               sessions: "users/sessions",
+               confirmations: "users/confirmations",
+               passwords: "users/passwords",
+               unlocks: "users/unlocks",
+               registrations: "users/registrations"
              }
 
   resource :profile, only: [:show, :edit, :update]

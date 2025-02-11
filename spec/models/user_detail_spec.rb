@@ -38,7 +38,7 @@ RSpec.describe UserDetail, type: :model do
   end
 
   describe "associations" do
-    it { is_expected.to belong_to(:user).inverse_of(:user_detail) }
+    it { is_expected.to belong_to(:user).inverse_of(:user_detail).touch }
   end
 
   describe "validations" do

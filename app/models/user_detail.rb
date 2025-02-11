@@ -14,7 +14,7 @@ class UserDetail < ApplicationRecord
             allow_blank: true,
             reduce: true
 
-  belongs_to :user, inverse_of: :user_detail
+  belongs_to :user, inverse_of: :user_detail, touch: true
 
   def full_name
     "#{try(:first_name)} #{try(:last_name)}"

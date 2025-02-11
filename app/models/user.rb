@@ -3,12 +3,13 @@
 # -*- warn_indent: true -*-
 
 class User < ApplicationRecord
-  include Toggleable, CaseSensitivity
+  include Toggleable, CaseSensitivity, WithoutTimestamps
 
   devise :database_authenticatable, :registerable, :confirmable, :lockable,
          :recoverable, :rememberable, :validatable, :timeoutable, :trackable
 
-  attr_accessor :password_required
+  LAST_ACTIVITY_AT_INTERVAL = 2.minutes.freeze
+  THROTTLE_RESET_PERIOD = 2.minutes.freeze
 
   attribute :is_active, default: false
   attribute :is_banned, default: false
@@ -23,7 +24,6 @@ class User < ApplicationRecord
             presence: true,
             password: true,
             length: {in: 8..20},
-            confirmation: {case_sensitive: true},
             reduce: true,
             if: :password_required?
 
@@ -34,6 +34,12 @@ class User < ApplicationRecord
   has_many :request_logs, inverse_of: :user, dependent: :nullify
 
   belongs_to :role, inverse_of: :users
+
+  after_update :update_password_updated_at, if: :saved_change_to_encrypted_password?
+
+  scope :admins, -> { with_role("admin") }
+  scope :suppliers, -> { with_role("supplier") }
+  scope :buyers, -> { with_role("buyer") }
 
   delegate :name, to: :role, prefix: true
   delegate :first_name, :last_name, :full_name, :mobile_number,
@@ -60,6 +66,19 @@ class User < ApplicationRecord
       email = conditions.delete(:email)
       where(conditions).with_email(email)
     end
+
+    def select_options
+      all.collect { |user| [user.full_name, user.id] }
+    end
+
+    def with_role(role_name)
+      role_table = Role.arel_table
+      user_table = User.arel_table
+      join = user_table.join(role_table)
+        .on(user_table[:role_id].eq(role_table[:id]))
+        .join_sources
+      joins(join).where(role_table[:name].eq(role_name))
+    end
   end
 
   def active_for_authentication?
@@ -78,7 +97,20 @@ class User < ApplicationRecord
     super.presence || build_address
   end
 
-  def password_required?
-    !!password_required
+  def update_last_activity_at
+    return if new_record?
+    return unless last_activity_at.to_i < (Time.now.utc - LAST_ACTIVITY_AT_INTERVAL).to_i
+
+    update_column(:last_activity_at, Time.now.utc)
+  end
+
+  def recently_sent_password_reset_instructions?
+    reset_password_sent_at.present? && reset_password_sent_at >= (Time.current - THROTTLE_RESET_PERIOD)
+  end
+
+  private
+
+  def update_password_updated_at
+    update_column(:password_updated_at, Time.now.utc)
   end
 end

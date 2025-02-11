@@ -18,7 +18,7 @@ class Address < ApplicationRecord
             reduce: true
   validates :country, presence: true, reduce: true
 
-  belongs_to :addressable, polymorphic: true
+  belongs_to :addressable, polymorphic: true, touch: true
 
   def country_data
     ISO3166::Country[country]

@@ -36,7 +36,7 @@ RSpec.describe Address, type: :model do
   end
 
   describe "associations" do
-    it { is_expected.to belong_to(:addressable) }
+    it { is_expected.to belong_to(:addressable).touch }
   end
 
   describe "validations" do

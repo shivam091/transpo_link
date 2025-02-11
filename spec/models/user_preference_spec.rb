@@ -54,7 +54,7 @@ RSpec.describe UserPreference, type: :model do
   end
 
   describe "associations" do
-    it { is_expected.to belong_to(:user).inverse_of(:user_preference) }
+    it { is_expected.to belong_to(:user).inverse_of(:user_preference).touch }
   end
 
   describe "validations" do
