@@ -1,7 +1,7 @@
 .row
   .col-sm-12.col-md-6.col-lg-4.mb-3
     = form.label :preferred_locale, class: "form-label required"
-    = form.select :preferred_locale, options_for_select(selectable_locales_with_translation_level(2), form.object.preferred_locale),
+    = form.select :preferred_locale, options_for_select(TranspoLink::I18n.options_for_languages, form.object.preferred_locale),
       {include_blank: t(".select_preferred_language")}, {class: "form-select"}
   .col-sm-12.col-md-6.col-lg-4.mb-3
     = form.label :preferred_time_zone, class: "form-label required"
