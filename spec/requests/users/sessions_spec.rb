@@ -47,7 +47,7 @@ RSpec.describe "Users::Sessions", type: :request do
       it "does not sign in the user and re-renders the sign-in page" do
         post user_session_path, params: {user: {email: user.email, password: "WrongPassword"}}
 
-        expect(flash[:alert]).to eq("It looks like your email and password combination isn't quite right, please try again.")
+        expect(flash[:alert]).to eq("It looks like your email address and password combination isn't quite right, please try again.")
         expect(response).to have_http_status(:unprocessable_entity)
       end
     end
@@ -145,7 +145,7 @@ RSpec.describe "Users::Sessions", type: :request do
 
         expect(response).to redirect_to(new_user_session_path)
         follow_redirect!
-        expect(flash[:notice]).to eq("You are already signed out of your account. Please sign in again.")
+        expect(flash[:notice]).to eq("You are already signed out of your account.")
         expect(response).to have_http_status(:ok)
       end
     end

@@ -123,11 +123,11 @@
       failure: {
         already_authenticated: "You are already signed in.",
         inactive: "Your account is not activated yet.",
-        invalid: "It looks like your email and password combination isn't quite right, please try again.",
+        invalid: "It looks like your email address and password combination isn't quite right, please try again.",
         locked: "Your account is locked either due to excessive failed attempts. Please communicate with administrator for further assistance.",
         last_attempt: "You have left one more attempt and your account access will be locked if this attempt is failed.",
         timeout: "Unfortunately your session is expired due to inactivity for a long time. Please sign in again to pickup from where you left off.",
-        unauthenticated: "You need to sign in or sign up before continuing.",
+        unauthenticated: "You need to sign in before continuing.",
         unconfirmed: "You need to verify your email address before sign in. Please check your inbox and spam folder for mail regarding email verification instructions and if you did not receive the instructions, please click on 'Didn't receive verification instructions' link on below side.",
         suspended: "Your account is suspended. If you believe your account was suspended by mistake, please communicate with administrator for further assistance.",
         not_found_in_database: "We could not find an account with that email address.",
@@ -180,7 +180,7 @@
       sessions: {
         signed_in: "Hi %{user_name}, welcome to TranspoLink!",
         signed_out: "You are successfully signed out.",
-        already_signed_out: "You are already signed out of your account. Please sign in again.",
+        already_signed_out: "You are already signed out of your account.",
         missing_email_or_password: "Please enter your email and password",
       },
       unlocks: {
