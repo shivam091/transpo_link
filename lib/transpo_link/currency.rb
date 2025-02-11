@@ -6,8 +6,6 @@ module TranspoLink
   module Currency
     extend self
 
-    include ActionView::Helpers::FormOptionsHelper
-
     def formatted_currency(currency)
       currency_obj = Money::Currency.new(currency)
 
@@ -16,13 +14,10 @@ module TranspoLink
       nil
     end
 
-    def currency_options(selected_currency = nil)
-      options_for_select(
-        Money::Currency.all.collect do |currency|
-          [formatted_currency(currency), currency.id.upcase.to_s]
-        end,
-        selected_currency
-      )
+    def options_for_currencies
+      Money::Currency.all.collect do |currency|
+        [formatted_currency(currency), currency.id.upcase.to_s]
+      end
     end
   end
 end

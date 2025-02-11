@@ -5,11 +5,11 @@
       {include_blank: t(".select_preferred_language")}, {class: "form-select"}
   .col-sm-12.col-md-6.col-lg-4.mb-3
     = form.label :preferred_time_zone, class: "form-label required"
-    = form.select :preferred_time_zone, TranspoLink::TimeZone.time_zone_options(form.object.preferred_time_zone),
+    = form.select :preferred_time_zone, options_for_select(TranspoLink::TimeZone.options_for_time_zones, form.object.preferred_time_zone),
       {include_blank: t(".select_time_zone")}, {class: "form-select"}
   .col-sm-12.col-md-6.col-lg-4.mb-3
     = form.label :preferred_currency, class: "form-label required"
-    = form.select :preferred_currency, TranspoLink::Currency.currency_options(form.object.preferred_currency),
+    = form.select :preferred_currency, options_for_select(TranspoLink::Currency.options_for_currencies, form.object.preferred_currency),
       {include_blank: t(".select_currency")}, {class: "form-select"}
   .col-sm-12.col-md-6.col-lg-4.mb-3
     = form.label :preferred_color_scheme, class: "form-label required"
