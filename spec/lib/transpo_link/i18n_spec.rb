@@ -152,22 +152,42 @@ RSpec.describe TranspoLink::I18n do
 
   describe ".day_name" do
     it "returns the full name of the day" do
-      allow(I18n).to receive(:t).with("date.day_names").and_return(%w[Sunday Monday Tuesday Wednesday Thursday Friday Saturday])
       expect(described_class.day_name(1)).to eq("Monday")
     end
   end
 
   describe ".day_letter" do
     it "returns the first letter of the abbreviated day name" do
-      allow(I18n).to receive(:t).with("date.abbr_day_names").and_return(%w[Sun Mon Tue Wed Thu Fri Sat])
       expect(described_class.day_letter(2)).to eq("T")
     end
   end
 
   describe ".month_name" do
     it "returns the full name of the month" do
-      allow(I18n).to receive(:t).with("date.month_names").and_return([nil, "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"])
       expect(described_class.month_name(3)).to eq("March")
+    end
+  end
+
+  describe "#options_for_languages" do
+    before do
+      allow(TranspoLink::I18n).to receive(:selectable_locales).and_return({
+        en: "English",
+        es: "Spanish - Español"
+      })
+      allow(TranspoLink::I18n).to receive(:percentage_translated_for).with(:en).and_return(100)
+      allow(TranspoLink::I18n).to receive(:percentage_translated_for).with(:es).and_return(10)
+    end
+
+    it "returns locales that meet the translation threshold with formatted strings" do
+      expect(I18n).to receive(:t).with("preferences.preference_form.language_translation_percentage", locale: :en).and_return("%{language} (%{percent_translated} translated)")
+      expect(I18n).to receive(:t).with("preferences.preference_form.language_translation_percentage", locale: :es).and_return("%{language} (%{percent_translated} translated)")
+
+      result = described_class.options_for_languages
+
+      expect(result).to eq([
+        ["English (100% translated)", :en],
+        ["Spanish - Español (10% translated)", :es]
+      ])
     end
   end
 end

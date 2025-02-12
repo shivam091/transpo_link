@@ -11,24 +11,24 @@ RSpec.describe "Profiles", type: :request do
     describe "GET /profile" do
       subject { get profile_path }
 
-      it { is_expected.to require_login }
+      it { is_expected.to require_sign_in }
     end
 
     describe "GET /profile/edit" do
       subject { get edit_profile_path }
 
-      it { is_expected.to require_login }
+      it { is_expected.to require_sign_in }
     end
 
     describe "PUT|PATCH /profile" do
       subject { put profile_path }
 
-      it { is_expected.to require_login }
+      it { is_expected.to require_sign_in }
     end
   end
 
   context "when user is logged in" do
-    include_context "login as admin"
+    include_context "sign in as admin"
 
     describe "GET /profile" do
       before { get profile_path }

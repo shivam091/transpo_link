@@ -7,12 +7,11 @@
     = form.text_field :address2, class: "form-control"
   .col-sm-12.col-md-6.col-lg-4.mb-3
     = form.label :country, class: "form-label required"
-    = form.select :country, options_for_select(ISO3166::Country.translations(I18n.locale).collect { |iso_code, name| [name, iso_code] }, form.object.country),
-        {include_blank: t(".select_country")}, {class: "form-select"}
+    = form.select :country, options_for_select(TranspoLink::CountryInfo.options_for_countries, form.object.country),
+      {include_blank: t(".select_country")}, {class: "form-select"}
   .col-sm-12.col-md-6.col-lg-4.mb-3
     = form.label :state, class: "form-label"
-    - selected_state = form.object.country_data.subdivisions[form.object.state].code
-    = form.select :state, options_for_select(form.object.country_data.subdivisions.collect { |code, obj| [obj.translations[I18n.locale.to_s], code] }, selected_state),
+    = form.select :state, options_for_select(TranspoLink::CountryInfo.new(form.object.country).options_for_subdivisions, form.object.state),
       {include_blank: t(".select_state")}, {class: "form-select"}
   .col-sm-12.col-md-6.col-lg-4.mb-3
     = form.label :city, class: "form-label"

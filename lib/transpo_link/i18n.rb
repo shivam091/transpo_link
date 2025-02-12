@@ -91,5 +91,17 @@ module TranspoLink
     def month_name(month)
       ::I18n.t("date.month_names")[month]
     end
+
+    def options_for_languages
+      selectable_locales(MINIMUM_TRANSLATION_LEVEL).map do |locale, language|
+        [
+          ::I18n.t("preferences.preference_form.language_translation_percentage", locale: locale) % {
+            language: language,
+            percent_translated: "#{percentage_translated_for(locale)}%"
+          },
+          locale
+        ]
+      end
+    end
   end
 end
