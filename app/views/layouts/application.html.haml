@@ -25,3 +25,4 @@
       = yield
     .clearfix
     = render_if_exists("layouts/application/footer")
+    = turbo_frame_tag :remote_modal, target: :_top
