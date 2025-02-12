@@ -20,10 +20,14 @@ class ProfilesController < ApplicationController
       redirect_to profile_path, status: :see_other
     else
       flash.now[:alert] = response.message
-      render turbo_stream: [
-        turbo_stream.update(:profile_form, partial: "profiles/form"),
-        render_flash
-      ], status: :unprocessable_entity
+      respond_to do |format|
+        format.turbo_stream do
+          render turbo_stream: [
+            turbo_stream.update(:profile_form, partial: "profiles/form"),
+            render_flash
+          ], status: :unprocessable_entity
+        end
+      end
     end
   end
 

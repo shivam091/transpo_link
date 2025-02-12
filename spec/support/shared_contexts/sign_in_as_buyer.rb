@@ -2,7 +2,7 @@
 # -*- frozen_string_literal: true -*-
 # -*- warn_indent: true -*-
 
-RSpec.shared_context "login as buyer" do
+RSpec.shared_context "sign in as buyer" do
   let(:buyer) { create(:buyer, :active, :confirmed, :with_address) }
 
   before do

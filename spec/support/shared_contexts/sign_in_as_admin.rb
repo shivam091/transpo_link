@@ -2,7 +2,7 @@
 # -*- frozen_string_literal: true -*-
 # -*- warn_indent: true -*-
 
-RSpec.shared_context "login as admin" do
+RSpec.shared_context "sign in as admin" do
   let(:admin) { create(:admin, :active, :confirmed, :with_address) }
 
   before do

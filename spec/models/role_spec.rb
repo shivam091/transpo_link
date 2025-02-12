@@ -26,8 +26,8 @@ RSpec.describe Role, type: :model do
 
     it { is_expected.to have_db_index(:name).unique(true) }
 
-    it { is_expected.to have_check_constraint("check_roles_name_length").with_expression("char_length(name::text) <= 55 AND char_length(name::text) >= 2") }
-    it { is_expected.to have_check_constraint("check_roles_name_presence").with_expression("name IS NOT NULL AND name::text <> ''::text") }
+    it { is_expected.to have_check_constraint(:check_roles_name_length).with_expression("char_length(name::text) <= 55 AND char_length(name::text) >= 2") }
+    it { is_expected.to have_check_constraint(:check_roles_name_presence).with_expression("name IS NOT NULL AND name::text <> ''::text") }
   end
 
   describe "default values" do
