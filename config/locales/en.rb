@@ -283,8 +283,14 @@
         update: {
           success: "Your preferences were successfully updated.",
           error: "Your preferences could not be updated."
-        }
+        },
       },
+      locales: {
+        update: {
+          success: "You've updated your language. Your change might take a while to show everywhere.",
+          error: "Your language could not be updated."
+        },
+      }
     },
     users: {
       sessions: {
