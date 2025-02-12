@@ -26,6 +26,7 @@
           remember_me: "Keep me signed in",
           is_banned: "Is banned",
           is_active: "Is active",
+          role_id: "Role",
         },
         user_detail: {
           user_id: "User",
@@ -114,6 +115,7 @@
       edit: "Edit",
       cancel: "Cancel",
       update: "Update",
+      delete: "Delete",
     },
     devise: {
       confirmations: {
@@ -220,7 +222,6 @@
         },
       },
       application: {
-
         top_menu: {
           change_to_dark_mode: "Change to dark mode",
           change_to_light_mode: "Change to light mode",
@@ -309,6 +310,13 @@
           after_password_reset_redirect_note: "After a successful password update, you will be redirected to the sign in page where you can use your new password.",
         }
       },
+      index: {
+        title: "Users",
+      },
+      user: {
+        actions: "Actions",
+        no_users_to_display: "No users to display",
+      }
     },
     dashboards: {
       show: {
