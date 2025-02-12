@@ -11,24 +11,24 @@ RSpec.describe "Preferences", type: :request do
     describe "GET /preference" do
       subject { get preference_path }
 
-      it { is_expected.to require_login }
+      it { is_expected.to require_sign_in }
     end
 
     describe "GET /preference/edit" do
       subject { get edit_preference_path }
 
-      it { is_expected.to require_login }
+      it { is_expected.to require_sign_in }
     end
 
     describe "PUT|PATCH /preference" do
       subject { put preference_path }
 
-      it { is_expected.to require_login }
+      it { is_expected.to require_sign_in }
     end
   end
 
   context "when user is logged in" do
-    include_context "login as admin"
+    include_context "sign in as admin"
 
     describe "GET /preference" do
       it "renders preference page" do

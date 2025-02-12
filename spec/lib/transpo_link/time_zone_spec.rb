@@ -23,15 +23,10 @@ RSpec.describe TranspoLink::TimeZone do
     end
   end
 
-  describe ".time_zone_options" do
+  describe ".options_for_time_zones" do
     it "returns a collection of formatted time zones" do
-      options = described_class.time_zone_options
-      expect(options).to include("<option value=\"Etc/GMT+12\">(GMT -12:00) International Date Line West</option>")
-    end
-
-    it "preselects the given time zone" do
-      options = described_class.time_zone_options("Etc/GMT+12")
-      expect(options).to include("<option selected=\"selected\" value=\"Etc/GMT+12\">(GMT -12:00) International Date Line West</option>")
+      options = described_class.options_for_time_zones
+      expect(options).to include(["(GMT +05:30) Mumbai", "Asia/Kolkata"])
     end
   end
 

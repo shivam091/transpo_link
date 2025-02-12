@@ -20,16 +20,12 @@ class Address < ApplicationRecord
 
   belongs_to :addressable, polymorphic: true, touch: true
 
-  def country_data
-    ISO3166::Country[country]
-  end
-
   def state_name
-    country_data.subdivisions[state].name if state.present?
+    TranspoLink::CountryInfo.new(country, state).subdivision_name
   end
 
   def country_name
-    country_data.common_name
+    TranspoLink::CountryInfo.new(country).country_name
   end
 
   def humanize

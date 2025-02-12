@@ -19,7 +19,7 @@
     text-align: center;
   }
 }
-.login-form input[name="user[email]"] {
+.sign-in-form input[name="user[email]"] {
   margin-bottom: -1px;
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
@@ -29,7 +29,7 @@
   border-top-right-radius: var(--bs-border-radius) !important;
   border-bottom-left-radius: 0;
 }
-.login-form input[name="user[password]"], .password-reset-form input[name="user[password_confirmation]"] {
+.sign-in-form input[name="user[password]"], .password-reset-form input[name="user[password_confirmation]"] {
   border-bottom-right-radius: var(--bs-border-radius) !important;
   border-top-left-radius: 0;
 }

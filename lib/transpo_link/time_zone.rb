@@ -6,8 +6,6 @@ module TranspoLink
   module TimeZone
     extend self
 
-    include ActionView::Helpers::FormOptionsHelper
-
     def formatted_time_zone(time_zone)
       offset = ActiveSupport::TimeZone[time_zone]&.utc_offset
       return nil unless offset
@@ -19,13 +17,10 @@ module TranspoLink
       ActiveSupport::TimeZone.seconds_to_utc_offset(offset)
     end
 
-    def time_zone_options(selected_zone = nil)
-      options_for_select(
-        ActiveSupport::TimeZone.all.map do |tz|
-          [formatted_time_zone(tz.name), tz.tzinfo.name]
-        end,
-        selected_zone
-      )
+    def options_for_time_zones
+      ActiveSupport::TimeZone.all.map do |tz|
+        [formatted_time_zone(tz.name), tz.tzinfo.name]
+      end
     end
 
     def with_user_time_zone(user, &block)

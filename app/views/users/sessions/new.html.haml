@@ -2,7 +2,7 @@
 .text-center
   %h4.fw-bold.mb-4.fw-normal= t(".welcome_sign_in_to_your_account")
 = form_with model: resource, as: resource_name, url: session_path(resource_name),
-  data: {turbo: false}, html: {class: "login-form"} do |form|
+  data: {turbo: false}, html: {class: "sign-in-form"} do |form|
   .col-12
     .form-floating
       = form.text_field :email, autofocus: true, autocomplete: "new-email", class: "form-control",
