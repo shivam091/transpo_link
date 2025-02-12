@@ -29,6 +29,7 @@
         },
         user_detail: {
           user_id: "User",
+          full_name: "Full name",
           first_name: "First name",
           last_name: "Last name",
           mobile_number: "Mobile number",
@@ -319,7 +320,6 @@
         title: "Your profile",
         your_profile: "Your profile",
         edit_profile_details: "Edit your profile details viz., first name, last name, address, etc.",
-        full_name: "Full name",
         address: "Address",
         mobile_number_help_text: "Quickly receive security notifications with this mobile number.",
       },
