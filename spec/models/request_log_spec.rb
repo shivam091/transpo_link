@@ -36,12 +36,12 @@ RSpec.describe RequestLog, type: :model do
 
     it { is_expected.to have_foreign_key(:user_id).with_name(:fk_request_logs_user_id_on_users).on_delete(:nullify) }
 
-    it { is_expected.to have_check_constraint("check_request_logs_uuid_presence").with_expression("uuid IS NOT NULL AND uuid::text <> ''::text") }
-    it { is_expected.to have_check_constraint("check_request_logs_uri_presence").with_expression("uri IS NOT NULL AND uri::text <> ''::text") }
-    it { is_expected.to have_check_constraint("check_request_logs_method_presence").with_expression("method IS NOT NULL AND method::text <> ''::text") }
-    it { is_expected.to have_check_constraint("check_request_logs_remote_address_presence").with_expression("remote_address IS NOT NULL") }
-    it { is_expected.to have_check_constraint("check_request_logs_ip_info_presence").with_expression("ip_info IS NOT NULL") }
-    it { is_expected.to have_check_constraint("check_request_logs_method_uppercase").with_expression("upper(method::text) = method::text") }
+    it { is_expected.to have_check_constraint(:check_request_logs_uuid_presence).with_expression("uuid IS NOT NULL AND uuid::text <> ''::text") }
+    it { is_expected.to have_check_constraint(:check_request_logs_uri_presence).with_expression("uri IS NOT NULL AND uri::text <> ''::text") }
+    it { is_expected.to have_check_constraint(:check_request_logs_method_presence).with_expression("method IS NOT NULL AND method::text <> ''::text") }
+    it { is_expected.to have_check_constraint(:check_request_logs_remote_address_presence).with_expression("remote_address IS NOT NULL") }
+    it { is_expected.to have_check_constraint(:check_request_logs_ip_info_presence).with_expression("ip_info IS NOT NULL") }
+    it { is_expected.to have_check_constraint(:check_request_logs_method_uppercase).with_expression("upper(method::text) = method::text") }
   end
 
   describe "associations" do

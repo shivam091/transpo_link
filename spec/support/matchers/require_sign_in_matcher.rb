@@ -8,10 +8,10 @@
 # RSpec.describe "Users", type: :request do
 #   subject { get users_path }
 #
-#   it { is_expected.to require_login }
+#   it { is_expected.to require_sign_in }
 # end
 # ```
-RSpec::Matchers.define :require_login do
+RSpec::Matchers.define :require_sign_in do
   match do |controller|
     expect(controller).to redirect_to(new_user_session_path)
   end
@@ -21,10 +21,10 @@ RSpec::Matchers.define :require_login do
   end
 
   failure_message do |controller|
-    "expected to require login but did not"
+    "expected to require sign in but did not"
   end
 
   failure_message_when_negated do |controller|
-    "expected not to require login but did"
+    "expected not to require sign in but did"
   end
 end
