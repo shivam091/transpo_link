@@ -1,6 +1,9 @@
 .nav-scroller.bg-body-tertiary.shadow-sm.border-bottom
   %nav.nav{aria: {label: t(".secondary_navigation")}}
     = link_to "javascript:void(0)", class: "nav-link" do
+      = external_svg_tag("svgs/marketplace.svg")
+      = t(".warehouses")
+    = link_to "javascript:void(0)", class: "nav-link" do
       = external_svg_tag("svgs/cube.svg")
       = t(".commodities")
     = link_to "javascript:void(0)", class: "nav-link" do
@@ -18,9 +21,6 @@
     = link_to "javascript:void(0)", class: "nav-link" do
       = external_svg_tag("svgs/compass.svg")
       = t(".routes")
-    = link_to "javascript:void(0)", class: "nav-link" do
-      = external_svg_tag("svgs/marketplace.svg")
-      = t(".warehouses")
     = link_to "javascript:void(0)", class: "nav-link" do
       = external_svg_tag("svgs/report.svg")
       = t(".reports")
