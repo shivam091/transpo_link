@@ -101,6 +101,9 @@ group :development, :test do
 
   # Test Rails generators with RSpec using the standard Rails::Generators::TestCase assertion methods.
   gem "generator_spec"
+
+  # Help to kill N+1 queries and unused eager loading
+  gem "bullet", "~> 8"
 end
 
 group :development do
