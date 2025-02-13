@@ -1,6 +1,6 @@
 #error-explanation {
   border: 1.5px solid var(--bs-danger-border-subtle) !important;
-  border-radius: .25rem !important;
+  border-radius: 0.25rem !important;
   padding: 7px;
   padding-bottom: 0;
   background-color: var(--bs-danger-bg-subtle);
@@ -30,7 +30,7 @@
 .required::after {
   color: rgba(var(--bs-danger-rgb), 1) !important;
   content: "\002A";
-  margin-left: .25rem;
+  margin-left: 0.25rem;
   top: -2px;
   font-weight: bolder;
 }
