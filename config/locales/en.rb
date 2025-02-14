@@ -239,7 +239,7 @@
         },
         secondary_navigation:{
           secondary_navigation: "Secondary navigation",
-          commodities: "Commodities",
+          inventories: "Inventories",
           orders: "Orders",
           invoices: "Invoices",
           payments: "Payments",
