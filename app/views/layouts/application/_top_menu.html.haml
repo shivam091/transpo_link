@@ -6,15 +6,15 @@
       .col-lg-6.col-12.d-none.d-lg-flex.justify-content-center.justify-content-lg-end
         .list-unstyled.d-flex.align-items-center
           .d-inline-block.middle-dot-divider
-            = link_to "javascript:void(0)", class: "text-body text-decoration-none", title: t(".change_to_dark_mode") do
+            = link_to "javascript:void(0)", class: "text-body", title: t(".change_to_dark_mode") do
               = external_svg_tag("svgs/background-color-toggle.svg")
           .d-inline-block.middle-dot-divider
-            = link_to "javascript:void(0)", class: "text-body text-decoration-none", title: t(".switch_screen_mode")  do
+            = link_to "javascript:void(0)", class: "text-body", title: t(".switch_screen_mode")  do
               = external_svg_tag("svgs/expand.svg")
           .d-inline-block.middle-dot-divider
-            = link_to "javascript:void(0)", class: "text-body text-decoration-none", title: t(".notifications") do
+            = link_to "javascript:void(0)", class: "text-body", title: t(".notifications") do
               = external_svg_tag("svgs/bell.svg")
           .d-inline-block.middle-dot-divider
-            = link_to "javascript:void(0)", class: "text-body text-decoration-none", title: t(".change_language") do
+            = link_to edit_locale_path, class: "text-body", title: t(".change_language"), data: {turbo_frame: :remote_modal} do
               = external_svg_tag("svgs/globe.svg")
   = yield

@@ -290,8 +290,14 @@
         update: {
           success: "Your preferences were successfully updated.",
           error: "Your preferences could not be updated."
-        }
+        },
       },
+      locales: {
+        update: {
+          success: "You've updated your language. Your change might take a while to show everywhere.",
+          error: "Your language could not be updated."
+        },
+      }
     },
     users: {
       sessions: {
@@ -362,5 +368,14 @@
         language_translation_percentage: "%{language} (%{percent_translated} translated)"
       },
     },
+    locales: {
+      edit: {
+        title: "Change language",
+      },
+      form: {
+        select_preferred_language: "Select preferred language",
+        preferred_locale_form_info: "Changes to your preferred language will be reflected across the application. Specify your preferred language from a list of supported languages. This feature is experimental and translations are not complete yet.",
+      },
+    }
   },
 }

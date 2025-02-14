@@ -7,7 +7,7 @@
 require "spec_helper"
 
 RSpec.describe "Profiles", type: :request do
-  context "when user is not logged in" do
+  context "when user is not signed in" do
     describe "GET /profile" do
       subject { get profile_path }
 
@@ -27,7 +27,7 @@ RSpec.describe "Profiles", type: :request do
     end
   end
 
-  context "when user is logged in" do
+  context "when user is signed in" do
     include_context "sign in as admin"
 
     describe "GET /profile" do
