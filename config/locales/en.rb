@@ -268,6 +268,11 @@
         },
       },
     },
+    pagination: {
+      label: "Pagination",
+      previous: "Previous",
+      next: "Next",
+    },
     shared: {
       address_form_fields: {
         select_country: "Select country",
