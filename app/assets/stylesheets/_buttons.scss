@@ -18,3 +18,9 @@
   border: transparent;
   z-index: 4;
 }
+.btn-close {
+  background: transparent url("svgs/x-mark.svg") center/1em auto no-repeat;
+}
+.btn-close:focus {
+  box-shadow: none;
+}

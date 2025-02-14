@@ -25,6 +25,7 @@ Rails.application.routes.draw do
 
   resource :profile, only: [:show, :edit, :update]
   resource :preference, only: [:show, :edit, :update]
+  resource :locale, only: [:edit, :update]
 
   resources :users, only: :index
 

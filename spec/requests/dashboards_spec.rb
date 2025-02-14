@@ -8,7 +8,7 @@ require "spec_helper"
 
 RSpec.describe "Dashboards", type: :request do
 
-  context "when user is not logged in" do
+  context "when user is not signed in" do
     describe "GET /" do
       subject { get root_path }
 
@@ -16,7 +16,7 @@ RSpec.describe "Dashboards", type: :request do
     end
   end
 
-  context "when user is logged in" do
+  context "when user is signed in" do
     include_context "sign in as admin"
 
     describe "GET /" do
