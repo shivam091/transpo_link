@@ -48,6 +48,17 @@ RSpec.configure do |config|
     FileUtils.mkdir_p test_directory_path
   end
 
+  if Bullet.enable?
+    config.before(:each) do
+      Bullet.start_request
+    end
+
+    config.after(:each) do
+      Bullet.perform_out_of_channel_notifications if Bullet.notification?
+      Bullet.end_request
+    end
+  end
+
   config.fixture_paths = ["#{::Rails.root}/spec/fixtures"]
 
   config.use_transactional_fixtures = false
