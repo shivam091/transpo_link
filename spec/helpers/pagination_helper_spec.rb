@@ -50,9 +50,9 @@ RSpec.describe PaginationHelper, type: :helper do
   end
 
   describe "#render_pagination" do
-    # it "returns empty string if only one page exists" do
-    #   expect(helper.render_pagination({total_pages: 1})).to eq("")
-    # end
+    it "returns empty string if only one page exists" do
+      expect(helper.render_pagination({total_pages: 1})).to eq("")
+    end
 
     it "renders pagination navigation" do
       rendered_html = helper.render_pagination(pagination_data)
