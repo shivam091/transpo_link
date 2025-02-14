@@ -26,5 +26,7 @@ Rails.application.routes.draw do
   resource :profile, only: [:show, :edit, :update]
   resource :preference, only: [:show, :edit, :update]
 
+  resources :users, only: :index
+
   root to: "dashboards#show"
 end
