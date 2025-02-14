@@ -1,0 +1,5 @@
+.card.card-primary.border.border-primary
+  .card-body
+    = render_if_exists("users/user")
+  .card-footer
+    = render_pagination(@pagination_data)

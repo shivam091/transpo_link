@@ -26,9 +26,11 @@
           remember_me: "Keep me signed in",
           is_banned: "Is banned",
           is_active: "Is active",
+          role_id: "Role",
         },
         user_detail: {
           user_id: "User",
+          full_name: "Full name",
           first_name: "First name",
           last_name: "Last name",
           mobile_number: "Mobile number",
@@ -113,6 +115,7 @@
       edit: "Edit",
       cancel: "Cancel",
       update: "Update",
+      delete: "Delete",
     },
     devise: {
       confirmations: {
@@ -219,7 +222,6 @@
         },
       },
       application: {
-
         top_menu: {
           change_to_dark_mode: "Change to dark mode",
           change_to_light_mode: "Change to light mode",
@@ -266,6 +268,11 @@
         },
       },
     },
+    pagination: {
+      label: "Pagination",
+      previous: "Previous",
+      next: "Next",
+    },
     shared: {
       address_form_fields: {
         select_country: "Select country",
@@ -283,8 +290,14 @@
         update: {
           success: "Your preferences were successfully updated.",
           error: "Your preferences could not be updated."
-        }
+        },
       },
+      locales: {
+        update: {
+          success: "You've updated your language. Your change might take a while to show everywhere.",
+          error: "Your language could not be updated."
+        },
+      }
     },
     users: {
       sessions: {
@@ -308,6 +321,13 @@
           after_password_reset_redirect_note: "After a successful password update, you will be redirected to the sign in page where you can use your new password.",
         }
       },
+      index: {
+        title: "Users",
+      },
+      user: {
+        actions: "Actions",
+        no_users_to_display: "No users to display",
+      }
     },
     dashboards: {
       show: {
@@ -319,7 +339,6 @@
         title: "Your profile",
         your_profile: "Your profile",
         edit_profile_details: "Edit your profile details viz., first name, last name, address, etc.",
-        full_name: "Full name",
         address: "Address",
         mobile_number_help_text: "Quickly receive security notifications with this mobile number.",
       },
@@ -349,5 +368,14 @@
         language_translation_percentage: "%{language} (%{percent_translated} translated)"
       },
     },
+    locales: {
+      edit: {
+        title: "Change language",
+      },
+      form: {
+        select_preferred_language: "Select preferred language",
+        preferred_locale_form_info: "Changes to your preferred language will be reflected across the application. Specify your preferred language from a list of supported languages. This feature is experimental and translations are not complete yet.",
+      },
+    }
   },
 }

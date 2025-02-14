@@ -3,3 +3,26 @@
   --bs-card-spacer-x: 0.5rem;
   border-radius: 0.25rem;
 }
+.card .card-body {
+  border-radius: 0.25rem;
+}
+.card .card-header ~ .card-body {
+  border-radius: 0;
+}
+.card-header, .card-body, .card-footer {
+  padding: .5rem .5rem;
+}
+.card-primary {
+  border-bottom-width: 0.25rem !important;
+}
+.card-title {
+  margin-bottom: 0rem;
+  font-weight: 600;
+  font-size: 1.25rem;
+}
+.card-header {
+  font-weight: 700;
+}
+.card-footer {
+  padding: .5rem .5rem;
+}

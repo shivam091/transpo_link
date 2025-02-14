@@ -2,15 +2,16 @@
 # -*- frozen_string_literal: true -*-
 # -*- warn_indent: true -*-
 
-# spec/requests/dashboards_spec.rb
+# spec/requests/users_spec.rb
 
 require "spec_helper"
 
-RSpec.describe "Dashboards", type: :request do
+RSpec.describe "Users", type: :request do
+  let!(:admin) { create(:admin, :confirmed, :active) }
 
   context "when user is not signed in" do
-    describe "GET /" do
-      subject { get root_path }
+    describe "GET /users" do
+      subject { get users_path }
 
       it { is_expected.to require_sign_in }
     end
@@ -19,10 +20,11 @@ RSpec.describe "Dashboards", type: :request do
   context "when user is signed in" do
     include_context "sign in as admin"
 
-    describe "GET /" do
-      before { get root_path }
+    describe "GET /users" do
+      before { get users_path }
 
-      it "returns :ok status" do
+      it "renders user list and returns :ok status" do
+        expect(controller_assigns(:users).reload).to include(admin)
         expect(response).to have_http_status(:ok)
       end
     end

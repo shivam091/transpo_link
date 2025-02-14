@@ -109,7 +109,7 @@ RSpec.describe "Users::Sessions", type: :request do
       end
     end
 
-    context "when user is already logged in" do
+    context "when user is already signed in" do
       before { sign_in(user) }
 
       it "redirects to root path if user is already signed in" do
