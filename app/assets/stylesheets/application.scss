@@ -10,6 +10,7 @@
 @import "form_elements";
 @import "modals";
 @import "widgets";
+@import "tables";
 @import "validations";
 @import "devise_layout";
 
@@ -134,4 +135,8 @@ p {
 }
 .btn + .btn {
   margin-left: 0.5rem;
+}
+.no-data {
+  text-align: center;
+  font-weight: bolder;
 }

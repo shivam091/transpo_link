@@ -13,11 +13,11 @@
       #navbar.navbar-collapse.collapse.divider
         %ul.navbar-nav.me-auto
           %li.nav-item
-            = link_to root_path, class: ["nav-link", active_when(current_controller?("dashboards") && current_action?("show"))] do
+            = link_to root_path, class: ["nav-link", active_when(current_controller?("dashboards"))] do
               = external_svg_tag("svgs/dashboard.svg")
               = t(".dashboard")
           %li.nav-item
-            = link_to "javascript:void(0)", class: "nav-link" do
+            = link_to users_path, class: ["nav-link", active_when(current_controller?("users"))] do
               = external_svg_tag("svgs/users.svg")
               = t(".users")
         %ul.navbar-nav.d-none.d-lg-flex.ms-2

@@ -27,5 +27,7 @@ Rails.application.routes.draw do
   resource :preference, only: [:show, :edit, :update]
   resource :locale, only: [:edit, :update]
 
+  resources :users, only: :index
+
   root to: "dashboards#show"
 end

@@ -1,0 +1,29 @@
+.table {
+  margin-bottom: 0rem;
+}
+.table td, .table th {
+  white-space: nowrap;
+  padding: .75rem .75rem;
+  vertical-align: middle !important;
+}
+.table th {
+  font-weight: 600;
+  letter-spacing: 1px;
+  white-space: nowrap !important;
+  font-weight: bold !important;
+}
+thead input[type="checkbox"], tbody input[type="checkbox"] {
+  margin-top: -2px;
+}
+.table-responsive {
+  overflow-y: hidden;
+}
+td input, td textarea, td select {
+  width: 100px;
+}
+.table-borderless thead, .table-borderless tbody, .table-borderless tfoot, .table-borderless tr, .table-borderless td, .table-borderless th {
+  border-width: 0;
+}
+.table-bordered thead, .table-bordered tbody, .table-bordered tfoot, .table-bordered tr, .table-bordered td, .table-bordered th {
+  border-width: 1px;
+}
