@@ -14,6 +14,8 @@ class User < ApplicationRecord
   attribute :is_active, default: false
   attribute :is_banned, default: false
 
+  normalizes :email, with: -> email { email.strip }
+
   validates :email,
             presence: true,
             length: {in: 2..55},

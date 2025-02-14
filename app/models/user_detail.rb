@@ -5,6 +5,9 @@
 class UserDetail < ApplicationRecord
   self.primary_key = :user_id
 
+  normalizes :first_name, with: -> first_name { first_name.strip }
+  normalizes :last_name, with: -> last_name { last_name.strip }  
+
   validates :first_name, :last_name,
             presence: true,
             length: {in: 2..55},
