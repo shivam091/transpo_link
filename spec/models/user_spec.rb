@@ -63,6 +63,7 @@ RSpec.describe User, type: :model do
     it { is_expected.to include_module(Toggleable) }
     it { is_expected.to include_module(CaseSensitivity) }
     it { is_expected.to include_module(WithoutTimestamps) }
+    it { is_expected.to include_module(Pageable) }
   end
 
   describe "default values" do

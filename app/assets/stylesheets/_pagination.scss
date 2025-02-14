@@ -1,0 +1,24 @@
+.pagination {
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
+}
+.page-item.disabled .page-link {
+  border-width: 1px;
+  border-style: solid;
+}
+.page-link {
+  border-width: 1px;
+  border-style: solid;
+}
+.page-item .page-link {
+  border-radius: 0 !important;
+  font-size: .875rem;
+}
+.page-item:first-child .page-link {
+  border-top-left-radius: 0.25rem !important;
+  border-bottom-left-radius: 0.25rem !important;
+}
+.page-item:last-child .page-link{
+  border-top-right-radius: 0.25rem !important;
+  border-bottom-right-radius: 0.25rem !important;
+}
