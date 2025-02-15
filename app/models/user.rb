@@ -11,7 +11,6 @@ class User < ApplicationRecord
   LAST_ACTIVITY_AT_INTERVAL = 2.minutes.freeze
   THROTTLE_RESET_PERIOD = 2.minutes.freeze
 
-  attribute :is_active, default: false
   attribute :is_banned, default: false
 
   normalizes :email, with: -> email { email.strip }
