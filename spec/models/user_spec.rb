@@ -76,6 +76,10 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe "normalized attributes" do
+    it { is_expected.to normalize(:email).from("  test@example.com  ").to("test@example.com") }
+  end
+
   describe "associations" do
     it { is_expected.to have_one(:user_detail).inverse_of(:user).dependent(:destroy) }
     it { is_expected.to have_one(:user_preference).inverse_of(:user).dependent(:destroy) }

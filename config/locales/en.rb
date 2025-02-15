@@ -232,14 +232,13 @@
           main_navigation: "Main navigation",
           dashboard: "Dashboard",
           users: "Users",
-          buyers: "Buyers",
-          suppliers: "Suppliers",
+          request_logs: "Request logs",
         },
         main_navigation: {
         },
         secondary_navigation:{
           secondary_navigation: "Secondary navigation",
-          commodities: "Commodities",
+          inventories: "Inventories",
           orders: "Orders",
           invoices: "Invoices",
           payments: "Payments",
@@ -254,6 +253,7 @@
           your_account: "Your account",
           your_profile: "Your profile",
           your_preferences: "Your preferences",
+          keyboard_shortcuts: "Keyboard shortcuts",
           sign_out: "Sign out",
         },
         footer: {

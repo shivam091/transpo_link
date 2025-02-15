@@ -20,6 +20,10 @@
             = link_to users_path, class: ["nav-link", active_when(current_controller?("users"))] do
               = external_svg_tag("svgs/users.svg")
               = t(".users")
+          %li.nav-item
+            = link_to "javascript:void(0)", class: ["nav-link", active_when(current_controller?("request_logs"))] do
+              = external_svg_tag("svgs/logs.svg")
+              = t(".request_logs")
         %ul.navbar-nav.d-none.d-lg-flex.ms-2
           = render_if_exists("layouts/application/menu")
         %ul.navbar-nav.d-lg-none

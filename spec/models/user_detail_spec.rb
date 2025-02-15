@@ -37,6 +37,11 @@ RSpec.describe UserDetail, type: :model do
     it { is_expected.to have_check_constraint(:check_user_details_alternate_email_length).with_expression("char_length(alternate_email::text) <= 55 AND char_length(alternate_email::text) >= 2") }
   end
 
+  describe "normalized attributes" do
+    it { is_expected.to normalize(:first_name).from("  TranspoLink  ").to("TranspoLink") }
+    it { is_expected.to normalize(:last_name).from("  User  ").to("User") }
+  end
+
   describe "associations" do
     it { is_expected.to belong_to(:user).inverse_of(:user_detail).touch }
   end
