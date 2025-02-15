@@ -23,7 +23,7 @@ RSpec.describe Pageable do
 
   after(:all) do
     ActiveRecord::Base.connection.drop_table(:pageable_models, if_exists: true)
-    Object.send(:remove_const, :Pageable)
+    Object.send(:remove_const, :PageableModel)
   end
 
   describe ".estimated_count" do
