@@ -7,12 +7,17 @@
       %h6.dropdown-header.fw-bold= t(".your_account")
     %li
       = link_to profile_path, class: "dropdown-item" do
-        = external_svg_tag("svgs/user.svg")
+        = external_svg_tag("svgs/personalize.svg")
         = t(".your_profile")
     %li
       = link_to preference_path, class: "dropdown-item" do
         = external_svg_tag("svgs/cog.svg")
         = t(".your_preferences")
+    %li.dropdown-divider
+    %li
+      = link_to "javascript:void(0)", class: "dropdown-item" do
+        = external_svg_tag("svgs/keyboard.svg")
+        = t(".keyboard_shortcuts")
     %li.dropdown-divider
     %li
       = link_to destroy_user_session_path, class: "dropdown-item", data: {turbo_method: :delete} do
