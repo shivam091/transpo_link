@@ -12,6 +12,38 @@
       "no": "No",
       nil: "Nothing",
     },
+    datetime: {
+      units: {
+        seconds: {
+          one: "1 second",
+          other: "%{count} seconds"
+        },
+        minutes: {
+          one: "1 minute",
+          other: "%{count} minutes"
+        },
+        hours: {
+          one: "1 hour",
+          other: "%{count} hours"
+        },
+        days: {
+          one: "1 day",
+          other: "%{count} days"
+        },
+        weeks: {
+          one: "1 week",
+          other: "%{count} weeks"
+        },
+        months: {
+          one: "1 month",
+          other: "%{count} months"
+        },
+        years: {
+          one: "1 year",
+          other: "%{count} years"
+        },
+      },
+    },
     activerecord: {
       attributes: {
         role: {
