@@ -21,6 +21,11 @@ RSpec.describe Pageable do
     end
   end
 
+  after(:all) do
+    ActiveRecord::Base.connection.drop_table(:pageable_models, if_exists: true)
+    Object.send(:remove_const, :Pageable)
+  end
+
   describe ".estimated_count" do
     before do
       allow(PageableModel.connection).to receive(:execute).and_return([{"reltuples" => 50}])
