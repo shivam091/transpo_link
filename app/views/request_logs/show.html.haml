@@ -1,4 +1,5 @@
 = title(@request_log.id)
+- accessed_by = @request_log.user
 .card.card-primary.border.border-primary
   .card-body
     .widget
@@ -9,9 +10,10 @@
           %span.middle-dot-divider
             = RequestLog.human_attribute_name(:created_at)
             = h(time_ago_with_tooltip(@request_log.created_at))
-          %span.middle-dot-divider
-            = t(".accessed_by")
-            = h(@request_log.user&.full_name)
+          - if accessed_by.present?
+            %span.middle-dot-divider
+              = t(".accessed_by")
+              = link_to accessed_by&.full_name, user_path(accessed_by), target: :_blank
     .widget
       .widget-header
         .widget-title
