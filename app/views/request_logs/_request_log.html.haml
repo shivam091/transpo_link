@@ -16,7 +16,7 @@
       - if @request_logs&.each.with_index(1) do |request_log, index|
         %tr
           %th{scope: "row"}= h(@pagination_data[:offset] + index)
-          %td= h(request_log.uuid)
+          %td= link_to request_log.uuid, request_log.uuid
           %td= link_to request_log.uri, request_log.uri, target: :_blank
           %td= h(request_log.method)
           %td= h(IPAddr.new(request_log.remote_ip_address, Socket::AF_INET)) rescue ""
