@@ -117,4 +117,35 @@ RSpec.describe DateTimeHelper, type: :helper do
       end
     end
   end
+
+  describe "#time_ago_with_tooltip" do
+    let(:time) { Time.zone.now - 5.minutes }
+
+    it "returns a time tag with default attributes" do
+      result = helper.time_ago_with_tooltip(time)
+      expect(result).to include("class=\"js-timeago\"")
+      expect(result).to include("title=\"#{time.to_fs(:long)}\"")
+      expect(result).to include("datetime=\"#{time.utc.iso8601}\"")
+      expect(result).to include("data-controller=\"tooltip\"")
+      expect(result).to include("data-bs-placement=\"top\"")
+    end
+
+    it "includes js-short-timeago class when short_format is true" do
+      result = helper.time_ago_with_tooltip(time, short_format: true)
+
+      expect(result).to include("class=\"js-short-timeago\"")
+    end
+
+    it "appends custom HTML classes" do
+      result = helper.time_ago_with_tooltip(time, html_class: "custom-class")
+
+      expect(result).to include("class=\"js-timeago custom-class\"")
+    end
+
+    it "sets tooltip placement correctly" do
+      result = helper.time_ago_with_tooltip(time, placement: "bottom")
+
+      expect(result).to include("data-bs-placement=\"bottom\"")
+    end
+  end
 end

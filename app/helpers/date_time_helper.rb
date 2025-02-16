@@ -40,4 +40,21 @@ module DateTimeHelper
       end
     end
   end
+
+  def time_ago_with_tooltip(time, options = {})
+    options = {placement: "top", html_class: "", short_format: false}.merge!(options)
+
+    css_classes = [options[:short_format] ? "js-short-timeago" : "js-timeago"]
+    css_classes << options[:html_class] unless options[:html_class].blank?
+    tag.time(
+      time_ago(time),
+      class: css_classes.join(" "),
+      datetime: time.to_time.getutc.iso8601,
+      data: {
+        controller: "tooltip",
+        bs_title: time.to_fs(:long),
+        bs_placement: options[:placement]
+      }
+    )
+  end
 end
