@@ -13,6 +13,43 @@
       nil: "Nothing",
     },
     datetime: {
+      time_ago: {
+        about_x_seconds_ago: {
+          zero: "just now",
+          one: "about a second ago",
+          other: "about %{count} seconds ago"
+        },
+        about_x_minutes_ago: {
+          one: "about a minute ago",
+          other: "about %{count} minutes ago"
+        },
+        about_x_hours_ago: {
+          one: "about an hour ago",
+          other: "about %{count} hours ago"
+        },
+        about_x_days_ago: {
+          one: "about a day ago",
+          other: "about %{count} days ago"
+        },
+        about_x_weeks_ago: {
+          one: "about a week ago",
+          other: "about %{count} weeks ago"
+        },
+        about_x_weeks_and_x_days_ago: {
+          one: "about %{weeks} weeks and a day ago",
+          other: "about %{weeks} weeks and %{count} days ago"
+        },
+        about_x_months_ago: {
+          one: "about a month ago",
+          other: "about %{count} months ago"
+        },
+        about_x_years_ago: {
+          one: "about a year ago",
+          other: "about %{count} years ago"
+        },
+        over_x_years_ago: "over %{count} years ago",
+        almost_x_years_ago: "almost %{count} years ago"
+      },
       units: {
         seconds: {
           one: "1 second",
