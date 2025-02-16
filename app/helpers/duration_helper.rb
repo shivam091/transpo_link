@@ -15,6 +15,6 @@ module DurationHelper
       parts.each.with_object([]) do |(unit, value), duration|
         duration << locale.t(unit.to_s, count: value)
       end
-    end.join(", ")
+    end.to_sentence
   end
 end
