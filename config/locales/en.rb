@@ -471,6 +471,11 @@
       request_log: {
         no_request_logs_to_display: "No request logs to display"
       },
+      show: {
+        basic_details: "Basic details",
+        additional_details: "Additional details",
+        accessed_by: "Accessed by",
+      },
     },
   },
 }

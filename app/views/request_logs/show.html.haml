@@ -6,25 +6,25 @@
         .widget-title
           = h(@request_log.uuid)
         .widget-help
-          = h(RequestLog.human_attribute_name(:created_at))
-          = h(time_ago_with_tooltip(@request_log.created_at))
+          %span.middle-dot-divider
+            = RequestLog.human_attribute_name(:created_at)
+            = h(time_ago_with_tooltip(@request_log.created_at))
+          %span.middle-dot-divider
+            = t(".accessed_by")
+            = h(@request_log.user&.full_name)
+    .widget
+      .widget-header
+        .widget-title
+          = t(".basic_details")
       .widget-body
         .widget-row.d-flex
           .flex-auto
             .widget-row-title= RequestLog.human_attribute_name(:uri)
-            .widget-row-body= @request_log.uri
+            .widget-row-body= h(@request_log.uri)
         .widget-row.d-flex
           .flex-auto
             .widget-row-title= RequestLog.human_attribute_name(:method)
             .widget-row-body= h(@request_log.method)
-        .widget-row.d-flex
-          .flex-auto
-            .widget-row-title= RequestLog.human_attribute_name(:session_id)
-            .widget-row-body= h(@request_log.session_id)
-        .widget-row.d-flex
-          .flex-auto
-            .widget-row-title= RequestLog.human_attribute_name(:session_private_id)
-            .widget-row-body= h(@request_log.session_private_id)
         .widget-row.d-flex
           .flex-auto
             .widget-row-title= RequestLog.human_attribute_name(:remote_address)
@@ -43,16 +43,29 @@
             .widget-row-body= link_to @request_log.referrer, @request_log.referrer, target: :_blank
         .widget-row.d-flex
           .flex-auto
-            .widget-row-title= RequestLog.human_attribute_name(:exception_message)
-            .widget-row-body= @request_log.exception_message
-        .widget-row.d-flex
-          .flex-auto
             .widget-row-title= RequestLog.human_attribute_name(:status)
-            .widget-row-body= @request_log.status
+            .widget-row-body= h(@request_log.status)
         .widget-row.d-flex
           .flex-auto
             .widget-row-title= RequestLog.human_attribute_name(:response_size)
             .widget-row-body= h(number_to_human_size(@request_log.response_size))
+    .widget
+      .widget-header
+        .widget-title
+          = t(".additional_details")
+      .widget-body
+        .widget-row.d-flex
+          .flex-auto
+            .widget-row-title= RequestLog.human_attribute_name(:session_id)
+            .widget-row-body= h(@request_log.session_id)
+        .widget-row.d-flex
+          .flex-auto
+            .widget-row-title= RequestLog.human_attribute_name(:session_private_id)
+            .widget-row-body= h(@request_log.session_private_id)
+        .widget-row.d-flex
+          .flex-auto
+            .widget-row-title= RequestLog.human_attribute_name(:exception_message)
+            .widget-row-body= h(@request_log.exception_message)
         .widget-row.d-flex
           .flex-auto
             .widget-row-title= RequestLog.human_attribute_name(:query_params)
@@ -61,7 +74,3 @@
           .flex-auto
             .widget-row-title= RequestLog.human_attribute_name(:ip_info)
             .widget-row-body.pretty-json= h(JSON.pretty_generate(JSON.parse(@request_log.ip_info.to_json)))
-        .widget-row.d-flex
-          .flex-auto
-            .widget-row-title= RequestLog.human_attribute_name(:user_id)
-            .widget-row-body= h(@request_log.user&.full_name)
