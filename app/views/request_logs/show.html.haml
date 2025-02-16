@@ -28,7 +28,7 @@
         .widget-row.d-flex
           .flex-auto
             .widget-row-title= RequestLog.human_attribute_name(:remote_address)
-            .widget-row-body= h(IPAddr.new(@request_log.remote_ip_address, Socket::AF_INET)) rescue ""
+            .widget-row-body= h(IPAddr.new(@request_log.remote_address, Socket::AF_INET)) rescue ""
         .widget-row.d-flex
           .flex-auto
             .widget-row-title= RequestLog.human_attribute_name(:elapsed_time)
