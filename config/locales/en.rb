@@ -87,6 +87,21 @@
           name: "Name",
           is_active: "Is active",
         },
+        request_log: {
+          uuid: "UUID",
+          uri: "URI",
+          method: "HTTP method",
+          remote_address: "Remote address",
+          elapsed_time: "Elapsed time",
+          user_agent: "User agent",
+          referrer: "Referrer",
+          exception_message: "Exception message",
+          status: "HTTP status",
+          response_size: "Response size",
+          query_params: "Query params",
+          user_id: "User",
+          created_at: "Accessed on",
+        },
         user: {
           email: "Email address",
           current_password: "Current password",
@@ -445,6 +460,14 @@
         select_preferred_language: "Select preferred language",
         preferred_locale_form_info: "Changes to your preferred language will be reflected across the application. Specify your preferred language from a list of supported languages. This feature is experimental and translations are not complete yet.",
       },
-    }
+    },
+    request_logs: {
+      index: {
+        title: "Request logs",
+      },
+      request_log: {
+        no_request_logs_to_display: "No request logs to display"
+      },
+    },
   },
 }
