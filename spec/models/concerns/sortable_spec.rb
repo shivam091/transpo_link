@@ -77,18 +77,22 @@ RSpec.describe Sortable do
 
     it "orders by created_at ascending" do
       expect(SortableModel.order_by(:created_asc).pluck(:created_at)).to eq([record1.created_at, record2.created_at, record3.created_at])
+      expect(SortableModel.order_by(:created_at_asc).pluck(:created_at)).to eq([record1.created_at, record2.created_at, record3.created_at])
     end
 
     it "orders by created_at descending" do
       expect(SortableModel.order_by(:created_desc).pluck(:created_at)).to eq([record3.created_at, record2.created_at, record1.created_at])
+      expect(SortableModel.order_by(:created_at_desc).pluck(:created_at)).to eq([record3.created_at, record2.created_at, record1.created_at])
     end
 
     it "orders by updated_at ascending" do
       expect(SortableModel.order_by(:updated_asc).pluck(:updated_at)).to eq([record1.updated_at, record2.updated_at, record3.updated_at])
+      expect(SortableModel.order_by(:updated_at_asc).pluck(:updated_at)).to eq([record1.updated_at, record2.updated_at, record3.updated_at])
     end
 
     it "orders by updated_at descending" do
       expect(SortableModel.order_by(:updated_desc).pluck(:updated_at)).to eq([record3.updated_at, record2.updated_at, record1.updated_at])
+      expect(SortableModel.order_by(:updated_at_desc).pluck(:updated_at)).to eq([record3.updated_at, record2.updated_at, record1.updated_at])
     end
 
     it "returns all records when given an unknown method" do
