@@ -34,6 +34,9 @@ class User < ApplicationRecord
 
   has_many :request_logs, inverse_of: :user, dependent: :nullify
 
+  has_many :warehouse_managers, inverse_of: :manager, foreign_key: :manager_id, dependent: :restrict_with_exception
+  has_many :managed_warehouses, through: :warehouse_managers, inverse_of: :managers, source: :warehouse
+
   belongs_to :role, inverse_of: :users
 
   after_update :update_password_updated_at, if: :saved_change_to_encrypted_password?

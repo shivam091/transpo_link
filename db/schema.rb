@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_02_14_143039) do
+ActiveRecord::Schema[8.0].define(version: 2025_02_17_141602) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -152,6 +152,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_14_143039) do
     t.check_constraint "encrypted_password IS NOT NULL AND encrypted_password::text <> ''::text", name: "check_users_encrypted_password_presence"
   end
 
+  create_table "warehouse_managers", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "warehouse_id", null: false
+    t.uuid "manager_id", null: false
+    t.timestamptz "created_at", null: false
+    t.timestamptz "updated_at", null: false
+    t.index ["manager_id"], name: "index_warehouse_managers_on_manager_id"
+    t.index ["warehouse_id"], name: "index_warehouse_managers_on_warehouse_id"
+  end
+
   create_table "warehouses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name"
     t.string "reference_code"
@@ -178,4 +187,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_14_143039) do
   add_foreign_key "user_details", "users", name: "fk_user_details_user_id_on_users", on_delete: :cascade
   add_foreign_key "user_preferences", "users", name: "fk_user_preferences_user_id_on_users", on_delete: :cascade
   add_foreign_key "users", "roles", name: "fk_users_role_id_on_roles", on_delete: :restrict
+  add_foreign_key "warehouse_managers", "users", column: "manager_id", name: "fk_warehouse_managers_manager_id_on_users", on_delete: :restrict
+  add_foreign_key "warehouse_managers", "warehouses", name: "fk_warehouse_managers_warehouse_id_on_warehouses", on_delete: :cascade
 end

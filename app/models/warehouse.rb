@@ -6,4 +6,7 @@ class Warehouse < ApplicationRecord
   include Toggleable, HasReferenceCode
 
   has_one :address, as: :addressable, inverse_of: :addressable, dependent: :destroy
+
+  has_many :warehouse_managers, inverse_of: :warehouse, dependent: :destroy
+  has_many :managers, through: :warehouse_managers, inverse_of: :managed_warehouses, source: :manager
 end
