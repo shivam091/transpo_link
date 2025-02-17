@@ -114,6 +114,20 @@
           is_banned: "Is banned",
           is_active: "Is active",
           role_id: "Role",
+          last_activity_at: "Last activity at",
+          sign_in_count: "Sign in count",
+          current_sign_in_at: "Current sign in at",
+          last_sign_in_at: "Last sign in at",
+          current_sign_in_ip: "Current sign in IP",
+          last_sign_in_ip: "Last sign in IP",
+          confirmed_at: "Confirmed at",
+          confirmation_sent_at: "Confirmation sent at",
+          unconfirmed_email: "Unconfirmed email address",
+          failed_attempts: "Failed attempts",
+          locked_at: "Locked at",
+          address: "Address",
+          created_at: "User since",
+          updated_at: "Last updated at",
         },
         user_detail: {
           user_id: "User",
@@ -414,7 +428,11 @@
       user: {
         actions: "Actions",
         no_users_to_display: "No users to display",
-      }
+      },
+      show: {
+        basic_n_contact_details: "Basic & contact details",
+        additional_details: "Additional details"
+      },
     },
     dashboards: {
       show: {
@@ -476,6 +494,8 @@
         additional_details: "Additional details",
         accessed_by: "Accessed by",
       },
+      basic_details: {},
+      additional_details: {},
     },
   },
 }
