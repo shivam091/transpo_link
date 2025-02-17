@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_02_17_141602) do
+ActiveRecord::Schema[8.0].define(version: 2025_02_17_171347) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -161,6 +161,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_17_141602) do
     t.index ["warehouse_id"], name: "index_warehouse_managers_on_warehouse_id"
   end
 
+  create_table "warehouse_suppliers", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "warehouse_id"
+    t.uuid "supplier_id"
+    t.timestamptz "created_at", null: false
+    t.timestamptz "updated_at", null: false
+    t.index ["supplier_id"], name: "index_warehouse_suppliers_on_supplier_id"
+    t.index ["warehouse_id"], name: "index_warehouse_suppliers_on_warehouse_id"
+  end
+
   create_table "warehouses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name"
     t.string "reference_code"
@@ -189,4 +198,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_17_141602) do
   add_foreign_key "users", "roles", name: "fk_users_role_id_on_roles", on_delete: :restrict
   add_foreign_key "warehouse_managers", "users", column: "manager_id", name: "fk_warehouse_managers_manager_id_on_users", on_delete: :restrict
   add_foreign_key "warehouse_managers", "warehouses", name: "fk_warehouse_managers_warehouse_id_on_warehouses", on_delete: :cascade
+  add_foreign_key "warehouse_suppliers", "users", column: "supplier_id", name: "fk_warehouse_suppliers_supplier_id_on_users", on_delete: :restrict
+  add_foreign_key "warehouse_suppliers", "warehouses", name: "fk_warehouse_suppliers_warehouse_id_on_warehouses", on_delete: :cascade
 end

@@ -9,4 +9,7 @@ class Warehouse < ApplicationRecord
 
   has_many :warehouse_managers, inverse_of: :warehouse, dependent: :destroy
   has_many :managers, through: :warehouse_managers, inverse_of: :managed_warehouses, source: :manager
+
+  has_many :warehouse_suppliers, inverse_of: :warehouse, dependent: :destroy
+  has_many :suppliers, through: :warehouse_suppliers, inverse_of: :supplied_warehouses, source: :supplier
 end
