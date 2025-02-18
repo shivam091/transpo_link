@@ -9,7 +9,7 @@ class UsersController < ApplicationController
   # GET /users
   def index
     @users = User.includes(:user_detail)
-    @users, @pagination_data = @users.paginate(params[:page])
+    @users, @pagination_data = @users.paginate(page: params[:page])
   end
 
   # GET /users/:id

@@ -24,7 +24,7 @@ module Pageable
       estimated_count.positive? ? (estimated_count.to_f / per_page).ceil : 1
     end
 
-    def paginate(page = 1, per_page = 20)
+    def paginate(page: 1, per_page: 20)
       page = page.to_i.positive? ? page.to_i : 1
       per_page = per_page.to_i.positive? ? per_page.to_i : 20
       total_pages = total_pages(per_page)
