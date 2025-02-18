@@ -1,5 +1,5 @@
 !!!5
-%html{dir: t("direction"), lang: I18n.locale}
+%html{dir: t("direction"), lang: TranspoLink::I18n.locale}
   %head
     %title
       = content_for?(:title) ? yield(:title) : t(".title")

@@ -19,24 +19,24 @@ module TranspoLink
     end
 
     def country_name
-      country&.translations&.dig(I18n.locale.to_s) || country&.alpha2
+      country&.translations&.dig(TranspoLink::I18n.locale.to_s) || country&.alpha2
     end
 
     def subdivision_name
-      subdivision&.translations&.dig(I18n.locale.to_s) || subdivision&.name
+      subdivision&.translations&.dig(TranspoLink::I18n.locale.to_s) || subdivision&.name
     end
 
     def options_for_subdivisions
       return [] unless country&.subdivisions.present?
 
       country.subdivisions.map do |code, subdivision|
-        [(subdivision.translations[I18n.locale.to_s] || subdivision.name), code]
+        [(subdivision.translations[TranspoLink::I18n.locale.to_s] || subdivision.name), code]
       end
     end
 
     class << self
       def options_for_countries
-        ISO3166::Country.translations(I18n.locale).map do |iso_code, name|
+        ISO3166::Country.translations(TranspoLink::I18n.locale).map do |iso_code, name|
           [name, iso_code]
         end
       end

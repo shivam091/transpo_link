@@ -2,6 +2,7 @@
 # -*- frozen_string_literal: true -*-
 # -*- warn_indent: true -*-
 
+# Mixin module containing methods required for pagination of objects.
 module Pageable
   extend ActiveSupport::Concern
 

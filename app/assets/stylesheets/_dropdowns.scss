@@ -1,14 +1,6 @@
 .dropdown-menu {
   font-size: inherit;
 }
-header .dropdown-menu.show {
-  animation-duration: 0.3s;
-  -webkit-animation-duration: 0.3s;
-  animation-fill-mode: both;
-  -webkit-animation-fill-mode: both;
-  -webkit-animation-name: slide-in;
-  animation-name: slide-in;
-}
 .navbar-nav .dropdown-menu {
   position: absolute !important;
 }
@@ -29,4 +21,7 @@ header .dropdown-menu.show {
   position: absolute;
   display: inline-block;
   content: "";
+}
+.dropdown-menu[data-bs-popper="static"] {
+  animation : slideUpAndFade 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }

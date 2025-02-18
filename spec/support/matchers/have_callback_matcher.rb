@@ -18,14 +18,14 @@ RSpec::Matchers.define :have_callback do |callback_kind, callback_name, method_n
   end
 
   description do
-    "have a #{callback_kind}_#{callback_name} callback defined for #{method_name}"
+    "have a #{callback_kind}_#{callback_name} callback defined for ##{method_name}"
   end
 
   failure_message do |model_class|
-    "expected to have a #{callback_kind}_#{callback_name} callback defined for #{method_name}"
+    "expected to have a #{callback_kind}_#{callback_name} callback defined for ##{method_name}"
   end
 
   failure_message_when_negated do |model_class|
-    "expected not to have a #{callback_kind}_#{callback_name} callback defined for #{method_name}"
+    "expected not to have a #{callback_kind}_#{callback_name} callback defined for ##{method_name}"
   end
 end
