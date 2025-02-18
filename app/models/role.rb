@@ -5,8 +5,6 @@
 class Role < ApplicationRecord
   include Toggleable
 
-  attribute :is_active, default: false
-
   validates :name,
             presence: true,
             uniqueness: true,
