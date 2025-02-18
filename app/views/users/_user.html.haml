@@ -14,7 +14,7 @@
       - if @users&.each.with_index(1) do |user, index|
         %tr
           %th{scope: "row"}= @pagination_data[:offset] + index
-          %td= user.full_name
+          %td= link_to user.full_name, user_path(user)
           %td= mail_to user.email
           %td= user.mobile_number
           %td= user.alternate_contact_number

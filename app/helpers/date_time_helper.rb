@@ -42,6 +42,8 @@ module DateTimeHelper
   end
 
   def time_ago_with_tooltip(time, options = {})
+    return unless time.present?
+
     options = {placement: "top", html_class: "", short_format: false}.merge!(options)
 
     css_classes = [options[:short_format] ? "js-short-timeago" : "js-timeago"]
