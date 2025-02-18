@@ -85,6 +85,10 @@ RSpec.describe User, type: :model do
     it { is_expected.to have_one(:user_preference).inverse_of(:user).dependent(:destroy) }
     it { is_expected.to have_one(:address).inverse_of(:addressable).dependent(:destroy) }
     it { is_expected.to have_many(:request_logs).inverse_of(:user).dependent(:nullify) }
+    it { is_expected.to have_many(:warehouse_managers).inverse_of(:manager).with_foreign_key(:manager_id).dependent(:restrict_with_exception) }
+    it { is_expected.to have_many(:managed_warehouses).through(:warehouse_managers).inverse_of(:managers).source(:warehouse) }
+    it { is_expected.to have_many(:warehouse_suppliers).inverse_of(:supplier).with_foreign_key(:supplier_id).dependent(:restrict_with_exception) }
+    it { is_expected.to have_many(:supplied_warehouses).through(:warehouse_suppliers).inverse_of(:suppliers).source(:warehouse) }
 
     it { is_expected.to belong_to(:role).inverse_of(:users) }
   end
@@ -192,7 +196,7 @@ RSpec.describe User, type: :model do
       it "returns user with provided email" do
         admin = create(:admin, :confirmed, :active)
 
-        expect(described_class.with_email("admin@transpo-link.com")).to eq(admin)
+        expect(described_class.with_email(admin.email)).to eq(admin)
       end
     end
 
@@ -216,7 +220,7 @@ RSpec.describe User, type: :model do
       let!(:existing_user) { create(:admin) }
 
       it "finds the user with matching email" do
-        found_user = described_class.find_for_database_authentication(email: "admin@transpo-link.com")
+        found_user = described_class.find_for_database_authentication(email: existing_user.email)
         expect(found_user).to eq(existing_user)
       end
 
@@ -226,12 +230,12 @@ RSpec.describe User, type: :model do
       end
 
       it "trims whitespace from email before searching" do
-        found_user = described_class.find_for_database_authentication(email: "  admin@transpo-link.com  ")
+        found_user = described_class.find_for_database_authentication(email: "  #{existing_user.email}  ")
         expect(found_user).to eq(existing_user)
       end
 
       it "ignores attributes other than email" do
-        found_user = described_class.find_for_database_authentication(email: "admin@transpo-link.com", is_active: false)
+        found_user = described_class.find_for_database_authentication(email: existing_user.email, is_active: false)
         expect(found_user).to eq(existing_user)
       end
     end

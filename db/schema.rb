@@ -153,8 +153,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_17_171347) do
   end
 
   create_table "warehouse_managers", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.uuid "warehouse_id", null: false
-    t.uuid "manager_id", null: false
+    t.uuid "warehouse_id"
+    t.uuid "manager_id"
     t.timestamptz "created_at", null: false
     t.timestamptz "updated_at", null: false
     t.index ["manager_id"], name: "index_warehouse_managers_on_manager_id"
