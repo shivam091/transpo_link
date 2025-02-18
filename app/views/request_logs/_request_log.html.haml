@@ -14,6 +14,7 @@
         %th{scope: "col"}= RequestLog.human_attribute_name(:user_id)
     %tbody.border
       - if @request_logs&.each.with_index(1) do |request_log, index|
+        - accessed_by = request_log.user
         %tr
           %th{scope: "row"}= h(@pagination_data[:offset] + index)
           %td= link_to request_log.uuid, request_log_path(request_log)
@@ -24,7 +25,9 @@
           %td= h(request_log.status)
           %td= h(number_to_human_size(request_log.response_size))
           %td= h(time_ago_with_tooltip(request_log.created_at))
-          %td= h(request_log.user&.full_name)
+          %td
+            - if accessed_by.present?
+              = link_to accessed_by&.full_name, user_path(accessed_by), target: :_blank
       - end.empty?
         %tr
           %td.no-data{colspan: RequestLog.columns.count}
