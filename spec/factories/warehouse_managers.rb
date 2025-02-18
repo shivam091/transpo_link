@@ -4,5 +4,7 @@
 
 FactoryBot.define do
   factory :warehouse_manager do
+    association :warehouse
+    association :manager, factory: :manager
   end
 end
