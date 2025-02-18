@@ -89,6 +89,7 @@ RSpec.configure do |config|
 
   # Include support classes and modules.
   config.include RailsHelpers
+  config.include TestHelpers
   config.include ControllerAssignsHelper
 
   config.around do |example|
