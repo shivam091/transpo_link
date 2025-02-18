@@ -47,6 +47,7 @@ class User < ApplicationRecord
   scope :admins, -> { with_role("admin") }
   scope :suppliers, -> { with_role("supplier") }
   scope :buyers, -> { with_role("buyer") }
+  scope :managers, -> { with_role("manager") }
 
   delegate :name, to: :role, prefix: true
   delegate :first_name, :last_name, :full_name, :mobile_number,

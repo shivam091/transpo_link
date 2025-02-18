@@ -160,6 +160,7 @@ RSpec.describe User, type: :model do
     let(:admin) { create(:admin, :confirmed, :active) }
     let(:buyer) { create(:buyer, :confirmed, :active) }
     let(:supplier) { create(:supplier, :confirmed, :active) }
+    let(:manager) { create(:manager, :confirmed, :active) }
 
     describe ".admins" do
       it "returns array of admins" do
@@ -176,6 +177,12 @@ RSpec.describe User, type: :model do
     describe ".buyers" do
       it "returns array of buyers" do
         expect(buyer).to be_one_of(described_class.buyers)
+      end
+    end
+
+    describe ".managers" do
+      it "returns array of managers" do
+        expect(manager).to be_one_of(described_class.managers)
       end
     end
   end
