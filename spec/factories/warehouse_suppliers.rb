@@ -4,6 +4,7 @@
 
 FactoryBot.define do
   factory :warehouse_supplier do
-
+    association :warehouse
+    supplier { create(:supplier, :confirmed) }
   end
 end
