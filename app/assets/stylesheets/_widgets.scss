@@ -81,3 +81,9 @@
   border-top: 1px solid var(--bs-border-color);
   border-radius: 0 0 6px 6px;
 }
+.widget:not(:has(.widget-body)) {
+  border: none !important;
+}
+.widget:not(:has(.widget-body)) .widget-header {
+  border-radius: 0.25rem;
+}

@@ -2,14 +2,20 @@
 # -*- frozen_string_literal: true -*-
 # -*- warn_indent: true -*-
 
+# Mixin module containing methods required for pagination of objects.
 module Pageable
   extend ActiveSupport::Concern
 
   class_methods do
     def estimated_count
       Rails.cache.fetch("#{name}/estimated_count", expires_in: 10.minutes) do
-        query = "SELECT reltuples::bigint FROM pg_class WHERE oid = '#{table_name}'::regclass"
-        result = connection.execute(query).first["reltuples"].to_i
+        connection.execute("ANALYZE #{table_name}")
+        query = <<~SQL
+          SELECT n_live_tup::bigint
+          FROM pg_stat_user_tables
+          WHERE relname = '#{table_name}'
+        SQL
+        result = connection.execute(query).first&.fetch("n_live_tup", 0).to_i
         result.positive? ? result : count
       end
     end
