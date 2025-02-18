@@ -15,5 +15,9 @@ FactoryBot.define do
     factory :supplier_role, parent: :role do
       name { "supplier" }
     end
+
+    factory :manager_role, parent: :role do
+      name { "manager" }
+    end
   end
 end

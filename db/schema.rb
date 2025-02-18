@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_02_09_133302) do
+ActiveRecord::Schema[8.0].define(version: 2025_02_17_171347) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -152,8 +152,52 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_09_133302) do
     t.check_constraint "encrypted_password IS NOT NULL AND encrypted_password::text <> ''::text", name: "check_users_encrypted_password_presence"
   end
 
+  create_table "warehouse_managers", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "warehouse_id"
+    t.uuid "manager_id"
+    t.timestamptz "created_at", null: false
+    t.timestamptz "updated_at", null: false
+    t.index ["manager_id"], name: "index_warehouse_managers_on_manager_id"
+    t.index ["warehouse_id"], name: "index_warehouse_managers_on_warehouse_id"
+  end
+
+  create_table "warehouse_suppliers", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "warehouse_id"
+    t.uuid "supplier_id"
+    t.timestamptz "created_at", null: false
+    t.timestamptz "updated_at", null: false
+    t.index ["supplier_id"], name: "index_warehouse_suppliers_on_supplier_id"
+    t.index ["warehouse_id"], name: "index_warehouse_suppliers_on_warehouse_id"
+  end
+
+  create_table "warehouses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name"
+    t.string "reference_code"
+    t.string "email_address"
+    t.string "contact_number"
+    t.text "description"
+    t.decimal "total_capacity", precision: 12, scale: 2
+    t.string "capacity_unit"
+    t.decimal "latitude", precision: 10, scale: 8
+    t.decimal "longitude", precision: 10, scale: 8
+    t.boolean "is_active", default: false
+    t.timestamptz "created_at", null: false
+    t.timestamptz "updated_at", null: false
+    t.index ["is_active"], name: "index_warehouses_on_is_active"
+    t.index ["reference_code"], name: "index_warehouses_on_reference_code", unique: true
+    t.check_constraint "capacity_unit IS NOT NULL AND capacity_unit::text <> ''::text", name: "check_warehouses_capacity_unit_presence"
+    t.check_constraint "char_length(description) <= 1000", name: "check_warehouses_description_length"
+    t.check_constraint "char_length(name::text) <= 255 AND char_length(name::text) >= 2", name: "check_warehouses_name_length"
+    t.check_constraint "name IS NOT NULL AND name::text <> ''::text", name: "check_warehouses_name_presence"
+    t.check_constraint "total_capacity IS NOT NULL", name: "check_warehouses_total_capacity_presence"
+  end
+
   add_foreign_key "request_logs", "users", name: "fk_request_logs_user_id_on_users", on_delete: :nullify
   add_foreign_key "user_details", "users", name: "fk_user_details_user_id_on_users", on_delete: :cascade
   add_foreign_key "user_preferences", "users", name: "fk_user_preferences_user_id_on_users", on_delete: :cascade
   add_foreign_key "users", "roles", name: "fk_users_role_id_on_roles", on_delete: :restrict
+  add_foreign_key "warehouse_managers", "users", column: "manager_id", name: "fk_warehouse_managers_manager_id_on_users", on_delete: :restrict
+  add_foreign_key "warehouse_managers", "warehouses", name: "fk_warehouse_managers_warehouse_id_on_warehouses", on_delete: :cascade
+  add_foreign_key "warehouse_suppliers", "users", column: "supplier_id", name: "fk_warehouse_suppliers_supplier_id_on_users", on_delete: :restrict
+  add_foreign_key "warehouse_suppliers", "warehouses", name: "fk_warehouse_suppliers_warehouse_id_on_warehouses", on_delete: :cascade
 end

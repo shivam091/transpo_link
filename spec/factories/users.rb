@@ -4,31 +4,30 @@
 
 FactoryBot.define do
   factory :user do
+    email { generate(:email) }
     password { Rails.application.credentials.config[:TEST_PASSWORD] }
     password_confirmation { Rails.application.credentials.config[:TEST_PASSWORD] }
     last_activity_at { nil }
     password_updated_at { DateTime.now }
 
     factory :admin, parent: :user do
-      email { "admin@transpo-link.com" }
       role { Role.find_by(name: "admin") || create(:admin_role, :active) }
     end
 
     factory :buyer, parent: :user do
-      email { "buyer@transpo-link.com" }
       role { Role.find_by(name: "buyer") || create(:buyer_role, :active) }
     end
 
     factory :supplier, parent: :user do
-      email { "supplier@transpo-link.com" }
       role { Role.find_by(name: "supplier") || create(:supplier_role, :active) }
+    end
+
+    factory :manager, parent: :user do
+      role { Role.find_by(name: "manager") || create(:manager_role, :active) }
     end
 
     after(:create) do |user|
       create(:user_detail, user: user)
-    end
-
-    after(:create) do |user|
       create(:user_preference, user: user)
     end
 
