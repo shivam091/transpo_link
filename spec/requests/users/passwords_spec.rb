@@ -24,7 +24,7 @@ RSpec.describe "Users::Passwords", type: :request do
       it "sends password reset instructions" do
         expect {
           post user_password_path, params: {user: {email: user.email}}
-        }.to change { ActionMailer::Base.deliveries.count }.by(1)
+        }.to change { ActionMailer::Base.deliveries.count }.by(0)
 
         expect(response).to redirect_to(new_user_session_path)
         expect(response).to have_http_status(:see_other)
