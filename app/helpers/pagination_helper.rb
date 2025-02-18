@@ -22,21 +22,25 @@ module PaginationHelper
   private
 
   def previous_page_tag(pagination_data)
+    link_text = t("pagination.previous", default: "Previous").html_safe
+
     tag.li(class: "page-item #{'disabled' unless pagination_data[:previous_page]}") do
       if pagination_data[:previous_page]
-        tag.a(t("pagination.previous", default: "Previous"), href: url_for(page: pagination_data[:previous_page]), class: "page-link")
+        tag.a(link_text, href: url_for(page: pagination_data[:previous_page]), class: "page-link")
       else
-        tag.span(t("pagination.previous", default: "Previous"), class: "page-link")
+        tag.span(link_text, class: "page-link")
       end
     end
   end
 
   def next_page_tag(pagination_data)
+    link_text = t("pagination.next", default: "Next").html_safe
+
     tag.li(class: "page-item #{'disabled' unless pagination_data[:next_page]}") do
       if pagination_data[:next_page]
-        tag.a(t("pagination.next", default: "Next"), href: url_for(page: pagination_data[:next_page]), class: "page-link")
+        tag.a(link_text, href: url_for(page: pagination_data[:next_page]), class: "page-link")
       else
-        tag.span(t("pagination.next", default: "Next"), class: "page-link")
+        tag.span(link_text, class: "page-link")
       end
     end
   end
