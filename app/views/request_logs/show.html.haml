@@ -1,0 +1,26 @@
+= title(@request_log.id)
+.card.card-primary.border.border-primary
+  .card-body
+    .widget
+      .widget-header
+        .widget-title
+          = h(@request_log.uuid)
+        .widget-help
+          %span.middle-dot-divider
+            = RequestLog.human_attribute_name(:created_at)
+            = h(time_ago_with_tooltip(@request_log.created_at))
+          %span.middle-dot-divider
+            = t(".accessed_by")
+            = h(@request_log.user&.full_name)
+    .widget
+      .widget-header
+        .widget-title
+          = t(".basic_details")
+      .widget-body
+        = render_if_exists("request_logs/basic_details", locals: {request_log: @request_log})
+    .widget
+      .widget-header
+        .widget-title
+          = t(".additional_details")
+      .widget-body
+        = render_if_exists("request_logs/additional_details", locals: {request_log: @request_log})

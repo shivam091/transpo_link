@@ -28,6 +28,7 @@ Rails.application.routes.draw do
   resource :locale, only: [:edit, :update]
 
   resources :users, only: :index
+  resources :request_logs, path: "request-logs", only: [:index, :show]
 
   root to: "dashboards#show"
 end

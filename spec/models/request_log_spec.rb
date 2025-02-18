@@ -7,6 +7,8 @@
 require "spec_helper"
 
 RSpec.describe RequestLog, type: :model do
+  subject(:request_log) { build(:request_log) }
+
   describe "attributes, indexes, foreign keys, and check constraints" do
     it { is_expected.to have_db_column(:id).of_type(:uuid) }
     it { is_expected.to have_db_column(:uuid).of_type(:string) }
@@ -51,4 +53,11 @@ RSpec.describe RequestLog, type: :model do
   describe "normalized attributes" do
     it { is_expected.to normalize(:method).from("get").to("GET") }
   end
+
+  describe "included modules" do
+    it { is_expected.to include_module(Pageable) }
+    it { is_expected.to include_module(Sortable) }
+  end
+
+  include_examples "apply default scope on created_at:desc"
 end

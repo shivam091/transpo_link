@@ -12,11 +12,98 @@
       "no": "No",
       nil: "Nothing",
     },
+    datetime: {
+      time_ago: {
+        about_x_seconds_ago: {
+          zero: "just now",
+          one: "about a second ago",
+          other: "about %{count} seconds ago"
+        },
+        about_x_minutes_ago: {
+          one: "about a minute ago",
+          other: "about %{count} minutes ago"
+        },
+        about_x_hours_ago: {
+          one: "about an hour ago",
+          other: "about %{count} hours ago"
+        },
+        about_x_days_ago: {
+          one: "about a day ago",
+          other: "about %{count} days ago"
+        },
+        about_x_weeks_ago: {
+          one: "about a week ago",
+          other: "about %{count} weeks ago"
+        },
+        about_x_weeks_and_x_days_ago: {
+          one: "about %{weeks} weeks and a day ago",
+          other: "about %{weeks} weeks and %{count} days ago"
+        },
+        about_x_months_ago: {
+          one: "about a month ago",
+          other: "about %{count} months ago"
+        },
+        about_x_years_ago: {
+          one: "about a year ago",
+          other: "about %{count} years ago"
+        },
+        over_x_years_ago: "over %{count} years ago",
+        almost_x_years_ago: "almost %{count} years ago"
+      },
+      units: {
+        seconds: {
+          one: "1 second",
+          other: "%{count} seconds"
+        },
+        minutes: {
+          one: "1 minute",
+          other: "%{count} minutes"
+        },
+        hours: {
+          one: "1 hour",
+          other: "%{count} hours"
+        },
+        days: {
+          one: "1 day",
+          other: "%{count} days"
+        },
+        weeks: {
+          one: "1 week",
+          other: "%{count} weeks"
+        },
+        months: {
+          one: "1 month",
+          other: "%{count} months"
+        },
+        years: {
+          one: "1 year",
+          other: "%{count} years"
+        },
+      },
+    },
     activerecord: {
       attributes: {
         role: {
           name: "Name",
           is_active: "Is active",
+        },
+        request_log: {
+          uuid: "UUID",
+          uri: "URI",
+          method: "HTTP method",
+          session_id: "Session ID",
+          session_private_id: "Session private ID",
+          remote_address: "Remote address",
+          elapsed_time: "Elapsed time",
+          user_agent: "User agent",
+          referrer: "Referrer",
+          exception_message: "Exception message",
+          status: "HTTP status",
+          response_size: "Response size",
+          query_params: "Query parameters",
+          ip_info: "IP info",
+          user_id: "User",
+          created_at: "Accessed on",
         },
         user: {
           email: "Email address",
@@ -376,6 +463,19 @@
         select_preferred_language: "Select preferred language",
         preferred_locale_form_info: "Changes to your preferred language will be reflected across the application. Specify your preferred language from a list of supported languages. This feature is experimental and translations are not complete yet.",
       },
-    }
+    },
+    request_logs: {
+      index: {
+        title: "Request logs",
+      },
+      request_log: {
+        no_request_logs_to_display: "No request logs to display"
+      },
+      show: {
+        basic_details: "Basic details",
+        additional_details: "Additional details",
+        accessed_by: "Accessed by",
+      },
+    },
   },
 }

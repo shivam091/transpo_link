@@ -1,0 +1,6 @@
+= title(t(".title"))
+.card.card-primary.border.border-primary
+  .card-body
+    = render_if_exists("request_logs/request_log")
+  .card-footer
+    = render_pagination(@pagination_data)
