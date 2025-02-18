@@ -1,0 +1,20 @@
+.widget-row.d-flex
+  .flex-auto
+    .widget-row-title= UserPreference.human_attribute_name(:preferred_locale)
+    .widget-row-body= h(TranspoLink::I18n.trimmed_language_name(user.preferred_locale))
+.widget-row.d-flex
+  .flex-auto
+    .widget-row-title= UserPreference.human_attribute_name(:preferred_time_zone)
+    .widget-row-body= h(TranspoLink::TimeZone.formatted_time_zone(user.preferred_time_zone))
+.widget-row.d-flex
+  .flex-auto
+    .widget-row-title= UserPreference.human_attribute_name(:preferred_currency)
+    .widget-row-body= h(TranspoLink::Currency.formatted_currency(user.preferred_currency))
+.widget-row.d-flex
+  .flex-auto
+    .widget-row-title= UserPreference.human_attribute_name(:preferred_color_scheme)
+    .widget-row-body= h(enum_i18n(UserPreference, :preferred_color_schemes, user.preferred_color_scheme))
+.widget-row.d-flex
+  .flex-auto
+    .widget-row-title= UserPreference.human_attribute_name(:are_notifications_enabled)
+    .widget-row-body= h(humanize_boolean(user.are_notifications_enabled))

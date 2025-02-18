@@ -34,6 +34,12 @@ class User < ApplicationRecord
 
   has_many :request_logs, inverse_of: :user, dependent: :nullify
 
+  has_many :warehouse_managers, inverse_of: :manager, foreign_key: :manager_id, dependent: :restrict_with_exception
+  has_many :managed_warehouses, through: :warehouse_managers, inverse_of: :managers, source: :warehouse
+
+  has_many :warehouse_suppliers, inverse_of: :supplier, foreign_key: :supplier_id, dependent: :restrict_with_exception
+  has_many :supplied_warehouses, through: :warehouse_suppliers, inverse_of: :suppliers, source: :warehouse
+
   belongs_to :role, inverse_of: :users
 
   after_update :update_password_updated_at, if: :saved_change_to_encrypted_password?
@@ -41,6 +47,7 @@ class User < ApplicationRecord
   scope :admins, -> { with_role("admin") }
   scope :suppliers, -> { with_role("supplier") }
   scope :buyers, -> { with_role("buyer") }
+  scope :managers, -> { with_role("manager") }
 
   delegate :name, to: :role, prefix: true
   delegate :first_name, :last_name, :full_name, :mobile_number,

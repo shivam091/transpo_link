@@ -1,0 +1,31 @@
+.table-responsive
+  %table.table.table-striped.table-borderless
+    %thead.border
+      %tr.table-active
+        %th{width: "25px", scope: "col"}#
+        %th{scope: "col"}= RequestLog.human_attribute_name(:uuid)
+        %th{scope: "col"}= RequestLog.human_attribute_name(:uri)
+        %th{scope: "col"}= RequestLog.human_attribute_name(:method)
+        %th{scope: "col"}= RequestLog.human_attribute_name(:remote_address)
+        %th{scope: "col"}= RequestLog.human_attribute_name(:elapsed_time)
+        %th{scope: "col"}= RequestLog.human_attribute_name(:status)
+        %th{scope: "col"}= RequestLog.human_attribute_name(:response_size)
+        %th{scope: "col"}= RequestLog.human_attribute_name(:created_at)
+        %th{scope: "col"}= RequestLog.human_attribute_name(:user_id)
+    %tbody.border
+      - if @request_logs&.each.with_index(1) do |request_log, index|
+        %tr
+          %th{scope: "row"}= h(@pagination_data[:offset] + index)
+          %td= link_to request_log.uuid, request_log_path(request_log)
+          %td= link_to request_log.uri, request_log.uri, target: :_blank
+          %td= h(request_log.method)
+          %td= h(IPAddr.new(request_log.remote_address, Socket::AF_INET)) rescue ""
+          %td= h(prettify_seconds(request_log.elapsed_time))
+          %td= h(request_log.status)
+          %td= h(number_to_human_size(request_log.response_size))
+          %td= h(time_ago_with_tooltip(request_log.created_at))
+          %td= h(request_log.user&.full_name)
+      - end.empty?
+        %tr
+          %td.no-data{colspan: RequestLog.columns.count}
+            = t(".no_request_logs_to_display")

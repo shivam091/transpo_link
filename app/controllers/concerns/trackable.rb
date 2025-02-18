@@ -15,7 +15,7 @@ module Trackable
   def log_activity
     log_data = {
       uuid: request.uuid,
-      uri: request.url,
+      uri: "#{request.protocol}#{request.host_with_port}#{request.path}",
       method: request.request_method,
       session_id: request.session.id.to_s,
       session_private_id: request.session.id&.private_id.to_s,

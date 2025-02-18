@@ -1,0 +1,26 @@
+= title(@user.full_name)
+.card.card-primary.border.border-primary
+  .card-body
+    .widget
+      .widget-header
+        .widget-title
+          = h(@user.full_name)
+        .widget-help
+          %span.middle-dot-divider
+            = User.human_attribute_name(:created_at)
+            = h(time_ago_with_tooltip(@user.created_at))
+          %span.middle-dot-divider
+            = User.human_attribute_name(:updated_at)
+            = h(time_ago_with_tooltip(@user.updated_at))
+    .widget
+      .widget-header
+        .widget-title
+          = t(".basic_n_contact_details")
+      .widget-body
+        = render_if_exists("users/basic_n_contact_details", locals: {user: @user})
+    .widget
+      .widget-header
+        .widget-title
+          = t(".additional_details")
+      .widget-body
+        = render_if_exists("users/additional_details", locals: {user: @user})

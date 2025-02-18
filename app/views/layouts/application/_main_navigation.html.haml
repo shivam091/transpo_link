@@ -21,7 +21,7 @@
               = external_svg_tag("svgs/users.svg")
               = t(".users")
           %li.nav-item
-            = link_to "javascript:void(0)", class: ["nav-link", active_when(current_controller?("request_logs"))] do
+            = link_to request_logs_path, class: ["nav-link", active_when(current_controller?("request_logs"))] do
               = external_svg_tag("svgs/logs.svg")
               = t(".request_logs")
         %ul.navbar-nav.d-none.d-lg-flex.ms-2

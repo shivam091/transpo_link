@@ -1,0 +1,32 @@
+.widget-row.d-flex
+  .flex-auto
+    .widget-row-title= RequestLog.human_attribute_name(:uri)
+    .widget-row-body= h(request_log.uri)
+.widget-row.d-flex
+  .flex-auto
+    .widget-row-title= RequestLog.human_attribute_name(:method)
+    .widget-row-body= h(request_log.method)
+.widget-row.d-flex
+  .flex-auto
+    .widget-row-title= RequestLog.human_attribute_name(:remote_address)
+    .widget-row-body= h(IPAddr.new(request_log.remote_address, Socket::AF_INET)) rescue ""
+.widget-row.d-flex
+  .flex-auto
+    .widget-row-title= RequestLog.human_attribute_name(:elapsed_time)
+    .widget-row-body= h(prettify_seconds(request_log.elapsed_time))
+.widget-row.d-flex
+  .flex-auto
+    .widget-row-title= RequestLog.human_attribute_name(:user_agent)
+    .widget-row-body= h(request_log.user_agent)
+.widget-row.d-flex
+  .flex-auto
+    .widget-row-title= RequestLog.human_attribute_name(:referrer)
+    .widget-row-body= link_to request_log.referrer, request_log.referrer, target: :_blank
+.widget-row.d-flex
+  .flex-auto
+    .widget-row-title= RequestLog.human_attribute_name(:status)
+    .widget-row-body= h(request_log.status)
+.widget-row.d-flex
+  .flex-auto
+    .widget-row-title= RequestLog.human_attribute_name(:response_size)
+    .widget-row-body= h(number_to_human_size(request_log.response_size))
