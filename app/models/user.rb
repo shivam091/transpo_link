@@ -116,6 +116,26 @@ class User < ApplicationRecord
     reset_password_sent_at.present? && reset_password_sent_at >= (Time.current - THROTTLE_RESET_PERIOD)
   end
 
+  def admin?
+    has_role?("admin")
+  end
+
+  def buyer?
+    has_role?("buyer")
+  end
+
+  def supplier?
+    has_role?("supplier")
+  end
+
+  def manager?
+    has_role?("manager")
+  end
+
+  def has_role?(role)
+    role.eql?(role_name)
+  end
+
   private
 
   def update_password_updated_at
