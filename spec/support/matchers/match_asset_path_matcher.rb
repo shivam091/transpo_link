@@ -6,7 +6,7 @@
 #
 # ```
 # RSpec.describe ClassName do
-#   expect(described_class.main).to match_asset_path("/assets/favicon.ico")
+#   it { expect(described_class.main).to match_asset_path("/assets/favicon.ico") }
 # end
 # ```
 RSpec::Matchers.define :match_asset_path do |expected|
@@ -26,6 +26,6 @@ RSpec::Matchers.define :match_asset_path do |expected|
   end
 
   failure_message_when_negated do |actual|
-    "expected that #{actual} would not include an asset path for  #{expected}"
+    "expected that #{actual} would not include an asset path for #{expected}"
   end
 end
