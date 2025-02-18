@@ -10,9 +10,19 @@ class PrettyFormBuilder < ActionView::Helpers::FormBuilder
     super(attribute, options)
   end
 
+  def password_field(attribute, options = {})
+    options[:class] = append_class(options[:class], "form-control")
+    super(attribute, options)
+  end
+
   def select(attribute, choices = nil, options = {}, html_options = {}, &block)
     html_options[:class] = append_class(html_options[:class], "form-select")
     super(attribute, choices, options, html_options, &block)
+  end
+
+  def radio_button(attribute, tag_value, options = {})
+    options[:class] = append_class(options[:class], "form-check-input")
+    super(attribute, tag_value, options)
   end
 
   private
