@@ -1,28 +1,13 @@
-@keyframes slide-in {
+@keyframes slideUpAndFade {
   0% {
-    transform: translateY(1rem);
     opacity: 0;
+    transform: translateY(16px)
   }
-  100% {
-    transform: translateY(0rem);
+  to {
     opacity: 1;
-  }
-  0% {
-    transform: translateY(1rem);
-    opacity: 0;
+    transform: translateY(0)
   }
 }
-@-webkit-keyframes slide-in {
-  0% {
-    -webkit-transform: transform;
-    -webkit-opacity: 0;
-  }
-  100% {
-    -webkit-transform: translateY(0);
-    -webkit-opacity: 1;
-  }
-  0% {
-    -webkit-transform: translateY(1rem);
-    -webkit-opacity: 0;
-  }
+.animate-slideUpAndFade {
+  animation: slideUpAndFade 0.2s cubic-bezier(0.16, 1, 0.3, 1)
 }
