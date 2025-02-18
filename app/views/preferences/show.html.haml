@@ -11,23 +11,4 @@
           = external_svg_tag("svgs/pencil.svg")
           = button_text("edit")
       .widget-body
-        .widget-row.d-flex
-          .flex-auto
-            .widget-row-title= UserPreference.human_attribute_name(:preferred_locale)
-            .widget-row-body= h(TranspoLink::I18n.trimmed_language_name(current_user.preferred_locale))
-        .widget-row.d-flex
-          .flex-auto
-            .widget-row-title= UserPreference.human_attribute_name(:preferred_time_zone)
-            .widget-row-body= h(TranspoLink::TimeZone.formatted_time_zone(current_user.preferred_time_zone))
-        .widget-row.d-flex
-          .flex-auto
-            .widget-row-title= UserPreference.human_attribute_name(:preferred_currency)
-            .widget-row-body= h(TranspoLink::Currency.formatted_currency(current_user.preferred_currency))
-        .widget-row.d-flex
-          .flex-auto
-            .widget-row-title= UserPreference.human_attribute_name(:preferred_color_scheme)
-            .widget-row-body= h(enum_i18n(UserPreference, :preferred_color_schemes, current_user.preferred_color_scheme))
-        .widget-row.d-flex
-          .flex-auto
-            .widget-row-title= UserPreference.human_attribute_name(:are_notifications_enabled)
-            .widget-row-body= h(humanize_boolean(current_user.are_notifications_enabled))
+        = render_if_exists("preferences/show", locals: {user: current_user})
