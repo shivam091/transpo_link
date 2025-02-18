@@ -371,8 +371,8 @@
     },
     pagination: {
       label: "Pagination",
-      previous: "Previous",
-      next: "Next",
+      previous: "&laquo;&nbsp;Previous",
+      next: "Next&nbsp;&raquo;",
     },
     shared: {
       address_form_fields: {
