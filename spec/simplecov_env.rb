@@ -38,7 +38,7 @@ module SimpleCovEnv
 
   def configure_filters
     SimpleCov.configure do
-      add_filter "spec"
+      add_filter "/spec/"
     end
   end
 
