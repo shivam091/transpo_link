@@ -11,7 +11,7 @@ RSpec.describe WarehousePresenter, type: :presenter do
 
   describe "#capacity" do
     it "returns formatted capacity with unit" do
-      expect(presenter.capacity).to eq("1000 kg")
+      expect(presenter.capacity).to eq("1,000 kg")
     end
 
     it "returns blank if values are nil" do
