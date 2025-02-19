@@ -6,6 +6,9 @@ require "spec_helper"
 
 ENV["RAILS_ENV"] ||= "test"
 
+require "./spec/simplecov_env"
+SimpleCovEnv.start!
+
 require_relative "../config/environment"
 require "active_support/testing/time_helpers"
 
@@ -23,9 +26,6 @@ end
 def test_directory_path
   spec_root / "test"
 end
-
-require "./spec/simplecov_env"
-SimpleCovEnv.start!
 
 begin
   # ActiveRecord::Migration.maintain_test_schema!
