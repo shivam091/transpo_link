@@ -12,8 +12,8 @@ class CreateWarehouses < ActiveRecord::Migration[8.0]
       t.text :description
       t.decimal :total_capacity, precision: 12, scale: 2
       t.string :capacity_unit
-      t.decimal :latitude, precision: 10, scale: 8
-      t.decimal :longitude, precision: 10, scale: 8
+      t.decimal :latitude, precision: 11, scale: 8
+      t.decimal :longitude, precision: 11, scale: 8
       t.boolean :is_active, default: false, index: {using: :btree}
 
       t.timestamps_with_timezone null: false

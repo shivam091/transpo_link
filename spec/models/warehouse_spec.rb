@@ -22,8 +22,8 @@ RSpec.describe Warehouse, type: :model do
     it { is_expected.to have_db_column(:description).of_type(:text) }
     it { is_expected.to have_db_column(:total_capacity).of_type(:decimal).with_options(precision: 12, scale: 2) }
     it { is_expected.to have_db_column(:capacity_unit).of_type(:string) }
-    it { is_expected.to have_db_column(:latitude).of_type(:decimal).with_options(precision: 10, scale: 8) }
-    it { is_expected.to have_db_column(:longitude).of_type(:decimal).with_options(precision: 10, scale: 8) }
+    it { is_expected.to have_db_column(:latitude).of_type(:decimal).with_options(precision: 11, scale: 8) }
+    it { is_expected.to have_db_column(:longitude).of_type(:decimal).with_options(precision: 11, scale: 8) }
     it { is_expected.to have_db_column(:is_active).of_type(:boolean).with_options(default: false) }
     it { is_expected.to have_db_column(:created_at).of_type(:timestamptz).with_options(null: false) }
     it { is_expected.to have_db_column(:updated_at).of_type(:timestamptz).with_options(null: false) }
