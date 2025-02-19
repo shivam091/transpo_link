@@ -399,6 +399,7 @@
           error: "Your language could not be updated."
         },
       }
+    },
     measurement_units: {
       categories: {
         area: "Area based",
