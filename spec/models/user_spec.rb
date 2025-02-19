@@ -344,5 +344,32 @@ RSpec.describe User, type: :model do
         end
       end
     end
+
+    describe "#admin?" do
+      it "returns true" do
+        expect(subject.admin?).to be_truthy
+      end
+    end
+
+    describe "#buyer?" do
+      it "returns true" do
+        buyer = create(:buyer, :confirmed)
+        expect(buyer.buyer?).to be_truthy
+      end
+    end
+
+    describe "#supplier?" do
+      it "returns true" do
+        supplier = create(:supplier, :confirmed)
+        expect(supplier.supplier?).to be_truthy
+      end
+    end
+
+    describe "#manager?" do
+      it "returns true" do
+        manager = create(:manager, :confirmed)
+        expect(manager.manager?).to be_truthy
+      end
+    end
   end
 end

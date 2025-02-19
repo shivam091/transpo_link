@@ -17,5 +17,9 @@ module TranspoLink
     config.autoload_paths += %W(#{config.root}/lib)
 
     config.encoding = "utf-8"
+
+    config.to_prepare do
+      Dir[Rails.root.join("lib/generators/**/*_generator.rb")].each { |file| require file }
+    end
   end
 end
