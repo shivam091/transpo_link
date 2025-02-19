@@ -1,6 +1,6 @@
 .nav-scroller.bg-body-tertiary.shadow-sm.border-bottom
   %nav.nav{aria: {label: t(".secondary_navigation")}}
-    = link_to "javascript:void(0)", class: "nav-link" do
+    = link_to warehouses_path, class: class_names("nav-link", "active": current_controller?(:warehouses)) do
       = external_svg_tag("svgs/marketplace.svg")
       = t(".warehouses")
     = link_to "javascript:void(0)", class: "nav-link" do

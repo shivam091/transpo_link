@@ -3,7 +3,7 @@
 # -*- warn_indent: true -*-
 
 class Warehouse < ApplicationRecord
-  include Toggleable, HasReferenceCode
+  include Toggleable, HasReferenceCode, Pageable
 
   has_one :address, as: :addressable, inverse_of: :addressable, dependent: :destroy
 

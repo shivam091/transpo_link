@@ -1,0 +1,28 @@
+.table-responsive
+  %table.table.table-striped.table-borderless
+    %thead.border
+      %tr.table-active
+        %th{width: "25px", scope: "col"}#
+        %th{scope: "col"}= Warehouse.human_attribute_name(:reference_code)
+        %th{scope: "col"}= Warehouse.human_attribute_name(:name)
+        %th{scope: "col"}= Warehouse.human_attribute_name(:email_address)
+        %th{scope: "col"}= Warehouse.human_attribute_name(:contact_number)
+        %th{scope: "col"}= Warehouse.human_attribute_name(:capacity)
+        %th{scope: "col"}= Warehouse.human_attribute_name(:latitude)
+        %th{scope: "col"}= Warehouse.human_attribute_name(:longitude)
+    %tbody.border
+      - if @warehouses&.each.with_index(1) do |warehouse, index|
+        - present(warehouse) do |warehouse|
+          %tr
+            %th{scope: "row"}= h(@pagination_data[:offset] + index)
+            %td= h(warehouse.reference_code)
+            %td= h(warehouse.name)
+            %td= mail_to(warehouse.email_address)
+            %td= h(warehouse.contact_number)
+            %td= h(warehouse.capacity)
+            %td= h(warehouse.latitude)
+            %td= h(warehouse.longitude)
+      - end.empty?
+        %tr
+          %td.no-data{colspan: Warehouse.columns.count}
+            = t(".not_warehouses_to_display")

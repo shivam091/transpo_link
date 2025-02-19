@@ -1,0 +1,15 @@
+.card.card-primary.border.border-primary
+  .card-header
+    .d-flex.justify-content-between.align-items-center
+      = render_if_exists("shared/inline_navigations") do
+        %ul.nav.nav-pills.flex-row
+          %li.nav-item
+            = link_to t(".all"), warehouses_path, class: class_names("nav-link", "active": current_action?(:index))
+          %li.nav-item
+            = link_to t(".active"), "javascript:void(0)", class: class_names("nav-link", "active": current_action?(:active))
+          %li.nav-item
+            = link_to t(".inactive"), "javascript:void(0)", class: class_names("nav-link", "active": current_action?(:inactive))
+  .card-body
+    = render_if_exists("warehouses/warehouse")
+  .card-footer
+    = render_pagination(@pagination_data)
