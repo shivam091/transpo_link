@@ -18,9 +18,9 @@ class Warehouses::CreateService < ApplicationService
   def create_warehouse
     warehouse = Warehouse.new(warehouse_attributes)
     if warehouse.save
-      ServiceResponse.success(message: t("warehouses.create.success"), payload: {warehouse: warehouse})
+      ServiceResponse.success(message: t("warehouses.create.notice"), payload: {warehouse: warehouse})
     else
-      ServiceResponse.error(message: t("warehouses.create.error"), payload: {warehouse: warehouse})
+      ServiceResponse.error(message: t("warehouses.create.alert"), payload: {warehouse: warehouse})
     end
   end
 end

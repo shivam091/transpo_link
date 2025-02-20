@@ -19,7 +19,7 @@ class Warehouses::UpdateService < ApplicationService
     if warehouse.update(warehouse_attributes)
       ServiceResponse.success(message: t("warehouses.update.notice"), payload: {warehouse: warehouse})
     else
-      ServiceResponse.error(message: t("warehouses.update.error"), payload: {warehouse: warehouse})
+      ServiceResponse.error(message: t("warehouses.update.alert"), payload: {warehouse: warehouse})
     end
   end
 end

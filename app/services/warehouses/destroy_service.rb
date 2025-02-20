@@ -19,7 +19,7 @@ class Warehouses::DestroyService < ApplicationService
     if warehouse.destroy
       ServiceResponse.success(message: t("warehouses.destroy.info"), payload: {warehouse: warehouse})
     else
-      ServiceResponse.error(message: t("warehouses.destroy.error"), payload: {warehouse: warehouse})
+      ServiceResponse.error(message: t("warehouses.destroy.alert"), payload: {warehouse: warehouse})
     end
   end
 end

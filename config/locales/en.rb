@@ -432,16 +432,16 @@
       },
       warehouses: {
         create: {
-          success: "Warehouse was successfully created.",
-          error: "Warehouse could not be created.",
+          notice: "Warehouse was successfully created.",
+          alert: "Warehouse could not be created.",
         },
         update: {
           notice: "Warehouse was successfully updated.",
-          error: "Warehouse could not be updated."
+          alert: "Warehouse could not be updated."
         },
         destroy: {
           info: "Warehouse was successfully deleted.",
-          error: "Warehouse could not be deleted."
+          alert: "Warehouse could not be deleted."
         },
       },
     },
