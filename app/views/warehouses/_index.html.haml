@@ -9,6 +9,9 @@
             = link_to t(".active"), "javascript:void(0)", class: class_names("nav-link", "active": current_action?(:active))
           %li.nav-item
             = link_to t(".inactive"), "javascript:void(0)", class: class_names("nav-link", "active": current_action?(:inactive))
+      = link_to new_warehouse_path, class: "btn btn-primary" do
+        = external_svg_tag("svgs/plus.svg")
+        = button_text("new")
   .card-body
     = render_if_exists("warehouses/warehouse")
   .card-footer
