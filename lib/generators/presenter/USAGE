@@ -1,0 +1,11 @@
+Description:
+  Stubs out a new presenter.
+
+Example:
+  rails g presenter post
+
+This will create:
+  app/presenters/post_presenter.rb
+
+If you want to specify targets then specify those targets like:
+  rails g presenter post "post" "comment"

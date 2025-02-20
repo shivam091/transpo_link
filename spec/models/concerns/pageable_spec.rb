@@ -70,7 +70,7 @@ RSpec.describe Pageable do
     end
 
     it "returns paginated records and pagination data" do
-      paginated_records, pagination_data = PageableModel.paginate(2, 10)
+      paginated_records, pagination_data = PageableModel.paginate(page: 2, per_page: 10)
 
       expect(paginated_records.size).to eq(10)
       expect(pagination_data).to eq(
@@ -85,7 +85,7 @@ RSpec.describe Pageable do
     end
 
     it "returns first page if page is invalid" do
-      paginated_records, pagination_data = PageableModel.paginate(0, 10)
+      paginated_records, pagination_data = PageableModel.paginate(page: 0, per_page: 10)
 
       expect(pagination_data[:current_page]).to eq(1)
       expect(paginated_records.size).to eq(10)
@@ -93,7 +93,7 @@ RSpec.describe Pageable do
 
     it "handles cases where total count is less than per_page" do
       allow(PageableModel).to receive(:estimated_count).and_return(8)
-      paginated_records, pagination_data = PageableModel.paginate(1, 10)
+      paginated_records, pagination_data = PageableModel.paginate(page: 1, per_page: 10)
 
       expect(pagination_data[:total_pages]).to eq(1)
       expect(pagination_data[:total_count]).to eq(8)
