@@ -4,6 +4,8 @@
 
 class WarehousesController < ApplicationController
 
+  before_action :find_warehouse, except: [:index, :new, :create]
+
   # GET /warehouses
   def index
     @warehouses = Warehouse.all
@@ -35,6 +37,30 @@ class WarehousesController < ApplicationController
     end
   end
 
+  # GET /warehouses/:id/edit
+  def edit
+  end
+
+  # PUT|PATCH /warehouses/:id/edit
+  def update
+    response = Warehouses::UpdateService.(@warehouse, warehouse_params)
+    @warehouse = response.payload[:warehouse]
+    if response.success?
+      flash[:notice] = response.message
+      redirect_to warehouses_path, status: :see_other
+    else
+      flash.now[:alert] = response.message
+      respond_to do |format|
+        format.turbo_stream do
+          render turbo_stream: [
+            turbo_stream.update(:warehouse_form, partial: "warehouses/form"),
+            render_flash
+          ], status: :unprocessable_entity
+        end
+      end
+    end
+  end
+
   private
 
   def warehouse_params
@@ -49,5 +75,9 @@ class WarehousesController < ApplicationController
       :longitude,
       :is_active
     )
+  end
+
+  def find_warehouse
+    @warehouse = Warehouse.find(params[:id])
   end
 end
