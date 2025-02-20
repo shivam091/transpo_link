@@ -20,9 +20,9 @@
             %td= mail_to(warehouse.email_address)
             %td= h(warehouse.contact_number)
             %td= h(warehouse.capacity)
-            %td= h(warehouse.latitude)
-            %td= h(warehouse.longitude)
+            %td= h(warehouse.formatted_latitude)
+            %td= h(warehouse.formatted_longitude)
       - end.empty?
         %tr
           %td.no-data{colspan: Warehouse.columns.count}
-            = t(".not_warehouses_to_display")
+            = t(".no_warehouses_to_display")

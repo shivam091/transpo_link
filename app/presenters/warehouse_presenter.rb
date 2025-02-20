@@ -10,4 +10,12 @@ class WarehousePresenter < ApplicationPresenter
   def capacity
     [number_to_delimited(try(:total_capacity)), try(:capacity_unit)].compact.join(" ")
   end
+
+  def formatted_latitude
+    [latitude, "°"].compact.join if latitude.present?
+  end
+
+  def formatted_longitude
+    [longitude, "°"].compact.join if longitude.present?
+  end
 end
