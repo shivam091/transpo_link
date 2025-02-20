@@ -36,13 +36,13 @@ RSpec.describe "Locales", type: :request do
     end
 
     describe "PUT|PATCH /locale" do
-      context "with valid attributes" do
+      context "when valid attributes" do
         it "updates the language" do
           put locale_path, params: {
             user: {user_preference_attributes: {preferred_locale: "es"}}
           }, headers: {"HTTP_REFERER" => root_path}, as: :turbo_stream
 
-          expect(admin.preferred_locale).to eq("es")
+          expect(admin.reload.preferred_locale).to eq("es")
           expect(response).not_to redirect_to(preference_path)
           expect(response).to redirect_to(root_path)
           expect(flash[:notice]).to be_present
@@ -50,15 +50,13 @@ RSpec.describe "Locales", type: :request do
         end
       end
 
-      context "with invalid attributes" do
+      context "when invalid attributes" do
         it "does not update the language" do
           put locale_path, params: {
             user: {user_preference_attributes: {preferred_locale: ""}}
           }, as: :turbo_stream
 
-          admin.reload
-
-          expect(admin.preferred_locale).to eq("en")
+          expect(admin.reload.preferred_locale).to eq("en")
           expect(flash[:alert]).to be_present
           expect(response.media_type).to eq(Mime[:turbo_stream])
           expect(response.body).to include("<turbo-stream action=\"update\" target=\"edit_locale_form\">")
