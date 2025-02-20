@@ -18,9 +18,9 @@ class Profiles::UpdateService < ApplicationService
 
   def update_profile
     if user.update(profile_attributes)
-      ServiceResponse.success(message: t("profiles.update.success"), payload: {user: user})
+      ServiceResponse.success(message: t("profiles.update.notice"), payload: {user: user})
     else
-      ServiceResponse.error(message: t("profiles.update.error"), payload: {user: user})
+      ServiceResponse.error(message: t("profiles.update.alert"), payload: {user: user})
     end
   end
 end
