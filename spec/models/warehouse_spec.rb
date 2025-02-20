@@ -74,4 +74,42 @@ RSpec.describe Warehouse, type: :model do
   end
 
   include_examples "apply default scope on created_at:desc"
+
+  describe "validations" do
+    describe "#name" do
+      it { is_expected.to validate_presence_of(:name) }
+      it { is_expected.to validate_length_of(:name).is_at_least(2).is_at_most(255) }
+    end
+
+    describe "#email_address" do
+      it { is_expected.to validate_length_of(:email_address).is_at_least(2).is_at_most(55).allow_blank }
+      it { is_expected.to validate_uniqueness_of(:email_address) }
+    end
+
+    describe "#contact_number" do
+      it { is_expected.to validate_length_of(:contact_number).is_at_least(2).is_at_most(55).allow_blank }
+    end
+
+    describe "#description" do
+      it { is_expected.to validate_length_of(:description).is_at_most(1000).allow_blank }
+    end
+
+    describe "#total_capacity" do
+      it { is_expected.to validate_presence_of(:total_capacity) }
+      it { is_expected.to validate_numericality_of(:total_capacity).is_greater_than(0).is_less_than(10**10) }
+    end
+
+    describe "#capacity_unit" do
+      it { is_expected.to validate_presence_of(:capacity_unit) }
+      it { is_expected.to validate_inclusion_of(:capacity_unit).in_array(TranspoLink::MeasurementUnits.all_units.map(&:to_s)) }
+    end
+
+    describe "#latitude" do
+      it { is_expected.to validate_numericality_of(:latitude).is_greater_than_or_equal_to(-90).is_less_than_or_equal_to(90).allow_nil }
+    end
+
+    describe "#longitude" do
+      it { is_expected.to validate_numericality_of(:longitude).is_greater_than_or_equal_to(-180).is_less_than_or_equal_to(180).allow_nil }
+    end
+  end
 end
