@@ -153,6 +153,29 @@
           country: "Country or region",
           postal_code: "Postal code, Postcode, or PIN code",
         },
+        warehouse: {
+          name: "Name",
+          reference_code: "Reference code",
+          email_address: "Email address",
+          contact_number: "Contact number",
+          description: "Description",
+          total_capacity: "Total capacity",
+          capacity_unit: "Capacity unit",
+          capacity: "Capacity",
+          latitude: "Latitude",
+          longitude: "Longitude",
+          is_active: "Is active",
+          created_at: "Created at",
+          updated_at: "Updated at",
+        },
+        warehouse_manager: {
+          warehouse_id: "Warehouse",
+          manager_id: "Manager",
+        },
+        warehouse_supplier: {
+          warehouse_id: "Warehouse",
+          supplier_id: "Supplier",
+        },
       },
       errors: {
         format: "%{attribute} %{message}",
@@ -213,10 +236,13 @@
       sign_in: "Sign in",
       continue: "Continue",
       save_changes: "Save changes",
+      new: "New",
+      create: "Create",
       edit: "Edit",
-      cancel: "Cancel",
       update: "Update",
       delete: "Delete",
+      save: "Save",
+      cancel: "Cancel",
     },
     devise: {
       confirmations: {
@@ -375,6 +401,11 @@
       next: "Next&nbsp;&raquo;",
     },
     shared: {
+      inline_navigations: {
+        all: "All",
+        active: "Active",
+        inactive: "Inactive",
+      },
       address_form_fields: {
         select_country: "Select country",
         select_state: "Select state",
@@ -398,7 +429,21 @@
           success: "You've updated your language. Your change might take a while to show everywhere.",
           error: "Your language could not be updated."
         },
-      }
+      },
+      warehouses: {
+        create: {
+          success: "Warehouse was successfully created.",
+          error: "Warehouse could not be created.",
+        },
+        update: {
+          notice: "Warehouse was successfully updated.",
+          error: "Warehouse could not be updated."
+        },
+        destroy: {
+          info: "Warehouse was successfully deleted.",
+          error: "Warehouse could not be deleted."
+        },
+      },
     },
     measurement_units: {
       categories: {
@@ -549,6 +594,26 @@
       },
       basic_details: {},
       additional_details: {},
+    },
+    warehouses: {
+      index: {
+        title: "Warehouses"
+      },
+      warehouse: {
+        actions: "Actions",
+        no_warehouses_to_display: "No warehouses to display",
+        delete_warehouse_confirmation_text: "Are you sure you want to delete the warehouse ‘%{warehouse_name}’? All related data may be lost.",
+      },
+      new: {
+        title: "New warehouse",
+      },
+      edit: {
+        title: "Edit warehouse",
+      },
+      form: {
+        select_capacity_unit: "Select capacity unit",
+      },
+      show: {},
     },
   },
 }
