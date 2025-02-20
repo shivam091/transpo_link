@@ -183,6 +183,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_17_171347) do
     t.boolean "is_active", default: false
     t.timestamptz "created_at", null: false
     t.timestamptz "updated_at", null: false
+    t.index ["email_address"], name: "index_warehouses_on_email_address", unique: true
     t.index ["is_active"], name: "index_warehouses_on_is_active"
     t.index ["reference_code"], name: "index_warehouses_on_reference_code", unique: true
     t.check_constraint "capacity_unit IS NOT NULL AND capacity_unit::text <> ''::text", name: "check_warehouses_capacity_unit_presence"

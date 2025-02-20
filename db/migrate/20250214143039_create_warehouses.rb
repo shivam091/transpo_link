@@ -7,7 +7,7 @@ class CreateWarehouses < ActiveRecord::Migration[8.0]
     create_table :warehouses, id: :uuid do |t|
       t.string :name
       t.string :reference_code, index: {using: :btree, unique: true}
-      t.string :email_address
+      t.string :email_address, index: {using: :btree, unique: true}
       t.string :contact_number
       t.text :description
       t.decimal :total_capacity, precision: 12, scale: 2
