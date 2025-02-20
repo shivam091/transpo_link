@@ -12,7 +12,7 @@ class CreateWarehouses < ActiveRecord::Migration[8.0]
       t.text :description
       t.decimal :total_capacity, precision: 12, scale: 2
       t.string :capacity_unit
-      t.decimal :latitude, precision: 11, scale: 8
+      t.decimal :latitude, precision: 10, scale: 8
       t.decimal :longitude, precision: 11, scale: 8
       t.boolean :is_active, default: false, index: {using: :btree}
 
@@ -24,6 +24,12 @@ class CreateWarehouses < ActiveRecord::Migration[8.0]
 
       t.check_constraint "CHAR_LENGTH(name) <= 255 AND CHAR_LENGTH(name) >= 2", name: "check_warehouses_name_length"
       t.check_constraint "CHAR_LENGTH(description) <= 1000", name: "check_warehouses_description_length"
+      t.check_constraint "CHAR_LENGTH(email_address) <= 55 AND CHAR_LENGTH(email_address) >= 2", name: "check_warehouses_email_address_length"
+      t.check_constraint "CHAR_LENGTH(contact_number) <= 55 AND CHAR_LENGTH(contact_number) >= 2", name: "check_warehouses_contact_number_length"
+
+      t.check_constraint "total_capacity BETWEEN 0 AND 100000000000", name: "check_warehouses_total_capacity_range"
+      t.check_constraint "latitude BETWEEN -90 AND 90", name: "check_warehouses_latitude_range"
+      t.check_constraint "longitude BETWEEN -180 AND 180", name: "check_warehouses_longitude_range"
     end
   end
 end
