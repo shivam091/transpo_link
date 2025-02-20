@@ -8,12 +8,9 @@ module PaginationHelper
 
     content = ActiveSupport::SafeBuffer.new
 
-    content.safe_concat(tag.nav(aria: {label: t("pagination.label", default: "Pagination")}) do
-      tag.ul(class: "pagination justify-content-center") do
-        safe_concat(previous_page_tag(pagination_data))
-        safe_concat(page_number_tags(pagination_data))
-        safe_concat(next_page_tag(pagination_data))
-      end
+    content.safe_concat(tag.div(class: "d-flex justify-content-between align-items-center mb-1") do
+      safe_concat(pagination_nav_tag(pagination_data))
+      safe_concat(record_info_tag(pagination_data))
     end)
 
     content
@@ -21,8 +18,32 @@ module PaginationHelper
 
   private
 
+  def record_info_tag(pagination_data)
+    per_page = pagination_data[:per_page] || 10
+    total_count = pagination_data[:total_count] || 0
+    current_page = pagination_data[:current_page] || 1
+
+    start_record = ((current_page - 1) * per_page) + 1
+    end_record = [start_record + (per_page - 1), total_count].compact.min
+
+    tag.p(
+      t("pagination.record_info", start: start_record, end: end_record, total: total_count),
+      class: "mb-0"
+    )
+  end
+
+  def pagination_nav_tag(pagination_data)
+    tag.nav(aria: {label: t("pagination.label")}) do
+      tag.ul(class: "pagination mb-0") do
+        safe_concat(previous_page_tag(pagination_data))
+        safe_concat(page_number_tags(pagination_data))
+        safe_concat(next_page_tag(pagination_data))
+      end
+    end
+  end
+
   def previous_page_tag(pagination_data)
-    link_text = t("pagination.previous", default: "Previous").html_safe
+    link_text = t("pagination.previous").html_safe
 
     tag.li(class: "page-item #{'disabled' unless pagination_data[:previous_page]}") do
       if pagination_data[:previous_page]
@@ -34,7 +55,7 @@ module PaginationHelper
   end
 
   def next_page_tag(pagination_data)
-    link_text = t("pagination.next", default: "Next").html_safe
+    link_text = t("pagination.next").html_safe
 
     tag.li(class: "page-item #{'disabled' unless pagination_data[:next_page]}") do
       if pagination_data[:next_page]
