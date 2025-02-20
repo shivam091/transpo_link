@@ -1,0 +1,25 @@
+# -*- encoding: utf-8 -*-
+# -*- frozen_string_literal: true -*-
+# -*- warn_indent: true -*-
+
+class Warehouses::DestroyService < ApplicationService
+  def initialize(warehouse)
+    @warehouse = warehouse
+  end
+
+  def call
+    destroy_warehouse
+  end
+
+  private
+
+  attr_reader :warehouse
+
+  def destroy_warehouse
+    if warehouse.destroy
+      ServiceResponse.success(message: t("warehouses.destroy.info"), payload: {warehouse: warehouse})
+    else
+      ServiceResponse.error(message: t("warehouses.destroy.error"), payload: {warehouse: warehouse})
+    end
+  end
+end
