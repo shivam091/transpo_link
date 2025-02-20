@@ -61,6 +61,10 @@ class WarehousesController < ApplicationController
     end
   end
 
+  # GET /warehouses/:id
+  def show
+  end
+
   private
 
   def warehouse_params
