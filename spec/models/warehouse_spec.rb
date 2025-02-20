@@ -22,13 +22,14 @@ RSpec.describe Warehouse, type: :model do
     it { is_expected.to have_db_column(:description).of_type(:text) }
     it { is_expected.to have_db_column(:total_capacity).of_type(:decimal).with_options(precision: 12, scale: 2) }
     it { is_expected.to have_db_column(:capacity_unit).of_type(:string) }
-    it { is_expected.to have_db_column(:latitude).of_type(:decimal).with_options(precision: 11, scale: 8) }
+    it { is_expected.to have_db_column(:latitude).of_type(:decimal).with_options(precision: 10, scale: 8) }
     it { is_expected.to have_db_column(:longitude).of_type(:decimal).with_options(precision: 11, scale: 8) }
     it { is_expected.to have_db_column(:is_active).of_type(:boolean).with_options(default: false) }
     it { is_expected.to have_db_column(:created_at).of_type(:timestamptz).with_options(null: false) }
     it { is_expected.to have_db_column(:updated_at).of_type(:timestamptz).with_options(null: false) }
 
     it { is_expected.to have_db_index(:reference_code).unique(true) }
+    it { is_expected.to have_db_index(:email_address).unique(true) }
     it { is_expected.to have_db_index(:is_active) }
 
     it { is_expected.to have_check_constraint(:check_warehouses_name_presence).with_expression("name IS NOT NULL AND name::text <> ''::text") }
@@ -37,11 +38,19 @@ RSpec.describe Warehouse, type: :model do
 
     it { is_expected.to have_check_constraint(:check_warehouses_name_length).with_expression("char_length(name::text) <= 255 AND char_length(name::text) >= 2") }
     it { is_expected.to have_check_constraint(:check_warehouses_description_length).with_expression("char_length(description) <= 1000") }
+    it { is_expected.to have_check_constraint(:check_warehouses_email_address_length).with_expression("char_length(email_address::text) <= 55 AND char_length(email_address::text) >= 2") }
+    it { is_expected.to have_check_constraint(:check_warehouses_contact_number_length).with_expression("char_length(contact_number::text) <= 55 AND char_length(contact_number::text) >= 2") }
+
+    it { is_expected.to have_check_constraint(:check_warehouses_total_capacity_range).with_expression("total_capacity >= 0::numeric AND total_capacity <= '100000000000'::bigint::numeric") }
+    it { is_expected.to have_check_constraint(:check_warehouses_latitude_range).with_expression("latitude >= '-90'::integer::numeric AND latitude <= 90::numeric") }
+    it { is_expected.to have_check_constraint(:check_warehouses_longitude_range).with_expression("longitude >= '-180'::integer::numeric AND longitude <= 180::numeric") }
   end
 
   describe "included modules" do
     it { is_expected.to include_module(Toggleable) }
     it { is_expected.to include_module(HasReferenceCode) }
+    it { is_expected.to include_module(Pageable) }
+    it { is_expected.to include_module(Sortable) }
   end
 
   describe "default values" do
@@ -55,9 +64,14 @@ RSpec.describe Warehouse, type: :model do
 
     it { is_expected.to have_many(:warehouse_managers).inverse_of(:warehouse).dependent(:destroy) }
     it { is_expected.to have_many(:managers).through(:warehouse_managers).inverse_of(:managed_warehouses).source(:manager) }
+
+    it { is_expected.to have_many(:warehouse_suppliers).inverse_of(:warehouse).dependent(:destroy) }
+    it { is_expected.to have_many(:suppliers).through(:warehouse_suppliers).inverse_of(:supplied_warehouses).source(:supplier) }
   end
 
   describe "callbacks" do
     it { is_expected.to have_callback(:before, :create, :set_reference_code) }
   end
+
+  include_examples "apply default scope on created_at:desc"
 end
