@@ -8,7 +8,7 @@ module TranspoLink
 
     UNITS = {
       area:   %i[cm² m² km² in² ft² yd² ac ha],
-      weight: %i[mg g kg q ton lb oz],
+      weight: %i[mg g kg q t lb oz],
       volume: %i[ml L cm³ m³ in³ ft³ gal pt qt bbl],
       length: %i[mm cm m km in ft yd mi],
       count:  %i[item pack box carton pallet bundle dz case roll],

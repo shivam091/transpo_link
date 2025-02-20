@@ -421,7 +421,7 @@
         g: "Gramme (g)",
         kg: "Kilogramme (kg)",
         q: "Quintal (q)",
-        ton: "Ton (t)",
+        t: "Ton (t)",
         lb: "Pound (lb)",
         oz: "Ounce (oz)",
         ml: "Millilitre (ml)",

@@ -53,7 +53,7 @@ RSpec.describe TranspoLink::MeasurementUnits do
     it "returns a flattened array of all measurement units" do
       expected_units = [
         :cm², :m², :km², :in², :ft², :yd², :ac, :ha,
-        :mg, :g, :kg, :q, :ton, :lb, :oz,
+        :mg, :g, :kg, :q, :t, :lb, :oz,
         :ml, :L, :cm³, :m³, :in³, :ft³, :gal, :pt, :qt, :bbl,
         :mm, :cm, :m, :km, :in, :ft, :yd, :mi,
         :item, :pack, :box, :carton, :pallet, :bundle, :dz, :case, :roll
