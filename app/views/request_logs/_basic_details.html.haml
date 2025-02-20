@@ -1,7 +1,7 @@
 .widget-row.d-flex
   .flex-auto
     .widget-row-title= RequestLog.human_attribute_name(:uri)
-    .widget-row-body= h(request_log.uri)
+    .widget-row-body= link_to request_log.uri, request_log.uri, target: :_blank
 .widget-row.d-flex
   .flex-auto
     .widget-row-title= RequestLog.human_attribute_name(:method)
