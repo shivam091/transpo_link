@@ -86,18 +86,6 @@ svg:not(:root) {
   align-items: center;
   gap: 0.25rem;
 }
-.nav-link {
-  color: rgba(var(--bs-emphasis-color-rgb), 0.65);
-  &:disabled {
-    color: rgba(var(--bs-emphasis-color-rgb), 0.3);
-  }
-  &:hover, &:focus {
-    color: rgba(var(--bs-emphasis-color-rgb), 0.8);
-  }
-  &:active {
-    color: rgba(var(--bs-emphasis-color-rgb), 1);
-  }
-}
 .translation_missing {
   color: rgba(var(--bs-danger-rgb),1);
 }
@@ -143,4 +131,18 @@ p {
 }
 .pretty-json {
   white-space: pre-wrap;
+}
+
+.nav-link {
+  color: rgba(var(--bs-emphasis-color-rgb), 0.65);
+  font-size: 0.875rem;
+  &:disabled {
+    color: rgba(var(--bs-emphasis-color-rgb), 0.3);
+  }
+  &:hover, &:focus {
+    color: rgba(var(--bs-emphasis-color-rgb), 0.8);
+  }
+  &:active, &.active {
+    color: rgba(var(--bs-emphasis-color-rgb), 1);
+  }
 }
