@@ -65,6 +65,18 @@ class WarehousesController < ApplicationController
   def show
   end
 
+  # DELETE /warehouses/:id
+  def destroy
+    response = Warehouses::DestroyService.(@warehouse)
+    @warehouse = response.payload[:warehouse]
+    if response.success?
+      flash[:info] = response.message
+    else
+      flash[:alert] = response.message
+    end
+    redirect_to warehouses_path, status: :see_other
+  end
+
   private
 
   def warehouse_params

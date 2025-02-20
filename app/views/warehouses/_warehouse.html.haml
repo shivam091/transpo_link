@@ -31,6 +31,11 @@
                   = link_to edit_warehouse_path(warehouse), class: "dropdown-item" do
                     = external_svg_tag("svgs/pencil.svg")
                     = button_text(:edit)
+                %li
+                  = link_to warehouse_path(warehouse), class: "dropdown-item",
+                    data: {turbo_confirm: t(".delete_warehouse_confirmation_text", warehouse_name: warehouse.name), turbo_method: :delete} do
+                    = external_svg_tag("svgs/trash.svg")
+                    = button_text(:delete)
       - end.empty?
         %tr
           %td.no-data{colspan: Warehouse.columns.count}
