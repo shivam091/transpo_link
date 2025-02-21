@@ -102,7 +102,7 @@
           response_size: "Response size",
           query_params: "Query parameters",
           ip_info: "IP info",
-          user_id: "User",
+          user_id: "Accessed by",
           created_at: "Accessed on",
         },
         user: {
