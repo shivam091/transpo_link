@@ -31,18 +31,18 @@ RSpec.describe "Profiles", type: :request do
     include_context "sign in as admin"
 
     describe "GET /profile" do
-      before { get profile_path }
-
       it "renders profile page" do
+        get profile_path
+
         expect(response).to have_http_status(:ok)
         expect(response.body).to include("<div class='widget-help'>Edit your profile details viz., first name, last name, address, etc.</div>")
       end
     end
 
     describe "GET /profile/edit" do
-      before { get edit_profile_path }
-
       it "renders profile edit page" do
+        get edit_profile_path
+
         expect(admin).to eq(controller_assigns(:current_user))
         expect(response.body).to include("<turbo-frame id=\"profile_form\" target=\"_top\">")
         expect(response).to have_http_status(:ok)
@@ -50,28 +50,26 @@ RSpec.describe "Profiles", type: :request do
     end
 
     describe "PUT|PATCH /profile" do
-      context "with valid attributes" do
+      context "when valid attributes" do
         it "updates the profile" do
           put profile_path, params: {
             user: {user_detail_attributes: {first_name: "John"}}
           }, as: :turbo_stream
 
-          expect(admin.first_name).to eq("John")
+          expect(admin.reload.first_name).to eq("John")
           expect(flash[:notice]).to eq("Your profile was successfully updated.")
           expect(response).to redirect_to(profile_path)
           expect(response).to have_http_status(:see_other)
         end
       end
 
-      context "with invalid attributes" do
+      context "when invalid attributes" do
         it "does not update the profile" do
           put profile_path, params: {
             user: {user_detail_attributes: {first_name: ""}}
           }, as: :turbo_stream
 
-          admin.reload
-
-          expect(admin.first_name).to eq("TranspoLink")
+          expect(admin.reload.first_name).to eq("TranspoLink")
           expect(flash[:alert]).to eq("Your profile could not be updated.")
           expect(response.media_type).to eq(Mime[:turbo_stream])
           expect(response.body).to include("<turbo-stream action=\"update\" target=\"profile_form\">")

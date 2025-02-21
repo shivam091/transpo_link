@@ -11,3 +11,29 @@
 .animate-slideUpAndFade {
   animation: slideUpAndFade 0.2s cubic-bezier(0.16, 1, 0.3, 1)
 }
+@keyframes fadeIn {
+  from {
+    transform: translate(0, 0) scale(0);
+    opacity: 0;
+  }
+  to {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+}
+.animate-fadeIn {
+  animation: fadeIn 0.4s ease-out;
+}
+@keyframes fadeOut {
+  from {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: translate(0, 0) scale(0);
+    opacity: 0;
+  }
+}
+.animate-fadeOut {
+  animation: fadeOut 0.4s ease-out;
+}

@@ -54,6 +54,10 @@ RSpec.describe DateTimeHelper, type: :helper do
       end
 
       it "returns about x days ago" do
+        expect(helper.time_ago(now - 2.days)).to eq("about 2 days ago")
+      end
+
+      it "returns about x days ago" do
         expect(helper.time_ago(now - 5.days)).to eq("about 5 days ago")
       end
     end

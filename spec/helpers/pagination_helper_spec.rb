@@ -292,4 +292,43 @@ RSpec.describe PaginationHelper, type: :helper do
       expect(helper.send(:p_t, "test_key", scope: "custom_scope")).to eq("Custom Scope Value")
     end
   end
+
+  describe "#full_page_range" do
+    it "renders all pages when total pages are small" do
+      html = helper.send(:full_page_range, 1, 5)
+      (2..5).each { |page| expect(html).to include("page=#{page}") }
+    end
+  end
+
+  describe "#generate_page_items" do
+    it "renders page items with ellipsis correctly" do
+      pages = [1, "...", 5]
+      html = helper.send(:generate_page_items, pages, 3)
+      expect(html).to include("...")
+      expect(html).to include("page=1")
+      expect(html).to include("page=5")
+    end
+  end
+
+  describe "#disabled_page_ellipsis" do
+    it "renders a disabled page item for ellipsis" do
+      html = helper.send(:disabled_page_ellipsis)
+      expect(html).to include("class=\"page-item disabled\"")
+      expect(html).to include("<a role=\"link\" class=\"page-link\">&hellip;</a>")
+    end
+  end
+
+  describe "#page_item" do
+    it "renders an active page item for the current page" do
+      html = helper.send(:page_item, 3, 3)
+      expect(html).to include("class=\"page-item active\"")
+      expect(html).to include("<a role=\"link\" class=\"page-link\" aria-current=\"page\">3</a>")
+    end
+
+    it "renders a clickable page item for other pages" do
+      html = helper.send(:page_item, 2, 3)
+      expect(html).to include("page=2")
+      expect(html).to include("class=\"page-item \"")
+    end
+  end
 end

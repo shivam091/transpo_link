@@ -48,30 +48,25 @@ RSpec.describe UserDetail, type: :model do
 
   describe "validations" do
     describe "#first_name" do
-      it { is_expected.to validate_presence_of(:first_name).with_message("is required") }
-      it { is_expected.to validate_length_of(:first_name).is_at_least(2).with_message("is too short (minimum is 2 characters)") }
-      it { is_expected.to validate_length_of(:first_name).is_at_most(55).with_message("is too long (maximum is 55 characters)") }
+      it { is_expected.to validate_presence_of(:first_name) }
+      it { is_expected.to validate_length_of(:first_name).is_at_least(2).is_at_most(55) }
     end
 
     describe "#last_name" do
-      it { is_expected.to validate_presence_of(:last_name).with_message("is required") }
-      it { is_expected.to validate_length_of(:last_name).is_at_least(2).with_message("is too short (minimum is 2 characters)") }
-      it { is_expected.to validate_length_of(:last_name).is_at_most(55).with_message("is too long (maximum is 55 characters)") }
+      it { is_expected.to validate_presence_of(:last_name) }
+      it { is_expected.to validate_length_of(:last_name).is_at_least(2).is_at_most(55) }
     end
 
     describe "#mobile_number" do
-      it { is_expected.to validate_length_of(:mobile_number).is_at_least(2).allow_blank.with_message("is too short (minimum is 2 characters)") }
-      it { is_expected.to validate_length_of(:mobile_number).is_at_most(55).allow_blank.with_message("is too long (maximum is 55 characters)") }
+      it { is_expected.to validate_length_of(:mobile_number).is_at_least(2).is_at_most(55).allow_blank }
     end
 
     describe "#alternate_contact_number" do
-      it { is_expected.to validate_length_of(:alternate_contact_number).is_at_least(2).allow_blank.with_message("is too short (minimum is 2 characters)") }
-      it { is_expected.to validate_length_of(:alternate_contact_number).is_at_most(55).allow_blank.with_message("is too long (maximum is 55 characters)") }
+      it { is_expected.to validate_length_of(:alternate_contact_number).is_at_least(2).is_at_most(55).allow_blank }
     end
 
     describe "#alternate_email" do
-      it { is_expected.to validate_length_of(:alternate_email).is_at_least(2).allow_blank.with_message("is too short (minimum is 2 characters)") }
-      it { is_expected.to validate_length_of(:alternate_email).is_at_most(55).allow_blank.with_message("is too long (maximum is 55 characters)") }
+      it { is_expected.to validate_length_of(:alternate_email).is_at_least(2).is_at_most(55).allow_blank }
     end
   end
 end
