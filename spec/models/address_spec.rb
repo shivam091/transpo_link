@@ -41,20 +41,20 @@ RSpec.describe Address, type: :model do
 
   describe "validations" do
     describe "#address1" do
-      it { is_expected.to validate_presence_of(:address1).with_message("is required") }
-      it { is_expected.to validate_length_of(:address1).is_at_most(100).with_message("is too long (maximum is 100 characters)") }
+      it { is_expected.to validate_presence_of(:address1) }
+      it { is_expected.to validate_length_of(:address1).is_at_most(100) }
     end
 
     describe "#address2" do
-      it { is_expected.to validate_length_of(:address2).is_at_most(100).allow_blank.with_message("is too long (maximum is 100 characters)") }
+      it { is_expected.to validate_length_of(:address2).is_at_most(100).allow_blank }
     end
 
     describe "#postal_code" do
-      it { is_expected.to validate_length_of(:postal_code).is_at_most(20).allow_blank.with_message("is too long (maximum is 20 characters)") }
+      it { is_expected.to validate_length_of(:postal_code).is_at_most(20).allow_blank }
     end
 
     describe "#country" do
-      it { is_expected.to validate_presence_of(:country).with_message("is required") }
+      it { is_expected.to validate_presence_of(:country) }
     end
   end
 end

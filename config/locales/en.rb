@@ -424,20 +424,20 @@
     flashes: {
       profiles: {
         update: {
-          success: "Your profile was successfully updated.",
-          error: "Your profile could not be updated."
+          notice: "Your profile was successfully updated.",
+          alert: "Your profile could not be updated."
         },
       },
       preferences: {
         update: {
-          success: "Your preferences were successfully updated.",
-          error: "Your preferences could not be updated."
+          notice: "Your preferences were successfully updated.",
+          alert: "Your preferences could not be updated."
         },
       },
       locales: {
         update: {
-          success: "You've updated your language. Your change might take a while to show everywhere.",
-          error: "Your language could not be updated."
+          notice: "You've updated your language. Your change might take a while to show everywhere.",
+          alert: "Your language could not be updated."
         },
       },
       warehouses: {

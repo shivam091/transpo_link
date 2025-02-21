@@ -17,9 +17,9 @@ class Preferences::UpdateService < ApplicationService
 
   def update_preference
     if user.update(preference_attributes)
-      ServiceResponse.success(message: t("preferences.update.success"), payload: {user: user})
+      ServiceResponse.success(message: t("preferences.update.notice"), payload: {user: user})
     else
-      ServiceResponse.error(message: t("preferences.update.error"), payload: {user: user})
+      ServiceResponse.error(message: t("preferences.update.alert"), payload: {user: user})
     end
   end
 end
