@@ -51,25 +51,27 @@ RSpec.describe PaginationHelper, type: :helper do
 
   describe "#render_pagination" do
     it "returns empty string if only one page exists" do
-      expect(helper.render_pagination(
-        PaginationMetadata.new(
-          total_pages: 1,
-          current_page: 1,
-          per_page: 10,
-          total_count: 10,
-          next_page: nil,
-          previous_page: nil,
-          offset: 0)
+      expect(
+        helper.render_pagination(
+          PaginationMetadata.new(
+            total_pages: 1,
+            current_page: 1,
+            per_page: 10,
+            total_count: 10,
+            next_page: nil,
+            previous_page: nil,
+            offset: 0
+          )
         )
       ).to eq("")
     end
 
-    it "renders pagination" do
+    it "renders pagination with ellipsis if enabled" do
       rendered_html = helper.render_pagination(pagination_metadata)
 
       expect(rendered_html).to include("<div class=\"pagination-container\">")
       expect(rendered_html).to include("<nav aria-label=\"Pagination\">")
-      expect(rendered_html).to include("<p class=\"record-info\">")
+      expect(rendered_html).to include("<span class=\"record-info\">")
     end
   end
 

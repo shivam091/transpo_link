@@ -26,7 +26,7 @@ module PaginationHelper
     start_record = ((current_page - 1) * per_page) + 1
     end_record = [start_record + (per_page - 1), total_count].compact.min
 
-    tag.p(
+    tag.span(
       p_t("record_info", start: start_record, end: end_record, total: total_count),
       class: "record-info"
     )
