@@ -15,7 +15,7 @@
       - if @warehouses&.each.with_index(1) do |warehouse, index|
         - present(warehouse) do |warehouse|
           %tr
-            %th{scope: "row"}= h(@pagination_data[:offset] + index)
+            %th{scope: "row"}= h(@pagination_data.offset + index)
             %td= link_to warehouse.reference_code, warehouse_path(warehouse)
             %td= h(warehouse.name)
             %td= mail_to(warehouse.email_address)
