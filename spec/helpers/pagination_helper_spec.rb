@@ -7,8 +7,8 @@
 require "spec_helper"
 
 RSpec.describe PaginationHelper, type: :helper do
-  let(:pagination_data) do
-    {
+  let(:pagination_metadata) do
+    PaginationMetadata.new(
       current_page: 3,
       per_page: 10,
       total_pages: 5,
@@ -16,11 +16,11 @@ RSpec.describe PaginationHelper, type: :helper do
       next_page: 4,
       previous_page: 2,
       offset: 20
-    }
+    )
   end
 
-  let(:pagination_data_first_page) do
-    {
+  let(:pagination_metadata_first_page) do
+    PaginationMetadata.new(
       current_page: 1,
       per_page: 10,
       total_pages: 5,
@@ -28,11 +28,11 @@ RSpec.describe PaginationHelper, type: :helper do
       next_page: 2,
       previous_page: nil,
       offset: 0
-    }
+    )
   end
 
-  let(:pagination_data_last_page) do
-    {
+  let(:pagination_metadata_last_page) do
+    PaginationMetadata.new(
       current_page: 5,
       per_page: 10,
       total_pages: 5,
@@ -40,7 +40,7 @@ RSpec.describe PaginationHelper, type: :helper do
       next_page: nil,
       previous_page: 4,
       offset: 40
-    }
+    )
   end
 
   before do
@@ -51,11 +51,11 @@ RSpec.describe PaginationHelper, type: :helper do
 
   describe "#render_pagination" do
     it "returns empty string if only one page exists" do
-      expect(helper.render_pagination({total_pages: 1})).to eq("")
+      expect(helper.render_pagination(PaginationMetadata.new(total_pages: 1, current_page: 1, per_page: 10, total_count: 10, next_page: nil, previous_page: nil, offset: 0))).to eq("")
     end
 
     it "renders pagination" do
-      rendered_html = helper.render_pagination(pagination_data)
+      rendered_html = helper.render_pagination(pagination_metadata)
       expect(rendered_html).to include("<nav aria-label=\"Pagination\">")
       expect(rendered_html).to include("<p class=\"mb-0\">")
     end
@@ -63,29 +63,29 @@ RSpec.describe PaginationHelper, type: :helper do
 
   describe "#record_info_tag" do
     it "renders record info correctly for middle page" do
-      html = helper.send(:record_info_tag, pagination_data)
+      html = helper.send(:record_info_tag, pagination_metadata)
       expect(html).to include("Showing 21 to 30 of 50 entries")
     end
 
     it "renders correct info for first page" do
-      html = helper.send(:record_info_tag, pagination_data_first_page)
+      html = helper.send(:record_info_tag, pagination_metadata_first_page)
       expect(html).to include("Showing 1 to 10 of 50 entries")
     end
 
     it "renders correct info for last page" do
-      html = helper.send(:record_info_tag, pagination_data_last_page)
+      html = helper.send(:record_info_tag, pagination_metadata_last_page)
       expect(html).to include("Showing 41 to 50 of 50 entries")
     end
 
     it "renders zero entries when no records exist" do
-      html = helper.send(:record_info_tag, {current_page: 1, per_page: 10, total_entries: 0})
+      html = helper.send(:record_info_tag, PaginationMetadata.new(current_page: 1, per_page: 10, total_pages: 1, total_count: 0, next_page: nil, previous_page: nil, offset: 0))
       expect(html).to include("Showing 1 to 0 of 0 entries")
     end
   end
 
   describe "#pagination_nav_tag" do
     it "renders pagination navigation correctly" do
-      html = helper.send(:pagination_nav_tag, pagination_data)
+      html = helper.send(:pagination_nav_tag, pagination_metadata)
       expect(html).to include("<nav aria-label=\"Pagination\">")
       expect(html).to include("<ul class=\"pagination mb-0\">")
       expect(html).to include("page=2")
@@ -93,13 +93,13 @@ RSpec.describe PaginationHelper, type: :helper do
     end
 
     it "does not include previous page link if on first page" do
-      html = helper.send(:pagination_nav_tag, pagination_data_first_page)
+      html = helper.send(:pagination_nav_tag, pagination_metadata_first_page)
       expect(html).to include("class=\"page-item disabled\"")
       expect(html).not_to include("page=0")
     end
 
     it "does not include next page link if on last page" do
-      html = helper.send(:pagination_nav_tag, pagination_data_last_page)
+      html = helper.send(:pagination_nav_tag, pagination_metadata_last_page)
       expect(html).to include("class=\"page-item disabled\"")
       expect(html).not_to include("page=6")
     end
@@ -107,12 +107,12 @@ RSpec.describe PaginationHelper, type: :helper do
 
   describe "#previous_page_tag" do
     it "renders previous page link when available" do
-      html = helper.send(:previous_page_tag, pagination_data)
+      html = helper.send(:previous_page_tag, pagination_metadata)
       expect(html).to include("page=2")
     end
 
     it "disables previous page link when unavailable" do
-      html = helper.send(:previous_page_tag, pagination_data_first_page)
+      html = helper.send(:previous_page_tag, pagination_metadata_first_page)
       expect(html).to include("class=\"page-item disabled\"")
       expect(html).to include("<span class=\"page-link\">&laquo;&nbsp;Previous</span>")
     end
@@ -120,12 +120,12 @@ RSpec.describe PaginationHelper, type: :helper do
 
   describe "#next_page_tag" do
     it "renders next page link when available" do
-      html = helper.send(:next_page_tag, pagination_data)
+      html = helper.send(:next_page_tag, pagination_metadata)
       expect(html).to include("page=4")
     end
 
     it "disables next page link when unavailable" do
-      html = helper.send(:next_page_tag, pagination_data_last_page)
+      html = helper.send(:next_page_tag, pagination_metadata_last_page)
       expect(html).to include("class=\"page-item disabled\"")
       expect(html).to include("<span class=\"page-link\">Next&nbsp;&raquo;</span>")
     end
@@ -133,14 +133,14 @@ RSpec.describe PaginationHelper, type: :helper do
 
   describe "#page_number_tags" do
     it "renders correct page numbers for small pagination" do
-      html = helper.send(:page_number_tags, {current_page: 2, total_pages: 3})
+      html = helper.send(:page_number_tags, PaginationMetadata.new(current_page: 2, total_pages: 3, per_page: 10, total_count: 30, next_page: 3, previous_page: 1, offset: 10))
       expect(html).to include("page=1")
       expect(html).to include("<span class=\"page-link\">2</span>")
       expect(html).to include("page=3")
     end
 
     it "renders ellipsis when total pages exceed 8" do
-      html = helper.send(:page_number_tags, {current_page: 5, total_pages: 10})
+      html = helper.send(:page_number_tags, PaginationMetadata.new(current_page: 5, total_pages: 10, per_page: 10, total_count: 100, next_page: 6, previous_page: 4, offset: 40))
       expect(html).to include("...")
     end
   end

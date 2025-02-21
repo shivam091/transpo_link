@@ -16,7 +16,7 @@
       - if @request_logs&.each.with_index(1) do |request_log, index|
         - accessed_by = request_log.user
         %tr
-          %th{scope: "row"}= h(@pagination_data[:offset] + index)
+          %th{scope: "row"}= h(@pagination_metadata.offset + index)
           %td= link_to request_log.uuid, request_log_path(request_log)
           %td= link_to request_log.uri, request_log.uri, target: :_blank
           %td= h(request_log.method)
