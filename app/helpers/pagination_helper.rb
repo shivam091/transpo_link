@@ -38,6 +38,7 @@ module PaginationHelper
         safe_concat(previous_page_tag(pagination_metadata))
         safe_concat(page_number_tags(pagination_metadata))
         safe_concat(next_page_tag(pagination_metadata))
+        safe_concat(page_select_tag(pagination_metadata))
       end
     end
   end
@@ -104,6 +105,19 @@ module PaginationHelper
         tag.span(page, class: "page-link")
       else
         tag.a(page, href: url_for(page: page), class: "page-link")
+      end
+    end
+  end
+
+  def page_select_tag(pagination_metadata)
+    total_pages = pagination_metadata.total_pages
+    current_page = pagination_metadata.current_page
+
+    tag.li(class: "page-item") do
+      tag.select(name: "page", class: "page-select form-select", onchange: "Turbo.visit(this.value)") do
+        safe_join((1..total_pages).map do |page|
+          tag.option(page, value: url_for(page: page), selected: (page == current_page ? "selected" : nil))
+        end)
       end
     end
   end

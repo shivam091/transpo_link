@@ -183,4 +183,21 @@ RSpec.describe PaginationHelper, type: :helper do
       expect(html).to include("class=\"page-item \"")
     end
   end
+
+  describe "#page_select_tag" do
+    it "renders a select dropdown with all pages" do
+      html = helper.send(:page_select_tag, pagination_metadata)
+
+      (1..5).each do |page|
+        expect(html).to include("page=#{page}")
+      end
+      expect(html).to include("<select name=\"page\"")
+    end
+
+    it "marks the current page as selected" do
+      html = helper.send(:page_select_tag, pagination_metadata)
+
+      expect(html).to include("<option value=\"/dummy_url?page=3\" selected=\"selected\">")
+    end
+  end
 end
