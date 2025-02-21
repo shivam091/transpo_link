@@ -52,7 +52,7 @@ module PaginationHelper
       if pagination_metadata.current_page > 1
         tag.a(link_text, href: url_for(page: 1), class: "page-link")
       else
-        tag.span(link_text, class: "page-link")
+        tag.a(link_text, role: "link", class: "page-link")
       end
     end
   end
@@ -64,7 +64,7 @@ module PaginationHelper
       if pagination_metadata.current_page < pagination_metadata.total_pages
         tag.a(link_text, href: url_for(page: pagination_metadata.total_pages), class: "page-link")
       else
-        tag.span(link_text, class: "page-link")
+        tag.a(link_text, role: "link", class: "page-link")
       end
     end
   end
@@ -76,7 +76,7 @@ module PaginationHelper
       if pagination_metadata.previous_page
         tag.a(link_text, href: url_for(page: pagination_metadata.previous_page), class: "page-link")
       else
-        tag.span(link_text, class: "page-link")
+        tag.a(link_text, role: "link", class: "page-link")
       end
     end
   end
@@ -88,7 +88,7 @@ module PaginationHelper
       if pagination_metadata.next_page
         tag.a(link_text, href: url_for(page: pagination_metadata.next_page), class: "page-link")
       else
-        tag.span(link_text, class: "page-link")
+        tag.a(link_text, role: "link", class: "page-link")
       end
     end
   end
@@ -122,13 +122,13 @@ module PaginationHelper
   end
 
   def disabled_page_ellipsis
-    tag.li(tag.span(t("pagination.gap").html_safe, class: "page-link"), class: "page-item disabled")
+    tag.li(tag.a(t("pagination.gap").html_safe, role: "link", class: "page-link"), class: "page-item disabled")
   end
 
   def page_item(page, current_page)
     tag.li(class: "page-item #{'active' if page == current_page}") do
       if page == current_page
-        tag.span(page, class: "page-link")
+        tag.a(page, role: "link", class: "page-link")
       else
         tag.a(page, href: url_for(page: page), class: "page-link")
       end
