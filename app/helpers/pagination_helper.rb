@@ -35,10 +35,36 @@ module PaginationHelper
   def pagination_nav_tag(pagination_metadata)
     tag.nav(aria: {label: t("pagination.label")}) do
       tag.ul(class: "pagination mb-0") do
+        safe_concat(first_page_tag(pagination_metadata))
         safe_concat(previous_page_tag(pagination_metadata))
         safe_concat(page_number_tags(pagination_metadata))
         safe_concat(next_page_tag(pagination_metadata))
+        safe_concat(last_page_tag(pagination_metadata))
         safe_concat(page_select_tag(pagination_metadata))
+      end
+    end
+  end
+
+  def first_page_tag(pagination_metadata)
+    link_text = t("pagination.first").html_safe
+
+    tag.li(class: "page-item #{'disabled' unless pagination_metadata.current_page > 1}") do
+      if pagination_metadata.current_page > 1
+        tag.a(link_text, href: url_for(page: 1), class: "page-link")
+      else
+        tag.span(link_text, class: "page-link")
+      end
+    end
+  end
+
+  def last_page_tag(pagination_metadata)
+    link_text = t("pagination.last").html_safe
+
+    tag.li(class: "page-item #{'disabled' unless pagination_metadata.current_page < pagination_metadata.total_pages}") do
+      if pagination_metadata.current_page < pagination_metadata.total_pages
+        tag.a(link_text, href: url_for(page: pagination_metadata.total_pages), class: "page-link")
+      else
+        tag.span(link_text, class: "page-link")
       end
     end
   end

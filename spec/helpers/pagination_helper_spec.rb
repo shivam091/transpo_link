@@ -105,6 +105,38 @@ RSpec.describe PaginationHelper, type: :helper do
     end
   end
 
+  describe "#first_page_tag" do
+    it "renders first page link when not on first page" do
+      html = helper.send(:first_page_tag, pagination_metadata)
+
+      expect(html).to include("page=1")
+      expect(html).not_to include("class=\"page-item disabled\"")
+    end
+
+    it "disables first page link when on first page" do
+      html = helper.send(:first_page_tag, pagination_metadata_first_page)
+
+      expect(html).to include("class=\"page-item disabled\"")
+      expect(html).to include("<span class=\"page-link\">&laquo;&nbsp;First</span>")
+    end
+  end
+
+  describe "#last_page_tag" do
+    it "renders last page link when not on last page" do
+      html = helper.send(:last_page_tag, pagination_metadata)
+
+      expect(html).to include("page=5")
+      expect(html).not_to include("class=\"page-item disabled\"")
+    end
+
+    it "disables last page link when on last page" do
+      html = helper.send(:last_page_tag, pagination_metadata_last_page)
+
+      expect(html).to include("class=\"page-item disabled\"")
+      expect(html).to include("<span class=\"page-link\">Last&nbsp;&raquo;</span>")
+    end
+  end
+
   describe "#previous_page_tag" do
     it "renders previous page link when available" do
       html = helper.send(:previous_page_tag, pagination_metadata)

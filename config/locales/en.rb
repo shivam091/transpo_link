@@ -371,8 +371,10 @@
     },
     pagination: {
       label: "Pagination",
+      first: "&laquo;&nbsp;First",
       previous: "&lsaquo;&nbsp;Previous",
       next: "Next&nbsp;&rsaquo;",
+      last: "Last&nbsp;&raquo;",
       gap: "&hellip;",
       record_info: "Showing %{start} to %{end} of %{total} entries",
     },
