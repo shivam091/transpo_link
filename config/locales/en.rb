@@ -373,6 +373,7 @@
       label: "Pagination",
       previous: "&laquo;&nbsp;Previous",
       next: "Next&nbsp;&raquo;",
+      record_info: "Showing %{start} to %{end} of %{total} entries",
     },
     shared: {
       address_form_fields: {
