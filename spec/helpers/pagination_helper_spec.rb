@@ -141,7 +141,7 @@ RSpec.describe PaginationHelper, type: :helper do
 
     it "renders ellipsis when total pages exceed 8" do
       html = helper.send(:page_number_tags, PaginationMetadata.new(current_page: 5, total_pages: 10, per_page: 10, total_count: 100, next_page: 6, previous_page: 4, offset: 40))
-      expect(html).to include("...")
+      expect(html).to include("&hellip;")
     end
   end
 
@@ -166,7 +166,7 @@ RSpec.describe PaginationHelper, type: :helper do
     it "renders a disabled page item for ellipsis" do
       html = helper.send(:disabled_page_ellipsis)
       expect(html).to include("class=\"page-item disabled\"")
-      expect(html).to include("<span class=\"page-link\">...</span>")
+      expect(html).to include("<span class=\"page-link\">&hellip;</span>")
     end
   end
 

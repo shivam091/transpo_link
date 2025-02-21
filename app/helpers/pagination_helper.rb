@@ -75,9 +75,9 @@ module PaginationHelper
 
     range = 2
     pages = [1]
-    pages << "..." if (current_page - range) > 2
+    pages << :gap if (current_page - range) > 2
     ((current_page - range)..(current_page + range)).each { |p| pages << p if (p > 1) && (p < total_pages) }
-    pages << "..." if (current_page + range) < (total_pages - 1)
+    pages << :gap if (current_page + range) < (total_pages - 1)
     pages << total_pages if total_pages > 1
 
     generate_page_items(pages, current_page)
@@ -96,7 +96,7 @@ module PaginationHelper
   end
 
   def disabled_page_ellipsis
-    tag.li(tag.span("...", class: "page-link"), class: "page-item disabled")
+    tag.li(tag.span(t("pagination.gap").html_safe, class: "page-link"), class: "page-item disabled")
   end
 
   def page_item(page, current_page)
