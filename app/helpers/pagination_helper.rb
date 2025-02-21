@@ -8,7 +8,7 @@ module PaginationHelper
 
     content = ActiveSupport::SafeBuffer.new
 
-    content.safe_concat(tag.div(class: "d-flex justify-content-between align-items-center flex-column-reverse flex-lg-row flex-wrap flex-lg-nowrap mb-1") do
+    content.safe_concat(tag.div(class: "pagination-container") do
       safe_concat(pagination_nav(pagination_metadata))
       safe_concat(record_info(pagination_metadata))
     end)
@@ -28,7 +28,7 @@ module PaginationHelper
 
     tag.p(
       p_t("record_info", start: start_record, end: end_record, total: total_count),
-      class: "mb-1 mb-lg-0"
+      class: "record-info"
     )
   end
 
