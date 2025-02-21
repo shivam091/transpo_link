@@ -1,0 +1,29 @@
+# -*- encoding: utf-8 -*-
+# -*- frozen_string_literal: true -*-
+# -*- warn_indent: true -*-
+
+# spec/initializers/active_record_table_definition_spec.rb
+
+require "spec_helper"
+
+RSpec.describe ActiveRecord::ConnectionAdapters::TableDefinition do
+  let(:table_definition) { described_class.new(ActiveRecord::Base.connection, nil) }
+
+  describe "#timestamps_with_timezone" do
+    it "adds created_at and updated_at columns with timestamptz type" do
+      expect(table_definition).to receive(:column).with(:created_at, :timestamptz, null: false)
+      expect(table_definition).to receive(:column).with(:updated_at, :timestamptz, null: false)
+
+      table_definition.timestamps_with_timezone
+    end
+
+    it "respects passed options" do
+      default_value = -> { "NOW()" }
+
+      expect(table_definition).to receive(:column).with(:created_at, :timestamptz, null: true, default: default_value)
+      expect(table_definition).to receive(:column).with(:updated_at, :timestamptz, null: true, default: default_value)
+
+      table_definition.timestamps_with_timezone(null: true, default: default_value)
+    end
+  end
+end
