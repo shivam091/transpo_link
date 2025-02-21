@@ -1,24 +1,50 @@
-.pagination {
-  margin-top: 0.25rem;
+.pagination-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: column-reverse;
   margin-bottom: 0.25rem;
+  .pagination {
+    margin-top: 0.25rem;
+    margin-bottom: 0.25rem;
+    .page-item {
+      &:first-child {
+        .page-link {
+          border-top-left-radius: 0.25rem !important;
+          border-bottom-left-radius: 0.25rem !important;
+        }
+      }
+      &:last-child {
+        .page-link {
+          border-top-right-radius: 0.25rem !important;
+          border-bottom-right-radius: 0.25rem !important;
+        }
+      }
+      .page-link {
+        border: 1px solid inherit;
+        border-radius: 0 !important;
+        font-size: .875rem;
+      }
+      .page-select {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+        margin-left: -1px;
+        width: auto;
+        &:focus {
+          margin-left: 0;
+        }
+      }
+    }
+  }
+  .record-info {
+    margin-bottom: 0.25rem;
+  }
 }
-.page-item.disabled .page-link {
-  border-width: 1px;
-  border-style: solid;
-}
-.page-link {
-  border-width: 1px;
-  border-style: solid;
-}
-.page-item .page-link {
-  border-radius: 0 !important;
-  font-size: .875rem;
-}
-.page-item:first-child .page-link {
-  border-top-left-radius: 0.25rem !important;
-  border-bottom-left-radius: 0.25rem !important;
-}
-.page-item:last-child .page-link{
-  border-top-right-radius: 0.25rem !important;
-  border-bottom-right-radius: 0.25rem !important;
+@media (min-width: 992px) {
+  .pagination-container {
+    flex-direction: row;
+  }
+  .record-info {
+    margin-bottom: 0 !important;
+  }
 }
