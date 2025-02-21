@@ -31,7 +31,7 @@ module Pageable
       offset = (page - 1) * per_page
 
       paginated_records = offset(offset).limit(per_page)
-      pagination_data = {
+      pagination_metadata = PaginationMetadata.new(
         current_page: page,
         per_page: per_page,
         total_pages: total_pages,
@@ -39,9 +39,9 @@ module Pageable
         next_page: (page < total_pages) ? (page + 1) : nil,
         previous_page: (page > 1) ? (page - 1) : nil,
         offset: offset
-      }
+      )
 
-      [paginated_records, pagination_data]
+      [paginated_records, pagination_metadata]
     end
   end
 end
