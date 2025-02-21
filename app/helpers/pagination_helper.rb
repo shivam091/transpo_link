@@ -27,13 +27,13 @@ module PaginationHelper
     end_record = [start_record + (per_page - 1), total_count].compact.min
 
     tag.p(
-      t("pagination.record_info", start: start_record, end: end_record, total: total_count),
+      p_t("record_info", start: start_record, end: end_record, total: total_count),
       class: "mb-1 mb-lg-0"
     )
   end
 
   def pagination_nav(pagination_metadata)
-    tag.nav(aria: {label: t("pagination.label")}) do
+    tag.nav(aria: {label: p_t("label")}) do
       tag.ul(class: "pagination mb-0") do
         safe_concat(first_page_item(pagination_metadata))
         safe_concat(previous_page_item(pagination_metadata))
@@ -46,7 +46,7 @@ module PaginationHelper
   end
 
   def first_page_item(pagination_metadata)
-    link_text = t("pagination.first").html_safe
+    link_text = p_t("first").html_safe
 
     tag.li(class: "page-item #{'disabled' unless pagination_metadata.current_page > 1}") do
       if pagination_metadata.current_page > 1
@@ -58,7 +58,7 @@ module PaginationHelper
   end
 
   def last_page_item(pagination_metadata)
-    link_text = t("pagination.last").html_safe
+    link_text = p_t("last").html_safe
 
     tag.li(class: "page-item #{'disabled' unless pagination_metadata.current_page < pagination_metadata.total_pages}") do
       if pagination_metadata.current_page < pagination_metadata.total_pages
@@ -70,7 +70,7 @@ module PaginationHelper
   end
 
   def previous_page_item(pagination_metadata)
-    link_text = t("pagination.previous").html_safe
+    link_text = p_t("previous").html_safe
 
     tag.li(class: "page-item #{'disabled' unless pagination_metadata.previous_page}") do
       if pagination_metadata.previous_page
@@ -82,7 +82,7 @@ module PaginationHelper
   end
 
   def next_page_item(pagination_metadata)
-    link_text = t("pagination.next").html_safe
+    link_text = p_t("next").html_safe
 
     tag.li(class: "page-item #{'disabled' unless pagination_metadata.next_page}") do
       if pagination_metadata.next_page
@@ -122,7 +122,7 @@ module PaginationHelper
   end
 
   def disabled_page_ellipsis
-    tag.li(tag.a(t("pagination.gap").html_safe, role: "link", class: "page-link"), class: "page-item disabled")
+    tag.li(tag.a(p_t("gap").html_safe, role: "link", class: "page-link"), class: "page-item disabled")
   end
 
   def page_item(page, current_page)
@@ -146,5 +146,10 @@ module PaginationHelper
         end)
       end
     end
+  end
+
+  def p_t(key, options = {})
+    options.reverse_merge!(scope: "pagination")
+    t(key, **options)
   end
 end

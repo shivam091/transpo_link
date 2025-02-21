@@ -257,4 +257,32 @@ RSpec.describe PaginationHelper, type: :helper do
       expect(html).to include("<option value=\"/dummy_url?page=3\" selected=\"selected\">")
     end
   end
+
+  describe "#p_t" do
+    before do
+      I18n.backend.store_translations(:en, {
+        pagination: {
+          label: "Page Navigation",
+          first: "First",
+          last: "Last",
+          record_info: "Showing %{start} to %{end} of %{total} entries"
+        }
+      })
+    end
+
+    it "translates keys within the pagination scope" do
+      expect(helper.send(:p_t, "first")).to eq("First")
+      expect(helper.send(:p_t, "last")).to eq("Last")
+    end
+
+    it "interpolates variables in translation" do
+      translation = helper.send(:p_t, "record_info", start: 1, end: 10, total: 100)
+      expect(translation).to eq("Showing 1 to 10 of 100 entries")
+    end
+
+    it "allows overriding the default scope" do
+      I18n.backend.store_translations(:en, {custom_scope: {test_key: "Custom Scope Value"}})
+      expect(helper.send(:p_t, "test_key", scope: "custom_scope")).to eq("Custom Scope Value")
+    end
+  end
 end
