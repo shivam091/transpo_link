@@ -9,8 +9,8 @@ module PaginationHelper
     content = ActiveSupport::SafeBuffer.new
 
     content.safe_concat(tag.div(class: "d-flex justify-content-between align-items-center flex-column-reverse flex-lg-row flex-wrap flex-lg-nowrap mb-1") do
-      safe_concat(pagination_nav_tag(pagination_metadata))
-      safe_concat(record_info_tag(pagination_metadata))
+      safe_concat(pagination_nav(pagination_metadata))
+      safe_concat(record_info(pagination_metadata))
     end)
 
     content
@@ -18,7 +18,7 @@ module PaginationHelper
 
   private
 
-  def record_info_tag(pagination_metadata)
+  def record_info(pagination_metadata)
     per_page = pagination_metadata.per_page || 10
     total_count = pagination_metadata.total_count || 0
     current_page = pagination_metadata.current_page || 1
@@ -32,20 +32,20 @@ module PaginationHelper
     )
   end
 
-  def pagination_nav_tag(pagination_metadata)
+  def pagination_nav(pagination_metadata)
     tag.nav(aria: {label: t("pagination.label")}) do
       tag.ul(class: "pagination mb-0") do
-        safe_concat(first_page_tag(pagination_metadata))
-        safe_concat(previous_page_tag(pagination_metadata))
-        safe_concat(page_number_tags(pagination_metadata))
-        safe_concat(next_page_tag(pagination_metadata))
-        safe_concat(last_page_tag(pagination_metadata))
-        safe_concat(page_select_tag(pagination_metadata))
+        safe_concat(first_page_item(pagination_metadata))
+        safe_concat(previous_page_item(pagination_metadata))
+        safe_concat(page_number_items(pagination_metadata))
+        safe_concat(next_page_item(pagination_metadata))
+        safe_concat(last_page_item(pagination_metadata))
+        safe_concat(page_select_item(pagination_metadata))
       end
     end
   end
 
-  def first_page_tag(pagination_metadata)
+  def first_page_item(pagination_metadata)
     link_text = t("pagination.first").html_safe
 
     tag.li(class: "page-item #{'disabled' unless pagination_metadata.current_page > 1}") do
@@ -57,7 +57,7 @@ module PaginationHelper
     end
   end
 
-  def last_page_tag(pagination_metadata)
+  def last_page_item(pagination_metadata)
     link_text = t("pagination.last").html_safe
 
     tag.li(class: "page-item #{'disabled' unless pagination_metadata.current_page < pagination_metadata.total_pages}") do
@@ -69,7 +69,7 @@ module PaginationHelper
     end
   end
 
-  def previous_page_tag(pagination_metadata)
+  def previous_page_item(pagination_metadata)
     link_text = t("pagination.previous").html_safe
 
     tag.li(class: "page-item #{'disabled' unless pagination_metadata.previous_page}") do
@@ -81,7 +81,7 @@ module PaginationHelper
     end
   end
 
-  def next_page_tag(pagination_metadata)
+  def next_page_item(pagination_metadata)
     link_text = t("pagination.next").html_safe
 
     tag.li(class: "page-item #{'disabled' unless pagination_metadata.next_page}") do
@@ -93,7 +93,7 @@ module PaginationHelper
     end
   end
 
-  def page_number_tags(pagination_metadata)
+  def page_number_items(pagination_metadata)
     current_page = pagination_metadata.current_page
     total_pages = pagination_metadata.total_pages
 
@@ -135,7 +135,7 @@ module PaginationHelper
     end
   end
 
-  def page_select_tag(pagination_metadata)
+  def page_select_item(pagination_metadata)
     total_pages = pagination_metadata.total_pages
     current_page = pagination_metadata.current_page
 
