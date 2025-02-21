@@ -114,7 +114,7 @@ RSpec.describe PaginationHelper, type: :helper do
     it "disables previous page link when unavailable" do
       html = helper.send(:previous_page_tag, pagination_metadata_first_page)
       expect(html).to include("class=\"page-item disabled\"")
-      expect(html).to include("<span class=\"page-link\">&laquo;&nbsp;Previous</span>")
+      expect(html).to include("<span class=\"page-link\">&lsaquo;&nbsp;Previous</span>")
     end
   end
 
@@ -127,7 +127,7 @@ RSpec.describe PaginationHelper, type: :helper do
     it "disables next page link when unavailable" do
       html = helper.send(:next_page_tag, pagination_metadata_last_page)
       expect(html).to include("class=\"page-item disabled\"")
-      expect(html).to include("<span class=\"page-link\">Next&nbsp;&raquo;</span>")
+      expect(html).to include("<span class=\"page-link\">Next&nbsp;&rsaquo;</span>")
     end
   end
 
