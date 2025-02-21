@@ -19,9 +19,9 @@ class Locales::UpdateService < ApplicationService
   def update_locale
     if user.update(locale_attributes)
       TranspoLink::I18n.locale = user.preferred_locale
-      ServiceResponse.success(message: t("locales.update.success"), payload: {user: user})
+      ServiceResponse.success(message: t("locales.update.notice"), payload: {user: user})
     else
-      ServiceResponse.error(message: t("locales.update.error"), payload: {user: user})
+      ServiceResponse.error(message: t("locales.update.alert"), payload: {user: user})
     end
   end
 end
