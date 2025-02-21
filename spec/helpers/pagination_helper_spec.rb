@@ -57,7 +57,7 @@ RSpec.describe PaginationHelper, type: :helper do
     it "renders pagination" do
       rendered_html = helper.render_pagination(pagination_metadata)
       expect(rendered_html).to include("<nav aria-label=\"Pagination\">")
-      expect(rendered_html).to include("<p class=\"mb-0\">")
+      expect(rendered_html).to include("<p class=\"mb-1 mb-lg-0\">")
     end
   end
 
