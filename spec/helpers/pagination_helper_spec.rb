@@ -314,7 +314,7 @@ RSpec.describe PaginationHelper, type: :helper do
     it "renders a disabled page item for ellipsis" do
       html = helper.send(:disabled_page_ellipsis)
       expect(html).to include("class=\"page-item disabled\"")
-      expect(html).to include("<span class=\"page-link\">...</span>")
+      expect(html).to include("<a role=\"link\" class=\"page-link\">&hellip;</a>")
     end
   end
 
@@ -322,7 +322,7 @@ RSpec.describe PaginationHelper, type: :helper do
     it "renders an active page item for the current page" do
       html = helper.send(:page_item, 3, 3)
       expect(html).to include("class=\"page-item active\"")
-      expect(html).to include("<span class=\"page-link\">3</span>")
+      expect(html).to include("<a role=\"link\" class=\"page-link\" aria-current=\"page\">3</a>")
     end
 
     it "renders a clickable page item for other pages" do
