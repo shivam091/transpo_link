@@ -33,7 +33,7 @@ module PaginationHelper
   end
 
   def pagination_nav(pagination_metadata)
-    tag.nav(aria: {label: p_t("label")}) do
+    tag.nav(aria: {label: p_t("aria_labels.nav")}) do
       tag.ul(class: "pagination mb-0") do
         safe_concat(first_page_item(pagination_metadata))
         safe_concat(previous_page_item(pagination_metadata))
@@ -47,48 +47,52 @@ module PaginationHelper
 
   def first_page_item(pagination_metadata)
     link_text = p_t("first").html_safe
+    options = {class: "page-link", aria: {label: p_t("aria_labels.first")}}
 
     tag.li(class: "page-item #{'disabled' unless pagination_metadata.current_page > 1}") do
       if pagination_metadata.current_page > 1
-        tag.a(link_text, href: url_for(page: 1), class: "page-link")
+        tag.a(link_text, href: url_for(page: 1), **options)
       else
-        tag.a(link_text, role: "link", class: "page-link")
+        tag.a(link_text, role: "link", **options)
       end
     end
   end
 
   def last_page_item(pagination_metadata)
     link_text = p_t("last").html_safe
+    options = {class: "page-link", aria: {label: p_t("aria_labels.last")}}
 
     tag.li(class: "page-item #{'disabled' unless pagination_metadata.current_page < pagination_metadata.total_pages}") do
       if pagination_metadata.current_page < pagination_metadata.total_pages
-        tag.a(link_text, href: url_for(page: pagination_metadata.total_pages), class: "page-link")
+        tag.a(link_text, href: url_for(page: pagination_metadata.total_pages), **options)
       else
-        tag.a(link_text, role: "link", class: "page-link")
+        tag.a(link_text, role: "link", **options)
       end
     end
   end
 
   def previous_page_item(pagination_metadata)
     link_text = p_t("previous").html_safe
+    options = {class: "page-link", aria: {label: p_t("aria_labels.previous")}}
 
     tag.li(class: "page-item #{'disabled' unless pagination_metadata.previous_page}") do
       if pagination_metadata.previous_page
-        tag.a(link_text, href: url_for(page: pagination_metadata.previous_page), class: "page-link")
+        tag.a(link_text, href: url_for(page: pagination_metadata.previous_page), **options)
       else
-        tag.a(link_text, role: "link", class: "page-link")
+        tag.a(link_text, role: "link", **options)
       end
     end
   end
 
   def next_page_item(pagination_metadata)
     link_text = p_t("next").html_safe
+    options = {class: "page-link", aria: {label: p_t("aria_labels.next")}}
 
     tag.li(class: "page-item #{'disabled' unless pagination_metadata.next_page}") do
       if pagination_metadata.next_page
-        tag.a(link_text, href: url_for(page: pagination_metadata.next_page), class: "page-link")
+        tag.a(link_text, href: url_for(page: pagination_metadata.next_page), **options)
       else
-        tag.a(link_text, role: "link", class: "page-link")
+        tag.a(link_text, role: "link", **options)
       end
     end
   end
@@ -128,7 +132,7 @@ module PaginationHelper
   def page_item(page, current_page)
     tag.li(class: "page-item #{'active' if page == current_page}") do
       if page == current_page
-        tag.a(page, role: "link", class: "page-link")
+        tag.a(page, role: "link", class: "page-link", aria: {current: "page"})
       else
         tag.a(page, href: url_for(page: page), class: "page-link")
       end

@@ -75,22 +75,26 @@ RSpec.describe PaginationHelper, type: :helper do
   describe "#record_info" do
     it "renders record info correctly for middle page" do
       html = helper.send(:record_info, pagination_metadata)
-      expect(html).to include("Showing 21 to 30 of 50 entries")
+
+      expect(html).to include("Displaying 21 to 30 of 50 in total")
     end
 
     it "renders correct info for first page" do
       html = helper.send(:record_info, pagination_metadata_first_page)
-      expect(html).to include("Showing 1 to 10 of 50 entries")
+
+      expect(html).to include("Displaying 1 to 10 of 50 in total")
     end
 
     it "renders correct info for last page" do
       html = helper.send(:record_info, pagination_metadata_last_page)
-      expect(html).to include("Showing 41 to 50 of 50 entries")
+
+      expect(html).to include("Displaying 41 to 50 of 50 in total")
     end
 
     it "renders zero entries when no records exist" do
       html = helper.send(:record_info, PaginationMetadata.new(current_page: 1, per_page: 10, total_pages: 1, total_count: 0, next_page: nil, previous_page: nil, offset: 0))
-      expect(html).to include("Showing 1 to 0 of 0 entries")
+
+      expect(html).to include("Displaying 1 to 0 of 0 in total")
     end
   end
 
@@ -131,7 +135,7 @@ RSpec.describe PaginationHelper, type: :helper do
       html = helper.send(:first_page_item, pagination_metadata_first_page)
 
       expect(html).to include("class=\"page-item disabled\"")
-      expect(html).to include("<a role=\"link\" class=\"page-link\">&laquo;&nbsp;First</a>")
+      expect(html).to include("<a role=\"link\" class=\"page-link\" aria-label=\"First\">&laquo;</a>")
     end
   end
 
@@ -147,7 +151,7 @@ RSpec.describe PaginationHelper, type: :helper do
       html = helper.send(:last_page_item, pagination_metadata_last_page)
 
       expect(html).to include("class=\"page-item disabled\"")
-      expect(html).to include("<a role=\"link\" class=\"page-link\">Last&nbsp;&raquo;</a>")
+      expect(html).to include("<a role=\"link\" class=\"page-link\" aria-label=\"Last\">&raquo;</a>")
     end
   end
 
@@ -162,7 +166,7 @@ RSpec.describe PaginationHelper, type: :helper do
       html = helper.send(:previous_page_item, pagination_metadata_first_page)
 
       expect(html).to include("class=\"page-item disabled\"")
-      expect(html).to include("<a role=\"link\" class=\"page-link\">&lsaquo;&nbsp;Previous</a>")
+      expect(html).to include("<a role=\"link\" class=\"page-link\" aria-label=\"Previous\">&lsaquo;</a>")
     end
   end
 
@@ -177,7 +181,7 @@ RSpec.describe PaginationHelper, type: :helper do
       html = helper.send(:next_page_item, pagination_metadata_last_page)
 
       expect(html).to include("class=\"page-item disabled\"")
-      expect(html).to include("<a role=\"link\" class=\"page-link\">Next&nbsp;&rsaquo;</a>")
+      expect(html).to include("<a role=\"link\" class=\"page-link\" aria-label=\"Next\">&rsaquo;</a>")
     end
   end
 
@@ -186,7 +190,7 @@ RSpec.describe PaginationHelper, type: :helper do
       html = helper.send(:page_number_items, PaginationMetadata.new(current_page: 2, total_pages: 3, per_page: 10, total_count: 30, next_page: 3, previous_page: 1, offset: 10))
 
       expect(html).to include("page=1")
-      expect(html).to include("<a role=\"link\" class=\"page-link\">2</a>")
+      expect(html).to include("<a role=\"link\" class=\"page-link\" aria-current=\"page\">2</a>")
       expect(html).to include("page=3")
     end
 
@@ -230,7 +234,7 @@ RSpec.describe PaginationHelper, type: :helper do
       html = helper.send(:page_item, 3, 3)
 
       expect(html).to include("class=\"page-item active\"")
-      expect(html).to include("<a role=\"link\" class=\"page-link\">3</a>")
+      expect(html).to include("<a role=\"link\" class=\"page-link\" aria-current=\"page\">3</a>")
     end
 
     it "renders a clickable page item for other pages" do

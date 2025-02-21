@@ -370,13 +370,19 @@
       },
     },
     pagination: {
-      label: "Pagination",
-      first: "&laquo;&nbsp;First",
-      previous: "&lsaquo;&nbsp;Previous",
-      next: "Next&nbsp;&rsaquo;",
-      last: "Last&nbsp;&raquo;",
+      aria_labels: {
+        nav: "Pagination",
+        first: "First",
+        previous: "Previous",
+        next: "Next",
+        last: "Last",
+      },
+      first: "&laquo;",
+      previous: "&lsaquo;",
+      next: "&rsaquo;",
+      last: "&raquo;",
       gap: "&hellip;",
-      record_info: "Showing %{start} to %{end} of %{total} entries",
+      record_info: "Displaying %{start} to %{end} of %{total} in total",
     },
     shared: {
       address_form_fields: {
