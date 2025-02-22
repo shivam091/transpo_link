@@ -6,7 +6,7 @@
 # Helper methods for rendering SVG images.
 #
 module ImagesHelper
-  DEFAULT_SVG_OPTIONS = {height: "20px", width: "20px", fill: "currentColor"}.freeze
+  DEFAULT_SVG_OPTIONS = {height: "24px", width: "24px"}.freeze
 
   def external_svg_tag(file_name, options = {})
     options = DEFAULT_SVG_OPTIONS.merge(options)
