@@ -5,15 +5,29 @@
         = render_if_exists("shared/live_clock")
       .col-lg-6.col-12.d-none.d-lg-flex.justify-content-center.justify-content-lg-end
         .list-unstyled.d-flex.align-items-center
-          .d-inline-block.middle-dot-divider
-            = link_to "javascript:void(0)", class: "text-body", title: t(".change_to_dark_mode") do
+          .d-inline-block.middle-dot-divider.dropdown
+            = link_to "javascript:void(0)", class: "text-body", title: t(".change_color_scheme"),
+              aria: {expanded: false}, data: {bs_toggle: "dropdown"} do
               = external_svg_tag("svgs/background-color-toggle.svg")
+            %ul.dropdown-menu
+              %li
+                = link_to "javascript:void(0)", class: class_names("dropdown-item", "dropdown-item-checked": current_user.preferred_color_scheme == "auto") do
+                  = external_svg_tag("svgs/background-color-toggle.svg")
+                  = enum_i18n(UserPreference, :preferred_color_schemes, :auto)
+              %li
+                = link_to "javascript:void(0)", class: class_names("dropdown-item", "dropdown-item-checked": current_user.preferred_color_scheme == "light") do
+                  = external_svg_tag("svgs/sun.svg")
+                  = enum_i18n(UserPreference, :preferred_color_schemes, :light)
+              %li
+                = link_to "javascript:void(0)", class: class_names("dropdown-item", "dropdown-item-checked": current_user.preferred_color_scheme == "dark") do
+                  = external_svg_tag("svgs/moon.svg")
+                  = enum_i18n(UserPreference, :preferred_color_schemes, :dark)
           .d-inline-block.middle-dot-divider
             = link_to "javascript:void(0)", class: "text-body", title: t(".switch_screen_mode")  do
               = external_svg_tag("svgs/expand.svg")
           .d-inline-block.middle-dot-divider
             = link_to "javascript:void(0)", class: "text-body", title: t(".notifications") do
-              = external_svg_tag("svgs/bell.svg")
+              = external_svg_tag("svgs/bell.svg", class: "animate-blinking")
           .d-inline-block.middle-dot-divider
             = link_to edit_locale_path, class: "text-body", title: t(".change_language"), data: {turbo_frame: :remote_modal} do
               = external_svg_tag("svgs/globe.svg")
