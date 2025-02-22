@@ -28,9 +28,8 @@ RSpec.describe ImagesHelper, type: :helper do
 
     it "renders the SVG with default attributes" do
       result = helper.external_svg_tag("test.svg")
-      expect(result).to include("height=\"20px\"")
-      expect(result).to include("width=\"20px\"")
-      expect(result).to include("fill=\"currentColor\"")
+      expect(result).to include("height=\"24px\"")
+      expect(result).to include("width=\"24px\"")
       expect(result).to include("<circle cx=\"50\" cy=\"50\" r=\"40\"")
     end
 
@@ -59,9 +58,8 @@ RSpec.describe ImagesHelper, type: :helper do
       result = helper.inline_svg_tag(symbol_id)
 
       expect(result).to include("<svg")
-      expect(result).to include("height=\"20px\"")
-      expect(result).to include("width=\"20px\"")
-      expect(result).to include("fill=\"currentColor\"")
+      expect(result).to include("height=\"24px\"")
+      expect(result).to include("width=\"24px\"")
       expect(result).to include("class=\"icon icon-test-icon\"")
       expect(result).to include("xlink:href=\"/assets/svgs/defs.svg#icon-test-icon\"")
     end

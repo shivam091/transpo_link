@@ -309,7 +309,7 @@
     enumerations: {
       user_preference: {
         preferred_color_schemes: {
-          auto: "Auto",
+          auto: "System",
           light: "Light",
           dark: "Dark"
         },
@@ -324,8 +324,7 @@
       },
       application: {
         top_menu: {
-          change_to_dark_mode: "Change to dark mode",
-          change_to_light_mode: "Change to light mode",
+          change_color_scheme: "Change color scheme",
           switch_screen_mode: "Switch screen mode",
           notifications: "Notifications",
           change_language: "Change language",
@@ -339,13 +338,14 @@
         },
         secondary_navigation:{
           secondary_navigation: "Secondary navigation",
+          warehouses: "Warehouses",
+          products: "Products",
           inventories: "Inventories",
           orders: "Orders",
           invoices: "Invoices",
           payments: "Payments",
           vehicles: "Vehicles",
           routes: "Routes",
-          warehouses: "Warehouses",
           reports: "Reports",
           feedbacks: "Feedbacks",
         },
