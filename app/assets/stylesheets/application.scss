@@ -22,7 +22,7 @@ body {
   scroll-behavior: "smooth";
 }
 body {
-  font-size: 0.875rem !important;
+  font-size: 0.950rem !important;
   overflow-x: hidden;
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: rgba(0,0,0,0);
@@ -58,15 +58,15 @@ a:link {
 svg:not(:root) {
   overflow: hidden;
 }
-[class^="icon-"], [class*=" icon-"] {
+[id^="icon-"], [id*=" icon-"] {
   display: inline-block;
   text-decoration: inherit;
   text-rendering: auto;
   text-transform: none;
-  vertical-align: -4px;
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   speak: none;
+  fill: currentColor;
 }
 .middle-dot-divider {
   @include middle-dot-divider;
@@ -132,10 +132,9 @@ p {
 .pretty-json {
   white-space: pre-wrap;
 }
-
 .nav-link {
   color: rgba(var(--bs-emphasis-color-rgb), 0.65);
-  font-size: 0.875rem;
+  font-size: 0.950rem;
   &:disabled {
     color: rgba(var(--bs-emphasis-color-rgb), 0.3);
   }

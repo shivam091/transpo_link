@@ -23,5 +23,22 @@
   content: "";
 }
 .dropdown-menu[data-bs-popper="static"] {
-  animation : slideUpAndFade 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: slideUpAndFade 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.dropdown-item-checked {
+  position: relative;
+  padding-right: 30px;
+}
+.dropdown-item-checked::after {
+  content: "";
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  background-image: url("svgs/check-circle.svg");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
 }

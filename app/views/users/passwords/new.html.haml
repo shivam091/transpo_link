@@ -10,4 +10,6 @@
         placeholder: User.human_attribute_name(:email), value: (params[:email] || resource.email)
       = form.label :email, class: "form-label required"
   .col-12
-    = form.submit button_text(:continue), class: "w-100 btn btn-primary justify-content-center"
+    = form.button type: :submit, class: "w-100 btn btn-primary justify-content-center" do
+      = button_text(:continue)
+      = external_svg_tag("svgs/arrow-right.svg")
