@@ -12,7 +12,7 @@
             = h(time_ago_with_tooltip(@request_log.created_at))
           - if accessed_by.present?
             %span.middle-dot-divider
-              = t(".accessed_by")
+              = RequestLog.human_attribute_name(:user_id)
               = link_to accessed_by&.full_name, user_path(accessed_by), target: :_blank
     .widget
       .widget-header

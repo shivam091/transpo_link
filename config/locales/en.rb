@@ -102,7 +102,7 @@
           response_size: "Response size",
           query_params: "Query parameters",
           ip_info: "IP info",
-          user_id: "User",
+          user_id: "Accessed by",
           created_at: "Accessed on",
         },
         user: {
@@ -152,6 +152,29 @@
           state: "State, Province, County, or Territory",
           country: "Country or region",
           postal_code: "Postal code, Postcode, or PIN code",
+        },
+        warehouse: {
+          name: "Name",
+          reference_code: "Reference code",
+          email_address: "Email address",
+          contact_number: "Contact number",
+          description: "Description",
+          total_capacity: "Total capacity",
+          capacity_unit: "Capacity unit",
+          capacity: "Capacity",
+          latitude: "Latitude",
+          longitude: "Longitude",
+          is_active: "Is active",
+          created_at: "Created at",
+          updated_at: "Updated at",
+        },
+        warehouse_manager: {
+          warehouse_id: "Warehouse",
+          manager_id: "Manager",
+        },
+        warehouse_supplier: {
+          warehouse_id: "Warehouse",
+          supplier_id: "Supplier",
         },
       },
       errors: {
@@ -213,10 +236,13 @@
       sign_in: "Sign in",
       continue: "Continue",
       save_changes: "Save changes",
+      new: "New",
+      create: "Create",
       edit: "Edit",
-      cancel: "Cancel",
       update: "Update",
       delete: "Delete",
+      save: "Save",
+      cancel: "Cancel",
     },
     devise: {
       confirmations: {
@@ -309,7 +335,7 @@
     enumerations: {
       user_preference: {
         preferred_color_schemes: {
-          auto: "Auto",
+          auto: "System",
           light: "Light",
           dark: "Dark"
         },
@@ -324,8 +350,7 @@
       },
       application: {
         top_menu: {
-          change_to_dark_mode: "Change to dark mode",
-          change_to_light_mode: "Change to light mode",
+          change_color_scheme: "Change color scheme",
           switch_screen_mode: "Switch screen mode",
           notifications: "Notifications",
           change_language: "Change language",
@@ -339,13 +364,14 @@
         },
         secondary_navigation:{
           secondary_navigation: "Secondary navigation",
+          warehouses: "Warehouses",
+          products: "Products",
           inventories: "Inventories",
           orders: "Orders",
           invoices: "Invoices",
           payments: "Payments",
           vehicles: "Vehicles",
           routes: "Routes",
-          warehouses: "Warehouses",
           reports: "Reports",
           feedbacks: "Feedbacks",
         },
@@ -385,6 +411,11 @@
       record_info: "Displaying %{start} to %{end} of %{total} in total",
     },
     shared: {
+      inline_navigations: {
+        all: "All",
+        active: "Active",
+        inactive: "Inactive",
+      },
       address_form_fields: {
         select_country: "Select country",
         select_state: "Select state",
@@ -408,7 +439,74 @@
           notice: "You've updated your language. Your change might take a while to show everywhere.",
           alert: "Your language could not be updated."
         },
-      }
+      },
+      warehouses: {
+        create: {
+          notice: "Warehouse was successfully created.",
+          alert: "Warehouse could not be created.",
+        },
+        update: {
+          notice: "Warehouse was successfully updated.",
+          alert: "Warehouse could not be updated."
+        },
+        destroy: {
+          info: "Warehouse was successfully deleted.",
+          alert: "Warehouse could not be deleted."
+        },
+      },
+    },
+    measurement_units: {
+      categories: {
+        area: "Area based",
+        count: "Count based",
+        weight: "Weight based",
+        volume: "Volume based",
+        length: "Length based",
+      },
+      sub_categories: {
+        cm²: "Square centimetre (cm²)",
+        m²: "Square metre (m²)",
+        km²: "Square kilometre (km²)",
+        in²: "Square inch (in²)",
+        ft²: "Square foot (ft²)",
+        yd²: "Square yard (yd²)",
+        ac: "Acre (ac)",
+        ha: "Hectare (ha)",
+        mg: "Milligramme (mg)",
+        g: "Gramme (g)",
+        kg: "Kilogramme (kg)",
+        q: "Quintal (q)",
+        t: "Ton (t)",
+        lb: "Pound (lb)",
+        oz: "Ounce (oz)",
+        ml: "Millilitre (ml)",
+        L: "Litre (L)",
+        item: "Item",
+        pack: "Pack",
+        box: "Box",
+        carton: "Carton",
+        pallet: "Pallet",
+        bundle: "Bundle",
+        dz: "Dozen",
+        case: "Case",
+        roll: "Roll",
+        cm³: "Cubic centimetre (cm³)",
+        m³: "Cubic metre (m³)",
+        in³: "Cubic inch (in³)",
+        ft³: "Cubic foot (ft³)",
+        gal: "Gallon (gal)",
+        pt: "Pint (pt)",
+        qt: "Quart (qt)",
+        bbl: "Barrel (bbl)",
+        mm: "Millimetre (mm)",
+        cm: "Centimetre (cm)",
+        m: "Metre (m)",
+        km: "Kilometre (km)",
+        in: "Inch (in)",
+        ft: "Foot (ft)",
+        yd: "Yard (yd)",
+        mi: "Mile (mi)",
+      },
     },
     users: {
       sessions: {
@@ -506,6 +604,26 @@
       },
       basic_details: {},
       additional_details: {},
+    },
+    warehouses: {
+      index: {
+        title: "Warehouses"
+      },
+      warehouse: {
+        actions: "Actions",
+        no_warehouses_to_display: "No warehouses to display",
+        delete_warehouse_confirmation_text: "Are you sure you want to delete the warehouse ‘%{warehouse_name}’? All related data may be lost.",
+      },
+      new: {
+        title: "New warehouse",
+      },
+      edit: {
+        title: "Edit warehouse",
+      },
+      form: {
+        select_capacity_unit: "Select capacity unit",
+      },
+      show: {},
     },
   },
 }
