@@ -187,16 +187,22 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_17_171347) do
     t.decimal "total_capacity", precision: 12, scale: 2
     t.string "capacity_unit"
     t.decimal "latitude", precision: 10, scale: 8
-    t.decimal "longitude", precision: 10, scale: 8
+    t.decimal "longitude", precision: 11, scale: 8
     t.boolean "is_active", default: false
     t.timestamptz "created_at", null: false
     t.timestamptz "updated_at", null: false
+    t.index ["email_address"], name: "index_warehouses_on_email_address", unique: true
     t.index ["is_active"], name: "index_warehouses_on_is_active"
     t.index ["reference_code"], name: "index_warehouses_on_reference_code", unique: true
     t.check_constraint "capacity_unit IS NOT NULL AND capacity_unit::text <> ''::text", name: "check_warehouses_capacity_unit_presence"
+    t.check_constraint "char_length(contact_number::text) <= 55 AND char_length(contact_number::text) >= 2", name: "check_warehouses_contact_number_length"
     t.check_constraint "char_length(description) <= 1000", name: "check_warehouses_description_length"
+    t.check_constraint "char_length(email_address::text) <= 55 AND char_length(email_address::text) >= 2", name: "check_warehouses_email_address_length"
     t.check_constraint "char_length(name::text) <= 255 AND char_length(name::text) >= 2", name: "check_warehouses_name_length"
+    t.check_constraint "latitude >= '-90'::integer::numeric AND latitude <= 90::numeric", name: "check_warehouses_latitude_range"
+    t.check_constraint "longitude >= '-180'::integer::numeric AND longitude <= 180::numeric", name: "check_warehouses_longitude_range"
     t.check_constraint "name IS NOT NULL AND name::text <> ''::text", name: "check_warehouses_name_presence"
+    t.check_constraint "total_capacity >= 0::numeric AND total_capacity <= '100000000000'::bigint::numeric", name: "check_warehouses_total_capacity_range"
     t.check_constraint "total_capacity IS NOT NULL", name: "check_warehouses_total_capacity_presence"
   end
 
