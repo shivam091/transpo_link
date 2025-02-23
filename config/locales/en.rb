@@ -97,7 +97,12 @@
           elapsed_time: "Elapsed time",
           user_agent: "User agent",
           referrer: "Referrer",
-          exception_message: "Exception message",
+          origin: "Origin",
+          memory_usage: "Memory usage",
+          cpu_usage: "CPU usage",
+          exception: "Exception",
+          request_headers: "Request headers",
+          response_headers: "Response headers",
           status: "HTTP status",
           response_size: "Response size",
           query_params: "Query parameters",
@@ -599,11 +604,10 @@
       },
       show: {
         basic_details: "Basic details",
-        additional_details: "Additional details",
-        accessed_by: "Accessed by",
+        advanced_details: "Advanced details",
       },
       basic_details: {},
-      additional_details: {},
+      advanced_details: {},
     },
     warehouses: {
       index: {

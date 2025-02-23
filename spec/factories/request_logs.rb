@@ -11,7 +11,12 @@ FactoryBot.define do
     elapsed_time { 0.0572.to_f }
     user_agent { "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36" }
     referrer { "http://www.example.com" }
-    exception_message { "" }
+    origin { "http://www.example.com" }
+    memory_usage { 194944 }
+    cpu_usage { 1.1 }
+    exception { {}.to_json }
+    request_headers { {}.to_json }
+    response_headers { {}.to_json }
     status { 200 }
     response_size { 9902 }
     query_params { {}.to_json }

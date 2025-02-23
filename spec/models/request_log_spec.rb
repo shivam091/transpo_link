@@ -20,12 +20,17 @@ RSpec.describe RequestLog, type: :model do
     it { is_expected.to have_db_column(:elapsed_time).of_type(:decimal).with_options(precision: 10, scale: 4, default: 0.0) }
     it { is_expected.to have_db_column(:user_agent).of_type(:string) }
     it { is_expected.to have_db_column(:referrer).of_type(:string) }
-    it { is_expected.to have_db_column(:exception_message).of_type(:text) }
+    it { is_expected.to have_db_column(:exception).of_type(:jsonb).with_options(default: {}) }
+    it { is_expected.to have_db_column(:request_headers).of_type(:jsonb).with_options(default: {}) }
+    it { is_expected.to have_db_column(:response_headers).of_type(:jsonb).with_options(default: {}) }
     it { is_expected.to have_db_column(:status).of_type(:integer) }
     it { is_expected.to have_db_column(:response_size).of_type(:integer) }
     it { is_expected.to have_db_column(:query_params).of_type(:jsonb).with_options(default: {}) }
     it { is_expected.to have_db_column(:ip_info).of_type(:jsonb).with_options(default: {}) }
     it { is_expected.to have_db_column(:user_id).of_type(:uuid) }
+    it { is_expected.to have_db_column(:origin).of_type(:string) }
+    it { is_expected.to have_db_column(:memory_usage).of_type(:integer).with_options(default: 0) }
+    it { is_expected.to have_db_column(:cpu_usage).of_type(:decimal).with_options(precision: 5, scale: 2, default: 0.0) }
     it { is_expected.to have_db_column(:created_at).of_type(:timestamptz).with_options(null: false) }
     it { is_expected.to have_db_column(:updated_at).of_type(:timestamptz).with_options(null: false) }
 
@@ -34,6 +39,9 @@ RSpec.describe RequestLog, type: :model do
     it { is_expected.to have_db_index(:remote_address) }
     it { is_expected.to have_db_index(:ip_info) }
     it { is_expected.to have_db_index(:query_params) }
+    it { is_expected.to have_db_index(:exception) }
+    it { is_expected.to have_db_index(:request_headers) }
+    it { is_expected.to have_db_index(:response_headers) }
     it { is_expected.to have_db_index(:user_id) }
 
     it { is_expected.to have_foreign_key(:user_id).with_name(:fk_request_logs_user_id_on_users).on_delete(:nullify) }

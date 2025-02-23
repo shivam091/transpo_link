@@ -13,7 +13,6 @@ class IpInfo
 
   def call(env)
     env["ipinfo"] = @ipinfo.details.all
-    status, headers, response = @app.call(env)
-    [status, headers, response]
+    @app.call(env)
   end
 end
