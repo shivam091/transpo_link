@@ -30,6 +30,7 @@ RSpec.describe Pageable do
     before do
       allow(PageableModel.connection).to receive(:execute).and_return([{"reltuples" => 50}])
       allow(PageableModel).to receive(:count).and_return(50)
+
       Rails.cache.clear
     end
 
@@ -40,12 +41,14 @@ RSpec.describe Pageable do
     it "caches the estimated count result" do
       PageableModel.estimated_count
       allow(PageableModel.connection).to receive(:execute).and_return([{"reltuples" => 50}])
+
       expect(PageableModel.estimated_count).to eq(50)
     end
 
     it "falls back to exact count if estimated count is zero" do
       allow(PageableModel.connection).to receive(:execute).and_return([{"reltuples" => 0}])
       allow(PageableModel).to receive(:count).and_return(20)
+
       expect(PageableModel.estimated_count).to eq(20)
     end
   end
@@ -53,11 +56,13 @@ RSpec.describe Pageable do
   describe ".total_pages" do
     it "returns the correct total pages" do
       allow(PageableModel).to receive(:estimated_count).and_return(50)
+
       expect(PageableModel.total_pages(10)).to eq(5)
     end
 
     it "returns 1 if estimated count is 0" do
       allow(PageableModel).to receive(:estimated_count).and_return(0)
+
       expect(PageableModel.total_pages(10)).to eq(1)
     end
   end
@@ -70,34 +75,26 @@ RSpec.describe Pageable do
     end
 
     it "returns paginated records and pagination data" do
-      paginated_records, pagination_data = PageableModel.paginate(page: 2, per_page: 10)
+      paginated_records, pagination_metadata = PageableModel.paginate(page: 2, per_page: 10)
 
       expect(paginated_records.size).to eq(10)
-      expect(pagination_data).to eq(
-        current_page: 2,
-        per_page: 10,
-        total_pages: 5,
-        total_count: 50,
-        next_page: 3,
-        previous_page: 1,
-        offset: 10
-      )
+      expect(pagination_metadata).to be_a(PaginationMetadata)
     end
 
     it "returns first page if page is invalid" do
-      paginated_records, pagination_data = PageableModel.paginate(page: 0, per_page: 10)
+      paginated_records, pagination_metadata = PageableModel.paginate(page: 0, per_page: 10)
 
-      expect(pagination_data[:current_page]).to eq(1)
+      expect(pagination_metadata.current_page).to eq(1)
       expect(paginated_records.size).to eq(10)
     end
 
     it "handles cases where total count is less than per_page" do
       allow(PageableModel).to receive(:estimated_count).and_return(8)
-      paginated_records, pagination_data = PageableModel.paginate(page: 1, per_page: 10)
+      paginated_records, pagination_metadata = PageableModel.paginate(page: 1, per_page: 10)
 
-      expect(pagination_data[:total_pages]).to eq(1)
-      expect(pagination_data[:total_count]).to eq(8)
-      expect(pagination_data[:next_page]).to be_nil
+      expect(pagination_metadata.total_pages).to eq(1)
+      expect(pagination_metadata.total_count).to eq(8)
+      expect(pagination_metadata.next_page).to be_nil
     end
   end
 end

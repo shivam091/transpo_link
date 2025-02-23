@@ -11,3 +11,103 @@
 .animate-slideUpAndFade {
   animation: slideUpAndFade 0.2s cubic-bezier(0.16, 1, 0.3, 1)
 }
+@keyframes fadeIn {
+  from {
+    transform: translate(0, 0) scale(0);
+    opacity: 0;
+  }
+  to {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+}
+.animate-fadeIn {
+  animation: fadeIn 0.4s ease-out;
+}
+@keyframes fadeOut {
+  from {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: translate(0, 0) scale(0);
+    opacity: 0;
+  }
+}
+.animate-fadeOut {
+  animation: fadeOut 0.4s ease-out;
+}
+@keyframes blink {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.animate-blink {
+  animation: blink 0.5s;
+}
+@keyframes blinking {
+  0%, from {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.75;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.animate-blinking {
+  animation: blinking 1s ease-in-out infinite forwards;
+}
+@keyframes bounce {
+  0%, to {
+    animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+    transform: translateY(-25%);
+  }
+  50% {
+    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+    transform: none;
+  }
+}
+.animate-bounce {
+  animation: bounce 1s infinite;
+}
+@keyframes pulse {
+  50% {
+    opacity: 0.5;
+  }
+}
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+@keyframes pulsing {
+  0% {
+    opacity: 1;
+    scale: 1;
+  }
+  50% {
+    opacity: 0.9;
+    scale: 0.875;
+  }
+  to {
+    opacity: 1;
+    scale: 1;
+  }
+}
+.animate-pulsing {
+  animation: pulsing 2s ease-in-out infinite forwards;
+}
+@keyframes spin {
+  to {
+    transform: rotate(1turn);
+  }
+}
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
