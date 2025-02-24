@@ -172,6 +172,7 @@
           is_active: "Is active",
           created_at: "Created at",
           updated_at: "Updated at",
+          address: "Address",
         },
         warehouse_manager: {
           warehouse_id: "Warehouse",
@@ -625,6 +626,10 @@
         title: "Edit warehouse",
       },
       form: {
+        basic_details: "Basic details",
+        address: "Address",
+      },
+      warehouse_basic_details_fields: {
         select_capacity_unit: "Select capacity unit",
       },
       show: {},

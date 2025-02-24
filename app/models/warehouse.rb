@@ -60,4 +60,10 @@ class Warehouse < ApplicationRecord
   has_many :suppliers, through: :warehouse_suppliers, inverse_of: :supplied_warehouses, source: :supplier
 
   default_scope -> { order_created_desc }
+
+  accepts_nested_attributes_for :address, update_only: true
+
+  def address
+    super.presence || build_address
+  end
 end

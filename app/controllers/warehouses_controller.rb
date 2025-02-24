@@ -89,7 +89,15 @@ class WarehousesController < ApplicationController
       :capacity_unit,
       :latitude,
       :longitude,
-      :is_active
+      :is_active,
+      address_attributes: [
+        :address1,
+        :address2,
+        :city,
+        :state,
+        :country,
+        :postal_code
+      ]
     )
   end
 

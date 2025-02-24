@@ -46,3 +46,7 @@
             .flex-auto
               .widget-row-title= Warehouse.human_attribute_name(:longitude)
               .widget-row-body= h(warehouse.formatted_longitude)
+          .widget-row.d-flex
+            .flex-auto
+              .widget-row-title= Warehouse.human_attribute_name(:address)
+              .widget-row-body= h(warehouse.address.humanize)
