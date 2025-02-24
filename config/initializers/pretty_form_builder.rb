@@ -6,6 +6,24 @@
 
 class PrettyFormBuilder < ActionView::Helpers::FormBuilder
   def text_field(attribute, options = {})
+    if options.delete(:static)
+      options.tap do |option|
+        option[:readonly] = true
+        option[:disabled] = true
+        option[:class] = append_class(options[:class], "form-control-plaintext")
+      end
+    else
+      options[:class] = append_class(options[:class], "form-control")
+    end
+    super(attribute, options)
+  end
+
+  def text_area(attribute, options = {})
+    options[:class] = append_class(options[:class], "form-control")
+    super(attribute, options)
+  end
+
+  def number_field(attribute, options = {})
     options[:class] = append_class(options[:class], "form-control")
     super(attribute, options)
   end
@@ -25,10 +43,15 @@ class PrettyFormBuilder < ActionView::Helpers::FormBuilder
     super(attribute, tag_value, options)
   end
 
+  def check_box(attribute, options = {}, checked_value = "1", unchecked_value = "0")
+    options[:class] = append_class(options[:class], "form-check-input")
+    super(attribute, options, checked_value, unchecked_value)
+  end
+
   private
 
   # Append new class to existing classes without duplication
   def append_class(existing_classes, new_class)
-    [existing_classes, new_class].compact.join(' ').split.uniq.join(' ')
+    [existing_classes, new_class].compact.join(" ").split.uniq.join(" ")
   end
 end
