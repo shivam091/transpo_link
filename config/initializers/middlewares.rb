@@ -6,6 +6,8 @@
 
 require_relative "../../app/middlewares/request_time_recorder.rb"
 require_relative "../../app/middlewares/ip_info.rb"
+require_relative "../../app/middlewares/request_logger.rb"
 
 TranspoLink::Application.config.middleware.insert 0, RequestTimeRecorder
 TranspoLink::Application.config.middleware.use IpInfo, {ttl: 30, maxsize: 30}
+TranspoLink::Application.config.middleware.use RequestLogger

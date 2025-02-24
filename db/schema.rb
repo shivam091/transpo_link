@@ -42,23 +42,31 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_17_171347) do
     t.string "uuid"
     t.string "uri"
     t.string "method"
+    t.jsonb "query_params", default: "{}"
     t.string "session_id"
     t.string "session_private_id"
     t.inet "remote_address"
-    t.decimal "elapsed_time", precision: 10, scale: 4, default: "0.0"
     t.string "user_agent"
     t.string "referrer"
-    t.text "exception_message"
+    t.string "origin"
+    t.bigint "memory_usage", default: 0
+    t.decimal "cpu_usage", precision: 5, scale: 2, default: "0.0"
+    t.jsonb "ip_info", default: "{}"
+    t.jsonb "request_headers", default: "{}"
+    t.jsonb "response_headers", default: "{}"
     t.integer "status"
     t.integer "response_size"
-    t.jsonb "query_params", default: "{}"
-    t.jsonb "ip_info", default: "{}"
+    t.jsonb "exception", default: "{}"
+    t.decimal "elapsed_time", precision: 10, scale: 4, default: "0.0"
     t.uuid "user_id"
     t.timestamptz "created_at", null: false
     t.timestamptz "updated_at", null: false
+    t.index ["exception"], name: "index_request_logs_on_exception", using: :gin
     t.index ["ip_info"], name: "index_request_logs_on_ip_info", using: :gin
     t.index ["query_params"], name: "index_request_logs_on_query_params", using: :gin
     t.index ["remote_address"], name: "index_request_logs_on_remote_address"
+    t.index ["request_headers"], name: "index_request_logs_on_request_headers", using: :gin
+    t.index ["response_headers"], name: "index_request_logs_on_response_headers", using: :gin
     t.index ["session_id"], name: "index_request_logs_on_session_id"
     t.index ["user_id"], name: "index_request_logs_on_user_id"
     t.index ["uuid"], name: "index_request_logs_on_uuid", unique: true

@@ -8,17 +8,22 @@ class CreateRequestLogs < ActiveRecord::Migration[8.0]
       t.string :uuid, index: {unique: true, using: :btree}
       t.string :uri
       t.string :method
+      t.jsonb :query_params, default: "{}", index: {using: :gin}
       t.string :session_id, index: {using: :btree}
       t.string :session_private_id
       t.inet :remote_address, index: {using: :btree}
-      t.decimal :elapsed_time, precision: 10, scale: 4, default: 0.0
       t.string :user_agent
       t.string :referrer
-      t.text :exception_message
+      t.string :origin
+      t.bigint :memory_usage, default: 0
+      t.decimal :cpu_usage, precision: 5, scale: 2, default: 0.0
+      t.jsonb :ip_info, default: "{}", index: {using: :gin}
+      t.jsonb :request_headers, default: "{}", index: {using: :gin}
+      t.jsonb :response_headers, default: "{}", index: {using: :gin}
       t.integer :status
       t.integer :response_size
-      t.jsonb :query_params, default: "{}", index: {using: :gin}
-      t.jsonb :ip_info, default: "{}", index: {using: :gin}
+      t.jsonb :exception, default: "{}", index: {using: :gin}
+      t.decimal :elapsed_time, precision: 10, scale: 4, default: 0.0
       t.references :user,
                    type: :uuid,
                    foreign_key: {
@@ -35,6 +40,7 @@ class CreateRequestLogs < ActiveRecord::Migration[8.0]
       t.check_constraint "method IS NOT NULL AND method <> ''", name: "check_request_logs_method_presence"
       t.check_constraint "remote_address IS NOT NULL", name: "check_request_logs_remote_address_presence"
       t.check_constraint "ip_info IS NOT NULL", name: "check_request_logs_ip_info_presence"
+
       t.check_constraint "UPPER(method) = method", name: "check_request_logs_method_uppercase"
     end
   end
