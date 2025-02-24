@@ -11,6 +11,10 @@ RSpec.describe "Devise configuration for TranspoLink" do
     load Rails.root.join("config/initializers/devise.rb")
   end
 
+  before do
+    load_initializers
+  end
+
   describe "secret key configuration" do
     it "sets the secret key from credentials" do
       expect(Devise.secret_key).to eq(Rails.application.credentials.config[:SECRET_KEY_BASE])
