@@ -11,7 +11,7 @@
 # ```
 RSpec::Matchers.define :match_html do |expected|
   match do |actual|
-    normalize_html(actual) == normalize_html(expected)
+    normalize_html(expected) == normalize_html(actual)
   end
 
   description do
@@ -19,11 +19,11 @@ RSpec::Matchers.define :match_html do |expected|
   end
 
   failure_message do |actual|
-    "expected '#{normalize_html(expected)}' to match '#{normalize_html(actual)}'"
+    "expected '#{normalize_html(actual)}' to match '#{normalize_html(expected)}'"
   end
 
   failure_message_when_negated do |actual|
-    "expected '#{normalize_html(expected)}' not to match '#{normalize_html(actual)}'"
+    "expected '#{normalize_html(actual)}' not to match '#{normalize_html(expected)}'"
   end
 
   private
