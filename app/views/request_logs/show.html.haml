@@ -23,6 +23,6 @@
     .widget
       .widget-header
         .widget-title
-          = t(".additional_details")
+          = t(".advanced_details")
       .widget-body
-        = render_if_exists("request_logs/additional_details", locals: {request_log: @request_log})
+        = render_if_exists("request_logs/advanced_details", locals: {request_log: @request_log})

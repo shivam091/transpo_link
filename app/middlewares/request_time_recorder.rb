@@ -9,8 +9,6 @@ class RequestTimeRecorder
 
   def call(env)
     env["REQUEST_STARTED_AT"] = Time.now.utc
-    status, headers, response = @app.call(env)
-
-    [status, headers, response]
+    @app.call(env)
   end
 end
