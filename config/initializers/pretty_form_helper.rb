@@ -20,27 +20,13 @@ module PrettyFormHelper
   def pretty_form_for(record, options = {}, &block)
     options.reverse_merge!(builder: PrettyFormBuilder)
 
-    supress_form_field_errors do
-      form_for(record, options, &block)
-    end
+    form_for(record, options, &block)
   end
 
   def pretty_form_with(options = {}, &block)
     options.reverse_merge!(builder: PrettyFormBuilder)
 
-    supress_form_field_errors do
-      form_with(**options, &block)
-    end
-  end
-
-  private
-
-  def supress_form_field_errors
-    original_proc = ActionView::Base.field_error_proc
-    # ActionView::Base.field_error_proc = RailsBootstrapForm.field_error_proc
-    yield
-  ensure
-    ActionView::Base.field_error_proc = original_proc
+    form_with(**options, &block)
   end
 end
 
