@@ -4,6 +4,8 @@ Emphasizing the connection between suppliers, buyers, and logistics.
 
 **© 2025, TranspoLink LLP or its affiliates, all rights reserved.**
 
+[![Ruby on Rails CI](https://github.com/shivam091/transpo_link/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/shivam091/transpo_link/actions/workflows/ci.yml)
+
 ## Introduction
 
 Centralized application for logistics company to manage all orders to be transported from suppliers to buyers
