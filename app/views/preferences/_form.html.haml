@@ -1,4 +1,4 @@
-= form_with model: current_user, url: preference_path do |form|
+= pretty_form_with model: current_user, url: preference_path do |form|
   = form_errors(current_user)
   = form.fields_for :user_preference, include_id: false do |preference_form|
     = render_if_exists("preferences/preference_form", locals: {form: preference_form})
