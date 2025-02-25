@@ -23,6 +23,14 @@
     = form.select :capacity_unit, grouped_options_for_select(TranspoLink::MeasurementUnits.options_for_units, form.object.capacity_unit),
       {include_blank: t(".select_capacity_unit")}, {class: "form-select"}
   .col-sm-12.col-md-6.col-lg-4.mb-3
+    = form.label :manager_ids, class: "form-label required"
+    = form.select :manager_ids, options_for_select(User.managers.select_options, form.object.manager_ids),
+      {include_blank: t(".select_managers"), multiple: true}, {class: "form-select"}
+  .col-sm-12.col-md-6.col-lg-4.mb-3
+    = form.label :supplier_ids, class: "form-label required"
+    = form.select :supplier_ids, options_for_select(User.suppliers.select_options, form.object.supplier_ids),
+      {include_blank: t(".select_suppliers"), multiple: true}, {class: "form-select"}
+  .col-sm-12.col-md-6.col-lg-4.mb-3
     = form.label :latitude, class: "form-label"
     = form.number_field :latitude, class: "form-control", step: 0.00000001
   .col-sm-12.col-md-6.col-lg-4.mb-3

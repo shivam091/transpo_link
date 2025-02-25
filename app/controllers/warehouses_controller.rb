@@ -90,6 +90,8 @@ class WarehousesController < ApplicationController
       :latitude,
       :longitude,
       :is_active,
+      manager_ids: [],
+      supplier_ids: [],
       address_attributes: [
         :address1,
         :address2,

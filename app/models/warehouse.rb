@@ -50,6 +50,8 @@ class Warehouse < ApplicationRecord
             },
             allow_nil: true,
             reduce: true
+  validates :manager_ids, presence: true, reduce: true
+  validates :supplier_ids, presence: true, reduce: true
 
   has_one :address, as: :addressable, inverse_of: :addressable, dependent: :destroy
 
