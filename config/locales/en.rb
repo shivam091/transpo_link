@@ -81,6 +81,15 @@
         },
       },
     },
+    number: {
+      angle: {
+        precision: nil,
+        strip_insignificant_zeros: true,
+        delimiter: ",",
+        separator: ".",
+        format: "%{n}°",
+      },
+    },
     activerecord: {
       attributes: {
         role: {
