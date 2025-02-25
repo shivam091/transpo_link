@@ -244,7 +244,7 @@ RSpec.describe PaginationHelper, type: :helper do
       html = helper.send(:page_item, 2, 3)
 
       expect(html).to include("page=2")
-      expect(html).to include("class=\"page-item \"")
+      expect(html).to include("class=\"page-item\"")
     end
   end
 
@@ -328,7 +328,7 @@ RSpec.describe PaginationHelper, type: :helper do
     it "renders a clickable page item for other pages" do
       html = helper.send(:page_item, 2, 3)
       expect(html).to include("page=2")
-      expect(html).to include("class=\"page-item \"")
+      expect(html).to include("class=\"page-item\"")
     end
   end
 end
