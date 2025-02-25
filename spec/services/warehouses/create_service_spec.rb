@@ -10,8 +10,11 @@ RSpec.describe Warehouses::CreateService, type: :service do
   subject { described_class.(warehouse_attributes) }
 
   describe "#call" do
+    let(:manager) { create(:manager) }
+    let(:supplier) { create(:supplier) }
+
     context "when warehouse is valid" do
-      let(:warehouse_attributes) { attributes_for(:warehouse) }
+      let(:warehouse_attributes) { attributes_for(:warehouse).merge(manager_ids: [manager.id], supplier_ids: [supplier.id]) }
 
       include_examples "creates a new object", Warehouse
 
