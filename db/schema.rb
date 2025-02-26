@@ -18,7 +18,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_24_144350) do
   # Custom types defined in this database.
   # Note that some types may not work with other database engines. Be careful if changing database.
   create_enum "color_schemes", ["auto", "dark", "light"]
-  create_enum "tax_types", ["vat", "gst", "ein", "ssn", "itin", "tin", "cif", "nif", "rfc", "abn", "bn", "pan", "gstin", "cnpj", "cpf", "siret", "siren", "tan", "trn", "brn", "ird", "ubi", "cuit", "cuil", "ruc", "nit", "npwp", "kra_pin", "gst_certificate", "vatin", "qst", "pcn", "business_id", "tax_number"]
+  create_enum "tax_types", ["vat", "gst", "tin", "ein", "ssn", "itin", "pan", "tan", "gstin", "vatin", "eori", "nif", "cif", "siret", "siren", "utr", "pcn", "bn", "qst", "abn", "acn", "tfn", "ird", "rfc", "cuit", "cuil", "ruc", "nit", "cnpj", "cpf", "npwp", "trn", "kra_pin", "brn", "pic", "inn", "kpp", "ogrn", "ogrnip", "brn_kr", "uscc", "mst", "tin_ph", "tin_th", "uen"]
 
   create_table "addresses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "addressable_type"

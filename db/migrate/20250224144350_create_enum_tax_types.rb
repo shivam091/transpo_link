@@ -7,38 +7,49 @@ class CreateEnumTaxTypes < ActiveRecord::Migration[8.0]
     create_enum :tax_types, %i[
                                 vat
                                 gst
+                                tin
                                 ein
                                 ssn
                                 itin
-                                tin
-                                cif
-                                nif
-                                rfc
-                                abn
-                                bn
                                 pan
+                                tan
                                 gstin
-                                cnpj
-                                cpf
+                                vatin
+                                eori
+                                nif
+                                cif
                                 siret
                                 siren
-                                tan
-                                trn
-                                brn
+                                utr
+                                pcn
+                                bn
+                                qst
+                                abn
+                                acn
+                                tfn
                                 ird
-                                ubi
+                                rfc
                                 cuit
                                 cuil
                                 ruc
                                 nit
+                                cnpj
+                                cpf
                                 npwp
+                                trn
                                 kra_pin
-                                gst_certificate
-                                vatin
-                                qst
-                                pcn
-                                business_id
-                                tax_number
+                                brn
+                                pic
+                                inn
+                                kpp
+                                ogrn
+                                ogrnip
+                                brn_kr
+                                uscc
+                                mst
+                                tin_ph
+                                tin_th
+                                uen
                               ]
   end
 end
