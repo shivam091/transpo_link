@@ -35,7 +35,7 @@ RSpec.describe "Profiles", type: :request do
         get profile_path
 
         expect(response).to have_http_status(:ok)
-        expect(response.body).to include("<div class='widget-help'>Edit your profile details viz., first name, last name, address, etc.</div>")
+        expect(response.body).to include("<div class='widget-help'>Edit your personal details viz., first name, last name, address, and more to ensure your profile reflects the latest information.</div>")
       end
     end
 

@@ -35,7 +35,7 @@ RSpec.describe "Preferences", type: :request do
         get preference_path
 
         expect(response).to have_http_status(:ok)
-        expect(response.body).to include("<div class='widget-help'>Edit your preferences viz. color scheme, time zone, language, etc.</div>")
+        expect(response.body).to include("<div class='widget-help'>Customize your preferences, including color scheme, time zone, language, and other settings to suit your personal experience.</div>")
       end
     end
 

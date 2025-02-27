@@ -565,7 +565,7 @@
       show: {
         title: "Your profile",
         your_profile: "Your profile",
-        edit_profile_details: "Edit your profile details viz., first name, last name, address, etc.",
+        edit_profile_details: "Edit your personal details viz., first name, last name, address, and more to ensure your profile reflects the latest information.",
         address: "Address",
         mobile_number_help_text: "Quickly receive security notifications with this mobile number.",
       },
@@ -581,7 +581,7 @@
       show: {
         title: "Your preferences",
         your_preferences: "Your preferences",
-        edit_preferences: "Edit your preferences viz. color scheme, time zone, language, etc.",
+        edit_preferences: "Customize your preferences, including color scheme, time zone, language, and other settings to suit your personal experience.",
       },
       edit: {
         title: "Edit preferences",
