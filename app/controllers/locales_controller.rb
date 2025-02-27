@@ -19,7 +19,7 @@ class LocalesController < ApplicationController
       respond_to do |format|
         format.turbo_stream do
           render turbo_stream: [
-            turbo_stream.update(:edit_locale_form, partial: "locales/form"),
+            turbo_stream.update(:edit_locale_form_frame, partial: "locales/form"),
             render_flash
           ], status: :unprocessable_entity
         end

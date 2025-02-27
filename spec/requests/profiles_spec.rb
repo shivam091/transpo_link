@@ -44,7 +44,7 @@ RSpec.describe "Profiles", type: :request do
         get edit_profile_path
 
         expect(admin).to eq(controller_assigns(:current_user))
-        expect(response.body).to include("<turbo-frame id=\"profile_form\" target=\"_top\">")
+        expect(response.body).to include("<turbo-frame id=\"edit_profile_form_frame\" target=\"_top\">")
         expect(response).to have_http_status(:ok)
       end
     end
@@ -72,7 +72,7 @@ RSpec.describe "Profiles", type: :request do
           expect(admin.reload.first_name).to eq("TranspoLink")
           expect(flash[:alert]).to eq("Your profile could not be updated.")
           expect(response.media_type).to eq(Mime[:turbo_stream])
-          expect(response.body).to include("<turbo-stream action=\"update\" target=\"profile_form\">")
+          expect(response.body).to include("<turbo-stream action=\"update\" target=\"edit_profile_form_frame\">")
           expect(response).to have_http_status(:unprocessable_entity)
         end
       end

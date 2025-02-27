@@ -96,7 +96,7 @@ RSpec.describe "Warehouses", type: :request do
 
           expect(flash[:alert]).to eq("Warehouse could not be created.")
           expect(response.media_type).to eq(Mime[:turbo_stream])
-          expect(response.body).to include("<turbo-stream action=\"update\" target=\"warehouse_form\">")
+          expect(response.body).to include("<turbo-stream action=\"update\" target=\"new_warehouse_form_frame\">")
           expect(response).to have_http_status(:unprocessable_entity)
         end
       end
@@ -131,7 +131,7 @@ RSpec.describe "Warehouses", type: :request do
 
           expect(flash[:alert]).to eq("Warehouse could not be updated.")
           expect(response.media_type).to eq(Mime[:turbo_stream])
-          expect(response.body).to include("<turbo-stream action=\"update\" target=\"warehouse_form\">")
+          expect(response.body).to include("<turbo-stream action=\"update\" target=\"edit_warehouse_form_frame\">")
           expect(response).to have_http_status(:unprocessable_entity)
         end
       end

@@ -23,7 +23,7 @@ class ApplicationController < ActionController::Base
   around_action :with_locale, :with_time_zone
 
   def render_flash
-    turbo_stream.update(:flash, partial: "shared/flash_messages")
+    turbo_stream.update(:flash_messages_frame, partial: "shared/flash_messages")
   end
 
   private

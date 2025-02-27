@@ -21,7 +21,7 @@
     = render_if_exists("layouts/application/secondary_navigation")
     .clearfix
     %main.container-fluid.my-2
-      = turbo_frame_tag :flash do
+      = turbo_frame_tag :flash_messages_frame do
         = render_if_exists("shared/flash_messages")
       = yield
     .clearfix
