@@ -14,5 +14,6 @@
         = button_text("new")
   .card-body
     = render_if_exists("warehouses/warehouse")
-  .card-footer
-    = render_pagination(@pagination_data)
+  - if @pagination_metadata.needs_pagination?
+    .card-footer
+      = render_pagination(@pagination_metadata)

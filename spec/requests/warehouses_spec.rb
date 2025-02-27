@@ -63,7 +63,7 @@ RSpec.describe "Warehouses", type: :request do
 
       it "renders user list and returns :ok status" do
         expect(controller_assigns(:warehouses)).to be_present
-        expect(controller_assigns(:pagination_data)).to be_present
+        expect(controller_assigns(:pagination_metadata)).to be_present
         expect(controller_assigns(:warehouses).reload).to include(warehouse)
         expect(response).to have_http_status(:ok)
       end
