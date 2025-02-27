@@ -37,7 +37,7 @@
   .actions
     = button_tag type: :submit, class: "btn btn-primary" do
       = external_svg_tag("svgs/floppy.svg")
-      = @warehouse.new_record? ? button_text("create") : button_text("update")
+      = @warehouse.new_record? ? button_text(:create) : button_text(:update)
     = link_to warehouses_path, class: "btn btn-secondary" do
       = external_svg_tag("svgs/cancel.svg")
-      = button_text("cancel")
+      = button_text(:cancel)

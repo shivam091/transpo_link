@@ -7,7 +7,7 @@
   .modal-actions
     = button_tag type: :submit, class: "btn btn-primary" do
       = external_svg_tag("svgs/floppy.svg")
-      = button_text("update")
+      = button_text(:update)
     = button_tag type: :button, class: "btn btn-secondary", data: {action: "click->remote-modal#hide"} do
       = external_svg_tag("svgs/cancel.svg")
-      = button_text("cancel")
+      = button_text(:cancel)
