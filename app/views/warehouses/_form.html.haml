@@ -1,39 +1,12 @@
 = form_with model: @warehouse do |form|
   = form_errors(@warehouse)
-  .row
-    - if form.object.persisted?
-      .col-sm-12.col-md-6.col-lg-4.mb-3
-        = form.label :reference_code, class: "form-label"
-        = form.text_field :reference_code, class: "form-control-plaintext", readonly: true, disabled: true
-    .col-sm-12.col-md-6.col-lg-4.mb-3
-      = form.label :name, class: "form-label required"
-      = form.text_field :name, class: "form-control", autofocus: true
-    .col-sm-12.col-md-6.col-lg-4.mb-3
-      = form.label :email_address, class: "form-label"
-      = form.text_field :email_address, class: "form-control"
-    .col-sm-12.col-md-6.col-lg-4.mb-3
-      = form.label :contact_number, class: "form-label"
-      = form.text_field :contact_number, class: "form-control"
-    .col-12.mb-3
-      = form.label :description, class: "form-label"
-      = form.text_area :description, class: "form-control", rows: 5
-    .col-sm-12.col-md-6.col-lg-4.mb-3
-      = form.label :total_capacity, class: "form-label required"
-      = form.number_field :total_capacity, class: "form-control", step: 0.01
-    .col-sm-12.col-md-6.col-lg-4.mb-3
-      = form.label :capacity_unit, class: "form-label required"
-      = form.select :capacity_unit, grouped_options_for_select(TranspoLink::MeasurementUnits.options_for_units, form.object.capacity_unit),
-        {include_blank: t(".select_capacity_unit")}, {class: "form-select"}
-    .col-sm-12.col-md-6.col-lg-4.mb-3
-      = form.label :latitude, class: "form-label"
-      = form.number_field :latitude, class: "form-control", step: 0.00000001
-    .col-sm-12.col-md-6.col-lg-4.mb-3
-      = form.label :longitude, class: "form-label"
-      = form.number_field :longitude, class: "form-control", step: 0.00000001
-    .col-12.mb-3
-      .form-check
-        = form.label :is_active, class: "form-check-label"
-        = form.check_box :is_active, class: "form-check-input"
+  .subheader
+    = t(".basic_details")
+  = render_if_exists("warehouses/warehouse_basic_details_fields", locals: {form: form})
+  .subheader
+    = t(".address")
+  = form.fields_for :address, include_id: false do |address_form_fields|
+    = render_if_exists("shared/address_form_fields", locals: {form: address_form_fields})
   .actions
     = button_tag type: :submit, class: "btn btn-primary" do
       = external_svg_tag("svgs/floppy.svg")

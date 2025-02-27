@@ -111,5 +111,17 @@ RSpec.describe Warehouse, type: :model do
     describe "#longitude" do
       it { is_expected.to validate_numericality_of(:longitude).is_greater_than_or_equal_to(-180).is_less_than_or_equal_to(180).allow_nil }
     end
+
+    describe "#manager_ids" do
+      it { is_expected.to validate_presence_of(:manager_ids) }
+    end
+
+    describe "#supplier_ids" do
+      it { is_expected.to validate_presence_of(:supplier_ids) }
+    end
+  end
+
+  describe "nested attributes" do
+    it { is_expected.to accept_nested_attributes_for(:address).update_only(true) }
   end
 end
