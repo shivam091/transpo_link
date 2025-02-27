@@ -4,7 +4,7 @@
 
 class Warehouses::CreateService < ApplicationService
   def initialize(warehouse_attributes)
-    @warehouse_attributes = warehouse_attributes.dup
+    @warehouse_attributes = warehouse_attributes
   end
 
   def call
