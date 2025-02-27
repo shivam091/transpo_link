@@ -160,12 +160,12 @@
           are_notifications_enabled: "Are notifications enabled",
         },
         address: {
-          address1: "Flat, House no., Building, Company, Apartment, P.O. box, c/o",
-          address2: "Area, Street, Sector, Village, Suite, or Floor",
-          city: "Town, City, Suburb, or Area",
-          state: "State, Province, County, or Territory",
+          address1: "Flat, house no., building, company, apartment, P.O. box, c/o",
+          address2: "Area, street, sector, village, suite, or floor",
+          city: "Town, city, suburb, or area",
+          state: "State, province, county, or territory",
           country: "Country or region",
-          postal_code: "Postal code, Postcode, or PIN code",
+          postal_code: "Postal code, postcode, or PIN code",
         },
         warehouse: {
           name: "Name",
@@ -431,8 +431,8 @@
         inactive: "Inactive",
       },
       address_form_fields: {
-        select_country: "Select country",
-        select_state: "Select state",
+        select_country: "Select country or region",
+        select_state: "Select state, province, county, or territory",
       },
     },
     flashes: {
