@@ -35,7 +35,7 @@ RSpec.describe "Users::Passwords", type: :request do
 
     context "when the user has recently requested a password reset" do
       before do
-        allow_any_instance_of(User).to receive(:recently_sent_password_reset_instructions?).and_return(true)
+        allow_any_instance_of(User).to receive(:recently_sent_password_reset_instructions?) { true }
       end
 
       it "throttles the password reset request" do

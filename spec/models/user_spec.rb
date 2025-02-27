@@ -130,28 +130,28 @@ RSpec.describe User, type: :model do
 
     describe "#password" do
       context "when password is required" do
-        before { allow(subject).to receive(:password_required?).and_return(true) }
+        before { allow(subject).to receive(:password_required?) { true } }
 
         it { is_expected.to validate_presence_of(:password) }
         it { is_expected.to validate_length_of(:password).is_at_least(8).is_at_most(20) }
       end
 
       context "when password is not required" do
-        before { allow(subject).to receive(:password_required?).and_return(false) }
+        before { allow(subject).to receive(:password_required?) { false } }
 
         it { is_expected.not_to validate_presence_of(:password) }
       end
 
       context "when password is present and not password_confirmation" do
-        before { allow(subject).to receive(:password).and_return(dummy_password) }
-        before { allow(subject).to receive(:password_confirmation).and_return("") }
+        before { allow(subject).to receive(:password) { dummy_password } }
+        before { allow(subject).to receive(:password_confirmation) { "" } }
 
         it { is_expected.to be_invalid }
       end
 
       context "when both password and password_confirmation are present" do
-        before { allow(subject).to receive(:password).and_return(dummy_password) }
-        before { allow(subject).to receive(:password_confirmation).and_return(dummy_password) }
+        before { allow(subject).to receive(:password) { dummy_password } }
+        before { allow(subject).to receive(:password_confirmation) { dummy_password } }
 
         it { is_expected.to be_valid }
       end

@@ -10,13 +10,13 @@ RSpec.describe FormsHelper, type: :helper do
 
     context "when the record has errors" do
       before do
-        allow(record).to receive(:errors).and_return(
+        allow(record).to receive(:errors) {
           double(
             any?: true,
             count: 2,
             full_messages: ["Email can't be blank", "Password is too short"]
           )
-        )
+        }
       end
 
       it "renders the error explanation div with error messages" do
@@ -37,9 +37,7 @@ RSpec.describe FormsHelper, type: :helper do
 
     context "when the record has no errors" do
       before do
-        allow(record).to receive(:errors).and_return(
-          double(any?: false)
-        )
+        allow(record).to receive(:errors) { double(any?: false) }
       end
 
       it "returns nil" do

@@ -46,7 +46,7 @@ RSpec.describe TranspoLink::CountryInfo do
 
     context "when country translation is missing" do
       it "falls back to the country alpha2" do
-        allow(country_info.country).to receive(:translations).and_return({})
+        allow(country_info.country).to receive(:translations) { {} }
         expect(country_info.country_name).to eq("IN")
       end
     end
@@ -63,7 +63,7 @@ RSpec.describe TranspoLink::CountryInfo do
 
     context "when subdivision translation is missing" do
       it "falls back to the subdivision name" do
-        allow(country_info.subdivision).to receive(:translations).and_return({})
+        allow(country_info.subdivision).to receive(:translations) { {} }
         expect(country_info.subdivision_name).to eq("Maharashtra")
       end
     end

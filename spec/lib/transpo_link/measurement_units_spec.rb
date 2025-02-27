@@ -22,17 +22,17 @@ RSpec.describe TranspoLink::MeasurementUnits do
     before do
       allow(I18n).to receive(:t) { |key, **| key.to_s.humanize }
 
-      allow(I18n).to receive(:t).with("area", scope: "measurement_units.categories").and_return("Area")
-      allow(I18n).to receive(:t).with("weight", scope: "measurement_units.categories").and_return("Weight")
-      allow(I18n).to receive(:t).with("volume", scope: "measurement_units.categories").and_return("Volume")
-      allow(I18n).to receive(:t).with("length", scope: "measurement_units.categories").and_return("Length")
-      allow(I18n).to receive(:t).with("count", scope: "measurement_units.categories").and_return("Count")
+      allow(I18n).to receive(:t).with("area", scope: "measurement_units.categories") { "Area" }
+      allow(I18n).to receive(:t).with("weight", scope: "measurement_units.categories") { "Weight" }
+      allow(I18n).to receive(:t).with("volume", scope: "measurement_units.categories") { "Volume" }
+      allow(I18n).to receive(:t).with("length", scope: "measurement_units.categories") { "Length" }
+      allow(I18n).to receive(:t).with("count", scope: "measurement_units.categories") { "Count" }
 
-      allow(I18n).to receive(:t).with("cm²", scope: "measurement_units.sub_categories").and_return("Square Centimeter")
-      allow(I18n).to receive(:t).with("kg", scope: "measurement_units.sub_categories").and_return("Kilogram")
-      allow(I18n).to receive(:t).with("L", scope: "measurement_units.sub_categories").and_return("Liter")
-      allow(I18n).to receive(:t).with("m", scope: "measurement_units.sub_categories").and_return("Meter")
-      allow(I18n).to receive(:t).with("item", scope: "measurement_units.sub_categories").and_return("Item")
+      allow(I18n).to receive(:t).with("cm²", scope: "measurement_units.sub_categories") { "Square Centimeter" }
+      allow(I18n).to receive(:t).with("kg", scope: "measurement_units.sub_categories") { "Kilogram" }
+      allow(I18n).to receive(:t).with("L", scope: "measurement_units.sub_categories") { "Liter" }
+      allow(I18n).to receive(:t).with("m", scope: "measurement_units.sub_categories") { "Meter" }
+      allow(I18n).to receive(:t).with("item", scope: "measurement_units.sub_categories") { "Item" }
     end
 
     it "returns a hash with translated categories and subcategories" do

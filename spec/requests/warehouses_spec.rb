@@ -161,7 +161,7 @@ RSpec.describe "Warehouses", type: :request do
         let(:service_response) { ServiceResponse.error(message: "Warehouse could not be deleted.") }
 
         before do
-          allow(Warehouses::DestroyService).to receive(:call).and_return(service_response)
+          allow(Warehouses::DestroyService).to receive(:call) { service_response }
         end
 
         it "redirects with an error message" do

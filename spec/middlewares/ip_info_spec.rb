@@ -17,13 +17,13 @@ RSpec.describe IpInfo do
 
   before do
     # Stub Rails credentials for API key
-    allow(Rails.application.credentials).to receive(:config).and_return({ IP_LOOKUP_API_KEY: "fake_api_key" })
+    allow(Rails.application.credentials).to receive(:config) { { IP_LOOKUP_API_KEY: "fake_api_key" } }
 
     # Stub IPinfo.create to return the mock_ipinfo_instance
-    allow(IPinfo).to receive(:create).with("fake_api_key", {}).and_return(mock_ipinfo_instance)
+    allow(IPinfo).to receive(:create).with("fake_api_key", {}) { mock_ipinfo_instance }
 
     # Stub the details method to return mock_details
-    allow(mock_ipinfo_instance).to receive(:details).and_return(mock_details)
+    allow(mock_ipinfo_instance).to receive(:details) { mock_details }
   end
 
   describe "#call" do
@@ -38,12 +38,12 @@ RSpec.describe IpInfo do
 
   describe "IPinfo API interaction" do
     it "initializes IPinfo with the API key" do
-      expect(IPinfo).to receive(:create).with("fake_api_key", {}).and_return(mock_ipinfo_instance)
+      expect(IPinfo).to receive(:create).with("fake_api_key", {}) { mock_ipinfo_instance }
       middleware.call(env)
     end
 
     it "calls the details method on the IPinfo instance" do
-      expect(mock_ipinfo_instance).to receive(:details).and_return(mock_details)
+      expect(mock_ipinfo_instance).to receive(:details) { mock_details }
       middleware.call(env)
     end
   end

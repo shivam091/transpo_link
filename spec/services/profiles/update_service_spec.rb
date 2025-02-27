@@ -22,7 +22,7 @@ RSpec.describe Profiles::UpdateService, type: :service do
     end
 
     context "when update fails" do
-      before { allow(user).to receive(:update).and_return(false) }
+      before { allow(user).to receive(:update) { false } }
 
       it "does not update the user profile" do
         expect(subject.payload[:user].first_name).to include("TranspoLink")

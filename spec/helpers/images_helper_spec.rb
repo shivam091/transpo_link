@@ -51,7 +51,7 @@ RSpec.describe ImagesHelper, type: :helper do
     let(:fake_image_url) { "/assets/svgs/defs.svg" }
 
     before do
-      allow(helper).to receive(:image_url).and_return(fake_image_url)
+      allow(helper).to receive(:image_url) { fake_image_url }
     end
 
     it "renders an inline SVG with default attributes" do
