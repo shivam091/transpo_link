@@ -8,7 +8,10 @@ require "spec_helper"
 
 RSpec.describe "Warehouses", type: :request do
   let!(:warehouse) { create(:warehouse, :active) }
-  let(:valid_attributes) { attributes_for(:warehouse) }
+  let!(:manager) { create(:manager) }
+  let!(:supplier) { create(:supplier) }
+
+  let(:valid_attributes) { attributes_for(:warehouse).merge(manager_ids: [manager.id], supplier_ids: [supplier.id]) }
   let(:invalid_attributes) { attributes_for(:warehouse, name: "") }
 
   context "when user is not signed in" do

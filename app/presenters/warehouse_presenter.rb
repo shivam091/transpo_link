@@ -8,7 +8,7 @@ class WarehousePresenter < ApplicationPresenter
   presents :warehouse
 
   def capacity
-    [number_to_delimited(try(:total_capacity)), try(:capacity_unit)].compact.join(" ")
+    "#{number_to_delimited(try(:total_capacity))} #{try(:capacity_unit)}".strip
   end
 
   def formatted_latitude

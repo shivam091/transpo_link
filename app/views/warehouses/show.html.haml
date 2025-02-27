@@ -36,6 +36,16 @@
               .widget-row-body= h(warehouse.description)
           .widget-row
             .widget-row-content
+              .widget-row-title= Warehouse.human_attribute_name(:manager_ids)
+              .widget-row-body
+                = warehouse.managers.includes(:user_detail).map { |manager| link_to(manager.full_name, user_path(manager)) }.join(", ").html_safe
+          .widget-row
+            .widget-row-content
+              .widget-row-title= Warehouse.human_attribute_name(:supplier_ids)
+              .widget-row-body
+                = warehouse.suppliers.includes(:user_detail).map { |supplier| link_to(supplier.full_name, user_path(supplier)) }.join(", ").html_safe
+          .widget-row
+            .widget-row-content
               .widget-row-title= Warehouse.human_attribute_name(:capacity)
               .widget-row-body= h(warehouse.capacity)
           .widget-row
@@ -46,3 +56,7 @@
             .widget-row-content
               .widget-row-title= Warehouse.human_attribute_name(:longitude)
               .widget-row-body= h(warehouse.formatted_longitude)
+          .widget-row
+            .widget-row-content
+              .widget-row-title= Warehouse.human_attribute_name(:address)
+              .widget-row-body= h(warehouse.address.humanize)

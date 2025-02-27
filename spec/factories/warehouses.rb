@@ -24,5 +24,10 @@ FactoryBot.define do
     trait :large_capacity do
       total_capacity { 10**9 } # 1,000,000,000 lb
     end
+
+    before(:create) do |warehouse|
+      warehouse.managers << create(:manager)
+      warehouse.suppliers << create(:supplier)
+    end
   end
 end
