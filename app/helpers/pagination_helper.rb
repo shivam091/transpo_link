@@ -4,7 +4,7 @@
 
 module PaginationHelper
   def render_pagination(pagination_metadata)
-    return "" if pagination_metadata.total_pages <= 1
+    return "" unless pagination_metadata.needs_pagination?
 
     content = ActiveSupport::SafeBuffer.new
 
