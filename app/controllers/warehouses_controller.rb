@@ -9,7 +9,7 @@ class WarehousesController < ApplicationController
   # GET /warehouses
   def index
     @warehouses = Warehouse.all
-    @warehouses, @pagination_data = @warehouses.paginate(page: params[:page])
+    @warehouses, @pagination_metadata = @warehouses.paginate(page: params[:page])
   end
 
   # GET /warehouses/new
