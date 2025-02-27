@@ -31,4 +31,14 @@ RSpec.describe WarehouseSupplier, type: :model do
     it { is_expected.to belong_to(:warehouse).inverse_of(:warehouse_suppliers).touch }
     it { is_expected.to belong_to(:supplier).inverse_of(:warehouse_suppliers).class_name("User") }
   end
+
+  describe "validations" do
+    describe "#warehouse_id" do
+      it { is_expected.to validate_presence_of(:warehouse_id) }
+    end
+
+    describe "#supplier_id" do
+      it { is_expected.to validate_presence_of(:supplier_id) }
+    end
+  end
 end

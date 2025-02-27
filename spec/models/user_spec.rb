@@ -156,6 +156,10 @@ RSpec.describe User, type: :model do
         it { is_expected.to be_valid }
       end
     end
+
+    describe "#role_id" do
+      it { is_expected.to validate_presence_of(:role_id) }
+    end
   end
 
   describe "scopes" do
