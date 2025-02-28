@@ -60,6 +60,19 @@ class TaxDetailsController < ApplicationController
       end
     end
   end
+
+  # DELETE /tax-details/:id
+  def destroy
+    response = TaxDetails::DestroyService.(@tax_detail)
+    @tax_detail = response.payload[:tax_detail]
+    if response.success?
+      flash[:info] = response.message
+    else
+      flash[:alert] = response.message
+    end
+    redirect_to tax_details_path, status: :see_other
+  end
+
   private
 
   def tax_detail_params

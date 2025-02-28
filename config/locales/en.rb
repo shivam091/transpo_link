@@ -538,6 +538,10 @@
           notice: "Tax detail was successfully updated.",
           alert: "Tax detail could not be updated."
         },
+        destroy: {
+          info: "Tax detail was successfully deleted.",
+          alert: "Tax detail could not be deleted."
+        },
       },
     },
     measurement_units: {
@@ -724,8 +728,13 @@
       },
       tax_detail: {
         no_tax_details_to_display: "No tax details to display",
+        delete_tax_detail_confirmation_text: "Are you sure you want to delete this '%{tax_type}' for '%{country}'? This cannot be undone.",
+      },
       new: {
         title: "New tax detail",
+      },
+      edit: {
+        title: "Edit tax detail",
       },
       form: {
         select_country: "Select country or region",
