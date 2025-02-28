@@ -1,0 +1,20 @@
+= form_with model: @tax_detail do |form|
+  .col-12.mb-2
+    = form.label :tax_type, class: "form-label required"
+    = form.select :tax_type, options_for_select(enum_options_for_select(TaxDetail, :tax_types), form.object.tax_type),
+      {include_blank: t(".select_tax_type")}, class: "form-select", autofocus: true
+  .col-12.mb-2
+    = form.label :tax_number, class: "form-label required"
+    = form.text_field :tax_number, class: "form-control"
+  .col-12.mb-2
+    = form.label :country, class: "form-label"
+    = form.select :country, options_for_select(TranspoLink::CountryInfo.options_for_countries, form.object.country),
+      {include_blank: t(".select_country")}, {class: "form-select"}
+    = help_text(t(".country_help_text"))
+  .modal-actions
+    = button_tag type: :submit, class: "btn btn-primary" do
+      = external_svg_tag("svgs/floppy.svg")
+      = button_text(:save)
+    = button_tag type: :button, class: "btn btn-secondary", data: {action: "click->remote-modal#hide"} do
+      = external_svg_tag("svgs/cancel.svg")
+      = button_text(:cancel)

@@ -193,6 +193,12 @@
           warehouse_id: "Warehouse",
           supplier_id: "Supplier",
         },
+        tax_detail: {
+          user_id: "User",
+          tax_type: "Tax type",
+          tax_number: "Tax number",
+          country: "Country or region",
+        }
       },
       errors: {
         format: "%{attribute} %{message}",
@@ -253,11 +259,13 @@
       sign_in: "Sign in",
       continue: "Continue",
       save_changes: "Save changes",
+      add: "Add",
       new: "New",
       create: "Create",
       edit: "Edit",
       update: "Update",
       delete: "Delete",
+      remove: "Remove",
       save: "Save",
       cancel: "Cancel",
     },
@@ -521,6 +529,12 @@
           alert: "Warehouse could not be deleted."
         },
       },
+      tax_details: {
+        create: {
+          notice: "Tax detail was successfully created.",
+          alert: "Tax detail could not be created.",
+        },
+      },
     },
     measurement_units: {
       categories: {
@@ -706,6 +720,13 @@
       },
       tax_detail: {
         no_tax_details_to_display: "No tax details to display",
+      new: {
+        title: "New tax detail",
+      },
+      form: {
+        select_country: "Select country or region",
+        select_tax_type: "Select tax type",
+        country_help_text: "For country-specific tax types, the country will be set automatically. For international tax types (VAT, GST, TIN) and regional tax types (VATIN, EORI, RUC, NIT, BRN), please select the applicable country.",
       },
     },
   },

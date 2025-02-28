@@ -11,7 +11,36 @@ class TaxDetailsController < ApplicationController
     @tax_details, @pagination_metadata = @tax_details.paginate(page: params[:page])
   end
 
+  # GET /tax-details/new
+  def new
+    @tax_detail = @tax_details.build
+  end
+
+  # POST /tax-details
+  def create
+    response = TaxDetails::CreateService.(current_user, tax_detail_params)
+    @tax_detail = response.payload[:tax_detail]
+    if response.success?
+      flash[:notice] = response.message
+      redirect_to tax_details_path, status: :see_other
+    else
+      flash.now[:alert] = response.message
+      respond_to do |format|
+        format.turbo_stream do
+          render turbo_stream: [
+            turbo_stream.update(:new_tax_detail_form, partial: "tax_details/form"),
+            render_flash
+          ], status: :unprocessable_entity
+        end
+      end
+    end
+  end
+
   private
+
+  def tax_detail_params
+    params.require(:tax_detail).permit(:tax_type, :tax_number, :country)
+  end
 
   def tax_details
     @tax_details ||= TaxDetail.accessible(current_user)

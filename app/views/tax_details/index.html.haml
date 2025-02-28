@@ -8,7 +8,7 @@
             = t(".your_tax_details")
           .widget-help
             .widget-help= t(".your_tax_details_help_text")
-        = link_to "javascript:void(0)", class: "btn btn-primary", data: {turbo_frame: :remote_modal} do
+        = link_to new_tax_detail_path, class: "btn btn-primary", data: {turbo_frame: :remote_modal} do
           = external_svg_tag("svgs/plus.svg")
           = button_text("new")
       .widget-body
