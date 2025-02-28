@@ -104,6 +104,22 @@ class TaxDetail < ApplicationRecord
 
   COUNTRY_REQUIRING_TAX_TYPES = INTERNATIONAL_TAX_TYPES + REGIONAL_TAX_TYPES + %w[ruc nit brn].freeze
 
+  validates :user_id,
+            presence: true,
+            reduce: true
+  validates :tax_number,
+            presence: true,
+            uniqueness: {scope: [:tax_type, :country], message: :uniqueness},
+            reduce: true
+  validates :tax_type,
+            presence: true,
+            inclusion: {in: tax_types.values, message: :inclusion},
+            reduce: true
+  validates :country,
+            presence: true,
+            if: :requires_country?,
+            reduce: true
+
   belongs_to :user, inverse_of: :tax_details, touch: true
 
   default_scope -> { order_created_desc }
@@ -112,5 +128,11 @@ class TaxDetail < ApplicationRecord
     def accessible(user)
       user.tax_details
     end
+  end
+
+  private
+
+  def requires_country?
+    tax_type.in?(COUNTRY_REQUIRING_TAX_TYPES)
   end
 end

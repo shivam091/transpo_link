@@ -210,6 +210,16 @@
           }
         },
         models: {
+          tax_detail: {
+            attributes: {
+              tax_number: {
+                uniqueness: "should be unique within the same tax type and country",
+              },
+              tax_type: {
+                inclusion: "'%{value}' is not a valid tax type",
+              },
+            },
+          },
         },
         messages: {
           label_already_exists_at_group_level: "already exists at group level for %{group}. Please choose another one.",
