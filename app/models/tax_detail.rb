@@ -105,4 +105,12 @@ class TaxDetail < ApplicationRecord
   COUNTRY_REQUIRING_TAX_TYPES = INTERNATIONAL_TAX_TYPES + REGIONAL_TAX_TYPES + %w[ruc nit brn].freeze
 
   belongs_to :user, inverse_of: :tax_details, touch: true
+
+  default_scope -> { order_created_desc }
+
+  class << self
+    def accessible(user)
+      user.tax_details
+    end
+  end
 end

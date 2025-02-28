@@ -30,6 +30,7 @@ Rails.application.routes.draw do
   resources :users, only: [:index, :show]
   resources :request_logs, path: "request-logs", only: [:index, :show]
   resources :warehouses
+  resources :tax_details, path: "tax-details", except: :show
 
   root to: "dashboards#show"
 end
