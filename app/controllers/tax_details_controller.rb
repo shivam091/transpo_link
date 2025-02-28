@@ -5,6 +5,7 @@
 class TaxDetailsController < ApplicationController
 
   before_action :tax_details
+  before_action :find_tax_detail, except: [:index, :new, :create]
 
   # GET /tax-details
   def index
@@ -36,6 +37,29 @@ class TaxDetailsController < ApplicationController
     end
   end
 
+  # GET /tax-details/:id/edit
+  def edit
+  end
+
+  # PUT|PATCH /tax-details/:id/edit
+  def update
+    response = TaxDetails::UpdateService.(@tax_detail, tax_detail_params)
+    @tax_detail = response.payload[:tax_detail]
+    if response.success?
+      flash[:notice] = response.message
+      redirect_to tax_details_path, status: :see_other
+    else
+      flash.now[:alert] = response.message
+      respond_to do |format|
+        format.turbo_stream do
+          render turbo_stream: [
+            turbo_stream.update(:edit_tax_detail_form_frame, partial: "tax_details/form"),
+            render_flash
+          ], status: :unprocessable_entity
+        end
+      end
+    end
+  end
   private
 
   def tax_detail_params
@@ -44,5 +68,9 @@ class TaxDetailsController < ApplicationController
 
   def tax_details
     @tax_details ||= TaxDetail.accessible(current_user)
+  end
+
+  def find_tax_detail
+    @tax_detail = @tax_details.find(params[:id])
   end
 end

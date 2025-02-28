@@ -534,6 +534,10 @@
           notice: "Tax detail was successfully created.",
           alert: "Tax detail could not be created.",
         },
+        update: {
+          notice: "Tax detail was successfully updated.",
+          alert: "Tax detail could not be updated."
+        },
       },
     },
     measurement_units: {
