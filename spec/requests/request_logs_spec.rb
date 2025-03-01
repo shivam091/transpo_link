@@ -29,8 +29,10 @@ RSpec.describe "RequestLogs", type: :request do
     describe "GET /request-logs" do
       before { get request_logs_path }
 
-      it "returns :ok status" do
-        expect(controller_assigns(:request_logs).reload).to be_present
+      it "renders request logs list and returns :ok status" do
+        expect(controller_assigns(:request_logs)).to be_present
+        expect(controller_assigns(:pagination_metadata)).to be_present
+        expect(controller_assigns(:request_logs).reload).to include(request_log)
         expect(response).to have_http_status(:ok)
       end
     end
