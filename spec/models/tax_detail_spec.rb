@@ -33,20 +33,12 @@ RSpec.describe TaxDetail, type: :model do
     it { is_expected.to have_check_constraint(:check_tax_details_tax_type_requires_country) }
   end
 
-  describe "enum" do
-    it { is_expected.to define_enum_for(:tax_type).backed_by_column_of_type(:enum) }
-  end
-
-  describe "constants" do
-    it { is_expected.to have_constant(:INTERNATIONAL_TAX_TYPES) }
-    it { is_expected.to have_constant(:REGIONAL_TAX_TYPES) }
-    it { is_expected.to have_constant(:NATIONAL_TAX_TYPES) }
-    it { is_expected.to have_constant(:COUNTRY_REQUIRING_TAX_TYPES) }
-  end
+  it_behaves_like "tax type"
 
   describe "included modules" do
     it { is_expected.to include_module(Sortable) }
     it { is_expected.to include_module(Pageable) }
+    it { is_expected.to include_module(Taxable) }
   end
 
   describe "associations" do
@@ -60,30 +52,12 @@ RSpec.describe TaxDetail, type: :model do
       it { is_expected.to validate_presence_of(:user_id) }
     end
 
-    describe "#tax_type" do
-      it { is_expected.to validate_presence_of(:tax_type) }
-    end
-
     describe "#tax_number" do
       it { is_expected.to validate_presence_of(:tax_number) }
       it do
         is_expected.to validate_uniqueness_of(:tax_number)
                          .scoped_to([:tax_type, :country])
                          .with_message("should be unique within the same tax type and country")
-      end
-    end
-
-    describe "#country" do
-      context "when #tax_type requires the country" do
-        before { allow(subject).to receive(:requires_country?) { true } }
-
-        it { is_expected.to validate_presence_of(:country) }
-      end
-
-      context "when #tax_type does not require the country" do
-        before { allow(subject).to receive(:requires_country?) { false } }
-
-        it { is_expected.not_to validate_presence_of(:country) }
       end
     end
   end
