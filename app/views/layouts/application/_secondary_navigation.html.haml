@@ -30,3 +30,6 @@
     = link_to "javascript:void(0)", class: "nav-link" do
       = external_svg_tag("svgs/speech-bubble.svg")
       = t(".feedbacks")
+    = link_to tax_rates_path, class: class_names("nav-link", "active": current_controller?(:tax_rates)) do
+      = external_svg_tag("svgs/percentage.svg")
+      = t(".tax_rates")

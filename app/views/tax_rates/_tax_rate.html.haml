@@ -1,0 +1,25 @@
+.table-responsive
+  %table.table.table-striped.table-borderless
+    %thead.border
+      %tr.table-active
+        %th{width: "25px", scope: "col"}#
+        %th{scope: "col"}= TaxRate.human_attribute_name(:country)
+        %th{scope: "col"}= TaxRate.human_attribute_name(:tax_type)
+        %th{scope: "col"}= TaxRate.human_attribute_name(:rate)
+        %th{scope: "col"}= TaxRate.human_attribute_name(:valid_from)
+        %th{scope: "col"}= TaxRate.human_attribute_name(:valid_to)
+    %tbody.border
+      - if @tax_rates&.each.with_index(1) do |tax_rate, index|
+        - tax_type = enum_i18n(TaxRate, :tax_types, tax_rate.tax_type)
+        - country = TranspoLink::CountryInfo.new(tax_rate.country).country_name
+        %tr
+          %th{scope: "row"}= h(@pagination_metadata.offset + index)
+          %td= h(country)
+          %td= h(tax_type)
+          %td= h(number_to_percentage(tax_rate.rate, precision: 2))
+          %td= h(tax_rate.valid_from.to_fs(:long))
+          %td= h(tax_rate.valid_to&.to_fs(:long))
+      - end.empty?
+        %tr
+          %td.no-data{colspan: TaxRate.columns.count}
+            = t(".no_tax_rates_to_display")

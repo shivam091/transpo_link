@@ -31,6 +31,7 @@ Rails.application.routes.draw do
   resources :request_logs, path: "request-logs", only: [:index, :show]
   resources :warehouses
   resources :tax_details, path: "tax-details", except: :show
+  resources :tax_rates, path: "tax-rates", except: :show
 
   root to: "dashboards#show"
 end
