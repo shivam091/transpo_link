@@ -5,6 +5,8 @@
 class TaxDetail < ApplicationRecord
   include Sortable, Pageable, Taxable
 
+  normalizes :tax_number, with: -> tax_number { tax_number.strip.upcase }
+
   validates :user_id,
             presence: true,
             reduce: true
