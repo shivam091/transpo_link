@@ -104,6 +104,8 @@ class TaxDetail < ApplicationRecord
 
   COUNTRY_REQUIRING_TAX_TYPES = INTERNATIONAL_TAX_TYPES + REGIONAL_TAX_TYPES + %w[ruc nit brn].freeze
 
+  normalizes :tax_number, with: -> tax_number { tax_number.strip.upcase }
+
   validates :user_id,
             presence: true,
             reduce: true

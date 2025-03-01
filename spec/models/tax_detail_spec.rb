@@ -49,6 +49,10 @@ RSpec.describe TaxDetail, type: :model do
     it { is_expected.to include_module(Pageable) }
   end
 
+  describe "normalized attributes" do
+    it { is_expected.to normalize(:tax_number).from("  ABCDE1234a  ").to("ABCDE1234A") }
+  end
+
   describe "associations" do
     it { is_expected.to belong_to(:user).inverse_of(:tax_details).touch }
   end
@@ -70,6 +74,7 @@ RSpec.describe TaxDetail, type: :model do
         is_expected.to validate_uniqueness_of(:tax_number)
                          .scoped_to([:tax_type, :country])
                          .with_message("should be unique within the same tax type and country")
+                         .case_insensitive
       end
     end
 
