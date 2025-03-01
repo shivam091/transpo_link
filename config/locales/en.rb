@@ -615,6 +615,10 @@
           notice: "Tax rate was successfully created.",
           alert: "Tax rate could not be created.",
         },
+        update: {
+          notice: "Tax rate was successfully updated.",
+          alert: "Tax rate could not be updated."
+        },
       },
     },
     measurement_units: {
@@ -820,9 +824,13 @@
         title: "Tax rates",
       },
       tax_rate: {
+        actions: "Actions",
         no_tax_rates_to_display: "No tax rates to display",
       new: {
         title: "New tax rate",
+      },
+      edit: {
+        title: "Edit tax rate",
       },
       form: {
         select_country: "Select country or region",
