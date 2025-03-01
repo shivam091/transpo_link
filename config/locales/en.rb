@@ -610,6 +610,12 @@
           alert: "Tax detail could not be deleted."
         },
       },
+      tax_rates: {
+        create: {
+          notice: "Tax rate was successfully created.",
+          alert: "Tax rate could not be created.",
+        },
+      },
     },
     measurement_units: {
       categories: {
@@ -815,6 +821,13 @@
       },
       tax_rate: {
         no_tax_rates_to_display: "No tax rates to display",
+      new: {
+        title: "New tax rate",
+      },
+      form: {
+        select_country: "Select country or region",
+        select_tax_type: "Select tax type",
+        country_help_text: "For country-specific tax types, the country will be set automatically. For international tax types (VAT, GST, TIN) and regional tax types (VATIN, EORI, RUC, NIT, BRN), please select the applicable country.",
       },
     },
   },

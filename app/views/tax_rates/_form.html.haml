@@ -1,0 +1,26 @@
+= form_with model: @tax_rate do |form|
+  .col-12.mb-2
+    = form.label :tax_type, class: "form-label required"
+    = form.select :tax_type, options_for_select(enum_options_for_select(TaxRate, :tax_types), form.object.tax_type),
+      {include_blank: t(".select_tax_type")}, class: "form-select", autofocus: true
+  .col-12.mb-2
+    = form.label :country, class: "form-label"
+    = form.select :country, options_for_select(TranspoLink::CountryInfo.options_for_countries, form.object.country),
+      {include_blank: t(".select_country")}, {class: "form-select"}
+    = help_text(t(".country_help_text"))
+  .col-12.mb-2
+    = form.label :rate, class: "form-label required"
+    = form.number_field :rate, class: "form-control", step: 0.01
+  .col-12.mb-2
+    = form.label :valid_from, class: "form-label required"
+    = form.date_field :valid_from, class: "form-control"
+  .col-12.mb-2
+    = form.label :valid_to, class: "form-label"
+    = form.date_field :valid_to, class: "form-control"
+  .modal-actions
+    = button_tag type: :submit, class: "btn btn-primary" do
+      = external_svg_tag("svgs/floppy.svg")
+      = @tax_rate.new_record? ? button_text(:create) : button_text(:update)
+    = button_tag type: :button, class: "btn btn-secondary", data: {action: "click->remote-modal#hide"} do
+      = external_svg_tag("svgs/cancel.svg")
+      = button_text(:cancel)
