@@ -619,6 +619,10 @@
           notice: "Tax rate was successfully updated.",
           alert: "Tax rate could not be updated."
         },
+        destroy: {
+          info: "Tax rate was successfully deleted.",
+          alert: "Tax rate could not be deleted."
+        },
       },
     },
     measurement_units: {
@@ -826,6 +830,8 @@
       tax_rate: {
         actions: "Actions",
         no_tax_rates_to_display: "No tax rates to display",
+        delete_tax_rate_confirmation_text: "Are you sure you want to delete this '%{tax_type}' for '%{country}'? This cannot be undone.",
+      },
       new: {
         title: "New tax rate",
       },

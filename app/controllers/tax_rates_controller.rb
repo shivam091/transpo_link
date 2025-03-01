@@ -60,6 +60,19 @@ class TaxRatesController < ApplicationController
       end
     end
   end
+
+  # DELETE /tax-rates/:id
+  def destroy
+    response = TaxRates::DestroyService.(@tax_rate)
+    @tax_rate = response.payload[:tax_rate]
+    if response.success?
+      flash[:info] = response.message
+    else
+      flash[:alert] = response.message
+    end
+    redirect_to tax_rates_path, status: :see_other
+  end
+
   private
 
   def tax_rate_params
