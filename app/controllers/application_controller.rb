@@ -8,7 +8,7 @@ class ApplicationController < ActionController::Base
   layout proc { false if request.xhr? }
 
   # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
-  # allow_browser versions: :modern
+  allow_browser versions: :modern
 
   rescue_from ActionController::InvalidAuthenticityToken do |exception|
     if user_signed_in?
