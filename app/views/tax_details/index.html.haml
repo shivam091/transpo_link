@@ -1,0 +1,19 @@
+= title(t(".title"))
+.card.card-primary.border.border-primary
+  .card-body
+    .widget
+      .widget-header.d-flex.align-items-center.justify-content-between
+        .d-block
+          .widget-title
+            = t(".your_tax_details")
+          .widget-help
+            .widget-help= t(".your_tax_details_help_text")
+        = link_to new_tax_detail_path, class: "btn btn-primary", data: {turbo_frame: :remote_modal} do
+          = external_svg_tag("svgs/plus.svg")
+          = button_text("new")
+      .widget-body
+        %p= t(".tax_details_related_help")
+        = render_if_exists("tax_details/tax_detail")
+      - if @pagination_metadata.total_pages > 1
+        .widget-footer
+          = render_pagination(@pagination_metadata)

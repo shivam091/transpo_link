@@ -11,7 +11,10 @@ RSpec.describe "Warehouses", type: :request do
   let!(:manager) { create(:manager) }
   let!(:supplier) { create(:supplier) }
 
-  let(:valid_attributes) { attributes_for(:warehouse).merge(manager_ids: [manager.id], supplier_ids: [supplier.id]) }
+  let(:valid_attributes) do
+    attributes_for(:warehouse, name: "New warehouse")
+      .merge(manager_ids: [manager.id], supplier_ids: [supplier.id])
+  end
   let(:invalid_attributes) { attributes_for(:warehouse, name: "") }
 
   context "when user is not signed in" do
@@ -67,7 +70,7 @@ RSpec.describe "Warehouses", type: :request do
       it "renders warehouse list and returns :ok status" do
         expect(controller_assigns(:warehouses)).to be_present
         expect(controller_assigns(:pagination_metadata)).to be_present
-        expect(controller_assigns(:warehouses).reload).to include(warehouse)
+        expect(controller_assigns(:warehouses)).to include(warehouse)
         expect(response).to have_http_status(:ok)
       end
     end
@@ -117,9 +120,7 @@ RSpec.describe "Warehouses", type: :request do
     describe "PUT|PATCH /warehouses/:id" do
       context "when valid attributes" do
         it "updates the warehouse" do
-          put warehouse_path(warehouse), params: {
-            warehouse: attributes_for(:warehouse, name: "New warehouse")
-          }, as: :turbo_stream
+          put warehouse_path(warehouse), params: {warehouse: valid_attributes}, as: :turbo_stream
 
           expect(warehouse.reload.name).to eq("New warehouse")
           expect(flash[:notice]).to eq("Warehouse was successfully updated.")

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_02_17_171347) do
+ActiveRecord::Schema[8.0].define(version: 2025_02_27_130933) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -18,6 +18,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_17_171347) do
   # Custom types defined in this database.
   # Note that some types may not work with other database engines. Be careful if changing database.
   create_enum "color_schemes", ["auto", "dark", "light"]
+  create_enum "tax_types", ["vat", "gst", "tin", "ein", "ssn", "itin", "pan", "tan", "gstin", "vatin", "eori", "nif", "cif", "siret", "siren", "utr", "bn", "qst", "abn", "acn", "tfn", "ird", "rfc", "cuit", "cuil", "ruc", "nit", "cnpj", "cpf", "npwp", "trn", "kra_pin", "brn", "corporate_number", "my_number", "inn", "kpp", "ogrn", "ogrnip", "brn_kr", "uscc", "mst", "tin_ph", "tin_th", "uen"]
 
   create_table "addresses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "addressable_type"
@@ -86,6 +87,21 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_17_171347) do
     t.index ["name"], name: "index_roles_on_name", unique: true
     t.check_constraint "char_length(name::text) <= 55 AND char_length(name::text) >= 2", name: "check_roles_name_length"
     t.check_constraint "name IS NOT NULL AND name::text <> ''::text", name: "check_roles_name_presence"
+  end
+
+  create_table "tax_details", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id"
+    t.enum "tax_type", enum_type: "tax_types"
+    t.string "tax_number"
+    t.string "country"
+    t.timestamptz "created_at", null: false
+    t.timestamptz "updated_at", null: false
+    t.index ["tax_number", "tax_type", "country"], name: "index_tax_details_on_tax_number_and_tax_type_and_country", unique: true
+    t.index ["user_id"], name: "index_tax_details_on_user_id"
+    t.check_constraint "country IS NOT NULL OR (tax_type <> ALL (ARRAY['vat'::tax_types, 'gst'::tax_types, 'tin'::tax_types, 'vatin'::tax_types, 'eori'::tax_types, 'ruc'::tax_types, 'nit'::tax_types, 'brn'::tax_types]))", name: "check_tax_details_tax_type_requires_country"
+    t.check_constraint "tax_number IS NOT NULL AND tax_number::text <> ''::text", name: "check_tax_details_tax_number_presence"
+    t.check_constraint "tax_type = ANY (ARRAY['vat'::tax_types, 'gst'::tax_types, 'tin'::tax_types, 'ein'::tax_types, 'ssn'::tax_types, 'itin'::tax_types, 'pan'::tax_types, 'tan'::tax_types, 'gstin'::tax_types, 'vatin'::tax_types, 'eori'::tax_types, 'nif'::tax_types, 'cif'::tax_types, 'siret'::tax_types, 'siren'::tax_types, 'utr'::tax_types, 'bn'::tax_types, 'qst'::tax_types, 'abn'::tax_types, 'acn'::tax_types, 'tfn'::tax_types, 'ird'::tax_types, 'rfc'::tax_types, 'cuit'::tax_types, 'cuil'::tax_types, 'ruc'::tax_types, 'nit'::tax_types, 'cnpj'::tax_types, 'cpf'::tax_types, 'npwp'::tax_types, 'trn'::tax_types, 'kra_pin'::tax_types, 'brn'::tax_types, 'corporate_number'::tax_types, 'my_number'::tax_types, 'inn'::tax_types, 'kpp'::tax_types, 'ogrn'::tax_types, 'ogrnip'::tax_types, 'brn_kr'::tax_types, 'uscc'::tax_types, 'mst'::tax_types, 'tin_ph'::tax_types, 'tin_th'::tax_types, 'uen'::tax_types])", name: "check_tax_details_tax_type_inclusion"
+    t.check_constraint "tax_type IS NOT NULL", name: "check_tax_details_tax_type_presence"
   end
 
   create_table "user_details", primary_key: "user_id", id: :uuid, default: nil, force: :cascade do |t|
@@ -207,6 +223,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_17_171347) do
   end
 
   add_foreign_key "request_logs", "users", name: "fk_request_logs_user_id_on_users", on_delete: :nullify
+  add_foreign_key "tax_details", "users", name: "fk_tax_details_user_id_on_users", on_delete: :cascade
   add_foreign_key "user_details", "users", name: "fk_user_details_user_id_on_users", on_delete: :cascade
   add_foreign_key "user_preferences", "users", name: "fk_user_preferences_user_id_on_users", on_delete: :cascade
   add_foreign_key "users", "roles", name: "fk_users_role_id_on_roles", on_delete: :restrict

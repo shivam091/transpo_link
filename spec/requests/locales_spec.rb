@@ -7,6 +7,9 @@
 require "spec_helper"
 
 RSpec.describe "Locales", type: :request do
+  let(:valid_attributes) { {preferred_locale: "es"} }
+  let(:invalid_attributes) { {preferred_locale: ""} }
+
   context "when user is not signed in" do
     describe "GET /locale/edit" do
       subject { get edit_locale_path }
@@ -39,7 +42,7 @@ RSpec.describe "Locales", type: :request do
       context "when valid attributes" do
         it "updates the language" do
           put locale_path, params: {
-            user: {user_preference_attributes: {preferred_locale: "es"}}
+            user: {user_preference_attributes: valid_attributes}
           }, headers: {"HTTP_REFERER" => root_path}, as: :turbo_stream
 
           expect(admin.reload.preferred_locale).to eq("es")
@@ -52,9 +55,7 @@ RSpec.describe "Locales", type: :request do
 
       context "when invalid attributes" do
         it "does not update the language" do
-          put locale_path, params: {
-            user: {user_preference_attributes: {preferred_locale: ""}}
-          }, as: :turbo_stream
+          put locale_path, params: {user: {user_preference_attributes: invalid_attributes}}, as: :turbo_stream
 
           expect(admin.reload.preferred_locale).to eq("en")
           expect(flash[:alert]).to be_present

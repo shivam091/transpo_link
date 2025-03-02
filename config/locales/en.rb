@@ -193,6 +193,12 @@
           warehouse_id: "Warehouse",
           supplier_id: "Supplier",
         },
+        tax_detail: {
+          user_id: "User",
+          tax_type: "Tax type",
+          tax_number: "Tax number",
+          country: "Country or region",
+        }
       },
       errors: {
         format: "%{attribute} %{message}",
@@ -204,6 +210,16 @@
           }
         },
         models: {
+          tax_detail: {
+            attributes: {
+              tax_number: {
+                uniqueness: "should be unique within the same tax type and country",
+              },
+              tax_type: {
+                inclusion: "'%{value}' is not a valid tax type",
+              },
+            },
+          },
         },
         messages: {
           label_already_exists_at_group_level: "already exists at group level for %{group}. Please choose another one.",
@@ -253,11 +269,13 @@
       sign_in: "Sign in",
       continue: "Continue",
       save_changes: "Save changes",
+      add: "Add",
       new: "New",
       create: "Create",
       edit: "Edit",
       update: "Update",
       delete: "Delete",
+      remove: "Remove",
       save: "Save",
       cancel: "Cancel",
     },
@@ -360,6 +378,55 @@
           dark: "Dark"
         },
       },
+      tax_detail: {
+        tax_types: {
+          vat: "VAT - Value Added Tax",
+          gst: "GST - Goods and Services Tax",
+          tin: "TIN - Taxpayer Identification Number",
+          ein: "EIN - Employer Identification Number",
+          ssn: "SSN - Social Security Number",
+          itin: "ITIN - Individual Taxpayer Identification Number",
+          pan: "PAN - Permanent Account Number",
+          tan: "TAN - Tax Deduction and Collection Account Number",
+          gstin: "GSTIN - GST Identification Number",
+          vatin: "VATIN - VAT Identification Number",
+          eori: "EORI - Economic Operators Registration and Identification Number",
+          nif: "NIF - Tax Identification Number",
+          cif: "CIF - Tax Identification Code",
+          siret: "SIRET - Business Identification System",
+          siren: "SIREN - Establishment Identification System",
+          utr: "UTR - Unique Taxpayer Reference",
+          bn: "BN - Business Number",
+          qst: "QST - Quebec Sales Tax",
+          abn: "ABN - Australian Business Number",
+          acn: "ACN - Australian Company Number",
+          tfn: "TFN - Tax File Number",
+          ird: "IRD - Inland Revenue Department Number",
+          rfc: "RFC - Federal Taxpayer Registry",
+          cuit: "CUIT - Unique Tax Identification Code",
+          cuil: "CUIL - Unique Labor Identification Code",
+          ruc: "RUC - Single Taxpayer Registry",
+          nit: "NIT - Tax Identification Number",
+          cnpj: "CNPJ - National Register of Legal Entities",
+          cpf: "CPF - Register of Natural Persons",
+          npwp: "NPWP - Taxpayer Identification Number",
+          trn: "TRN - Tax Registration Number",
+          kra_pin: "KRA_PIN - Kenya Revenue Authority PIN",
+          brn: "BRN - Business Registration Number",
+          corporate_number: "CORPORATE_NUMBER - Corporate Number",
+          my_number: "MY_NUMBER - Individual Tax Number",
+          inn: "INN - Taxpayer Identification Number",
+          kpp: "KPP - Tax Registration Reason Code",
+          ogrn: "OGRN - Principal State Registration Number",
+          ogrnip: "OGRNIP - Individual Entrepreneur Registration Number",
+          brn_kr: "BRN_KR - Business Registration Number",
+          uscc: "USCC - Unified Social Credit Code",
+          mst: "MST - Tax Identification Number",
+          tin_ph: "TIN_PH - Taxpayer Identification Number",
+          tin_th: "TIN_TH - Taxpayer Identification Number",
+          uen: "UEN - Unique Entity Number",
+        },
+      },
     },
     layouts: {
       devise: {
@@ -400,6 +467,7 @@
           your_account: "Your account",
           your_profile: "Your profile",
           your_preferences: "Your preferences",
+          your_tax_details: "Your tax details",
           keyboard_shortcuts: "Keyboard shortcuts",
           sign_out: "Sign out",
         },
@@ -472,6 +540,20 @@
         destroy: {
           info: "Warehouse was successfully deleted.",
           alert: "Warehouse could not be deleted."
+        },
+      },
+      tax_details: {
+        create: {
+          notice: "Tax detail was successfully created.",
+          alert: "Tax detail could not be created.",
+        },
+        update: {
+          notice: "Tax detail was successfully updated.",
+          alert: "Tax detail could not be updated."
+        },
+        destroy: {
+          info: "Tax detail was successfully deleted.",
+          alert: "Tax detail could not be deleted."
         },
       },
     },
@@ -649,6 +731,29 @@
         select_suppliers: "Select suppliers",
       },
       show: {},
+    },
+    tax_details: {
+      index: {
+        title: "Your tax details",
+        your_tax_details: "Your tax details",
+        your_tax_details_help_text: "Manage your tax details for different countries. Add multiple tax records based on where your business operates.",
+        tax_details_related_help: "These will be used for compliance, invoicing, and taxation purposes. Ensure accuracy to avoid any tax-related issues.",
+      },
+      tax_detail: {
+        no_tax_details_to_display: "No tax details to display",
+        delete_tax_detail_confirmation_text: "Are you sure you want to delete this '%{tax_type}' for '%{country}'? This cannot be undone.",
+      },
+      new: {
+        title: "New tax detail",
+      },
+      edit: {
+        title: "Edit tax detail",
+      },
+      form: {
+        select_country: "Select country or region",
+        select_tax_type: "Select tax type",
+        country_help_text: "For country-specific tax types, the country will be set automatically. For international tax types (VAT, GST, TIN) and regional tax types (VATIN, EORI, RUC, NIT, BRN), please select the applicable country.",
+      },
     },
   },
 }

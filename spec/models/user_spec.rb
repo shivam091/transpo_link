@@ -84,7 +84,10 @@ RSpec.describe User, type: :model do
     it { is_expected.to have_one(:user_detail).inverse_of(:user).dependent(:destroy) }
     it { is_expected.to have_one(:user_preference).inverse_of(:user).dependent(:destroy) }
     it { is_expected.to have_one(:address).inverse_of(:addressable).dependent(:destroy) }
+
     it { is_expected.to have_many(:request_logs).inverse_of(:user).dependent(:nullify) }
+    it { is_expected.to have_many(:tax_details).inverse_of(:user) }
+
     it { is_expected.to have_many(:warehouse_managers).inverse_of(:manager).with_foreign_key(:manager_id).dependent(:restrict_with_exception) }
     it { is_expected.to have_many(:managed_warehouses).through(:warehouse_managers).inverse_of(:managers).source(:warehouse) }
     it { is_expected.to have_many(:warehouse_suppliers).inverse_of(:supplier).with_foreign_key(:supplier_id).dependent(:restrict_with_exception) }

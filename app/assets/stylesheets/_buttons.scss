@@ -5,9 +5,14 @@
   transition: 0.2s cubic-bezier(0.3, 0, 0.5, 1) !important;
   transition-property: color,background-color,border-color,box-shadow !important;
   touch-action: manipulation;
+  -ms-touch-action: manipulation;
   padding: 0.5rem 0.5rem;
   font-size: 0.950rem;
   border-radius: 0.25rem;
+  appearance: button;
+  -webkit-appearance: button;
+  -moz-appearance: button;
+  justify-content: center;
 }
 .btn-secret-reveal {
   position: absolute;
@@ -23,4 +28,7 @@
 }
 .btn-close:focus {
   box-shadow: none;
+}
+.btn-sm, .btn-group-sm > .btn {
+  padding: 0.25rem 0.25rem;
 }

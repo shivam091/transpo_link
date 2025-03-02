@@ -14,7 +14,7 @@ RSpec.describe Warehouses::DestroyService, type: :service do
     context "when destroy is successful" do
       include_examples "deletes an object", Warehouse
 
-      it "sets flash mmesage" do
+      it "sets flash message" do
         expect(subject.message).to eq("Warehouse was successfully deleted.")
         expect(Warehouse.find_by(id: warehouse.id)).to be_nil
       end
@@ -27,7 +27,7 @@ RSpec.describe Warehouses::DestroyService, type: :service do
 
       include_examples "does not change count of objects", Warehouse
 
-      it "sets flash mmesage" do
+      it "sets flash message" do
         expect(subject.message).to eq("Warehouse could not be deleted.")
       end
 
