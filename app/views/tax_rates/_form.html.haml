@@ -1,4 +1,5 @@
 = form_with model: @tax_rate do |form|
+  = form_errors(@tax_rate)
   .col-12.mb-2
     = form.label :tax_type, class: "form-label required"
     = form.select :tax_type, options_for_select(enum_options_for_select(TaxRate, :tax_types), form.object.tax_type),
