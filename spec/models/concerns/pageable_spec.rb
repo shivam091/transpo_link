@@ -28,8 +28,8 @@ RSpec.describe Pageable do
 
   describe ".estimated_count" do
     before do
-      allow(PageableModel.connection).to receive(:execute).and_return([{"reltuples" => 50}])
-      allow(PageableModel).to receive(:count).and_return(50)
+      allow(PageableModel.connection).to receive(:execute) { [{"reltuples" => 50}] }
+      allow(PageableModel).to receive(:count) { 50 }
 
       Rails.cache.clear
     end
@@ -40,14 +40,14 @@ RSpec.describe Pageable do
 
     it "caches the estimated count result" do
       PageableModel.estimated_count
-      allow(PageableModel.connection).to receive(:execute).and_return([{"reltuples" => 50}])
+      allow(PageableModel.connection).to receive(:execute) { [{"reltuples" => 50}] }
 
       expect(PageableModel.estimated_count).to eq(50)
     end
 
     it "falls back to exact count if estimated count is zero" do
-      allow(PageableModel.connection).to receive(:execute).and_return([{"reltuples" => 0}])
-      allow(PageableModel).to receive(:count).and_return(20)
+      allow(PageableModel.connection).to receive(:execute) { [{"reltuples" => 0}] }
+      allow(PageableModel).to receive(:count) { 20 }
 
       expect(PageableModel.estimated_count).to eq(20)
     end
@@ -55,13 +55,13 @@ RSpec.describe Pageable do
 
   describe ".total_pages" do
     it "returns the correct total pages" do
-      allow(PageableModel).to receive(:estimated_count).and_return(50)
+      allow(PageableModel).to receive(:estimated_count) { 50 }
 
       expect(PageableModel.total_pages(10)).to eq(5)
     end
 
     it "returns 1 if estimated count is 0" do
-      allow(PageableModel).to receive(:estimated_count).and_return(0)
+      allow(PageableModel).to receive(:estimated_count) { 0 }
 
       expect(PageableModel.total_pages(10)).to eq(1)
     end
@@ -89,7 +89,7 @@ RSpec.describe Pageable do
     end
 
     it "handles cases where total count is less than per_page" do
-      allow(PageableModel).to receive(:estimated_count).and_return(8)
+      allow(PageableModel).to receive(:estimated_count) { 8 }
       paginated_records, pagination_metadata = PageableModel.paginate(page: 1, per_page: 10)
 
       expect(pagination_metadata.total_pages).to eq(1)

@@ -9,7 +9,7 @@ class WarehousesController < ApplicationController
   # GET /warehouses
   def index
     @warehouses = Warehouse.all
-    @warehouses, @pagination_data = @warehouses.paginate(page: params[:page])
+    @warehouses, @pagination_metadata = @warehouses.paginate(page: params[:page])
   end
 
   # GET /warehouses/new
@@ -29,7 +29,7 @@ class WarehousesController < ApplicationController
       respond_to do |format|
         format.turbo_stream do
           render turbo_stream: [
-            turbo_stream.update(:warehouse_form, partial: "warehouses/form"),
+            turbo_stream.update(:new_warehouse_form_frame, partial: "warehouses/form"),
             render_flash
           ], status: :unprocessable_entity
         end
@@ -53,7 +53,7 @@ class WarehousesController < ApplicationController
       respond_to do |format|
         format.turbo_stream do
           render turbo_stream: [
-            turbo_stream.update(:warehouse_form, partial: "warehouses/form"),
+            turbo_stream.update(:edit_warehouse_form_frame, partial: "warehouses/form"),
             render_flash
           ], status: :unprocessable_entity
         end
@@ -89,7 +89,17 @@ class WarehousesController < ApplicationController
       :capacity_unit,
       :latitude,
       :longitude,
-      :is_active
+      :is_active,
+      manager_ids: [],
+      supplier_ids: [],
+      address_attributes: [
+        :address1,
+        :address2,
+        :city,
+        :state,
+        :country,
+        :postal_code
+      ]
     )
   end
 

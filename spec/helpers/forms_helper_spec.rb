@@ -10,13 +10,13 @@ RSpec.describe FormsHelper, type: :helper do
 
     context "when the record has errors" do
       before do
-        allow(record).to receive(:errors).and_return(
+        allow(record).to receive(:errors) {
           double(
             any?: true,
             count: 2,
             full_messages: ["Email can't be blank", "Password is too short"]
           )
-        )
+        }
       end
 
       it "renders the error explanation div with error messages" do
@@ -37,13 +37,71 @@ RSpec.describe FormsHelper, type: :helper do
 
     context "when the record has no errors" do
       before do
-        allow(record).to receive(:errors).and_return(
-          double(any?: false)
-        )
+        allow(record).to receive(:errors) { double(any?: false) }
       end
 
       it "returns nil" do
         expect(helper.form_errors(record)).to be_nil
+      end
+    end
+  end
+
+  describe "#help_text" do
+    context "when given a string argument" do
+      it "returns help text wrapped in a small tag with the correct class" do
+        expect(helper.help_text("This is a help message")).to eq('<small class="form-text text-muted">This is a help message</small>')
+      end
+    end
+
+    context "when given a different HTML tag as a parameter" do
+      it "returns help text wrapped in the specified tag with the correct class" do
+        expect(helper.help_text("This is a help message", :div)).to eq('<div class="form-text text-muted">This is a help message</div>')
+      end
+    end
+
+    context "when the help text is an empty string" do
+      it "returns nil" do
+        expect(helper.help_text("")).to be_nil
+      end
+    end
+
+    context "when help text is nil" do
+      it "returns nil" do
+        expect(helper.help_text(nil)).to be_nil
+      end
+    end
+
+    context "when a block is given" do
+      it "captures and returns help text inside the block wrapped in a small tag" do
+        output = helper.help_text { "Block help text" }
+
+        expect(output).to eq('<small class="form-text text-muted">Block help text</small>')
+      end
+
+      it "does not include empty content in the block" do
+        output = helper.help_text { "" }
+
+        expect(output).to be_nil
+      end
+
+      it "does not include nil content in the block" do
+        output = helper.help_text { nil }
+
+        expect(output).to be_nil
+      end
+    end
+
+    context "when block is given and a tag is specified" do
+      it "captures and returns help text inside the block wrapped in the specified tag" do
+        output = helper.help_text(:div) { "Block help text with div" }
+
+        expect(output).to eq('<div class="form-text text-muted">Block help text with div</div>')
+      end
+
+      it "returns nil if the block content is empty" do
+        output = helper.help_text(:div) { "" }
+
+        expect(output).to be_nil
       end
     end
   end

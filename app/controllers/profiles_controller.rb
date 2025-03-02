@@ -23,7 +23,7 @@ class ProfilesController < ApplicationController
       respond_to do |format|
         format.turbo_stream do
           render turbo_stream: [
-            turbo_stream.update(:profile_form, partial: "profiles/form"),
+            turbo_stream.update(:edit_profile_form_frame, partial: "profiles/form"),
             render_flash
           ], status: :unprocessable_entity
         end

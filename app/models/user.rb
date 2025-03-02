@@ -15,6 +15,9 @@ class User < ApplicationRecord
 
   normalizes :email, with: -> email { email.strip }
 
+  validates :role_id,
+            presence: true,
+            reduce: true
   validates :email,
             presence: true,
             length: {in: 2..55},
@@ -76,7 +79,7 @@ class User < ApplicationRecord
     end
 
     def select_options
-      all.collect { |user| [user.full_name, user.id] }
+      all.includes(:user_detail).collect { |user| [user.full_name, user.id] }
     end
 
     def with_role(role_name)

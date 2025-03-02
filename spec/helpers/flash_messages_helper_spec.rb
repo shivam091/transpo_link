@@ -9,7 +9,7 @@ require "spec_helper"
 RSpec.describe FlashMessagesHelper, type: :helper do
   describe "#flash_messages" do
     before do
-      allow(helper).to receive(:flash).and_return(flash_messages)
+      allow(helper).to receive(:flash) { flash_messages }
     end
 
     context "when flash messages are present" do

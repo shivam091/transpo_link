@@ -9,34 +9,34 @@
           .widget-help= t(".edit_profile_details")
         = link_to edit_profile_path, class: "btn btn-secondary" do
           = external_svg_tag("svgs/pencil.svg")
-          = button_text("edit")
+          = button_text(:edit)
       .widget-body
-        .widget-row.d-flex
-          .flex-auto
+        .widget-row
+          .widget-row-content
             .widget-row-title= UserDetail.human_attribute_name(:full_name)
             .widget-row-body= h(current_user.full_name)
-        .widget-row.d-flex
-          .flex-auto
+        .widget-row
+          .widget-row-content
             .widget-row-title= User.human_attribute_name(:email)
             .widget-row-body= h(current_user.email)
-        .widget-row.d-flex
-          .flex-auto
+        .widget-row
+          .widget-row-content
             .widget-row-title= User.human_attribute_name(:password)
             .widget-row-body ******
-        .widget-row.d-flex
-          .flex-auto
+        .widget-row
+          .widget-row-content
             .widget-row-title= UserDetail.human_attribute_name(:mobile_number)
             .widget-row-body= h(current_user.mobile_number)
             .widget-help= t(".mobile_number_help_text")
-        .widget-row.d-flex
-          .flex-auto
+        .widget-row
+          .widget-row-content
             .widget-row-title= UserDetail.human_attribute_name(:alternate_contact_number)
             .widget-row-body= h(current_user.alternate_contact_number)
-        .widget-row.d-flex
-          .flex-auto
+        .widget-row
+          .widget-row-content
             .widget-row-title= UserDetail.human_attribute_name(:alternate_email)
             .widget-row-body= h(current_user.alternate_email)
-        .widget-row.d-flex
-          .flex-auto
+        .widget-row
+          .widget-row-content
             .widget-row-title= t(".address")
             .widget-row-body= h(current_user.address.humanize)

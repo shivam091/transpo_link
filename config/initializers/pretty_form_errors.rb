@@ -8,6 +8,8 @@ ActionView::Base.field_error_proc = Proc.new do |html_tag, instance|
   html_doc = Nokogiri::HTML::DocumentFragment.parse(html_tag)
   element = html_doc.children[0]
 
+  next html_tag if element["type"] == "hidden"
+
   element.add_class("is-invalid")
   html_tag = element.to_s
 

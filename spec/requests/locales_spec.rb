@@ -29,7 +29,7 @@ RSpec.describe "Locales", type: :request do
 
       it "renders locale edit modal" do
         expect(response).to have_http_status(:ok)
-        expect(response.body).to include("<turbo-frame id=\"edit_locale_form\" target=\"_top\">")
+        expect(response.body).to include("<turbo-frame id=\"edit_locale_form_frame\" target=\"_top\">")
         expect(response.body).to include("modal")
         expect(response.body).to include("name=\"user[user_preference_attributes][preferred_locale]\"")
       end
@@ -59,7 +59,7 @@ RSpec.describe "Locales", type: :request do
           expect(admin.reload.preferred_locale).to eq("en")
           expect(flash[:alert]).to be_present
           expect(response.media_type).to eq(Mime[:turbo_stream])
-          expect(response.body).to include("<turbo-stream action=\"update\" target=\"edit_locale_form\">")
+          expect(response.body).to include("<turbo-stream action=\"update\" target=\"edit_locale_form_frame\">")
           expect(response).to have_http_status(:unprocessable_entity)
         end
       end

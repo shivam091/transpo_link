@@ -17,6 +17,9 @@ class UserPreference < ApplicationRecord
   attribute :preferred_currency, default: Money.default_currency.iso_code
   attribute :are_notifications_enabled, default: true
 
+  validates :user_id,
+            presence: true,
+            reduce: true
   validates :preferred_locale,
             presence: true,
             inclusion: {in: I18n.available_locales.map(&:to_s)},

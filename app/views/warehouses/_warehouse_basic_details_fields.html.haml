@@ -1,0 +1,42 @@
+.row
+  - if form.object.persisted?
+    .col-sm-12.col-md-6.col-lg-4.mb-3
+      = form.label :reference_code, class: "form-label"
+      = form.text_field :reference_code, static: true
+  .col-sm-12.col-md-6.col-lg-4.mb-3
+    = form.label :name, class: "form-label required"
+    = form.text_field :name, autofocus: true
+  .col-sm-12.col-md-6.col-lg-4.mb-3
+    = form.label :email_address, class: "form-label"
+    = form.text_field :email_address
+  .col-sm-12.col-md-6.col-lg-4.mb-3
+    = form.label :contact_number, class: "form-label"
+    = form.text_field :contact_number
+  .col-12.mb-3
+    = form.label :description, class: "form-label"
+    = form.text_area :description, rows: 5
+  .col-sm-12.col-md-6.col-lg-4.mb-3
+    = form.label :total_capacity, class: "form-label required"
+    = form.number_field :total_capacity, step: 0.01
+  .col-sm-12.col-md-6.col-lg-4.mb-3
+    = form.label :capacity_unit, class: "form-label required"
+    = form.select :capacity_unit, grouped_options_for_select(TranspoLink::MeasurementUnits.options_for_units, form.object.capacity_unit),
+      {include_blank: t(".select_capacity_unit")}
+  .col-sm-12.col-md-6.col-lg-4.mb-3
+    = form.label :latitude, class: "form-label"
+    = form.number_field :latitude, class: "form-control", step: 0.00000001
+  .col-sm-12.col-md-6.col-lg-4.mb-3
+    = form.label :longitude, class: "form-label"
+    = form.number_field :longitude, class: "form-control", step: 0.00000001
+  .col-sm-12.col-md-6.col-lg-4.mb-3
+    = form.label :manager_ids, class: "form-label required"
+    = form.select :manager_ids, options_for_select(User.managers.select_options, form.object.manager_ids),
+      {include_blank: t(".select_managers"), multiple: true}, {class: "form-select"}
+  .col-sm-12.col-md-6.col-lg-4.mb-3
+    = form.label :supplier_ids, class: "form-label required"
+    = form.select :supplier_ids, options_for_select(User.suppliers.select_options, form.object.supplier_ids),
+      {include_blank: t(".select_suppliers"), multiple: true}, {class: "form-select"}
+  .col-12.mb-3
+    .form-check
+      = form.label :is_active, class: "form-check-label"
+      = form.check_box :is_active, class: "form-check-input"

@@ -36,8 +36,8 @@ RSpec.describe HasReferenceCode do
   describe "#set_reference_code" do
     context "when reference_code column exists" do
       before do
-        allow(ReferenceCodeModel).to receive(:unscope).and_return(ReferenceCodeModel)
-        allow(ReferenceCodeModel).to receive(:maximum).with(:reference_code).and_return("XX-00010")
+        allow(ReferenceCodeModel).to receive(:unscope) { ReferenceCodeModel }
+        allow(ReferenceCodeModel).to receive(:maximum).with(:reference_code) { "XX-00010" }
       end
 
       it "generates a new reference code" do
@@ -49,8 +49,8 @@ RSpec.describe HasReferenceCode do
 
     context "when no existing reference codes are present" do
       before do
-        allow(ReferenceCodeModel).to receive(:unscope).and_return(ReferenceCodeModel)
-        allow(ReferenceCodeModel).to receive(:maximum).with(:reference_code).and_return(nil)
+        allow(ReferenceCodeModel).to receive(:unscope) { ReferenceCodeModel }
+        allow(ReferenceCodeModel).to receive(:maximum).with(:reference_code){ nil }
       end
 
       it "starts from 1" do
@@ -62,7 +62,7 @@ RSpec.describe HasReferenceCode do
 
     context "when reference_code column does not exist" do
       before do
-        allow(ReferenceCodeModel).to receive(:column_names).and_return(%w[id])
+        allow(ReferenceCodeModel).to receive(:column_names) { %w[id] }
       end
 
       it "does not set reference_code" do
@@ -82,7 +82,7 @@ RSpec.describe HasReferenceCode do
 
     context "when column does not exist" do
       before do
-        allow(ReferenceCodeModel).to receive(:column_names).and_return(%w[id])
+        allow(ReferenceCodeModel).to receive(:column_names) { %w[id] }
       end
 
       it "returns false" do

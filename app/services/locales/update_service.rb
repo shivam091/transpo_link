@@ -5,7 +5,7 @@
 class Locales::UpdateService < ApplicationService
   def initialize(user, locale_attributes)
     @user = user
-    @locale_attributes = locale_attributes.dup
+    @locale_attributes = locale_attributes
   end
 
   def call

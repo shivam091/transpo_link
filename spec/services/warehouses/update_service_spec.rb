@@ -22,7 +22,7 @@ RSpec.describe Warehouses::UpdateService, type: :service do
     end
 
     context "when update fails" do
-      before { allow(warehouse).to receive(:update).and_return(false) }
+      before { allow(warehouse).to receive(:update) { false } }
 
       it "does not update the warehouse" do
         expect(subject.payload[:warehouse].name).to eq("TranspoLink Logistics")

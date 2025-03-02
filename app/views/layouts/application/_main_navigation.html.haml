@@ -13,15 +13,15 @@
       #navbar.navbar-collapse.collapse.divider
         %ul.navbar-nav.me-auto
           %li.nav-item
-            = link_to root_path, class: ["nav-link", active_when(current_controller?("dashboards"))] do
+            = link_to root_path, class: class_names("nav-link", "active": current_controller?("dashboards")) do
               = external_svg_tag("svgs/dashboard.svg")
               = t(".dashboard")
           %li.nav-item
-            = link_to users_path, class: ["nav-link", active_when(current_controller?("users"))] do
+            = link_to users_path, class: class_names("nav-link", "active": current_controller?("users")) do
               = external_svg_tag("svgs/users.svg")
               = t(".users")
           %li.nav-item
-            = link_to request_logs_path, class: ["nav-link", active_when(current_controller?("request_logs"))] do
+            = link_to request_logs_path, class: class_names("nav-link", "active": current_controller?("request_logs")) do
               = external_svg_tag("svgs/logs.svg")
               = t(".request_logs")
         %ul.navbar-nav.d-none.d-lg-flex.ms-2

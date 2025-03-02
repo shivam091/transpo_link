@@ -1,6 +1,6 @@
 = title(t(".title"))
 .text-center
-  %h4.fw-bold.mb-4.fw-normal= t(".create_new_password")
+  %h4.fw-bold.mb-3.fw-normal= t(".create_new_password")
   %p= t(".you_will_be_asked_for_new_password")
   %p= t(".after_password_reset_redirect_note")
 = pretty_form_with model: resource, as: resource_name, url: password_path(resource_name), method: :put,

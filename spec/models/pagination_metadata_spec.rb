@@ -7,7 +7,7 @@
 require "spec_helper"
 
 RSpec.describe PaginationMetadata do
-  let(:pagination) do
+  let(:pagination_metadata) do
     described_class.new(
       current_page: 3,
       per_page: 10,
@@ -21,19 +21,19 @@ RSpec.describe PaginationMetadata do
 
   describe "#initialize" do
     it "assigns the correct attributes" do
-      expect(pagination.current_page).to eq(3)
-      expect(pagination.per_page).to eq(10)
-      expect(pagination.total_pages).to eq(5)
-      expect(pagination.total_count).to eq(50)
-      expect(pagination.next_page).to eq(4)
-      expect(pagination.previous_page).to eq(2)
-      expect(pagination.offset).to eq(20)
+      expect(pagination_metadata.current_page).to eq(3)
+      expect(pagination_metadata.per_page).to eq(10)
+      expect(pagination_metadata.total_pages).to eq(5)
+      expect(pagination_metadata.total_count).to eq(50)
+      expect(pagination_metadata.next_page).to eq(4)
+      expect(pagination_metadata.previous_page).to eq(2)
+      expect(pagination_metadata.offset).to eq(20)
     end
   end
 
   describe "#first_page?" do
-    it "returns true if current page is 1" do
-      first_page_pagination = described_class.new(
+    let(:first_page_pagination_metadata) do
+      described_class.new(
         current_page: 1,
         per_page: 10,
         total_pages: 5,
@@ -42,17 +42,20 @@ RSpec.describe PaginationMetadata do
         previous_page: nil,
         offset: 0
       )
-      expect(first_page_pagination.first_page?).to be_truthy
+    end
+
+    it "returns true if current page is 1" do
+      expect(first_page_pagination_metadata.first_page?).to be_truthy
     end
 
     it "returns false if current page is not 1" do
-      expect(pagination.first_page?).to be_falsy
+      expect(pagination_metadata.first_page?).to be_falsy
     end
   end
 
   describe "#last_page?" do
-    it "returns true if current page is the last page" do
-      last_page_pagination = described_class.new(
+    let(:last_page_pagination_metadata) do
+      described_class.new(
         current_page: 5,
         per_page: 10,
         total_pages: 5,
@@ -61,11 +64,36 @@ RSpec.describe PaginationMetadata do
         previous_page: 4,
         offset: 40
       )
-      expect(last_page_pagination.last_page?).to be_truthy
+    end
+
+    it "returns true if current page is the last page" do
+      expect(last_page_pagination_metadata.last_page?).to be_truthy
     end
 
     it "returns false if current page is not the last page" do
-      expect(pagination.last_page?).to be_falsy
+      expect(pagination_metadata.last_page?).to be_falsy
+    end
+  end
+
+  describe "#needs_pagination?" do
+    let(:single_page_pagination_metadata) do
+      described_class.new(
+        current_page: 1,
+        per_page: 10,
+        total_pages: 1,
+        total_count: 5,
+        next_page: nil,
+        previous_page: nil,
+        offset: 10
+      )
+    end
+
+    it "returns true if total pages are greater than 1" do
+      expect(pagination_metadata.needs_pagination?).to be_truthy
+    end
+
+    it "returns false if total pages are less than or equal to 1" do
+      expect(single_page_pagination_metadata.needs_pagination?).to be_falsy
     end
   end
 end

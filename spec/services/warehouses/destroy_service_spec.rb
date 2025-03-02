@@ -23,7 +23,7 @@ RSpec.describe Warehouses::DestroyService, type: :service do
     end
 
     context "when destroy fails" do
-      before { allow(warehouse).to receive(:destroy).and_return(false) }
+      before { allow(warehouse).to receive(:destroy) { false } }
 
       include_examples "does not change count of objects", Warehouse
 

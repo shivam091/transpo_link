@@ -15,7 +15,7 @@ RSpec.describe "Users::Passwords", type: :request do
       get new_user_password_path
 
       expect(response).to have_http_status(:ok)
-      expect(response.body).to include("<h4 class='fw-bold mb-4 fw-normal'>Password assistance</h4>")
+      expect(response.body).to include("<h4 class='fw-bold mb-3 fw-normal'>Password assistance</h4>")
     end
   end
 
@@ -35,7 +35,7 @@ RSpec.describe "Users::Passwords", type: :request do
 
     context "when the user has recently requested a password reset" do
       before do
-        allow_any_instance_of(User).to receive(:recently_sent_password_reset_instructions?).and_return(true)
+        allow_any_instance_of(User).to receive(:recently_sent_password_reset_instructions?) { true }
       end
 
       it "throttles the password reset request" do
@@ -69,7 +69,7 @@ RSpec.describe "Users::Passwords", type: :request do
       get edit_user_password_path, params: {reset_password_token: reset_token}
 
       expect(response).to have_http_status(:ok)
-      expect(response.body).to include("<h4 class='fw-bold mb-4 fw-normal'>Create new password</h4>")
+      expect(response.body).to include("<h4 class='fw-bold mb-3 fw-normal'>Create new password</h4>")
     end
   end
 
