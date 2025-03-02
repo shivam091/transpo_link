@@ -202,6 +202,7 @@
         tax_rate: {
           country: "Country or region",
           tax_type: "Tax type",
+          business_category: "Business category",
           rate: "Rate",
           valid_from: "Valid from",
           valid_to: "Valid to",
@@ -478,6 +479,10 @@
           tin_ph: "TIN_PH - Taxpayer Identification Number",
           tin_th: "TIN_TH - Taxpayer Identification Number",
           uen: "UEN - Unique Entity Number",
+        },
+        business_categories: {
+          b2b: "Business to Business (B2B)",
+          b2c: "Business to Consumer (B2C)"
         },
       },
     },
@@ -841,6 +846,7 @@
       form: {
         select_country: "Select country or region",
         select_tax_type: "Select tax type",
+        select_business_category: "Select business category",
         country_help_text: "For country-specific tax types, the country will be set automatically. For international tax types (VAT, GST, TIN) and regional tax types (VATIN, EORI, RUC, NIT, BRN), please select the applicable country.",
       },
     },

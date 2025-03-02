@@ -5,6 +5,7 @@
         %th{width: "25px", scope: "col"}#
         %th{scope: "col"}= TaxRate.human_attribute_name(:country)
         %th{scope: "col"}= TaxRate.human_attribute_name(:tax_type)
+        %th{scope: "col"}= TaxRate.human_attribute_name(:business_category)
         %th{scope: "col"}= TaxRate.human_attribute_name(:rate)
         %th{scope: "col"}= TaxRate.human_attribute_name(:valid_from)
         %th{scope: "col"}= TaxRate.human_attribute_name(:valid_to)
@@ -17,6 +18,7 @@
           %th{scope: "row"}= h(@pagination_metadata.offset + index)
           %td= h(country)
           %td= h(tax_type)
+          %td= h(enum_i18n(TaxRate, :business_categories, tax_rate.business_category))
           %td= h(number_to_percentage(tax_rate.rate, precision: 2))
           %td= h(tax_rate.valid_from.to_fs(:long))
           %td= h(tax_rate.valid_to&.to_fs(:long))
