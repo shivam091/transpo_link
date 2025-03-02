@@ -46,7 +46,51 @@ class TaxRate < ApplicationRecord
   validate :no_overlapping_tax_rates
   validate :cannot_change_rate_for_active_tax_rate, on: :update
 
+  # Scope to get active tax rates (valid for today)
+  scope :active, -> {
+    where(
+      arel_table[:valid_from].lteq(Date.current)
+        .and(arel_table[:valid_to].eq(nil)
+          .or(arel_table[:valid_to].gteq(Date.current)))
+    )
+  }
+
+  # Scope to get tax rates for a specific country
+  scope :for_country, ->(country) { where(arel_table[:country].eq(country)) }
+
+  # Scope to get tax rates for a specific tax type
+  scope :for_tax_type, ->(tax_type) { where(arel_table[:tax_type].eq(tax_type)) }
+
+  # Scope for filtering by category
+  scope :for_category, ->(category) { where(arel_table[:business_category].eq(category)) }
+
+  # Scope for applicable tax rates based on type, country, and category
+  scope :applicable_rates, ->(type, country, category) {
+    for_tax_type(type).for_country(country).for_category(category)
+  }
+
+  # Scope to find tax rates valid on a specific date
+  scope :valid_on, ->(date) {
+    where(
+      arel_table[:valid_from].lteq(date)
+        .and(arel_table[:valid_to].eq(nil)
+          .or(arel_table[:valid_to].gteq(date)))
+    )
+  }
+
   default_scope -> { order_created_desc }
+
+  class << self
+    def active_rate(country, tax_type)
+      for_country(country).for_tax_type(tax_type).active.order(arel_table[:valid_from].desc).first
+    end
+
+    # Returns the tax rate for a future date
+    def future_rate(country, tax_type, date)
+      for_country(country).for_tax_type(tax_type).valid_on(date).order(arel_table[:valid_from].desc).first
+    end
+  end
+
   private
 
   # Prevent overlapping tax rates for the same country and tax type
