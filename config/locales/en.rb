@@ -160,12 +160,12 @@
           are_notifications_enabled: "Are notifications enabled",
         },
         address: {
-          address1: "Flat, House no., Building, Company, Apartment, P.O. box, c/o",
-          address2: "Area, Street, Sector, Village, Suite, or Floor",
-          city: "Town, City, Suburb, or Area",
-          state: "State, Province, County, or Territory",
+          address1: "Flat, house no., building, company, apartment, P.O. box, c/o",
+          address2: "Area, street, sector, village, suite, or floor",
+          city: "Town, city, suburb, or area",
+          state: "State, province, county, or territory",
           country: "Country or region",
-          postal_code: "Postal code, Postcode, or PIN code",
+          postal_code: "Postal code, postcode, or PIN code",
         },
         warehouse: {
           name: "Name",
@@ -260,6 +260,9 @@
       delete: "Delete",
       save: "Save",
       cancel: "Cancel",
+    },
+    common: {
+      selected: "%{count} selected",
     },
     devise: {
       confirmations: {
@@ -434,8 +437,8 @@
         inactive: "Inactive",
       },
       address_form_fields: {
-        select_country: "Select country",
-        select_state: "Select state",
+        select_country: "Select country or region",
+        select_state: "Select state, province, county, or territory",
       },
     },
     flashes: {
@@ -568,7 +571,7 @@
       show: {
         title: "Your profile",
         your_profile: "Your profile",
-        edit_profile_details: "Edit your profile details viz., first name, last name, address, etc.",
+        edit_profile_details: "Edit your personal details viz., first name, last name, address, and more to ensure your profile reflects the latest information.",
         address: "Address",
         mobile_number_help_text: "Quickly receive security notifications with this mobile number.",
       },
@@ -584,7 +587,7 @@
       show: {
         title: "Your preferences",
         your_preferences: "Your preferences",
-        edit_preferences: "Edit your preferences viz. color scheme, time zone, language, etc.",
+        edit_preferences: "Customize your preferences, including color scheme, time zone, language, and other settings to suit your personal experience.",
       },
       edit: {
         title: "Edit preferences",

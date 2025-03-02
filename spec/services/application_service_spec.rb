@@ -19,8 +19,8 @@ RSpec.describe ApplicationService do
     let(:service_instance) { instance_double("DummyService") }
 
     it "instantiates a new instance of the service class and calls #call on it" do
-      expect(dummy_service_class).to receive(:new).and_return(service_instance)
-      expect(service_instance).to receive(:call).and_return(:service_result)
+      expect(dummy_service_class).to receive(:new) { service_instance }
+      expect(service_instance).to receive(:call) { :service_result }
 
       result = dummy_service_class.call
       expect(result).to eq(:service_result)
@@ -32,7 +32,7 @@ RSpec.describe ApplicationService do
     let(:count) { 2 }
 
     it "translates using the flashes scope by default" do
-      allow(I18n).to receive(:t).with("test.key", scope: "flashes").and_return("Translated Message")
+      allow(I18n).to receive(:t).with("test.key", scope: "flashes") { "Translated Message" }
 
       result = service.t("test.key")
 
@@ -40,7 +40,7 @@ RSpec.describe ApplicationService do
     end
 
     it "merges custom options with default scope" do
-      allow(I18n).to receive(:t).with("test.key", scope: "flashes", count: 2).and_return("Translated Message #{count}")
+      allow(I18n).to receive(:t).with("test.key", scope: "flashes", count: 2) { "Translated Message #{count}" }
 
       result = service.t("test.key", count: count)
 

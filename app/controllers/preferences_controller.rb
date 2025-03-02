@@ -23,7 +23,7 @@ class PreferencesController < ApplicationController
       respond_to do |format|
         format.turbo_stream do
           render turbo_stream: [
-            turbo_stream.update(:preference_form, partial: "preferences/form"),
+            turbo_stream.update(:edit_preference_form_frame, partial: "preferences/form"),
             render_flash
           ], status: :unprocessable_entity
         end

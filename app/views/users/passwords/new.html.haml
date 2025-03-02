@@ -1,6 +1,6 @@
 = title(t(".title"))
 .text-center
-  %h4.fw-bold.mb-4.fw-normal= t(".password_assistance")
+  %h4.fw-bold.mb-3.fw-normal= t(".password_assistance")
   %p=t (".password_reset_note")
 = form_with model: resource, as: resource_name, url: password_path(resource_name), data: {turbo: false} do |form|
   = form_errors(resource)

@@ -15,6 +15,9 @@ class User < ApplicationRecord
 
   normalizes :email, with: -> email { email.strip }
 
+  validates :role_id,
+            presence: true,
+            reduce: true
   validates :email,
             presence: true,
             length: {in: 2..55},

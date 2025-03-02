@@ -35,7 +35,7 @@ RSpec.describe "Preferences", type: :request do
         get preference_path
 
         expect(response).to have_http_status(:ok)
-        expect(response.body).to include("<div class='widget-help'>Edit your preferences viz. color scheme, time zone, language, etc.</div>")
+        expect(response.body).to include("<div class='widget-help'>Customize your preferences, including color scheme, time zone, language, and other settings to suit your personal experience.</div>")
       end
     end
 
@@ -45,7 +45,7 @@ RSpec.describe "Preferences", type: :request do
 
         expect(admin).to eq(controller_assigns(:current_user))
         expect(response).to have_http_status(:ok)
-        expect(response.body).to include("<turbo-frame id=\"preference_form\" target=\"_top\">")
+        expect(response.body).to include("<turbo-frame id=\"edit_preference_form_frame\" target=\"_top\">")
       end
     end
 
@@ -72,7 +72,7 @@ RSpec.describe "Preferences", type: :request do
           expect(admin.reload.preferred_currency).to eq("INR")
           expect(flash[:alert]).to eq("Your preferences could not be updated.")
           expect(response.media_type).to eq(Mime[:turbo_stream])
-          expect(response.body).to include("<turbo-stream action=\"update\" target=\"preference_form\">")
+          expect(response.body).to include("<turbo-stream action=\"update\" target=\"edit_preference_form_frame\">")
           expect(response).to have_http_status(:unprocessable_entity)
         end
       end

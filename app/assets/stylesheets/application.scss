@@ -78,7 +78,7 @@ svg:not(:root) {
     display: inline-flex;
     align-items: center;
     gap: 0.25rem;
-    color: var(--bs-body-color);
+    color: rgba(var(--bs-emphasis-color-rgb), 0.65);
   }
 }
 .nav-link, .dropdown-item {
@@ -96,6 +96,7 @@ p {
   word-wrap: break-word;
   word-spacing: normal;
   text-align: justify;
+  margin-bottom: 0.5rem;
 }
 .subheader {
   font-weight: 600;
@@ -132,7 +133,7 @@ p {
 .pretty-json {
   white-space: pre-wrap;
 }
-.nav-link {
+.nav-link, .top-menu-link {
   color: rgba(var(--bs-emphasis-color-rgb), 0.65);
   font-size: 0.950rem;
   &:disabled {

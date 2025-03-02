@@ -170,17 +170,19 @@ RSpec.describe TranspoLink::I18n do
 
   describe "#options_for_languages" do
     before do
-      allow(TranspoLink::I18n).to receive(:selectable_locales).and_return({
-        en: "English",
-        es: "Spanish - Español"
-      })
-      allow(TranspoLink::I18n).to receive(:percentage_translated_for).with(:en).and_return(100)
-      allow(TranspoLink::I18n).to receive(:percentage_translated_for).with(:es).and_return(10)
+      allow(TranspoLink::I18n).to receive(:selectable_locales) {
+        {
+          en: "English",
+          es: "Spanish - Español"
+        }
+      }
+      allow(TranspoLink::I18n).to receive(:percentage_translated_for).with(:en) { 100 }
+      allow(TranspoLink::I18n).to receive(:percentage_translated_for).with(:es) { 10 }
     end
 
     it "returns locales that meet the translation threshold with formatted strings" do
-      expect(I18n).to receive(:t).with("preferences.preference_form.language_translation_percentage", locale: :en).and_return("%{language} (%{percent_translated} translated)")
-      expect(I18n).to receive(:t).with("preferences.preference_form.language_translation_percentage", locale: :es).and_return("%{language} (%{percent_translated} translated)")
+      expect(I18n).to receive(:t).with("preferences.preference_form.language_translation_percentage", locale: :en) { "%{language} (%{percent_translated} translated)" }
+      expect(I18n).to receive(:t).with("preferences.preference_form.language_translation_percentage", locale: :es) { "%{language} (%{percent_translated} translated)" }
 
       result = described_class.options_for_languages
 

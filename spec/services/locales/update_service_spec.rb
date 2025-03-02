@@ -22,7 +22,7 @@ RSpec.describe Locales::UpdateService, type: :service do
     end
 
     context "when update fails" do
-      before { allow(user).to receive(:update).and_return(false) }
+      before { allow(user).to receive(:update) { false } }
 
       it "does not update the language" do
         expect(subject.payload[:user].preferred_locale).to include("en")

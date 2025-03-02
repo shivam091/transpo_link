@@ -47,6 +47,10 @@ RSpec.describe UserDetail, type: :model do
   end
 
   describe "validations" do
+    describe "#user_id" do
+      it { is_expected.to validate_presence_of(:user_id) }
+    end
+
     describe "#first_name" do
       it { is_expected.to validate_presence_of(:first_name) }
       it { is_expected.to validate_length_of(:first_name).is_at_least(2).is_at_most(55) }

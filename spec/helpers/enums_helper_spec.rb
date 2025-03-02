@@ -21,9 +21,9 @@ RSpec.describe EnumsHelper, type: :helper do
       end
     end
 
-    allow(I18n).to receive(:t).with("light", scope: "enumerations.preference.color_schemes").and_return("Light Mode")
-    allow(I18n).to receive(:t).with("dark", scope: "enumerations.preference.color_schemes").and_return("Dark Mode")
-    allow(I18n).to receive(:t).with("auto", scope: "enumerations.preference.color_schemes").and_return("Auto Mode")
+    allow(I18n).to receive(:t).with("light", scope: "enumerations.preference.color_schemes") { "Light Mode" }
+    allow(I18n).to receive(:t).with("dark", scope: "enumerations.preference.color_schemes") { "Dark Mode" }
+    allow(I18n).to receive(:t).with("auto", scope: "enumerations.preference.color_schemes") { "Auto Mode" }
   end
 
   describe "#enum_options_for_select" do

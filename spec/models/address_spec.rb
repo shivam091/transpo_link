@@ -56,5 +56,13 @@ RSpec.describe Address, type: :model do
     describe "#country" do
       it { is_expected.to validate_presence_of(:country) }
     end
+
+    describe "#addressable_id" do
+      it { is_expected.to validate_presence_of(:addressable_id) }
+    end
+
+    describe "#addressable_type" do
+      it { is_expected.to validate_presence_of(:addressable_type) }
+    end
   end
 end

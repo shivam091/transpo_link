@@ -15,8 +15,8 @@ RSpec.describe WarehousePresenter, type: :presenter do
     end
 
     it "returns blank if values are nil" do
-      allow(warehouse).to receive(:total_capacity).and_return(nil)
-      allow(warehouse).to receive(:capacity_unit).and_return(nil)
+      allow(warehouse).to receive(:total_capacity){ nil }
+      allow(warehouse).to receive(:capacity_unit){ nil }
 
       expect(presenter.capacity).to eq("")
     end
@@ -28,7 +28,7 @@ RSpec.describe WarehousePresenter, type: :presenter do
     end
 
     it "returns nil if latitude is nil" do
-      allow(warehouse).to receive(:latitude).and_return(nil)
+      allow(warehouse).to receive(:latitude){ nil }
 
       expect(presenter.formatted_latitude).to be_nil
     end
@@ -40,7 +40,7 @@ RSpec.describe WarehousePresenter, type: :presenter do
     end
 
     it "returns nil if longitude is nil" do
-      allow(warehouse).to receive(:longitude).and_return(nil)
+      allow(warehouse).to receive(:longitude){ nil }
 
       expect(presenter.formatted_longitude).to be_nil
     end

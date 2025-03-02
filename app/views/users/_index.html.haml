@@ -1,5 +1,6 @@
 .card.card-primary.border.border-primary
-  .card-body
+  .card-body{data: {controller: "checkbox-selection"}}
     = render_if_exists("users/user")
-  .card-footer
-    = render_pagination(@pagination_metadata)
+  - if @pagination_metadata.needs_pagination?
+    .card-footer
+      = render_pagination(@pagination_metadata)

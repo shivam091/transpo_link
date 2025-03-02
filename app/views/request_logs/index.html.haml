@@ -2,5 +2,6 @@
 .card.card-primary.border.border-primary
   .card-body
     = render_if_exists("request_logs/request_log")
-  .card-footer
-    = render_pagination(@pagination_metadata)
+  - if @pagination_metadata.needs_pagination?
+    .card-footer
+      = render_pagination(@pagination_metadata)

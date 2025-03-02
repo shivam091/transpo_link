@@ -64,9 +64,9 @@ RSpec.describe "Warehouses", type: :request do
     describe "GET /warehouses" do
       before { get warehouses_path }
 
-      it "renders user list and returns :ok status" do
+      it "renders warehouse list and returns :ok status" do
         expect(controller_assigns(:warehouses)).to be_present
-        expect(controller_assigns(:pagination_data)).to be_present
+        expect(controller_assigns(:pagination_metadata)).to be_present
         expect(controller_assigns(:warehouses).reload).to include(warehouse)
         expect(response).to have_http_status(:ok)
       end
@@ -99,7 +99,7 @@ RSpec.describe "Warehouses", type: :request do
 
           expect(flash[:alert]).to eq("Warehouse could not be created.")
           expect(response.media_type).to eq(Mime[:turbo_stream])
-          expect(response.body).to include("<turbo-stream action=\"update\" target=\"warehouse_form\">")
+          expect(response.body).to include("<turbo-stream action=\"update\" target=\"new_warehouse_form_frame\">")
           expect(response).to have_http_status(:unprocessable_entity)
         end
       end
@@ -134,7 +134,7 @@ RSpec.describe "Warehouses", type: :request do
 
           expect(flash[:alert]).to eq("Warehouse could not be updated.")
           expect(response.media_type).to eq(Mime[:turbo_stream])
-          expect(response.body).to include("<turbo-stream action=\"update\" target=\"warehouse_form\">")
+          expect(response.body).to include("<turbo-stream action=\"update\" target=\"edit_warehouse_form_frame\">")
           expect(response).to have_http_status(:unprocessable_entity)
         end
       end
@@ -164,7 +164,7 @@ RSpec.describe "Warehouses", type: :request do
         let(:service_response) { ServiceResponse.error(message: "Warehouse could not be deleted.") }
 
         before do
-          allow(Warehouses::DestroyService).to receive(:call).and_return(service_response)
+          allow(Warehouses::DestroyService).to receive(:call) { service_response }
         end
 
         it "redirects with an error message" do

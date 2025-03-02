@@ -26,7 +26,7 @@ RSpec.describe RequestLogger do
   end
 
   before do
-    allow(Time).to receive(:now).and_return(Time.utc(2025, 1, 1, 12, 0, 0)) # Freeze time
+    allow(Time).to receive(:now) { Time.utc(2025, 1, 1, 12, 0, 0) } # Freeze time
     allow(RequestLog).to receive(:create!) # Stub DB call
   end
 
@@ -51,7 +51,7 @@ RSpec.describe RequestLogger do
 
   describe "#memory_usage" do
     it "fetches memory usage" do
-      allow(middleware).to receive(:`).with("ps -o rss= -p #{Process.pid}").and_return("1024")
+      allow(middleware).to receive(:`).with("ps -o rss= -p #{Process.pid}") { "1024" }
 
       expect(middleware.send(:memory_usage)).to eq(1024)
     end
@@ -59,7 +59,7 @@ RSpec.describe RequestLogger do
 
   describe "#cpu_usage" do
     it "fetches CPU usage" do
-      allow(middleware).to receive(:`).with("ps -o %cpu= -p #{Process.pid}").and_return(3.5)
+      allow(middleware).to receive(:`).with("ps -o %cpu= -p #{Process.pid}") { 3.5 }
 
       expect(middleware.send(:cpu_usage)).to eq(3.5)
     end

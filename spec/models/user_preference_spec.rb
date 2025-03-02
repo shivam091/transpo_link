@@ -58,6 +58,10 @@ RSpec.describe UserPreference, type: :model do
   end
 
   describe "validations" do
+    describe "#user_id" do
+      it { is_expected.to validate_presence_of(:user_id) }
+    end
+
     describe "#preferred_locale" do
       it { is_expected.to validate_presence_of(:preferred_locale) }
       it { is_expected.to validate_inclusion_of(:preferred_locale).in_array(I18n.available_locales.map(&:to_s)) }
