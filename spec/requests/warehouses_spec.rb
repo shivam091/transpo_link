@@ -67,7 +67,7 @@ RSpec.describe "Warehouses", type: :request do
     describe "GET /warehouses" do
       before { get warehouses_path }
 
-      it "renders user list and returns :ok status" do
+      it "renders warehouse list and returns :ok status" do
         expect(controller_assigns(:warehouses)).to be_present
         expect(controller_assigns(:pagination_metadata)).to be_present
         expect(controller_assigns(:warehouses)).to include(warehouse)

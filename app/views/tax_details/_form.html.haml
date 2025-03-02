@@ -1,15 +1,15 @@
-= form_with model: @tax_detail do |form|
+= pretty_form_with model: @tax_detail do |form|
   .col-12.mb-2
     = form.label :tax_type, class: "form-label required"
     = form.select :tax_type, options_for_select(enum_options_for_select(TaxDetail, :tax_types), form.object.tax_type),
-      {include_blank: t(".select_tax_type")}, class: "form-select", autofocus: true
+      {include_blank: t(".select_tax_type")}, {autofocus: true}
   .col-12.mb-2
     = form.label :tax_number, class: "form-label required"
-    = form.text_field :tax_number, class: "form-control"
+    = form.text_field :tax_number
   .col-12.mb-2
     = form.label :country, class: "form-label"
     = form.select :country, options_for_select(TranspoLink::CountryInfo.options_for_countries, form.object.country),
-      {include_blank: t(".select_country")}, {class: "form-select"}
+      {include_blank: t(".select_country")}, {}
     = help_text(t(".country_help_text"))
   .modal-actions
     = button_tag type: :submit, class: "btn btn-primary" do

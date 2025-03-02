@@ -14,5 +14,9 @@ FactoryBot.define do
     trait :for_user do
       association :addressable, factory: :admin
     end
+
+    trait :for_warehouse do
+      association :addressable, factory: :warehouse
+    end
   end
 end
