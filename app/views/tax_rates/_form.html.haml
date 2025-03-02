@@ -1,4 +1,4 @@
-= form_with model: @tax_rate do |form|
+= pretty_form_with model: @tax_rate do |form|
   = form_errors(@tax_rate)
   .col-12.mb-2
     = form.label :tax_type, class: "form-label required"

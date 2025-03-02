@@ -15,6 +15,7 @@ RSpec.describe PrettyFormBuilder, type: :helper do
         t.string :password
         t.string :email
         t.string :role
+        t.date :joining_date
         t.integer :age
         t.text :bio
         t.boolean :is_active
@@ -133,6 +134,35 @@ RSpec.describe PrettyFormBuilder, type: :helper do
         <input class="form-control custom-class" type="number" name="test_user[age]" id="test_user_age" />
       HTML
       output = builder.number_field(:age, class: "form-control custom-class")
+
+      expect(output).to match_html(expected)
+    end
+  end
+
+  describe "#date_field" do
+    it "adds the 'form-control' class to date fields" do
+      expected = <<~HTML
+        <input class="form-control" type="date" name="test_user[joining_date]" id="test_user_joining_date" />
+      HTML
+      output = builder.date_field(:joining_date)
+
+      expect(output).to match_html(expected)
+    end
+
+    it "preserves existing classes and adds 'form-control'" do
+      expected = <<~HTML
+        <input class="custom-class form-control" type="date" name="test_user[joining_date]" id="test_user_joining_date" />
+      HTML
+      output = builder.date_field(:joining_date, class: "custom-class")
+
+      expect(output).to match_html(expected)
+    end
+
+    it "does not add duplicate classes" do
+      expected = <<~HTML
+        <input class="form-control custom-class" type="date" name="test_user[joining_date]" id="test_user_joining_date" />
+      HTML
+      output = builder.date_field(:joining_date, class: "form-control custom-class")
 
       expect(output).to match_html(expected)
     end
