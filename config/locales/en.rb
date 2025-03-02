@@ -228,6 +228,26 @@
               },
             },
           },
+          tax_rate: {
+            attributes: {
+              base: {
+                no_overlapping_tax_rates: "There is already an active tax rate for this country, tax type, and business category in the selected date range",
+              },
+              tax_type: {
+                inclusion: "'%{value}' is not a valid tax type",
+                uniqueness: "already exist for this country and business category for selected date range"
+              },
+              business_category: {
+                inclusion: "'%{value}' is not a valid tax type",
+              },
+              rate: {
+                cannot_change_rate_for_active_tax_rate: "cannot be changed for an active tax rate",
+              },
+              valid_from: {
+                greater_than_or_equal_to: "must be today or a future date"
+              }
+            },
+          },
         },
         messages: {
           label_already_exists_at_group_level: "already exists at group level for %{group}. Please choose another one.",
