@@ -12,4 +12,10 @@ FactoryBot.define do
       create(:address, addressable: object)
     end
   end
+
+  TaxRate.tax_types.keys.each do |tax_type|
+    trait tax_type do
+      tax_type { tax_type.to_s }
+    end
+  end
 end

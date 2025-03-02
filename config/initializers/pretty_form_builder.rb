@@ -33,6 +33,11 @@ class PrettyFormBuilder < ActionView::Helpers::FormBuilder
     super(attribute, options)
   end
 
+  def date_field(attribute, options = {})
+    options[:class] = append_class(options[:class], "form-control")
+    super(attribute, options)
+  end
+
   def select(attribute, choices = nil, options = {}, html_options = {}, &block)
     html_options[:class] = append_class(html_options[:class], "form-select")
     super(attribute, choices, options, html_options, &block)

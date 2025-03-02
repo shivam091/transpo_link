@@ -198,7 +198,15 @@
           tax_type: "Tax type",
           tax_number: "Tax number",
           country: "Country or region",
-        }
+        },
+        tax_rate: {
+          country: "Country or region",
+          tax_type: "Tax type",
+          business_category: "Business category",
+          rate: "Rate",
+          valid_from: "Valid from",
+          valid_to: "Valid to",
+        },
       },
       errors: {
         format: "%{attribute} %{message}",
@@ -218,6 +226,26 @@
               tax_type: {
                 inclusion: "'%{value}' is not a valid tax type",
               },
+            },
+          },
+          tax_rate: {
+            attributes: {
+              base: {
+                no_overlapping_tax_rates: "There is already an active tax rate for this country, tax type, and business category in the selected date range",
+              },
+              tax_type: {
+                inclusion: "'%{value}' is not a valid tax type",
+                uniqueness: "already exist for this country and business category for selected date range"
+              },
+              business_category: {
+                inclusion: "'%{value}' is not a valid tax type",
+              },
+              rate: {
+                cannot_change_rate_for_active_tax_rate: "cannot be changed for an active tax rate",
+              },
+              valid_from: {
+                greater_than_or_equal_to: "must be today or a future date"
+              }
             },
           },
         },
@@ -427,6 +455,59 @@
           uen: "UEN - Unique Entity Number",
         },
       },
+      tax_rate: {
+        tax_types: {
+          vat: "VAT - Value Added Tax",
+          gst: "GST - Goods and Services Tax",
+          tin: "TIN - Taxpayer Identification Number",
+          ein: "EIN - Employer Identification Number",
+          ssn: "SSN - Social Security Number",
+          itin: "ITIN - Individual Taxpayer Identification Number",
+          pan: "PAN - Permanent Account Number",
+          tan: "TAN - Tax Deduction and Collection Account Number",
+          gstin: "GSTIN - GST Identification Number",
+          vatin: "VATIN - VAT Identification Number",
+          eori: "EORI - Economic Operators Registration and Identification Number",
+          nif: "NIF - Tax Identification Number",
+          cif: "CIF - Tax Identification Code",
+          siret: "SIRET - Business Identification System",
+          siren: "SIREN - Establishment Identification System",
+          utr: "UTR - Unique Taxpayer Reference",
+          bn: "BN - Business Number",
+          qst: "QST - Quebec Sales Tax",
+          abn: "ABN - Australian Business Number",
+          acn: "ACN - Australian Company Number",
+          tfn: "TFN - Tax File Number",
+          ird: "IRD - Inland Revenue Department Number",
+          rfc: "RFC - Federal Taxpayer Registry",
+          cuit: "CUIT - Unique Tax Identification Code",
+          cuil: "CUIL - Unique Labor Identification Code",
+          ruc: "RUC - Single Taxpayer Registry",
+          nit: "NIT - Tax Identification Number",
+          cnpj: "CNPJ - National Register of Legal Entities",
+          cpf: "CPF - Register of Natural Persons",
+          npwp: "NPWP - Taxpayer Identification Number",
+          trn: "TRN - Tax Registration Number",
+          kra_pin: "KRA_PIN - Kenya Revenue Authority PIN",
+          brn: "BRN - Business Registration Number",
+          corporate_number: "CORPORATE_NUMBER - Corporate Number",
+          my_number: "MY_NUMBER - Individual Tax Number",
+          inn: "INN - Taxpayer Identification Number",
+          kpp: "KPP - Tax Registration Reason Code",
+          ogrn: "OGRN - Principal State Registration Number",
+          ogrnip: "OGRNIP - Individual Entrepreneur Registration Number",
+          brn_kr: "BRN_KR - Business Registration Number",
+          uscc: "USCC - Unified Social Credit Code",
+          mst: "MST - Tax Identification Number",
+          tin_ph: "TIN_PH - Taxpayer Identification Number",
+          tin_th: "TIN_TH - Taxpayer Identification Number",
+          uen: "UEN - Unique Entity Number",
+        },
+        business_categories: {
+          b2b: "Business to Business (B2B)",
+          b2c: "Business to Consumer (B2C)"
+        },
+      },
     },
     layouts: {
       devise: {
@@ -461,6 +542,7 @@
           routes: "Routes",
           reports: "Reports",
           feedbacks: "Feedbacks",
+          tax_rates: "Tax rates",
         },
         menu: {
           hello_username: "Hello %{username}",
@@ -554,6 +636,20 @@
         destroy: {
           info: "Tax detail was successfully deleted.",
           alert: "Tax detail could not be deleted."
+        },
+      },
+      tax_rates: {
+        create: {
+          notice: "Tax rate was successfully created.",
+          alert: "Tax rate could not be created.",
+        },
+        update: {
+          notice: "Tax rate was successfully updated.",
+          alert: "Tax rate could not be updated."
+        },
+        destroy: {
+          info: "Tax rate was successfully deleted.",
+          alert: "Tax rate could not be deleted."
         },
       },
     },
@@ -752,6 +848,28 @@
       form: {
         select_country: "Select country or region",
         select_tax_type: "Select tax type",
+        country_help_text: "For country-specific tax types, the country will be set automatically. For international tax types (VAT, GST, TIN) and regional tax types (VATIN, EORI, RUC, NIT, BRN), please select the applicable country.",
+      },
+    },
+    tax_rates: {
+      index: {
+        title: "Tax rates",
+      },
+      tax_rate: {
+        actions: "Actions",
+        no_tax_rates_to_display: "No tax rates to display",
+        delete_tax_rate_confirmation_text: "Are you sure you want to delete this '%{tax_type}' for '%{country}'? This cannot be undone.",
+      },
+      new: {
+        title: "New tax rate",
+      },
+      edit: {
+        title: "Edit tax rate",
+      },
+      form: {
+        select_country: "Select country or region",
+        select_tax_type: "Select tax type",
+        select_business_category: "Select business category",
         country_help_text: "For country-specific tax types, the country will be set automatically. For international tax types (VAT, GST, TIN) and regional tax types (VATIN, EORI, RUC, NIT, BRN), please select the applicable country.",
       },
     },
