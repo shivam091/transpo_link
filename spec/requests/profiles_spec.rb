@@ -7,6 +7,9 @@
 require "spec_helper"
 
 RSpec.describe "Profiles", type: :request do
+  let(:valid_attributes) { {first_name: "John"} }
+  let(:invalid_attributes) { {first_name: ""} }
+
   context "when user is not signed in" do
     describe "GET /profile" do
       subject { get profile_path }
@@ -52,9 +55,7 @@ RSpec.describe "Profiles", type: :request do
     describe "PUT|PATCH /profile" do
       context "when valid attributes" do
         it "updates the profile" do
-          put profile_path, params: {
-            user: {user_detail_attributes: {first_name: "John"}}
-          }, as: :turbo_stream
+          put profile_path, params: {user: {user_detail_attributes: valid_attributes}}, as: :turbo_stream
 
           expect(admin.reload.first_name).to eq("John")
           expect(flash[:notice]).to eq("Your profile was successfully updated.")
@@ -65,9 +66,7 @@ RSpec.describe "Profiles", type: :request do
 
       context "when invalid attributes" do
         it "does not update the profile" do
-          put profile_path, params: {
-            user: {user_detail_attributes: {first_name: ""}}
-          }, as: :turbo_stream
+          put profile_path, params: {user: {user_detail_attributes: invalid_attributes}}, as: :turbo_stream
 
           expect(admin.reload.first_name).to eq("TranspoLink")
           expect(flash[:alert]).to eq("Your profile could not be updated.")

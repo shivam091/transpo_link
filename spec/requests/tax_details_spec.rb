@@ -9,8 +9,9 @@ require "spec_helper"
 RSpec.describe "TaxDetails", type: :request do
   let!(:buyer) { create(:buyer) }
   let!(:tax_detail) { create(:tax_detail, user: buyer) }
+
   let(:valid_attributes) { attributes_for(:tax_detail, tax_number: "ABCDE1234A").merge(user_id: buyer.id) }
-  let(:invalid_attributes) { attributes_for(:tax_detail, tax_type: "") }
+  let(:invalid_attributes) { attributes_for(:tax_detail, tax_number: "") }
 
   context "when user is not signed in" do
     describe "GET /tax-details" do
@@ -59,7 +60,7 @@ RSpec.describe "TaxDetails", type: :request do
       it "renders tax details list and returns :ok status" do
         expect(controller_assigns(:tax_details)).to be_present
         expect(controller_assigns(:pagination_metadata)).to be_present
-        expect(controller_assigns(:tax_details).reload).to include(tax_detail)
+        expect(controller_assigns(:tax_details)).to include(tax_detail)
         expect(response).to have_http_status(:ok)
       end
     end
@@ -109,11 +110,9 @@ RSpec.describe "TaxDetails", type: :request do
     describe "PUT|PATCH /tax-details/:id" do
       context "when valid attributes" do
         it "updates the tax detail" do
-          put tax_detail_path(tax_detail), params: {
-            tax_detail: attributes_for(:tax_detail, tax_type: "gstin")
-          }, as: :turbo_stream
+          put tax_detail_path(tax_detail), params: {tax_detail: valid_attributes}, as: :turbo_stream
 
-          expect(tax_detail.reload.tax_type).to eq("gstin")
+          expect(tax_detail.reload.tax_number).to eq("ABCDE1234A")
           expect(flash[:notice]).to eq("Tax detail was successfully updated.")
           expect(response).to redirect_to(tax_details_path)
           expect(response).to have_http_status(:see_other)
