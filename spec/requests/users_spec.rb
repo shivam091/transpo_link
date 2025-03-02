@@ -30,7 +30,9 @@ RSpec.describe "Users", type: :request do
       before { get users_path }
 
       it "renders user list and returns :ok status" do
-        expect(controller_assigns(:users).reload).to include(admin)
+        expect(controller_assigns(:users)).to be_present
+        expect(controller_assigns(:pagination_metadata)).to be_present
+        expect(controller_assigns(:users)).to include(admin)
         expect(response).to have_http_status(:ok)
       end
     end
@@ -39,7 +41,7 @@ RSpec.describe "Users", type: :request do
       before { get user_path(admin) }
 
       it "returns :ok status" do
-        expect(controller_assigns(:user).reload).to eq(admin)
+        expect(controller_assigns(:user)).to eq(admin)
         expect(response).to have_http_status(:ok)
       end
     end

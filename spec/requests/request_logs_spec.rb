@@ -30,7 +30,9 @@ RSpec.describe "RequestLogs", type: :request do
       before { get request_logs_path }
 
       it "returns :ok status" do
-        expect(controller_assigns(:request_logs).reload).to be_present
+        expect(controller_assigns(:request_logs)).to be_present
+        expect(controller_assigns(:pagination_metadata)).to be_present
+        expect(controller_assigns(:request_logs)).to include(request_log)
         expect(response).to have_http_status(:ok)
       end
     end
@@ -39,7 +41,7 @@ RSpec.describe "RequestLogs", type: :request do
       before { get request_log_path(request_log) }
 
       it "returns :ok status" do
-        expect(controller_assigns(:request_log).reload).to eq(request_log)
+        expect(controller_assigns(:request_log)).to eq(request_log)
         expect(response).to have_http_status(:ok)
       end
     end
