@@ -279,6 +279,9 @@
       save: "Save",
       cancel: "Cancel",
     },
+    common: {
+      selected: "%{count} selected",
+    },
     devise: {
       confirmations: {
         confirmed: "Your email address has been successfully confirmed.",
