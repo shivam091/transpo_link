@@ -1,6 +1,5 @@
 = pretty_form_with model: @warehouse do |form|
   = form_errors(@warehouse)
-  
   .subheader
     = t(".basic_details")
   = render_if_exists("warehouses/warehouse_basic_details_fields", locals: {form: form})
