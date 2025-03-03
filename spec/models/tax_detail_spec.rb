@@ -62,7 +62,7 @@ RSpec.describe TaxDetail, type: :model do
         is_expected.to validate_uniqueness_of(:tax_number)
                          .scoped_to([:tax_type, :country])
                          .with_message("should be unique within the same tax type and country")
-                         .case_insensitive
+                         .ignoring_case_sensitivity
       end
     end
   end

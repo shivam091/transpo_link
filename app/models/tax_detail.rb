@@ -12,7 +12,11 @@ class TaxDetail < ApplicationRecord
             reduce: true
   validates :tax_number,
             presence: true,
-            uniqueness: {scope: [:tax_type, :country], message: :uniqueness},
+            uniqueness: {
+              scope: [:tax_type, :country],
+              message: :uniqueness,
+              case_sensitive: true
+            },
             reduce: true
 
   belongs_to :user, inverse_of: :tax_details, touch: true

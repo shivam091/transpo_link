@@ -96,7 +96,7 @@ RSpec.describe TaxRate, type: :model do
   end
 
   describe "scopes" do
-    let!(:active_tax_rate) { create(:tax_rate, :gstin) }
+    let!(:active_tax_rate) { create(:tax_rate, :pan) }
     let!(:future_tax_rate) { create(:tax_rate, :for_b2c, country: "IN", valid_from: Date.current + 1.year, valid_to: Date.current + 5.years) }
 
     describe ".active" do
@@ -115,8 +115,8 @@ RSpec.describe TaxRate, type: :model do
 
     describe ".for_tax_type" do
       it "returns tax rates for the given tax type" do
-        expect(described_class.for_tax_type("gstin")).to include(active_tax_rate)
-        expect(described_class.for_tax_type("vat")).not_to include(active_tax_rate)
+        expect(described_class.for_tax_type("pan")).to include(active_tax_rate)
+        expect(described_class.for_tax_type("gstin")).not_to include(active_tax_rate)
       end
     end
 
@@ -129,8 +129,8 @@ RSpec.describe TaxRate, type: :model do
 
     describe ".applicable_rates" do
       it "returns applicable tax rates matching tax type, country, and category" do
-        expect(described_class.applicable_rates("gstin", "DE", "b2b")).to include(active_tax_rate)
-        expect(described_class.applicable_rates("gstin", "DE", "b2c")).not_to include(active_tax_rate)
+        expect(described_class.applicable_rates("pan", "IN", "b2b")).to include(active_tax_rate)
+        expect(described_class.applicable_rates("gstin", "IN", "b2c")).not_to include(active_tax_rate)
       end
     end
 
@@ -150,15 +150,15 @@ RSpec.describe TaxRate, type: :model do
 
     describe ".active_rate" do
       it "returns the tax rate for a current date" do
-        expect(described_class.active_rate("DE", "gstin")).to eq(active_tax_rate)
-        expect(described_class.active_rate("DE", "gstin")).not_to eq(future_tax_rate)
+        expect(described_class.active_rate("IN", "gstin")).to eq(active_tax_rate)
+        expect(described_class.active_rate("IN", "gstin")).not_to eq(future_tax_rate)
       end
     end
 
     describe ".future_rate" do
       it "returns the tax rate for a future date" do
-        expect(described_class.future_rate("IN", "vat", Date.current + 1.year)).to eq(future_tax_rate)
-        expect(described_class.future_rate("IN", "vat", Date.current + 1.year)).not_to eq(active_tax_rate)
+        expect(described_class.future_rate("IN", "gstin", Date.current + 1.year)).to eq(future_tax_rate)
+        expect(described_class.future_rate("IN", "gstin", Date.current + 1.year)).not_to eq(active_tax_rate)
       end
     end
   end

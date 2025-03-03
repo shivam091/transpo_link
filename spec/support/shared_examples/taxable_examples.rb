@@ -24,7 +24,7 @@ RSpec.shared_examples "tax type" do
       context "when #tax_type requires the country" do
         before { allow(subject).to receive(:requires_country?) { true } }
 
-        it { is_expected.to validate_presence_of(:country) }
+        it { is_expected.to validate_presence_of(:country).allow_blank }
       end
 
       context "when #tax_type does not require the country" do

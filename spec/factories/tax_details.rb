@@ -5,8 +5,8 @@
 FactoryBot.define do
   factory :tax_detail do
     association :user, factory: :buyer
-    tax_number { "ARTPL8760R" }
-    tax_type { "pan" }
+    tax_number { "27ABCDE1234B1Z5" }
+    tax_type { "gstin" }
     country { "IN" }
   end
 end

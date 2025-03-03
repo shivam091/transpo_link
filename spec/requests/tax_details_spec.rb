@@ -10,7 +10,7 @@ RSpec.describe "TaxDetails", type: :request do
   let!(:buyer) { create(:buyer) }
   let!(:tax_detail) { create(:tax_detail, user: buyer) }
 
-  let(:valid_attributes) { attributes_for(:tax_detail, tax_number: "ABCDE1234A").merge(user_id: buyer.id) }
+  let(:valid_attributes) { attributes_for(:tax_detail, tax_number: "27PQRST1234D1Z9").merge(user_id: buyer.id) }
   let(:invalid_attributes) { attributes_for(:tax_detail, tax_number: "") }
 
   context "when user is not signed in" do
@@ -112,7 +112,7 @@ RSpec.describe "TaxDetails", type: :request do
         it "updates the tax detail" do
           put tax_detail_path(tax_detail), params: {tax_detail: valid_attributes}, as: :turbo_stream
 
-          expect(tax_detail.reload.tax_number).to eq("ABCDE1234A")
+          expect(tax_detail.reload.tax_number).to eq("27PQRST1234D1Z9")
           expect(flash[:notice]).to eq("Tax detail was successfully updated.")
           expect(response).to redirect_to(tax_details_path)
           expect(response).to have_http_status(:see_other)
