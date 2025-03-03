@@ -55,8 +55,8 @@ RSpec.describe User, type: :model do
   end
 
   describe "constants" do
-    it { expect(described_class).to have_constant(:LAST_ACTIVITY_AT_INTERVAL).with_value(2.minutes) }
-    it { expect(described_class).to have_constant(:THROTTLE_RESET_PERIOD).with_value(2.minutes) }
+    it { is_expected.to have_constant(:LAST_ACTIVITY_AT_INTERVAL).with_value(2.minutes) }
+    it { is_expected.to have_constant(:THROTTLE_RESET_PERIOD).with_value(2.minutes) }
   end
 
   describe "included modules" do
