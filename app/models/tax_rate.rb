@@ -32,10 +32,13 @@ class TaxRate < ApplicationRecord
             reduce: true
   validates :valid_from,
             presence: true,
+            reduce: true
+  validates :valid_from,
             comparison: {
               greater_than_or_equal_to: Date.current,
               message: :greater_than_or_equal_to
             },
+            on: :create,
             reduce: true
   validates :valid_to,
             comparison: {

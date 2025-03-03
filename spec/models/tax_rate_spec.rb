@@ -85,7 +85,7 @@ RSpec.describe TaxRate, type: :model do
 
     describe "#valid_from" do
       it { is_expected.to validate_presence_of(:valid_from) }
-      it { is_expected.to validate_comparison_of(:valid_from).is_greater_than_or_equal_to(Date.current).with_message("must be today or a future date") }
+      it { is_expected.to validate_comparison_of(:valid_from).is_greater_than_or_equal_to(Date.current).with_message("must be today or a future date").on(:create) }
     end
 
     describe "#valid_to" do
