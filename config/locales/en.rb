@@ -308,6 +308,7 @@
       cancel: "Cancel",
     },
     common: {
+      actions: "Actions",
       selected: "%{count} selected",
     },
     devise: {
@@ -732,7 +733,6 @@
         title: "Users",
       },
       user: {
-        actions: "Actions",
         no_users_to_display: "No users to display",
       },
       show: {
@@ -807,7 +807,6 @@
         title: "Warehouses"
       },
       warehouse: {
-        actions: "Actions",
         no_warehouses_to_display: "No warehouses to display",
         delete_warehouse_confirmation_text: "Are you sure you want to delete the warehouse ‘%{warehouse_name}’? All related data may be lost.",
       },
@@ -856,7 +855,6 @@
         title: "Tax rates",
       },
       tax_rate: {
-        actions: "Actions",
         no_tax_rates_to_display: "No tax rates to display",
         delete_tax_rate_confirmation_text: "Are you sure you want to delete this '%{tax_type}' for '%{country}'? This cannot be undone.",
       },

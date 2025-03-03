@@ -9,7 +9,7 @@
         %th{scope: "col"}= TaxRate.human_attribute_name(:rate)
         %th{scope: "col"}= TaxRate.human_attribute_name(:valid_from)
         %th{scope: "col"}= TaxRate.human_attribute_name(:valid_to)
-        %th{scope: "col"}= t(".actions")
+        %th{scope: "col"}= t("common.actions")
     %tbody.border
       - if @tax_rates&.each.with_index(1) do |tax_rate, index|
         - tax_type = enum_i18n(TaxRate, :tax_types, tax_rate.tax_type)
