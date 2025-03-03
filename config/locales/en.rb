@@ -850,7 +850,7 @@
       form: {
         select_country: "Select country or region",
         select_tax_type: "Select tax type",
-        country_help_text: "For country-specific tax types, the country will be set automatically. For international tax types (VAT, GST, TIN) and regional tax types (VATIN, EORI, RUC, NIT, BRN), please select the applicable country.",
+        country_help_text: "The country will be set automatically for country-specific tax types (SSN, ITIN, TAN). For international tax types (VAT, GST, TIN) and regional tax types (VATIN, EORI, RUC, NIT, BRN), please select the applicable country.",
       },
     },
     tax_rates: {
@@ -872,7 +872,7 @@
         select_country: "Select country or region",
         select_tax_type: "Select tax type",
         select_business_category: "Select business category",
-        country_help_text: "For country-specific tax types, the country will be set automatically. For international tax types (VAT, GST, TIN) and regional tax types (VATIN, EORI, RUC, NIT, BRN), please select the applicable country.",
+        country_help_text: "The country will be set automatically for country-specific tax types (SSN, ITIN, TAN). For international tax types (VAT, GST, TIN) and regional tax types (VATIN, EORI, RUC, NIT, BRN), please select the applicable country.",
       },
     },
   },

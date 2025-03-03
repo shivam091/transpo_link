@@ -26,7 +26,7 @@ RSpec.describe Taxable do
     Object.send(:remove_const, :TaxableModel)
   end
 
-  subject { TaxableModel.new(tax_type: "gstin", country: "IN") }
+  subject { TaxableModel.new(tax_type: "vat", country: "IN") }
 
   describe "enums" do
     it { is_expected.to define_enum_for(:tax_type).backed_by_column_of_type(:enum) }
@@ -95,6 +95,96 @@ RSpec.describe Taxable do
         taxable_model.valid?
 
         expect(taxable_model.errors[:tax_type]).to be_empty
+      end
+    end
+  end
+
+  describe "#set_country" do
+    let(:taxable_model) { TaxableModel.new(tax_type: tax_type, country: country) }
+
+    context "when country is present" do
+      let(:tax_type) { "ein" }
+      let(:country) { "US" }
+
+      it "does not change the country" do
+        taxable_model.valid?
+        expect(taxable_model.country).to eq("US")
+      end
+    end
+
+    context "when country is blank and tax_type requires a country" do
+      let(:tax_type) { "vat" }
+      let(:country) { nil }
+
+      it "does not set a country" do
+        taxable_model.valid?
+        expect(taxable_model.country).to be_nil
+      end
+    end
+
+    context "when tax_type is not recognized" do
+      let(:taxable_model) { TaxableModel.new(tax_type: "vat", country: nil) }
+
+      before do
+        allow(taxable_model).to receive(:tax_type).and_return("unknown_tax_type")
+      end
+
+      it "does not set a country" do
+        taxable_model.valid?
+        expect(taxable_model.country).to be_nil
+      end
+    end
+
+    context "when country is blank and tax_type has a default country" do
+      where(:tax_type, :expected_country) do
+        [
+          ["ein", "US"],
+          ["ssn", "US"],
+          ["itin", "US"],
+          ["pan", "IN"],
+          ["tan", "IN"],
+          ["gstin", "IN"],
+          ["nif", "ES"],
+          ["cif", "ES"],
+          ["siret", "FR"],
+          ["siren", "FR"],
+          ["utr", "GB"],
+          ["bn", "CA"],
+          ["qst", "CA"],
+          ["abn", "AU"],
+          ["acn", "AU"],
+          ["tfn", "AU"],
+          ["ird", "NZ"],
+          ["rfc", "MX"],
+          ["cuit", "AR"],
+          ["cuil", "AR"],
+          ["cnpj", "BR"],
+          ["cpf", "BR"],
+          ["npwp", "ID"],
+          ["trn", "AE"],
+          ["kra_pin", "KE"],
+          ["corporate_number", "JP"],
+          ["my_number", "JP"],
+          ["inn", "RU"],
+          ["kpp", "RU"],
+          ["ogrn", "RU"],
+          ["ogrnip", "RU"],
+          ["brn_kr", "KR"],
+          ["uscc", "CN"],
+          ["mst", "VN"],
+          ["tin_ph", "PH"],
+          ["tin_th", "TH"],
+          ["uen", "SG"]
+        ]
+      end
+
+      with_them do
+        let(:country) { nil }
+
+        it "sets the correct country" do
+          taxable_model.valid?
+          expect(taxable_model.country).to eq(expected_country)
+        end
       end
     end
   end

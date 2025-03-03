@@ -103,6 +103,8 @@ module Taxable
               if: :requires_country?,
               reduce: true
     validate :tax_type_country_combination
+
+    before_validation :set_country
   end
 
   class_methods do
@@ -175,6 +177,36 @@ module Taxable
 
   def requires_country?
     tax_type.in?(COUNTRY_REQUIRING_TAX_TYPES)
+  end
+
+  def set_country
+    return unless country.presence.blank? && COUNTRY_REQUIRING_TAX_TYPES.exclude?(tax_type)
+
+    self.country = case tax_type
+                   when "ein", "ssn", "itin"            then "US"
+                   when "pan", "tan", "gstin"           then "IN"
+                   when "nif", "cif"                    then "ES"
+                   when "siret", "siren"                then "FR"
+                   when "utr"                           then "GB"
+                   when "bn", "qst"                     then "CA"
+                   when "abn", "acn", "tfn"             then "AU"
+                   when "ird"                           then "NZ"
+                   when "rfc"                           then "MX"
+                   when "cuit", "cuil"                  then "AR"
+                   when "cnpj", "cpf"                   then "BR"
+                   when "npwp"                          then "ID"
+                   when "trn"                           then "AE"
+                   when "kra_pin"                       then "KE"
+                   when "corporate_number", "my_number" then "JP"
+                   when "inn", "kpp", "ogrn", "ogrnip"  then "RU"
+                   when "brn_kr"                        then "KR"
+                   when "uscc"                          then "CN"
+                   when "mst"                           then "VN"
+                   when "tin_ph"                        then "PH"
+                   when "tin_th"                        then "TH"
+                   when "uen"                           then "SG"
+                   else                                      nil
+                   end
   end
 
   def tax_type_country_combination
