@@ -2,7 +2,7 @@
   = form_errors(@warehouse)
   .subheader
     = t(".basic_details")
-  = render_if_exists("warehouses/warehouse_basic_details_fields", locals: {form: form})
+  = render_if_exists("warehouses/basic_details_fields", locals: {form: form})
   .subheader
     = t(".address")
   = form.fields_for :address, include_id: false do |address_form_fields|
