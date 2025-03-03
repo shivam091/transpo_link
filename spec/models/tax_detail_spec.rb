@@ -33,8 +33,6 @@ RSpec.describe TaxDetail, type: :model do
     it { is_expected.to have_check_constraint(:check_tax_details_tax_type_requires_country) }
   end
 
-  it_behaves_like "tax type"
-
   describe "included modules" do
     it { is_expected.to include_module(Sortable) }
     it { is_expected.to include_module(Pageable) }

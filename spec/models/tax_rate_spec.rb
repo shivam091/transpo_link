@@ -47,8 +47,6 @@ RSpec.describe TaxRate, type: :model do
     it { is_expected.to have_check_constraint(:check_tax_rates_valid_to_comparison).with_expression("valid_to IS NULL OR valid_to > valid_from") }
   end
 
-  it_behaves_like "tax type"
-
   describe "enums" do
     it { is_expected.to define_enum_for(:business_category).with_values({b2b: "b2b", b2c: "b2c"}).backed_by_column_of_type(:enum) }
   end

@@ -101,7 +101,6 @@ module Taxable
     validates :country,
               presence: true,
               if: :requires_country?,
-              allow_blank: true,
               reduce: true
   end
 
