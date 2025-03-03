@@ -225,6 +225,7 @@
               },
               tax_type: {
                 inclusion: "'%{value}' is not a valid tax type",
+                invalid: "is not valid for the selected country"
               },
             },
           },
@@ -235,7 +236,8 @@
               },
               tax_type: {
                 inclusion: "'%{value}' is not a valid tax type",
-                uniqueness: "already exist for this country and business category for selected date range"
+                uniqueness: "already exist for this country and business category for selected date range",
+                invalid: "is not valid for the selected country"
               },
               business_category: {
                 inclusion: "'%{value}' is not a valid tax type",

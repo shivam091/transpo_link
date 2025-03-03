@@ -8,7 +8,7 @@ require "spec_helper"
 
 RSpec.describe TaxRates::UpdateService, type: :service do
   let(:tax_rate) { create(:tax_rate) }
-  let(:tax_rate_attributes) { attributes_for(:tax_rate, tax_type: "ssn") }
+  let(:tax_rate_attributes) { attributes_for(:tax_rate, country: "US", tax_type: "ssn") }
   subject { described_class.(tax_rate, tax_rate_attributes) }
 
   describe "#call" do

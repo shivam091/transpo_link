@@ -37,12 +37,14 @@ RSpec.describe Taxable do
     it { is_expected.to have_constant(:REGIONAL_TAX_TYPES) }
     it { is_expected.to have_constant(:NATIONAL_TAX_TYPES) }
     it { is_expected.to have_constant(:COUNTRY_REQUIRING_TAX_TYPES) }
+    it { is_expected.to have_constant(:EU_COUNTRIES_ISO2) }
+    it { is_expected.to have_constant(:VALID_TAX_TYPE_COUNTRY_COMBINATIONS) }
   end
 
   describe "validations" do
     describe "#tax_type" do
       it { is_expected.to validate_presence_of(:tax_type) }
-      # it { is_expected.to validate_inclusion_of(:tax_type).in_array(described_class.tax_types.values) }
+      # it { is_expected.to validate_inclusion_of(:tax_type).in_array(TaxableModel.tax_types.values) }
     end
 
     describe "#country" do
@@ -56,6 +58,43 @@ RSpec.describe Taxable do
         before { allow(subject).to receive(:requires_country?) { false } }
 
         it { is_expected.not_to validate_presence_of(:country) }
+      end
+    end
+  end
+
+  describe "#tax_type_country_combination" do
+    let(:taxable_model) { TaxableModel.new(tax_type: tax_type, country: country) }
+
+    context "when tax_type and country are a valid combination" do
+      let(:tax_type) { "vat" }
+      let(:country) { "DE" }
+
+      it "does not add errors" do
+        taxable_model.valid?
+
+        expect(taxable_model.errors[:tax_type]).to be_empty
+      end
+    end
+
+    context "when tax_type and country are an invalid combination" do
+      let(:tax_type) { "gstin" }
+      let(:country) { "US" }
+
+      it "adds an error to tax_type" do
+        taxable_model.valid?
+
+        expect(taxable_model.errors[:tax_type]).to be_present
+      end
+    end
+
+    context "when tax_type is present but country is missing" do
+      let(:tax_type) { "ein" }
+      let(:country) { nil }
+
+      it "does not validate tax_type-country combination" do
+        taxable_model.valid?
+
+        expect(taxable_model.errors[:tax_type]).to be_empty
       end
     end
   end

@@ -102,6 +102,7 @@ module Taxable
               presence: true,
               if: :requires_country?,
               reduce: true
+    validate :tax_type_country_combination
   end
 
   class_methods do
@@ -116,11 +117,71 @@ module Taxable
     ].freeze
 
     COUNTRY_REQUIRING_TAX_TYPES = INTERNATIONAL_TAX_TYPES + REGIONAL_TAX_TYPES + %w[ruc nit brn].freeze
+
+    EU_COUNTRIES_ISO2 = %w[
+      AT BE BG HR CY CZ DK EE FI FR DE GR HU IE IT LV LT LU MT NL PL PT RO SK SI ES SE
+    ].freeze
+
+    VALID_TAX_TYPE_COUNTRY_COMBINATIONS = {
+      vat:              EU_COUNTRIES_ISO2 + %w[GB CH NO TR RU BR ZA AE SA EG NG],
+      gst:              %w[AU NZ CA IN SG MY],
+      tin:              %w[US IN MX PH VN RU CN KE],
+      ein:              %w[US],
+      ssn:              %w[US],
+      itin:             %w[US],
+      pan:              %w[IN],
+      tan:              %w[IN],
+      gstin:            %w[IN],
+      vatin:            EU_COUNTRIES_ISO2,
+      eori:             EU_COUNTRIES_ISO2 + %w[GB],
+      nif:              %w[ES],
+      cif:              %w[ES],
+      siret:            %w[FR],
+      siren:            %w[FR],
+      utr:              %w[GB],
+      bn:               %w[CA],
+      qst:              %w[CA],
+      abn:              %w[AU],
+      acn:              %w[AU],
+      tfn:              %w[AU],
+      ird:              %w[NZ],
+      rfc:              %w[MX],
+      cuit:             %w[AR],
+      cuil:             %w[AR],
+      ruc:              %w[PE PY EC PA],
+      nit:              %w[CO BO SV GT],
+      cnpj:             %w[BR],
+      cpf:              %w[BR],
+      npwp:             %w[ID],
+      trn:              %w[AE],
+      kra_pin:          %w[KE],
+      brn:              %w[MY HK],
+      corporate_number: %w[JP],
+      my_number:        %w[JP],
+      inn:              %w[RU],
+      kpp:              %w[RU],
+      ogrn:             %w[RU],
+      ogrnip:           %w[RU],
+      brn_kr:           %w[KR],
+      uscc:             %w[CN],
+      mst:              %w[VN],
+      tin_ph:           %w[PH],
+      tin_th:           %w[TH],
+      uen:              %w[SG]
+    }
   end
 
   private
 
   def requires_country?
     tax_type.in?(COUNTRY_REQUIRING_TAX_TYPES)
+  end
+
+  def tax_type_country_combination
+    return unless country.present? && tax_type.present?
+
+    unless VALID_TAX_TYPE_COUNTRY_COMBINATIONS[tax_type.to_sym].include?(country)
+      errors.add(:tax_type, :invalid)
+    end
   end
 end
