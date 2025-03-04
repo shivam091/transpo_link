@@ -25,11 +25,8 @@ module Taxable
 
       # European Union (EU)
       vatin: "vatin",                       # VAT Identification Number
-      eori: "eori",                         # Economic Operators Registration and Identification Number
       nif: "nif",                           # Tax Identification Number
       cif: "cif",                           # Tax Identification Code
-      siret: "siret",                       # Business Identification System
-      siren: "siren",                       # Establishment Identification System
 
       # United Kingdom
       utr: "utr",                           # Unique Taxpayer Reference
@@ -40,7 +37,6 @@ module Taxable
 
       # Australia & New Zealand
       abn: "abn",                           # Australian Business Number
-      acn: "acn",                           # Australian Company Number
       tfn: "tfn",                           # Tax File Number
       ird: "ird",                           # Inland Revenue Department Number
 
@@ -62,24 +58,11 @@ module Taxable
       trn: "trn",                           # Tax Registration Number
       kra_pin: "kra_pin",                   # Kenya Revenue Authority PIN
 
-      # Hong Kong & Malaysia
-      brn: "brn",                           # Business Registration Number
-
-      # Japan
-      corporate_number: "corporate_number", # Corporate Number
-      my_number: "my_number",               # Individual Tax Number
-
       # Russia
       inn: "inn",                           # Taxpayer Identification Number
-      kpp: "kpp",                           # Tax Registration Reason Code
-      ogrn: "ogrn",                         # Principal State Registration Number
-      ogrnip: "ogrnip",                     # Individual Entrepreneur Registration Number
 
       # South Korea
       brn_kr: "brn_kr",                     # Business Registration Number
-
-      # China
-      uscc: "uscc",                         # Unified Social Credit Code
 
       # Vietnam
       mst: "mst",                           # Tax Identification Number
@@ -92,6 +75,9 @@ module Taxable
 
       # Singapore
       uen: "uen",                           # Unique Entity Number
+
+      # Colombia
+      rut: "rut"                            # Single Tax Registry
     }
 
     validates :tax_type,
@@ -100,26 +86,11 @@ module Taxable
               reduce: true
     validates :country,
               presence: true,
-              if: :requires_country?,
               reduce: true
     validate :tax_type_country_combination
-
-    before_validation :set_country
   end
 
   class_methods do
-    INTERNATIONAL_TAX_TYPES = %w[vat gst tin].freeze
-
-    REGIONAL_TAX_TYPES = %w[vatin eori].freeze
-
-    NATIONAL_TAX_TYPES = %w[
-      ein ssn itin pan tan gstin nif cif siret siren utr bn qst abn acn tfn ird rfc
-      cuit cuil cnpj cpf npwp trn kra_pin corporate_number my_number inn kpp ogrn
-      ogrnip brn_kr uscc mst tin_ph tin_th uen
-    ].freeze
-
-    COUNTRY_REQUIRING_TAX_TYPES = INTERNATIONAL_TAX_TYPES + REGIONAL_TAX_TYPES + %w[ruc nit brn].freeze
-
     EU_COUNTRIES_ISO2 = %w[
       AT BE BG HR CY CZ DK EE FI FR DE GR HU IE IT LV LT LU MT NL PL PT RO SK SI ES SE
     ].freeze
@@ -135,16 +106,12 @@ module Taxable
       tan:              %w[IN],
       gstin:            %w[IN],
       vatin:            EU_COUNTRIES_ISO2,
-      eori:             EU_COUNTRIES_ISO2 + %w[GB],
       nif:              %w[ES],
       cif:              %w[ES],
-      siret:            %w[FR],
-      siren:            %w[FR],
       utr:              %w[GB],
       bn:               %w[CA],
       qst:              %w[CA],
       abn:              %w[AU],
-      acn:              %w[AU],
       tfn:              %w[AU],
       ird:              %w[NZ],
       rfc:              %w[MX],
@@ -157,57 +124,17 @@ module Taxable
       npwp:             %w[ID],
       trn:              %w[AE],
       kra_pin:          %w[KE],
-      brn:              %w[MY HK],
-      corporate_number: %w[JP],
-      my_number:        %w[JP],
       inn:              %w[RU],
-      kpp:              %w[RU],
-      ogrn:             %w[RU],
-      ogrnip:           %w[RU],
       brn_kr:           %w[KR],
-      uscc:             %w[CN],
       mst:              %w[VN],
       tin_ph:           %w[PH],
       tin_th:           %w[TH],
-      uen:              %w[SG]
+      uen:              %w[SG],
+      rut:              %w[CO]
     }
   end
 
   private
-
-  def requires_country?
-    tax_type.in?(COUNTRY_REQUIRING_TAX_TYPES)
-  end
-
-  def set_country
-    return unless country.presence.blank? && COUNTRY_REQUIRING_TAX_TYPES.exclude?(tax_type)
-
-    self.country = case tax_type
-                   when "ein", "ssn", "itin"            then "US"
-                   when "pan", "tan", "gstin"           then "IN"
-                   when "nif", "cif"                    then "ES"
-                   when "siret", "siren"                then "FR"
-                   when "utr"                           then "GB"
-                   when "bn", "qst"                     then "CA"
-                   when "abn", "acn", "tfn"             then "AU"
-                   when "ird"                           then "NZ"
-                   when "rfc"                           then "MX"
-                   when "cuit", "cuil"                  then "AR"
-                   when "cnpj", "cpf"                   then "BR"
-                   when "npwp"                          then "ID"
-                   when "trn"                           then "AE"
-                   when "kra_pin"                       then "KE"
-                   when "corporate_number", "my_number" then "JP"
-                   when "inn", "kpp", "ogrn", "ogrnip"  then "RU"
-                   when "brn_kr"                        then "KR"
-                   when "uscc"                          then "CN"
-                   when "mst"                           then "VN"
-                   when "tin_ph"                        then "PH"
-                   when "tin_th"                        then "TH"
-                   when "uen"                           then "SG"
-                   else                                      nil
-                   end
-  end
 
   def tax_type_country_combination
     return unless country.present? && tax_type.present?
