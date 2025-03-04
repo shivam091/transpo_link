@@ -54,6 +54,10 @@ RSpec.describe TaxDetail, type: :model do
     it { is_expected.to define_enum_for(:business_number_type).backed_by_column_of_type(:enum) }
   end
 
+  describe "nullified attributes" do
+    it { is_expected.to nullify_if_blank(:business_number) }
+  end
+
   describe "normalized attributes" do
     it { is_expected.to normalize(:tax_number).from("  ABCDE1234a  ").to("ABCDE1234A") }
     it { is_expected.to normalize(:business_number).from("  l12345Mh2025llP67890  ").to("L12345MH2025LLP67890") }

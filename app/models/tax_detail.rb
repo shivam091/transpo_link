@@ -3,7 +3,7 @@
 # -*- warn_indent: true -*-
 
 class TaxDetail < ApplicationRecord
-  include Sortable, Pageable, Taxable
+  include Sortable, Pageable, Taxable, NullifyIfBlank
 
   enum :entity_type, {
     business: "business",
@@ -52,6 +52,8 @@ class TaxDetail < ApplicationRecord
 
   normalizes :tax_number, with: -> tax_number { tax_number.strip.upcase }
   normalizes :business_number, with: -> business_number { business_number.strip.upcase }
+
+  nullify_if_blank :business_number
 
   validates :user_id,
             presence: true,
