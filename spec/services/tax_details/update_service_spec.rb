@@ -8,13 +8,13 @@ require "spec_helper"
 
 RSpec.describe TaxDetails::UpdateService, type: :service do
   let(:tax_detail) { create(:tax_detail) }
-  let(:tax_detail_attributes) { attributes_for(:tax_detail, tax_type: "pan") }
+  let(:tax_detail_attributes) { attributes_for(:tax_detail, tax_number: "27ABCDE1234B1Z6") }
   subject { described_class.(tax_detail, tax_detail_attributes) }
 
   describe "#call" do
     context "when update is successful" do
       it "updates the tax detail" do
-        expect(subject.payload[:tax_detail].tax_type).to eq("pan")
+        expect(subject.payload[:tax_detail].tax_number).to eq("27ABCDE1234B1Z6")
         expect(subject.message).to eq("Tax detail was successfully updated.")
       end
 
@@ -25,7 +25,7 @@ RSpec.describe TaxDetails::UpdateService, type: :service do
       before { allow(tax_detail).to receive(:update) { false } }
 
       it "does not update the tax detail" do
-        expect(subject.payload[:tax_detail].tax_type).to eq("gstin")
+        expect(subject.payload[:tax_detail].tax_number).to eq("27ABCDE1234B1Z5")
         expect(subject.message).to eq("Tax detail could not be updated.")
       end
 

@@ -11,49 +11,108 @@ class TaxDetail < ApplicationRecord
   }
 
   enum :business_number_type, {
-    ein: "ein",       # Employer Identification Number (USA)
-    duns: "duns",     # Dun & Bradstreet Number (USA, International)
+    # USA
+    ein: "ein",                             # Employer Identification Number
+    duns: "duns",                           # Dun & Bradstreet Number
 
-    cin: "cin",       # Corporate Identification Number (India)
-    roc: "roc",       # Registrar of Companies Number (India)
-    acn: "acn",       # Australian Company Number (Australia)
-    abn: "abn",       # Australian Business Number (Australia)
-    nzbn: "nzbn",     # New Zealand Business Number (New Zealand)
+    # India
+    cin: "cin",                             # Corporate Identification Number
+    roc: "roc",                             # Registrar of Companies Number
 
-    cnpj: "cnpj",     # National Register of Legal Entities (Brazil)
+    # Australia
+    acn: "acn",                             # Australian Company Number
+    abn: "abn",                             # Australian Business Number
 
-    bn: "bn",         # Business Number (Canada)
+    # New Zealand
+    nzbn: "nzbn",                           # New Zealand Business Number
 
-    siret: "siret",   # Business Establishment Identification Number (France)
-    siren: "siren",   # Business Identification Number (France)
+    # Brazil
+    cnpj: "cnpj",                           # National Register of Legal Entities
 
-    crn: "crn",       # Company Registration Number (United Kingdom)
-    uen: "uen",       # Unique Entity Number (Singapore)
+    # Canada
+    bn: "bn",                               # Business Number
 
-    rfc: "rfc",       # Federal Taxpayer Registry (Mexico)
-    cuit: "cuit",     # Unique Tax Identification Code (Argentina)
-    ruc: "ruc",       # Single Taxpayer Registry (Peru, Paraguay, Ecuador, Panama)
-    nit: "nit",       # Tax Identification Number (Colombia, Bolivia, Guatemala, El Salvador, Honduras)
+    # France
+    siret: "siret",                         # Business Establishment Identification Number
+    siren: "siren",                         # Business Identification Number
 
-    hrb: "hrb",       # Handelsregisternummer (Germany)
-    ico: "ico",       # Business Registration Number (Czech Republic, Slovakia)
+    # United Kingdom
+    crn: "crn",                             # Company Registration Number
 
-    npwp: "npwp",     # Taxpayer Identification Number (Indonesia)
-    brn: "brn",       # Business Registration Number (Malaysia)
-    ssm: "ssm",       # Companies Commission of Malaysia Number (Malaysia)
+    # Singapore
+    uen: "uen",                             # Unique Entity Number
 
-    ogrn: "ogrn",     # Primary State Registration Number (Russia)
+    # Mexico
+    rfc: "rfc",                             # Federal Taxpayer Registry
 
-    brn_kr: "brn_kr", # Business Registration Number (South Korea)
+    # Argentina
+    cuit: "cuit",                           # Unique Tax Identification Code
 
-    cbr: "cbr",       # Company Business Registration Number (Kenya)
-    cr: "cr"          # Commercial Registration Number (Saudi Arabia, UAE, Bahrain, Qatar, Oman)
+    # Peru, Paraguay, Ecuador, Panama
+    ruc: "ruc",                             # Single Taxpayer Registry
+
+    # Colombia, Bolivia, Guatemala, El Salvador, Honduras
+    nit: "nit",                             # Tax Identification Number
+
+    # Germany
+    hrb: "hrb",                             # Handelsregisternummer
+
+    # Czech Republic, Slovakia
+    ico: "ico",                             # Business Registration Number
+
+    # Indonesia
+    npwp: "npwp",                           # Taxpayer Identification Number
+
+    # Malaysia
+    brn: "brn",                             # Business Registration Number
+    ssm: "ssm",                             # Companies Commission of Malaysia Number
+
+    # Russia
+    ogrn: "ogrn",                           # Primary State Registration Number
+
+    # South Korea
+    brn_kr: "brn_kr",                       # Business Registration Number
+
+    # Kenya
+    cbr: "cbr",                             # Company Business Registration Number
+
+    # Saudi Arabia, UAE, Bahrain, Qatar, Oman
+    cr: "cr"                                # Commercial Registration Number
   }, prefix: true
 
   normalizes :tax_number, with: -> tax_number { tax_number.strip.upcase }
   normalizes :business_number, with: -> business_number { business_number.strip.upcase }
 
   nullify_if_blank :business_number
+
+  VALID_BUSINESS_NUMBER_TYPE_COUNTRY_COMBINATIONS = {
+    ein:      %w[US],
+    duns:     %w[US INT],
+    cin:      %w[IN],
+    roc:      %w[IN],
+    acn:      %w[AU],
+    abn:      %w[AU],
+    nzbn:     %w[NZ],
+    cnpj:     %w[BR],
+    bn:       %w[CA],
+    siret:    %w[FR],
+    siren:    %w[FR],
+    crn:      %w[GB],
+    uen:      %w[SG],
+    rfc:      %w[MX],
+    cuit:     %w[AR],
+    ruc:      %w[PE PY EC PA],
+    nit:      %w[CO BO GT SV HN],
+    hrb:      %w[DE],
+    ico:      %w[CZ SK],
+    npwp:     %w[ID],
+    brn:      %w[MY],
+    ssm:      %w[MY],
+    ogrn:     %w[RU],
+    brn_kr:   %w[KR],
+    cbr:      %w[KE],
+    cr:       %w[SA AE BH QA OM]
+  }
 
   validates :user_id,
             presence: true,
@@ -92,6 +151,7 @@ class TaxDetail < ApplicationRecord
             absence: {message: :absence},
             if: :individual?,
             reduce: true
+  validate :business_number_type_country_combination
 
   belongs_to :user, inverse_of: :tax_details, touch: true
 
@@ -100,6 +160,16 @@ class TaxDetail < ApplicationRecord
   class << self
     def accessible(user)
       user.tax_details
+    end
+  end
+
+  private
+
+  def business_number_type_country_combination
+    return unless country.present? && business_number_type.present?
+
+    unless VALID_BUSINESS_NUMBER_TYPE_COUNTRY_COMBINATIONS[business_number_type.to_sym].include?(country)
+      errors.add(:business_number_type, :invalid)
     end
   end
 end

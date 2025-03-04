@@ -124,4 +124,51 @@ RSpec.describe TaxDetail, type: :model do
       end
     end
   end
+
+  describe "#business_number_type_country_combination" do
+    let(:tax_detail) do
+      build(:tax_detail, :for_business, business_number_type: business_number_type, country: country)
+    end
+
+    context "valid business number type and country combinations" do
+      where(:business_number_type, :country) do
+        described_class::VALID_BUSINESS_NUMBER_TYPE_COUNTRY_COMBINATIONS.flat_map do |type, countries|
+          countries.map { |country| [type.to_s, country] }
+        end
+      end
+
+      with_them do
+        it "allows #{params[:business_number_type]} for #{params[:country]}" do
+          tax_detail.valid?
+
+          expect(tax_detail.errors[:business_number_type]).to be_empty
+        end
+      end
+    end
+
+    context "when business number type and country combination is invalid" do
+      where(:business_number_type, :country) do
+        [
+          [:ein, "CA"],  # EIN is not valid for CA
+          [:duns, "IN"], # DUNS is not valid for IN
+          [:cin, "US"],  # CIN is not valid for US
+          [:rfc, "AR"],  # RFC is not valid for AR
+          [:cuit, "MX"], # CUIT is not valid for MX
+          [:ruc, "BR"],  # RUC is not valid for BR
+          [:nit, "FR"],  # NIT is not valid for FR
+          [:hrb, "GB"],  # HRB is not valid for GB
+          [:ogrn, "US"], # OGRN is not valid for US
+          [:cr, "DE"]    # CR is not valid for DE
+        ]
+      end
+
+      with_them do
+        it "does not allow #{params[:business_number_type]} for #{params[:country]}" do
+          tax_detail.valid?
+
+          expect(tax_detail.errors[:business_number_type]).to include("is not valid for the selected country")
+        end
+      end
+    end
+  end
 end
