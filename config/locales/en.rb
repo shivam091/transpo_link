@@ -864,8 +864,9 @@
         tax_details_related_help: "These will be used for compliance, invoicing, and taxation purposes. Ensure accuracy to avoid any tax-related issues.",
       },
       tax_detail: {
+        actions: "Actions",
         no_tax_details_to_display: "No tax details to display",
-        delete_tax_detail_confirmation_text: "Are you sure you want to delete this '%{tax_type}' for '%{country}'? This cannot be undone.",
+        delete_tax_detail_confirmation_text: "Are you sure you want to delete this? This action cannot be undone.",
       },
       new: {
         title: "New tax detail",

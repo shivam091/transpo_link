@@ -1,28 +1,41 @@
-- if @tax_details&.each.with_index(1) do |tax_detail, index|
-  - tax_type = enum_i18n(TaxDetail, :tax_types, tax_detail.tax_type)
-  - country = TranspoLink::CountryInfo.new(tax_detail.country).country_name
-  .widget-row.d-flex.align-items-center.justify-content-between
-    .widget-row-content
-      .widget-row-title= h(tax_detail.tax_number)
-      .widget-row-body
-        %span.middle-dot-divider
-          = h(tax_type)
-        - if tax_detail.country.present?
-          %span.middle-dot-divider
-            = h(TranspoLink::CountryInfo.new(tax_detail.country).country_name)
-    .dropdown
-      = link_to "javascript:void(0)", class: "text-reset", data: {bs_toggle: "dropdown"}, aria: {expanded: false} do
-        = external_svg_tag("svgs/ellipsis-vertical.svg")
-      %ul.dropdown-menu
-        %li
-          = link_to edit_tax_detail_path(tax_detail), class: "dropdown-item",
-            data: {turbo_frame: :remote_modal} do
-            = external_svg_tag("svgs/pencil.svg")
-            = button_text(:edit)
-        %li
-          = link_to tax_detail_path(tax_detail), class: "dropdown-item",
-            data: {turbo_method: :delete, turbo_confirm: t(".delete_tax_detail_confirmation_text") % {tax_type: tax_type, country: country}} do
-            = external_svg_tag("svgs/trash.svg")
-            = button_text(:delete)
-- end.empty?
-  .no-data= t(".no_tax_details_to_display")
+.table-responsive
+  %table.table.table-striped.table-borderless
+    %thead.border
+      %tr.table-active
+        %th{width: "25px", scope: "col"}#
+        %th{scope: "col"}= TaxDetail.human_attribute_name(:country)
+        %th{scope: "col"}= TaxDetail.human_attribute_name(:entity_type)
+        %th{scope: "col"}= TaxDetail.human_attribute_name(:tax_type)
+        %th{scope: "col"}= TaxDetail.human_attribute_name(:tax_number)
+        %th{scope: "col"}= TaxDetail.human_attribute_name(:business_number_type)
+        %th{scope: "col"}= TaxDetail.human_attribute_name(:business_number)
+        %th{scope: "col"}= t(".actions")
+    %tbody.border
+      - if @tax_details&.each.with_index(1) do |tax_detail, index|
+        %tr
+          %th{scope: "row"}= h(@pagination_metadata.offset + index)
+          %td= h(TranspoLink::CountryInfo.new(tax_detail.country).country_name)
+          %td= h(enum_i18n(TaxDetail, :entity_types, tax_detail.entity_type))
+          %td= h(enum_i18n(TaxDetail, :tax_types, tax_detail.tax_type))
+          %td= h(tax_detail.tax_number)
+          %td
+            - if tax_detail.business_number_type.present?
+              = h(enum_i18n(TaxDetail, :business_number_types, tax_detail.business_number_type))
+          %td= h(tax_detail.business_number)
+          %td.actions
+            = link_to "javascript:void(0)", class: "text-reset", data: {bs_toggle: "dropdown"}, aria: {expanded: false} do
+              = external_svg_tag("svgs/ellipsis-vertical.svg")
+            %ul.dropdown-menu
+              %li
+                = link_to edit_tax_detail_path(tax_detail), class: "dropdown-item", data: {turbo_frame: :remote_modal} do
+                  = external_svg_tag("svgs/pencil.svg")
+                  = button_text(:edit)
+              %li
+                = link_to tax_detail_path(tax_detail), class: "dropdown-item",
+                  data: {turbo_method: :delete, turbo_confirm: t(".delete_tax_detail_confirmation_text")} do
+                  = external_svg_tag("svgs/trash.svg")
+                  = button_text(:delete)
+      - end.empty?
+        %tr
+          %td.no-data{colspan: TaxDetail.columns.count}
+            = t(".no_tax_details_to_display")
