@@ -26,7 +26,6 @@ module Taxable
       # European Union (EU)
       vatin: "vatin",                       # VAT Identification Number
       nif: "nif",                           # Tax Identification Number
-      cif: "cif",                           # Tax Identification Code
 
       # United Kingdom
       utr: "utr",                           # Unique Taxpayer Reference
@@ -96,9 +95,9 @@ module Taxable
     ].freeze
 
     VALID_TAX_TYPE_COUNTRY_COMBINATIONS = {
-      vat:              EU_COUNTRIES_ISO2 + %w[GB CH NO TR RU BR ZA AE SA EG NG],
+      vat:              EU_COUNTRIES_ISO2 + %w[GB CH NO TR BR ZA AE SA EG NG],
       gst:              %w[AU NZ CA IN SG MY],
-      tin:              %w[US IN MX PH VN RU CN KE],
+      tin:              %w[US IN PH VN CN KE],
       ein:              %w[US],
       ssn:              %w[US],
       itin:             %w[US],
@@ -107,14 +106,13 @@ module Taxable
       gstin:            %w[IN],
       vatin:            EU_COUNTRIES_ISO2,
       nif:              %w[ES],
-      cif:              %w[ES],
       utr:              %w[GB],
       bn:               %w[CA],
       qst:              %w[CA],
       abn:              %w[AU],
       tfn:              %w[AU],
       ird:              %w[NZ],
-      rfc:              %w[MX],
+      rfc:              %w[MX CO AR PE PY EC PA BO SV GT],
       cuit:             %w[AR],
       cuil:             %w[AR],
       ruc:              %w[PE PY EC PA],
