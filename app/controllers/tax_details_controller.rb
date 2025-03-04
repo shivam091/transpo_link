@@ -76,7 +76,14 @@ class TaxDetailsController < ApplicationController
   private
 
   def tax_detail_params
-    params.require(:tax_detail).permit(:tax_type, :tax_number, :country)
+    params.require(:tax_detail).permit(
+      :entity_type,
+      :tax_type,
+      :tax_number,
+      :business_number_type,
+      :business_number,
+      :country
+    )
   end
 
   def tax_details

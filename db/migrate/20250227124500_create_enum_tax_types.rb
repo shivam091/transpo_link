@@ -5,10 +5,9 @@
 class CreateEnumTaxTypes < ActiveRecord::Migration[8.0]
   def change
     create_enum :tax_types, %i[
-      vat gst tin ein ssn itin pan tan gstin vatin eori nif cif siret siren utr
-      bn qst abn acn tfn ird rfc cuit cuil ruc nit cnpj cpf npwp trn kra_pin brn
-      corporate_number my_number inn kpp ogrn ogrnip brn_kr uscc mst tin_ph
-      tin_th uen
+      vat gst tin ein ssn itin pan tan gstin vatin nif cif utr bn qst abn tfn
+      ird rfc cuit cuil ruc nit cnpj cpf npwp trn kra_pin inn brn_kr mst tin_ph
+      tin_th uen rut
     ]
   end
 end

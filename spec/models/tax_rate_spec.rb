@@ -30,7 +30,6 @@ RSpec.describe TaxRate, type: :model do
     it { is_expected.to have_db_index([:tax_type, :country, :business_category, :valid_from]).unique(true) }
 
     it { is_expected.to have_check_constraint(:check_tax_rates_country_presence).with_expression("country IS NOT NULL AND country::text <> ''::text") }
-    it { is_expected.to have_check_constraint(:check_tax_rates_tax_type_requires_country) }
 
     it { is_expected.to have_check_constraint(:check_tax_rates_tax_type_presence).with_expression("tax_type IS NOT NULL") }
     it { is_expected.to have_check_constraint(:check_tax_rates_tax_type_inclusion) }

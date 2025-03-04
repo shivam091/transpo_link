@@ -20,10 +20,9 @@ class CreateTaxRates < ActiveRecord::Migration[8.0]
       t.index [:tax_type, :country, :business_category, :valid_from], using: :btree, unique: true
 
       t.check_constraint "country IS NOT NULL AND country <> ''", name: "check_tax_rates_country_presence"
-      t.check_constraint "country IS NOT NULL OR tax_type NOT IN (#{country_requiring_tax_types})", name: "check_tax_rates_tax_type_requires_country"
 
       t.check_constraint "tax_type IS NOT NULL", name: "check_tax_rates_tax_type_presence"
-      t.check_constraint "tax_type IN (#{all_tax_types})", name: "check_tax_rates_tax_type_inclusion"
+      t.check_constraint "tax_type IN (#{enum_values('tax_types')})", name: "check_tax_rates_tax_type_inclusion"
 
       t.check_constraint "business_category IS NOT NULL", name: "check_tax_rates_business_category_presence"
       t.check_constraint "business_category IN ('b2b', 'b2c')", name: "check_tax_rates_business_category_inclusion"
@@ -40,11 +39,9 @@ class CreateTaxRates < ActiveRecord::Migration[8.0]
 
   private
 
-  def all_tax_types
-    TaxRate.tax_types.values.map { |v| "'#{v}'" }.join(", ")
-  end
-
-  def country_requiring_tax_types
-    TaxRate::COUNTRY_REQUIRING_TAX_TYPES.map { |v| "'#{v}'" }.join(", ")
+  def enum_values(enum_name)
+    ActiveRecord::Base.connection.execute("SELECT enumlabel FROM pg_enum JOIN pg_type ON pg_enum.enumtypid = pg_type.oid WHERE typname = '#{enum_name}'").map do |row|
+      "'#{row['enumlabel']}'"
+    end.join(", ")
   end
 end
