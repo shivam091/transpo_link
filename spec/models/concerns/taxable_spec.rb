@@ -73,4 +73,46 @@ RSpec.describe Taxable do
       end
     end
   end
+
+  describe "#tax_type_country_combination" do
+    let(:taxable_model) { TaxableModel.new(tax_type: tax_type, country: country) }
+
+    context "valid tax type and country combinations" do
+      where(:tax_type, :country) do
+        Taxable::VALID_TAX_TYPE_COUNTRY_COMBINATIONS.flat_map do |type, countries|
+          countries.map { |country| [type.to_s, country] }
+        end
+      end
+
+      with_them do
+        it "allows #{params[:tax_type]} for #{params[:country]}" do
+          taxable_model.valid?
+
+          expect(taxable_model.errors[:tax_type]).to be_empty
+        end
+      end
+    end
+
+    context "when tax type and country combination is invalid" do
+      where(:tax_type, :country) do
+        [
+          [:ssn, "CA"],  # SSN is not valid for CA
+          [:nif, "GB"],  # NIF is not valid for GB
+          [:pan, "US"],  # CIN is not valid for US
+          [:cuit, "PE"], # RFC is not valid for PE
+          [:ruc, "IN"],  # RUC is not valid for IN
+          [:qst, "BR"],  # QST is not valid for BR
+          [:uen, "FR"],  # NIT is not valid for FR
+        ]
+      end
+
+      with_them do
+        it "does not allow #{params[:tax_type]} for #{params[:country]}" do
+          taxable_model.valid?
+
+          expect(taxable_model.errors[:tax_type]).to be_present
+        end
+      end
+    end
+  end
 end
