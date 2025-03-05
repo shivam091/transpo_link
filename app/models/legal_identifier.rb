@@ -2,7 +2,7 @@
 # -*- frozen_string_literal: true -*-
 # -*- warn_indent: true -*-
 
-class TaxDetail < ApplicationRecord
+class LegalIdentifier < ApplicationRecord
   include Sortable, Pageable, Taxable, NullifyIfBlank
 
   enum :entity_type, {
@@ -170,13 +170,13 @@ class TaxDetail < ApplicationRecord
             reduce: true
   validate :business_identifier_type_country_combination
 
-  belongs_to :user, inverse_of: :tax_details, touch: true
+  belongs_to :user, inverse_of: :legal_identifiers, touch: true
 
   default_scope -> { order_created_desc }
 
   class << self
     def accessible(user)
-      user.tax_details
+      user.legal_identifiers
     end
   end
 

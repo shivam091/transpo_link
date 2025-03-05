@@ -1,0 +1,27 @@
+= title(t(".title"))
+.card.card-primary.border.border-primary
+  .card-body
+    .widget
+      .widget-header.d-flex.align-items-center.justify-content-between
+        .d-block
+          .widget-title
+            = t(".your_legal_identifiers")
+          .widget-help
+            .widget-help= t(".your_legal_identifiers_help_text")
+        = link_to new_legal_identifier_path, class: "btn btn-primary", data: {turbo_frame: :remote_modal} do
+          = external_svg_tag("svgs/plus.svg")
+          = button_text("new")
+      .widget-body
+        %p= t(".legal_identifier_help")
+        %ul
+          %li= t(".legal_identifiers_list_item_1")
+          %li= t(".legal_identifiers_list_item_2")
+          %li= t(".legal_identifiers_list_item_3")
+          %li= t(".legal_identifiers_list_item_4")
+        %p
+          = external_svg_tag("svgs/bulb.svg")
+          = t(".legal_identifiers_tip")
+        = render_if_exists("legal_identifiers/legal_identifier")
+      - if @pagination_metadata.total_pages > 1
+        .widget-footer
+          = render_pagination(@pagination_metadata)

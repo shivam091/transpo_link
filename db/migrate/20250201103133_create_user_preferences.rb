@@ -3,6 +3,8 @@
 # -*- warn_indent: true -*-
 
 class CreateUserPreferences < ActiveRecord::Migration[8.0]
+  include TranspoLink::MigrationHelpers
+
   def change
     create_table :user_preferences, primary_key: :user_id, id: false do |t|
       t.references :user,
@@ -26,7 +28,7 @@ class CreateUserPreferences < ActiveRecord::Migration[8.0]
       t.check_constraint "preferred_time_zone IS NOT NULL AND preferred_time_zone  <> ''", name: "check_user_preferences_preferred_time_zone_presence"
       t.check_constraint "preferred_currency IS NOT NULL AND preferred_currency  <> ''", name: "check_user_preferences_preferred_currency_presence"
       t.check_constraint "preferred_color_scheme IS NOT NULL", name: "check_user_preferences_preferred_color_scheme_presence"
-      t.check_constraint "preferred_color_scheme IN ('auto', 'dark', 'light')", name: "check_user_preferences_preferred_color_scheme_inclusion"
+      t.check_constraint "preferred_color_scheme IN (#{enum_values('color_schemes')})", name: "check_user_preferences_preferred_color_scheme_inclusion"
     end
   end
 end

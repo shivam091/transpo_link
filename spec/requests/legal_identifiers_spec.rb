@@ -1,0 +1,162 @@
+# -*- encoding: utf-8 -*-
+# -*- frozen_string_literal: true -*-
+# -*- warn_indent: true -*-
+
+# spec/requests/legal_identifiers_spec.rb
+
+require "spec_helper"
+
+RSpec.describe "LegalIdentifiers", type: :request do
+  let!(:buyer) { create(:buyer) }
+  let!(:legal_identifier) { create(:legal_identifier, user: buyer) }
+
+  let(:valid_attributes) { attributes_for(:legal_identifier, tax_identifier: "27PQRST1234D1Z9").merge(user_id: buyer.id) }
+  let(:invalid_attributes) { attributes_for(:legal_identifier, tax_identifier: "") }
+
+  context "when user is not signed in" do
+    describe "GET /tax-details" do
+      subject { get legal_identifiers_path }
+
+      it { is_expected.to require_sign_in }
+    end
+
+    describe "GET /tax-details/new" do
+      subject { get new_legal_identifier_path }
+
+      it { is_expected.to require_sign_in }
+    end
+
+    describe "POST /tax-details" do
+      subject { post legal_identifiers_path }
+
+      it { is_expected.to require_sign_in }
+    end
+
+    describe "GET /tax-details/:id/edit" do
+      subject { get edit_legal_identifier_path(legal_identifier) }
+
+      it { is_expected.to require_sign_in }
+    end
+
+    describe "PUT|PATCH /tax-details/:id" do
+      subject { put legal_identifier_path(legal_identifier) }
+
+      it { is_expected.to require_sign_in }
+    end
+
+    describe "DELETE /tax-details/:id" do
+      subject { delete legal_identifier_path(legal_identifier) }
+
+      it { is_expected.to require_sign_in }
+    end
+  end
+
+  context "when user is signed in" do
+    include_context "sign in as buyer"
+
+    describe "GET /tax-details" do
+      before { get legal_identifiers_path }
+
+      it "renders legal identifiers list and returns :ok status" do
+        expect(controller_assigns(:legal_identifiers)).to be_present
+        expect(controller_assigns(:pagination_metadata)).to be_present
+        expect(controller_assigns(:legal_identifiers)).to include(legal_identifier)
+        expect(response).to have_http_status(:ok)
+      end
+    end
+
+    describe "GET /tax-details/new" do
+      before { get new_legal_identifier_path }
+
+      include_examples "initializes a new instance", :legal_identifier, LegalIdentifier
+
+      it "returns :ok status" do
+        expect(response).to have_http_status(:ok)
+      end
+    end
+
+    describe "POST /tax-details" do
+      context "when valid attributes" do
+        it "creates the legal identifier" do
+          post legal_identifiers_path, params: {legal_identifier: valid_attributes}, as: :turbo_stream
+
+          expect(flash[:notice]).to eq("Legal identifier was successfully added.")
+          expect(response).to redirect_to(legal_identifiers_path)
+          expect(response).to have_http_status(:see_other)
+        end
+      end
+
+      context "when invalid attributes" do
+        it "does not create new legal identifier" do
+          post legal_identifiers_path, params: {legal_identifier: invalid_attributes}, as: :turbo_stream
+
+          expect(flash[:alert]).to eq("Legal identifier could not be added.")
+          expect(response.media_type).to eq(Mime[:turbo_stream])
+          expect(response.body).to include("<turbo-stream action=\"update\" target=\"new_legal_identifier_form_frame\">")
+          expect(response).to have_http_status(:unprocessable_entity)
+        end
+      end
+    end
+
+    describe "GET /tax-details/:id/edit" do
+      it "returns :ok status" do
+        get edit_legal_identifier_path(legal_identifier)
+
+        expect(controller_assigns(:legal_identifier)).to eq(legal_identifier)
+        expect(response).to have_http_status(:ok)
+      end
+    end
+
+    describe "PUT|PATCH /tax-details/:id" do
+      context "when valid attributes" do
+        it "updates the legal identifier" do
+          put legal_identifier_path(legal_identifier), params: {legal_identifier: valid_attributes}, as: :turbo_stream
+
+          expect(legal_identifier.reload.tax_identifier).to eq("27PQRST1234D1Z9")
+          expect(flash[:notice]).to eq("Legal identifier was successfully updated.")
+          expect(response).to redirect_to(legal_identifiers_path)
+          expect(response).to have_http_status(:see_other)
+        end
+      end
+
+      context "when invalid attributes" do
+        it "does not update the legal identifier" do
+          put legal_identifier_path(legal_identifier), params: {legal_identifier: invalid_attributes}, as: :turbo_stream
+
+          expect(flash[:alert]).to eq("Legal identifier could not be updated.")
+          expect(response.media_type).to eq(Mime[:turbo_stream])
+          expect(response.body).to include("<turbo-stream action=\"update\" target=\"edit_legal_identifier_form_frame\">")
+          expect(response).to have_http_status(:unprocessable_entity)
+        end
+      end
+    end
+
+    describe "DELETE /tax-details/:id" do
+      context "when valid id" do
+        it "deletes the legal identifier" do
+          delete legal_identifier_path(legal_identifier)
+
+          expect(response).to redirect_to(legal_identifiers_path)
+          expect(flash[:info]).to eq("Legal identifier was successfully deleted.")
+          expect(response).to have_http_status(:see_other)
+        end
+      end
+
+      context "when invalid id" do
+        let(:service_response) { ServiceResponse.error(message: "Legal identifier could not be deleted.") }
+
+        before do
+          allow(LegalIdentifiers::DestroyService).to receive(:call) { service_response }
+        end
+
+        it "redirects with an error message" do
+          delete legal_identifier_path(legal_identifier)
+
+          expect(response).to redirect_to(legal_identifiers_path)
+          expect(flash[:alert]).to eq("Legal identifier could not be deleted.")
+          expect(response).to have_http_status(:see_other)
+        end
+      end
+    end
+  end
+end
