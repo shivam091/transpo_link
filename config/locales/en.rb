@@ -238,7 +238,8 @@
               },
               business_identifier: {
                 absence: "must not be present when entity type is business",
-                uniqueness: "should be unique within the same business identifier type and country"
+                uniqueness: "should be unique within the same business identifier type and country",
+                invalid: "is invalid for selected country and business identifier type"
               },
               entity_type: {
                 inclusion: "'%{value}' is not a valid entity type",

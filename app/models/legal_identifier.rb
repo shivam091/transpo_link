@@ -163,6 +163,7 @@ class LegalIdentifier < ApplicationRecord
               message: :uniqueness,
               case_sensitive: true
             },
+            business_identifier: true,
             if: :business?,
             reduce: true
   validates :business_identifier_type, :business_identifier,

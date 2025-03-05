@@ -20,5 +20,11 @@ module TranspoLink
         BE: "^(BE)?0[0-9]{9}$",
       },
     }.freeze
+
+    BUSINESS_IDENTIFIER_PATTERNS = {
+      ein: {
+        US: /^\d{2}-\d{7}$/
+      }
+    }.freeze
   end
 end
