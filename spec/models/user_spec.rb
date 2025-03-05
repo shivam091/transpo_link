@@ -289,7 +289,7 @@ RSpec.describe User, type: :model do
         let(:user) { build(:admin) }
 
         it "does not update last_activity_at" do
-          expect { user.update_last_activity_at }.not_to change(user, :last_activity_at)
+          expect { user.update_last_activity_at }.to not_change(user, :last_activity_at)
         end
       end
 
@@ -322,7 +322,7 @@ RSpec.describe User, type: :model do
 
         it "does not update last_activity_at" do
           expect { user.update_last_activity_at }
-            .not_to change { user.reload.last_activity_at }
+            .to not_change { user.reload.last_activity_at }
         end
       end
     end
