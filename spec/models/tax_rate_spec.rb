@@ -102,41 +102,41 @@ RSpec.describe TaxRate, type: :model do
     describe ".active" do
       it "returns only active tax rates" do
         expect(described_class.active).to include(active_tax_rate)
-        expect(described_class.active).not_to include(future_tax_rate)
+        expect(described_class.active).to exclude(future_tax_rate)
       end
     end
 
     describe ".for_country" do
       it "returns tax rates for the given country" do
         expect(described_class.for_country("IN")).to include(future_tax_rate)
-        expect(described_class.for_country("DE")).not_to include(future_tax_rate)
+        expect(described_class.for_country("DE")).to exclude(future_tax_rate)
       end
     end
 
     describe ".for_tax_type" do
       it "returns tax rates for the given tax type" do
         expect(described_class.for_tax_type("gstin")).to include(active_tax_rate)
-        expect(described_class.for_tax_type("vat")).not_to include(active_tax_rate)
+        expect(described_class.for_tax_type("vat")).to exclude(active_tax_rate)
       end
     end
 
     describe ".for_category" do
       it "returns tax rates for the given category" do
         expect(described_class.for_category("b2c")).to include(future_tax_rate)
-        expect(described_class.for_category("b2b")).not_to include(future_tax_rate)
+        expect(described_class.for_category("b2b")).to exclude(future_tax_rate)
       end
     end
 
     describe ".applicable_rates" do
       it "returns applicable tax rates matching tax type, country, and category" do
         expect(described_class.applicable_rates("gstin", "DE", "b2b")).to include(active_tax_rate)
-        expect(described_class.applicable_rates("gstin", "DE", "b2c")).not_to include(active_tax_rate)
+        expect(described_class.applicable_rates("gstin", "DE", "b2c")).to exclude(active_tax_rate)
       end
     end
 
     describe ".valid_on" do
       it "returns tax rates valid on given date" do
-        expect(described_class.valid_on(Date.current + 1.year)).not_to include(active_tax_rate)
+        expect(described_class.valid_on(Date.current + 1.year)).to exclude(active_tax_rate)
         expect(described_class.valid_on(Date.current + 1.year)).to include(future_tax_rate)
       end
     end
