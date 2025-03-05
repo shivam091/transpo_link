@@ -225,6 +225,7 @@
             attributes: {
               tax_identifier: {
                 uniqueness: "should be unique within the same tax identifier type, country, and entity type",
+                invalid: "is invalid for selected country and tax identifier type"
               },
               tax_identifier_type: {
                 inclusion: "'%{value}' is not a valid tax identifier type",

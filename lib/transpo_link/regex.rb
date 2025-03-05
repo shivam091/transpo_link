@@ -13,5 +13,12 @@ module TranspoLink
     def email_regex
       @email_regex ||= /^[a-zA-Z0-9_\.\+\-]+@[a-zA-Z0-9\-]+\.[a-zA-Z0-9\-.]+$/i.freeze
     end
+
+    TAX_IDENTIFIER_PATTERNS = {
+      vat: {
+        AT: "^(AT)?U[0-9]{8}$",
+        BE: "^(BE)?0[0-9]{9}$",
+      },
+    }.freeze
   end
 end
