@@ -45,7 +45,7 @@ RSpec.describe RequestLogger do
       status, headers, body = middleware.call(env)
 
       expect(headers).to include("Content-Type" => "text/plain")
-      expect(headers).not_to include("Authorization")
+      expect(headers).to exclude("Authorization")
     end
   end
 
