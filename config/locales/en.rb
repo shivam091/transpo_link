@@ -865,7 +865,6 @@
         title: "Your legal identifiers",
         your_legal_identifiers: "Your legal identifiers",
         your_legal_identifiers_help_text: "Manage your legal identifiers across different countries with ease.",
-        legal_identifier_help: "Manage your legal identifiers for different countries. Add multiple tax records based on where your business operates.",
         legal_identifiers_list_item_1: "Add multiple tax records based on the regions where your business operates.",
         legal_identifiers_list_item_2: "These identifiers are essential for regulatory compliance, invoicing, and taxation.",
         legal_identifiers_list_item_3: "Ensure accuracy to prevent processing delays, tax penalties, or compliance issues.",
