@@ -26,6 +26,7 @@ Rails.application.routes.draw do
   concern :toggleable do
     collection do
        get :active
+       get :inactive
     end
   end
 

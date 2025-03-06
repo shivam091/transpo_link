@@ -8,7 +8,7 @@
           %li.nav-item
             = link_to t(".active"), active_warehouses_path, class: class_names("nav-link", "active": current_action?(:active))
           %li.nav-item
-            = link_to t(".inactive"), "javascript:void(0)", class: class_names("nav-link", "active": current_action?(:inactive))
+            = link_to t(".inactive"), inactive_warehouses_path, class: class_names("nav-link", "active": current_action?(:inactive))
       = link_to new_warehouse_path, class: "btn btn-primary" do
         = external_svg_tag("svgs/plus.svg")
         = button_text(:new)

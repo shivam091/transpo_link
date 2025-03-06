@@ -809,6 +809,9 @@
       active: {
         title: "Active warehouses",
       },
+      inactive: {
+        title: "Inactive warehouses",
+      },
       warehouse: {
         actions: "Actions",
         no_warehouses_to_display: "No warehouses to display",

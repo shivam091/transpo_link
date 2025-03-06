@@ -18,6 +18,12 @@ class WarehousesController < ApplicationController
     @warehouses, @pagination_metadata = @warehouses.paginate(page: params[:page])
   end
 
+  # GET /warehouses/inactive
+  def inactive
+    @warehouses = Warehouse.inactive
+    @warehouses, @pagination_metadata = @warehouses.paginate(page: params[:page])
+  end
+
   # GET /warehouses/new
   def new
     @warehouse = Warehouse.new
