@@ -4,6 +4,10 @@
 
 FactoryBot.define do
   factory :product_category do
+    sequence(:name) { |n| "Product category #{n}" }
 
+    factory :product_sub_category, parent: :product_category do
+      association :parent_category, factory: :product_category
+    end
   end
 end
