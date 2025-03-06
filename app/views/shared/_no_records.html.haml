@@ -1,0 +1,4 @@
+- no_records_text = t(".no_#{resource.table_name}_to_display")
+%tr
+  %td.no-data{colspan: resource.columns.count}
+    = no_records_text
