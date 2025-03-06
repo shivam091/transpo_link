@@ -14,37 +14,37 @@ RSpec.describe "LegalIdentifiers", type: :request do
   let(:invalid_attributes) { attributes_for(:legal_identifier, tax_identifier: "") }
 
   context "when user is not signed in" do
-    describe "GET /tax-details" do
+    describe "GET /legal-identifiers" do
       subject { get legal_identifiers_path }
 
       it { is_expected.to require_sign_in }
     end
 
-    describe "GET /tax-details/new" do
+    describe "GET /legal-identifiers/new" do
       subject { get new_legal_identifier_path }
 
       it { is_expected.to require_sign_in }
     end
 
-    describe "POST /tax-details" do
+    describe "POST /legal-identifiers" do
       subject { post legal_identifiers_path }
 
       it { is_expected.to require_sign_in }
     end
 
-    describe "GET /tax-details/:id/edit" do
+    describe "GET /legal-identifiers/:id/edit" do
       subject { get edit_legal_identifier_path(legal_identifier) }
 
       it { is_expected.to require_sign_in }
     end
 
-    describe "PUT|PATCH /tax-details/:id" do
+    describe "PUT|PATCH /legal-identifiers/:id" do
       subject { put legal_identifier_path(legal_identifier) }
 
       it { is_expected.to require_sign_in }
     end
 
-    describe "DELETE /tax-details/:id" do
+    describe "DELETE /legal-identifiers/:id" do
       subject { delete legal_identifier_path(legal_identifier) }
 
       it { is_expected.to require_sign_in }
@@ -54,7 +54,7 @@ RSpec.describe "LegalIdentifiers", type: :request do
   context "when user is signed in" do
     include_context "sign in as buyer"
 
-    describe "GET /tax-details" do
+    describe "GET /legal-identifiers" do
       before { get legal_identifiers_path }
 
       it "renders legal identifiers list and returns :ok status" do
@@ -65,7 +65,7 @@ RSpec.describe "LegalIdentifiers", type: :request do
       end
     end
 
-    describe "GET /tax-details/new" do
+    describe "GET /legal-identifiers/new" do
       before { get new_legal_identifier_path }
 
       include_examples "initializes a new instance", :legal_identifier, LegalIdentifier
@@ -75,7 +75,7 @@ RSpec.describe "LegalIdentifiers", type: :request do
       end
     end
 
-    describe "POST /tax-details" do
+    describe "POST /legal-identifiers" do
       context "when valid attributes" do
         it "creates the legal identifier" do
           post legal_identifiers_path, params: {legal_identifier: valid_attributes}, as: :turbo_stream
@@ -98,7 +98,7 @@ RSpec.describe "LegalIdentifiers", type: :request do
       end
     end
 
-    describe "GET /tax-details/:id/edit" do
+    describe "GET /legal-identifiers/:id/edit" do
       it "returns :ok status" do
         get edit_legal_identifier_path(legal_identifier)
 
@@ -107,7 +107,7 @@ RSpec.describe "LegalIdentifiers", type: :request do
       end
     end
 
-    describe "PUT|PATCH /tax-details/:id" do
+    describe "PUT|PATCH /legal-identifiers/:id" do
       context "when valid attributes" do
         it "updates the legal identifier" do
           put legal_identifier_path(legal_identifier), params: {legal_identifier: valid_attributes}, as: :turbo_stream
@@ -131,7 +131,7 @@ RSpec.describe "LegalIdentifiers", type: :request do
       end
     end
 
-    describe "DELETE /tax-details/:id" do
+    describe "DELETE /legal-identifiers/:id" do
       context "when valid id" do
         it "deletes the legal identifier" do
           delete legal_identifier_path(legal_identifier)

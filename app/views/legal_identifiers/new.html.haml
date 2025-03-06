@@ -1,4 +1,4 @@
 = title(t(".title"))
-= render_modal(title: t(".title"), modal_id: "new-tax-detail") do
+= render_modal(title: t(".title"), modal_id: "new-legal-identifier") do
   = turbo_frame_tag :new_legal_identifier_form_frame, target: "_top" do
     = render_if_exists("legal_identifiers/form")
