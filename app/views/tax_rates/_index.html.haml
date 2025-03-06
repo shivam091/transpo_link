@@ -1,19 +1,28 @@
 .card.card-primary.border.border-primary
   .card-header
     .d-flex.justify-content-between.align-items-center
-      = render_if_exists("shared/inline_navigations") do
-        %ul.nav.nav-pills.flex-row
-          %li.nav-item
-            = link_to t(".all"), tax_rates_path, class: class_names("nav-link", "active": current_action?(:index))
-          %li.nav-item
-            = link_to t(".active"), "javascript:void(0)", class: class_names("nav-link", "active": current_action?(:active))
-          %li.nav-item
-            = link_to t(".inactive"), "javascript:void(0)", class: class_names("nav-link", "active": current_action?(:inactive))
+      = render_if_exists("tax_rates/nav_tabs")
       = link_to new_tax_rate_path, class: "btn btn-primary", data: {turbo_frame: "remote_modal"} do
         = external_svg_tag("svgs/plus.svg")
         = button_text(:new)
   .card-body
-    = render_if_exists("tax_rates/tax_rate")
+    .table-responsive
+      %table.table.table-striped.table-borderless
+        %thead.border
+          %tr.table-active
+            %th{width: "25px", scope: "col"}#
+            %th{scope: "col"}= TaxRate.human_attribute_name(:country)
+            %th{scope: "col"}= TaxRate.human_attribute_name(:tax_identifier_type)
+            %th{scope: "col"}= TaxRate.human_attribute_name(:business_category)
+            %th{scope: "col"}= TaxRate.human_attribute_name(:rate)
+            %th{scope: "col"}= TaxRate.human_attribute_name(:valid_from)
+            %th{scope: "col"}= TaxRate.human_attribute_name(:valid_to)
+            %th{scope: "col"}= t(".actions")
+        %tbody.border
+          - if @tax_rates&.each.with_index(1) do |tax_rate, index|
+            = render_if_exists("tax_rates/tax_rate", locals: {tax_rate:, index:})
+          - end.empty?
+            = render_if_exists("shared/no_records", locals: {resource: TaxRate})
   - if @pagination_metadata.needs_pagination?
     .card-footer
       = render_pagination(@pagination_metadata)
