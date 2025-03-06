@@ -59,6 +59,10 @@ RSpec.describe Warehouse, type: :model do
     end
   end
 
+  describe "constants" do
+    it { is_expected.to have_constant(:LISTING_ATTRIBUTES) }
+  end
+
   describe "associations" do
     it { is_expected.to have_one(:address).inverse_of(:addressable).dependent(:destroy) }
 
