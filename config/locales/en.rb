@@ -585,12 +585,14 @@
         all: "All",
         active: "Active",
         inactive: "Inactive",
+        suspended: "Suspended",
       },
       address_form_fields: {
         select_country: "Select country or region",
         select_state: "Select state, province, county, or territory",
       },
       no_records: {
+        no_users_to_display: "No users to display",
         no_warehouses_to_display: "No warehouses to display",
       },
     },
@@ -733,10 +735,9 @@
       },
       index: {
         title: "Users",
+        actions: "Actions",
       },
       user: {
-        actions: "Actions",
-        no_users_to_display: "No users to display",
       },
       show: {
         basic_n_contact_details: "Basic & contact details",
