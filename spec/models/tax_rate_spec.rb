@@ -49,6 +49,10 @@ RSpec.describe TaxRate, type: :model do
     it { is_expected.to define_enum_for(:business_category).with_values({b2b: "b2b", b2c: "b2c"}).backed_by_column_of_type(:enum) }
   end
 
+  describe "constants" do
+    it { is_expected.to have_constant(:LISTING_ATTRIBUTES) }
+  end
+
   describe "default values" do
     it "should set b2b as default value for #business_category" do
       expect(tax_rate.business_category).to eq("b2b")
