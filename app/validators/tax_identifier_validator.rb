@@ -20,7 +20,7 @@ class TaxIdentifierValidator < ActiveModel::EachValidator
 
     pattern = fetch_pattern(tax_identifier_type, country)
 
-    unless pattern.nil? || value =~ Regexp.new(pattern)
+    unless pattern.nil? || value =~ pattern
       record.errors.add(attribute, error_message)
     end
   end
