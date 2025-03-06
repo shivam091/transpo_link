@@ -11,13 +11,8 @@
         %thead.border
           %tr.table-active
             %th{width: "25px", scope: "col"}#
-            %th{scope: "col"}= Warehouse.human_attribute_name(:reference_code)
-            %th{scope: "col"}= Warehouse.human_attribute_name(:name)
-            %th{scope: "col"}= Warehouse.human_attribute_name(:email_address)
-            %th{scope: "col"}= Warehouse.human_attribute_name(:contact_number)
-            %th{scope: "col"}= Warehouse.human_attribute_name(:capacity)
-            %th{scope: "col"}= Warehouse.human_attribute_name(:latitude)
-            %th{scope: "col"}= Warehouse.human_attribute_name(:longitude)
+            - Warehouse::LISTING_ATTRIBUTES.each do |attribute|
+              %th{scope: "col"}= Warehouse.human_attribute_name(attribute)
             %th{scope: "col"}= t(".actions")
         %tbody.border
           - if @warehouses&.each.with_index(1) do |warehouse, index|
