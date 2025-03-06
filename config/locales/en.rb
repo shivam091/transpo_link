@@ -896,7 +896,6 @@
     tax_rates: {
       index: {
         title: "Tax rates",
-        actions: "Actions",
       },
       tax_rate: {
         delete_tax_rate_confirmation_text: "Are you sure you want to delete this '%{tax_identifier_type}' for '%{country}'? This cannot be undone.",
