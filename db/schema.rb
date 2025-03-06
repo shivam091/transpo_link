@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_02_28_145537) do
+ActiveRecord::Schema[8.0].define(version: 2025_03_06_155901) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -62,6 +62,19 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_28_145537) do
     t.check_constraint "entity_type IS NOT NULL", name: "check_legal_identifiers_entity_type_presence"
     t.check_constraint "tax_identifier IS NOT NULL AND tax_identifier::text <> ''::text", name: "check_legal_identifiers_tax_identifier_presence"
     t.check_constraint "tax_identifier_type IS NOT NULL AND tax_identifier_type::text <> ''::text", name: "check_legal_identifiers_tax_identifier_type_presence"
+  end
+
+  create_table "product_categories", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name"
+    t.uuid "parent_category_id"
+    t.boolean "is_active", default: false
+    t.timestamptz "created_at", null: false
+    t.timestamptz "updated_at", null: false
+    t.index ["is_active"], name: "index_product_categories_on_is_active"
+    t.index ["name", "parent_category_id"], name: "index_product_categories_on_name_and_parent_category_id", unique: true
+    t.index ["parent_category_id"], name: "index_product_categories_on_parent_category_id"
+    t.check_constraint "char_length(name::text) <= 255 AND char_length(name::text) >= 2", name: "check_product_categories_name_length"
+    t.check_constraint "name IS NOT NULL AND name::text <> ''::text", name: "check_product_categories_name_presence"
   end
 
   create_table "request_logs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -257,6 +270,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_28_145537) do
   end
 
   add_foreign_key "legal_identifiers", "users", name: "fk_legal_identifiers_user_id_on_users", on_delete: :cascade
+  add_foreign_key "product_categories", "product_categories", column: "parent_category_id", name: "fk_product_categories_parent_category_id_on_product_categories", on_delete: :cascade
   add_foreign_key "request_logs", "users", name: "fk_request_logs_user_id_on_users", on_delete: :nullify
   add_foreign_key "user_details", "users", name: "fk_user_details_user_id_on_users", on_delete: :cascade
   add_foreign_key "user_preferences", "users", name: "fk_user_preferences_user_id_on_users", on_delete: :cascade
