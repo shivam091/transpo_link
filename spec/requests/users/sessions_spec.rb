@@ -21,7 +21,7 @@ RSpec.describe "Users::Sessions", type: :request do
 
   describe "POST /users/sign-in" do
     context "when valid credentials" do
-      it "signs in the user and redirects to the root path" do
+      it "signs in the user and redirects" do
         post user_session_path, params: {user: {email: user.email, password: dummy_password}}
 
         expect(response).to redirect_to(root_path)
@@ -44,7 +44,7 @@ RSpec.describe "Users::Sessions", type: :request do
     end
 
     context "when invalid credentials" do
-      it "does not sign in the user and re-renders the sign-in page" do
+      it "does not sign in the user and re-renders the sign-in page with errors" do
         post user_session_path, params: {user: {email: user.email, password: "WrongPassword"}}
 
         expect(flash[:alert]).to eq("It looks like your email address and password combination isn't quite right, please try again.")
@@ -53,7 +53,7 @@ RSpec.describe "Users::Sessions", type: :request do
     end
 
     context "when email is missing" do
-      it "redirects back with an alert for missing email" do
+      it "redirects with an error message" do
         post user_session_path, params: {user: {email: "", password: "Password123"}}
 
         expect(response).to redirect_to(new_user_session_path)
@@ -64,7 +64,7 @@ RSpec.describe "Users::Sessions", type: :request do
     end
 
     context "when password is missing" do
-      it "redirects back with an alert for missing password" do
+      it "redirects with an error message" do
         post user_session_path, params: {user: { email: user.email, password: ""}}
 
         expect(response).to redirect_to(new_user_session_path)
@@ -75,7 +75,7 @@ RSpec.describe "Users::Sessions", type: :request do
     end
 
     context "when inexistant email" do
-      it "redirects back with an alert for missing password" do
+      it "redirects with an error message" do
         post user_session_path, params: {user: { email: "test@example.com", password: "Dummy_password"}}
 
         expect(flash[:alert]).to eq("We could not find an account with that email address.")
@@ -84,7 +84,7 @@ RSpec.describe "Users::Sessions", type: :request do
     end
 
     context "when user is suspended" do
-      it "redirects back with an alert for suspend" do
+      it "redirects with an error message" do
         user.toggle!(:is_banned)
 
         post user_session_path, params: {user: { email: user.email, password: dummy_password}}
@@ -97,7 +97,7 @@ RSpec.describe "Users::Sessions", type: :request do
     end
 
     context "when user is deactivated" do
-      it "does not allow deactivated user to sign in" do
+      it "redirects with an error message" do
         user.toggle!(:is_active)
 
         post user_session_path, params: {user: {email: user.email, password: dummy_password}}
@@ -112,7 +112,7 @@ RSpec.describe "Users::Sessions", type: :request do
     context "when user is already signed in" do
       before { sign_in(user) }
 
-      it "redirects to root path if user is already signed in" do
+      it "redirects with a successful message" do
         get new_user_session_path
 
         expect(response).to redirect_to(root_path)
@@ -127,7 +127,7 @@ RSpec.describe "Users::Sessions", type: :request do
     before { sign_in(user) }
 
     context "when user is not signed out" do
-      it "signs out the user and redirects to sign-in page" do
+      it "signs out the user and redirects" do
         delete destroy_user_session_path
 
         expect(response).to redirect_to(new_user_session_path)

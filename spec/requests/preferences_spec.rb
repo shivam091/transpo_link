@@ -54,18 +54,18 @@ RSpec.describe "Preferences", type: :request do
 
     describe "PUT|PATCH /preference" do
       context "when valid attributes" do
-        it "updates the preference" do
+        it "updates the preference and redirects" do
           put preference_path, params: {user: {user_preference_attributes: valid_attributes}}, as: :turbo_stream
 
           expect(admin.reload.preferred_currency).to eq("GBP")
-          expect(flash[:notice]).to eq("Your preferences were successfully updated.")
           expect(response).to redirect_to(preference_path)
+          expect(flash[:notice]).to eq("Your preferences were successfully updated.")
           expect(response).to have_http_status(:see_other)
         end
       end
 
       context "when invalid attributes" do
-        it "does not update the preference" do
+        it "does not update the preference and renders errors" do
           put preference_path, params: {user: {user_preference_attributes: invalid_attributes}}, as: :turbo_stream
 
           expect(admin.reload.preferred_currency).to eq("INR")

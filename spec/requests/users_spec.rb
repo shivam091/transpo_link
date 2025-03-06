@@ -27,20 +27,19 @@ RSpec.describe "Users", type: :request do
     include_context "sign in as admin"
 
     describe "GET /users" do
-      before { get users_path }
+      it "renders list of all users with pagination" do
+        get users_path
 
-      it "renders user list and returns :ok status" do
-        expect(controller_assigns(:users)).to be_present
-        expect(controller_assigns(:pagination_metadata)).to be_present
         expect(controller_assigns(:users)).to include(admin)
+        expect(controller_assigns(:pagination_metadata)).to be_present
         expect(response).to have_http_status(:ok)
       end
     end
 
     describe "GET /users/:id" do
-      before { get user_path(admin) }
+      it "renders user details page" do
+        get user_path(admin)
 
-      it "returns :ok status" do
         expect(controller_assigns(:user)).to eq(admin)
         expect(response).to have_http_status(:ok)
       end
