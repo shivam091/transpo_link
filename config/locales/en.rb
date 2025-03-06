@@ -591,6 +591,7 @@
         select_state: "Select state, province, county, or territory",
       },
       no_records: {
+        no_warehouses_to_display: "No warehouses to display",
       },
     },
     flashes: {
@@ -806,7 +807,8 @@
     },
     warehouses: {
       index: {
-        title: "Warehouses"
+        title: "Warehouses",
+        actions: "Actions",
       },
       active: {
         title: "Active warehouses",
@@ -815,8 +817,6 @@
         title: "Inactive warehouses",
       },
       warehouse: {
-        actions: "Actions",
-        no_warehouses_to_display: "No warehouses to display",
         delete_warehouse_confirmation_text: "Are you sure you want to delete the warehouse ‘%{warehouse_name}’? All related data may be lost.",
       },
       new: {

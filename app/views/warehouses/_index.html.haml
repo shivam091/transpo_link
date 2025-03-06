@@ -1,19 +1,29 @@
 .card.card-primary.border.border-primary
   .card-header
     .d-flex.justify-content-between.align-items-center
-      = render_if_exists("shared/inline_navigations") do
-        %ul.nav.nav-pills.flex-row
-          %li.nav-item
-            = link_to t(".all"), warehouses_path, class: class_names("nav-link", "active": current_action?(:index))
-          %li.nav-item
-            = link_to t(".active"), active_warehouses_path, class: class_names("nav-link", "active": current_action?(:active))
-          %li.nav-item
-            = link_to t(".inactive"), inactive_warehouses_path, class: class_names("nav-link", "active": current_action?(:inactive))
+      = render_if_exists("warehouses/nav_tabs")
       = link_to new_warehouse_path, class: "btn btn-primary" do
         = external_svg_tag("svgs/plus.svg")
         = button_text(:new)
   .card-body
-    = render_if_exists("warehouses/warehouse")
+    .table-responsive
+      %table.table.table-striped.table-borderless
+        %thead.border
+          %tr.table-active
+            %th{width: "25px", scope: "col"}#
+            %th{scope: "col"}= Warehouse.human_attribute_name(:reference_code)
+            %th{scope: "col"}= Warehouse.human_attribute_name(:name)
+            %th{scope: "col"}= Warehouse.human_attribute_name(:email_address)
+            %th{scope: "col"}= Warehouse.human_attribute_name(:contact_number)
+            %th{scope: "col"}= Warehouse.human_attribute_name(:capacity)
+            %th{scope: "col"}= Warehouse.human_attribute_name(:latitude)
+            %th{scope: "col"}= Warehouse.human_attribute_name(:longitude)
+            %th{scope: "col"}= t(".actions")
+        %tbody.border
+          - if @warehouses&.each.with_index(1) do |warehouse, index|
+            = render_if_exists("warehouses/warehouse", locals: {warehouse:, index:})
+          - end.empty?
+            = render_if_exists("shared/no_records", locals: {resource: Warehouse})
   - if @pagination_metadata.needs_pagination?
     .card-footer
       = render_pagination(@pagination_metadata)
