@@ -3,7 +3,7 @@
 # -*- warn_indent: true -*-
 
 class WarehousePresenter < ApplicationPresenter
-  include ActiveSupport::NumberHelper
+  include NumberHelper
 
   presents :warehouse
 
@@ -12,10 +12,10 @@ class WarehousePresenter < ApplicationPresenter
   end
 
   def formatted_latitude
-    [latitude, "°"].compact.join if latitude.present?
+    number_to_angle(try(:latitude))
   end
 
   def formatted_longitude
-    [longitude, "°"].compact.join if longitude.present?
+    number_to_angle(try(:longitude))
   end
 end
