@@ -7,17 +7,17 @@ class LegalIdentifiersController < ApplicationController
   before_action :legal_identifiers
   before_action :find_legal_identifier, except: [:index, :new, :create]
 
-  # GET /tax-details
+  # GET /legal-identifiers
   def index
     @legal_identifiers, @pagination_metadata = @legal_identifiers.paginate(page: params[:page])
   end
 
-  # GET /tax-details/new
+  # GET /legal-identifiers/new
   def new
     @legal_identifier = @legal_identifiers.build
   end
 
-  # POST /tax-details
+  # POST /legal-identifiers
   def create
     response = LegalIdentifiers::CreateService.(current_user, legal_identifier_params)
     @legal_identifier = response.payload[:legal_identifier]
@@ -37,11 +37,11 @@ class LegalIdentifiersController < ApplicationController
     end
   end
 
-  # GET /tax-details/:id/edit
+  # GET /legal-identifiers/:id/edit
   def edit
   end
 
-  # PUT|PATCH /tax-details/:id/edit
+  # PUT|PATCH /legal-identifiers/:id/edit
   def update
     response = LegalIdentifiers::UpdateService.(@legal_identifier, legal_identifier_params)
     @legal_identifier = response.payload[:legal_identifier]
@@ -61,7 +61,7 @@ class LegalIdentifiersController < ApplicationController
     end
   end
 
-  # DELETE /tax-details/:id
+  # DELETE /legal-identifiers/:id
   def destroy
     response = LegalIdentifiers::DestroyService.(@legal_identifier)
     @legal_identifier = response.payload[:legal_identifier]
