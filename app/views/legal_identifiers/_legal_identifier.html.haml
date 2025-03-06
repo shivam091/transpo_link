@@ -1,41 +1,23 @@
-.table-responsive
-  %table.table.table-striped.table-borderless
-    %thead.border
-      %tr.table-active
-        %th{width: "25px", scope: "col"}#
-        %th{scope: "col"}= LegalIdentifier.human_attribute_name(:country)
-        %th{scope: "col"}= LegalIdentifier.human_attribute_name(:entity_type)
-        %th{scope: "col"}= LegalIdentifier.human_attribute_name(:tax_identifier_type)
-        %th{scope: "col"}= LegalIdentifier.human_attribute_name(:tax_identifier)
-        %th{scope: "col"}= LegalIdentifier.human_attribute_name(:business_identifier_type)
-        %th{scope: "col"}= LegalIdentifier.human_attribute_name(:business_identifier)
-        %th{scope: "col"}= t(".actions")
-    %tbody.border
-      - if @legal_identifiers&.each.with_index(1) do |legal_identifier, index|
-        %tr
-          %th{scope: "row"}= h(@pagination_metadata.offset + index)
-          %td= h(TranspoLink::CountryInfo.new(legal_identifier.country).country_name)
-          %td= h(enum_i18n(LegalIdentifier, :entity_types, legal_identifier.entity_type))
-          %td= h(enum_i18n(LegalIdentifier, :tax_identifier_types, legal_identifier.tax_identifier_type))
-          %td= h(legal_identifier.tax_identifier)
-          %td
-            - if legal_identifier.business_identifier_type.present?
-              = h(enum_i18n(LegalIdentifier, :business_identifier_types, legal_identifier.business_identifier_type))
-          %td= h(legal_identifier.business_identifier)
-          %td.actions
-            = link_to "javascript:void(0)", class: "text-reset", data: {bs_toggle: "dropdown"}, aria: {expanded: false} do
-              = external_svg_tag("svgs/ellipsis-vertical.svg")
-            %ul.dropdown-menu
-              %li
-                = link_to edit_legal_identifier_path(legal_identifier), class: "dropdown-item", data: {turbo_frame: :remote_modal} do
-                  = external_svg_tag("svgs/pencil.svg")
-                  = button_text(:edit)
-              %li
-                = link_to legal_identifier_path(legal_identifier), class: "dropdown-item",
-                  data: {turbo_method: :delete, turbo_confirm: t(".delete_legal_identifier_confirmation_text")} do
-                  = external_svg_tag("svgs/trash.svg")
-                  = button_text(:delete)
-      - end.empty?
-        %tr
-          %td.no-data{colspan: LegalIdentifier.columns.count}
-            = t(".no_legal_identifiers_to_display")
+%tr
+  %th{scope: "row"}= h(@pagination_metadata.offset + index)
+  %td= h(TranspoLink::CountryInfo.new(legal_identifier.country).country_name)
+  %td= h(enum_i18n(LegalIdentifier, :entity_types, legal_identifier.entity_type))
+  %td= h(enum_i18n(LegalIdentifier, :tax_identifier_types, legal_identifier.tax_identifier_type))
+  %td= h(legal_identifier.tax_identifier)
+  %td
+    - if legal_identifier.business_identifier_type.present?
+      = h(enum_i18n(LegalIdentifier, :business_identifier_types, legal_identifier.business_identifier_type))
+  %td= h(legal_identifier.business_identifier)
+  %td.actions
+    = link_to "javascript:void(0)", class: "text-reset", data: {bs_toggle: "dropdown"}, aria: {expanded: false} do
+      = external_svg_tag("svgs/ellipsis-vertical.svg")
+    %ul.dropdown-menu
+      %li
+        = link_to edit_legal_identifier_path(legal_identifier), class: "dropdown-item", data: {turbo_frame: :remote_modal} do
+          = external_svg_tag("svgs/pencil.svg")
+          = button_text(:edit)
+      %li
+        = link_to legal_identifier_path(legal_identifier), class: "dropdown-item",
+          data: {turbo_method: :delete, turbo_confirm: t(".delete_legal_identifier_confirmation_text")} do
+          = external_svg_tag("svgs/trash.svg")
+          = button_text(:delete)

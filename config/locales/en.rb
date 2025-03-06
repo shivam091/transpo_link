@@ -623,6 +623,7 @@
       },
       no_records: {
         no_tax_rates_to_display: "No tax rates to display",
+        no_legal_identifiers_to_display: "No legal identifiers to display",
       },
     },
     flashes: {
@@ -865,16 +866,19 @@
         title: "Your legal identifiers",
         your_legal_identifiers: "Your legal identifiers",
         your_legal_identifiers_help_text: "Manage your legal identifiers across different countries with ease.",
-        legal_identifiers_list_item_1: "Add multiple tax records based on the regions where your business operates.",
-        legal_identifiers_list_item_2: "These identifiers are essential for regulatory compliance, invoicing, and taxation.",
-        legal_identifiers_list_item_3: "Ensure accuracy to prevent processing delays, tax penalties, or compliance issues.",
-        legal_identifiers_list_item_4: "Your tax and business registration details will be used for automated tax calculations, invoice generation, and verification purposes.",
-        legal_identifiers_tip: "Keep your records updated to comply with local tax regulations and avoid potential business disruptions.",
       },
       legal_identifier: {
-        actions: "Actions",
-        no_legal_identifiers_to_display: "No legal identifiers to display",
         delete_legal_identifier_confirmation_text: "Are you sure you want to delete this? This action cannot be undone.",
+      },
+      help_texts: {
+        main: "Legal identifiers are crucial for tax compliance and business operations. They ensure smooth transactions, proper tax filings, and regulatory adherence.",
+        items: [
+          "Add multiple tax records based on the regions where your business operates.",
+          "These identifiers are essential for regulatory compliance, invoicing, and taxation.",
+          "Ensure accuracy to prevent processing delays, tax penalties, or compliance issues.",
+          "Your tax and business registration details will be used for automated tax calculations, invoice generation, and verification purposes.",
+        ],
+        tip: "Keep your records updated to comply with local tax regulations and avoid potential business disruptions.",
       },
       new: {
         title: "New legal identifier",
