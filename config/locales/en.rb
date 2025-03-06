@@ -620,6 +620,8 @@
         select_country: "Select country or region",
         select_state: "Select state, province, county, or territory",
       },
+      no_records: {
+      },
     },
     flashes: {
       profiles: {
