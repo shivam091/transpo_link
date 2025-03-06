@@ -10,7 +10,7 @@
         %th{scope: "col"}= Warehouse.human_attribute_name(:capacity)
         %th{scope: "col"}= Warehouse.human_attribute_name(:latitude)
         %th{scope: "col"}= Warehouse.human_attribute_name(:longitude)
-        %th{scope: "col"}= t(".actions")
+        %th{scope: "col"}= t("common.actions")
     %tbody.border
       - if @warehouses&.each.with_index(1) do |warehouse, index|
         - present(warehouse) do |warehouse|

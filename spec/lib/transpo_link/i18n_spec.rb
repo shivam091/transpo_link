@@ -9,7 +9,7 @@ require "spec_helper"
 RSpec.describe TranspoLink::I18n do
   describe "constants" do
     it "defines constant AVAILABLE_LANGUAGES" do
-      expect(described_class).to have_constant(:AVAILABLE_LANGUAGES).with_value(
+      is_expected.to have_constant(:AVAILABLE_LANGUAGES).with_value(
         {
           "de" => "German - Deutsch",
           "en" => "English",
@@ -23,11 +23,11 @@ RSpec.describe TranspoLink::I18n do
     end
 
     it "defines constant MINIMUM_TRANSLATION_LEVEL" do
-      expect(described_class).to have_constant(:MINIMUM_TRANSLATION_LEVEL).with_value(2)
+      is_expected.to have_constant(:MINIMUM_TRANSLATION_LEVEL).with_value(2)
     end
 
     it "defines constant AVAILABLE_LANGUAGES" do
-      expect(described_class).to have_constant(:TRANSLATION_LEVELS).with_value(
+      is_expected.to have_constant(:TRANSLATION_LEVELS).with_value(
         {
           "de" => 0,
           "en" => 100,

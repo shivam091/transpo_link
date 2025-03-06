@@ -14,7 +14,7 @@
 #
 class PasswordValidator < ActiveModel::EachValidator
   def validate_each(record, attribute, value)
-    unless value =~ TranspoLink::Regex.strong_password_regex
+    unless value =~ TranspoLink::Regex::STRONG_PASSWORD_REGEX
       error_message = options[:message] || :invalid
 
       record.errors.add(attribute, error_message)

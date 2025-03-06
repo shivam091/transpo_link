@@ -46,7 +46,7 @@ RSpec.describe Toggleable do
     end
 
     it "does not change if already active" do
-      expect { active_record.activate }.not_to change { active_record.reload.is_active }
+      expect { active_record.activate }.to not_change { active_record.reload.is_active }
     end
   end
 
@@ -56,7 +56,7 @@ RSpec.describe Toggleable do
     end
 
     it "does not change if already inactive" do
-      expect { inactive_record.deactivate }.not_to change { inactive_record.reload.is_active }
+      expect { inactive_record.deactivate }.to not_change { inactive_record.reload.is_active }
     end
   end
 
