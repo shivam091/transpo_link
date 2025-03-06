@@ -7,7 +7,7 @@ FactoryBot.define do
     association :user, factory: :buyer
     entity_type { "individual" }
     tax_identifier_type { "gstin" }
-    tax_identifier { "27ABCDE1234B1Z5" }
+    tax_identifier { "27AAAFI1234A1Z7" }
     country { "IN" }
 
     trait :for_business do
