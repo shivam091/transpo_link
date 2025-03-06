@@ -8,7 +8,7 @@ class RequestLog < ApplicationRecord
   LISTING_ATTRIBUTES = %i[
     uuid uri method remote_address elapsed_time status response_size created_at
     user_id
-  ]
+  ].freeze
 
   normalizes :method, with: -> method { method.upcase }
 
