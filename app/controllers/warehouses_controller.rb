@@ -4,11 +4,17 @@
 
 class WarehousesController < ApplicationController
 
-  before_action :find_warehouse, except: [:index, :new, :create]
+  before_action :find_warehouse, only: [:edit, :update, :show, :destroy]
 
   # GET /warehouses
   def index
     @warehouses = Warehouse.all
+    @warehouses, @pagination_metadata = @warehouses.paginate(page: params[:page])
+  end
+
+  # GET /warehouses/active
+  def active
+    @warehouses = Warehouse.active
     @warehouses, @pagination_metadata = @warehouses.paginate(page: params[:page])
   end
 

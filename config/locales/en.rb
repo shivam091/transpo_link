@@ -806,6 +806,9 @@
       index: {
         title: "Warehouses"
       },
+      active: {
+        title: "Active warehouses",
+      },
       warehouse: {
         actions: "Actions",
         no_warehouses_to_display: "No warehouses to display",
