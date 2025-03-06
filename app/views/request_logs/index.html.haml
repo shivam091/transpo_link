@@ -1,7 +1,25 @@
 = title(t(".title"))
 .card.card-primary.border.border-primary
   .card-body
-    = render_if_exists("request_logs/request_log")
+    .table-responsive
+      %table.table.table-striped.table-borderless
+        %thead.border
+          %tr.table-active
+            %th{width: "25px", scope: "col"}#
+            %th{scope: "col"}= RequestLog.human_attribute_name(:uuid)
+            %th{scope: "col"}= RequestLog.human_attribute_name(:uri)
+            %th{scope: "col"}= RequestLog.human_attribute_name(:method)
+            %th{scope: "col"}= RequestLog.human_attribute_name(:remote_address)
+            %th{scope: "col"}= RequestLog.human_attribute_name(:elapsed_time)
+            %th{scope: "col"}= RequestLog.human_attribute_name(:status)
+            %th{scope: "col"}= RequestLog.human_attribute_name(:response_size)
+            %th{scope: "col"}= RequestLog.human_attribute_name(:created_at)
+            %th{scope: "col"}= RequestLog.human_attribute_name(:user_id)
+        %tbody.border
+          - if @request_logs&.each.with_index(1) do |request_log, index|
+            = render_if_exists("request_logs/request_log", locals: {request_log:, index:})
+          - end.empty?
+            = render_if_exists("shared/no_records", locals: {resource: RequestLog})
   - if @pagination_metadata.needs_pagination?
     .card-footer
       = render_pagination(@pagination_metadata)
