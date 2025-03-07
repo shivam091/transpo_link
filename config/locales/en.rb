@@ -699,6 +699,10 @@
           notice: "Product category was successfully created.",
           alert: "Product category could not be created.",
         },
+        update: {
+          notice: "Product category was successfully updated.",
+          alert: "Product category could not be updated."
+        },
       },
     },
     measurement_units: {
@@ -937,6 +941,9 @@
       },
       new: {
         title: "New product category",
+      },
+      edit: {
+        title: "Edit product category",
       },
       form: {
         select_parent_category: "Select parent category",
