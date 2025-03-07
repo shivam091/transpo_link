@@ -22,7 +22,7 @@ RSpec.describe "Dashboards", type: :request do
     describe "GET /" do
       before { get root_path }
 
-      it "returns :ok status" do
+      it "renders dashboard page" do
         expect(response).to have_http_status(:ok)
       end
     end

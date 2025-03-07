@@ -1,9 +1,7 @@
-- tax_identifier_type = enum_i18n(TaxRate, :tax_identifier_types, tax_rate.tax_identifier_type)
-- country = TranspoLink::CountryInfo.new(tax_rate.country).country_name
 %tr
   %th{scope: "row"}= h(@pagination_metadata.offset + index)
-  %td= h(country)
-  %td= h(tax_identifier_type)
+  %td= h(TranspoLink::CountryInfo.new(tax_rate.country).country_name)
+  %td= h(enum_i18n(TaxRate, :tax_identifier_types, tax_rate.tax_identifier_type))
   %td= h(enum_i18n(TaxRate, :business_categories, tax_rate.business_category))
   %td= h(number_to_percentage(tax_rate.rate, precision: 2))
   %td= h(tax_rate.valid_from.to_fs(:long))
@@ -18,6 +16,6 @@
           = button_text(:edit)
       %li
         = link_to tax_rate_path(tax_rate), class: "dropdown-item",
-          data: {turbo_method: :delete, turbo_confirm: t(".delete_tax_rate_confirmation_text") % {tax_identifier_type: tax_identifier_type, country: country}} do
+          data: {turbo_method: :delete, turbo_confirm: t(".delete_tax_rate_confirmation_text")} do
           = external_svg_tag("svgs/trash.svg")
           = button_text(:delete)

@@ -1,7 +1,18 @@
 = title(t(".title"))
 .card.card-primary.border.border-primary
   .card-body
-    = render_if_exists("request_logs/request_log")
+    .table-responsive
+      %table.table.table-striped.table-borderless
+        %thead.border
+          %tr.table-active
+            %th{width: "25px", scope: "col"}#
+            - RequestLog::LISTING_ATTRIBUTES.each do |attribute|
+              %th{scope: "col"}= RequestLog.human_attribute_name(attribute)
+        %tbody.border
+          - if @request_logs&.each.with_index(1) do |request_log, index|
+            = render_if_exists("request_logs/request_log", locals: {request_log:, index:})
+          - end.empty?
+            = render_if_exists("shared/no_records", locals: {resource: RequestLog})
   - if @pagination_metadata.needs_pagination?
     .card-footer
       = render_pagination(@pagination_metadata)
