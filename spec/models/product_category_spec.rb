@@ -36,6 +36,7 @@ RSpec.describe ProductCategory, type: :model do
   describe "included modules" do
     it { is_expected.to include_module(Sortable) }
     it { is_expected.to include_module(Toggleable) }
+    it { is_expected.to include_module(Pageable) }
   end
 
   describe "default values" do
