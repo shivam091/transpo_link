@@ -28,9 +28,9 @@ RSpec.describe "Locales", type: :request do
     include_context "sign in as admin"
 
     describe "GET /locale/edit" do
-      before { get edit_locale_path }
+      it "renders locale edit page" do
+        get edit_locale_path
 
-      it "renders locale edit modal" do
         expect(response).to have_http_status(:ok)
         expect(response.body).to include("<turbo-frame id=\"edit_locale_form_frame\" target=\"_top\">")
         expect(response.body).to include("modal")
@@ -40,21 +40,21 @@ RSpec.describe "Locales", type: :request do
 
     describe "PUT|PATCH /locale" do
       context "when valid attributes" do
-        it "updates the language" do
+        it "updates the locale and redirects" do
           put locale_path, params: {
             user: {user_preference_attributes: valid_attributes}
           }, headers: {"HTTP_REFERER" => root_path}, as: :turbo_stream
 
           expect(admin.reload.preferred_locale).to eq("es")
-          expect(response).not_to redirect_to(preference_path)
           expect(response).to redirect_to(root_path)
+          expect(response).not_to redirect_to(preference_path)
           expect(flash[:notice]).to be_present
           expect(response).to have_http_status(:found)
         end
       end
 
       context "when invalid attributes" do
-        it "does not update the language" do
+        it "does not update the locale and renders errors" do
           put locale_path, params: {user: {user_preference_attributes: invalid_attributes}}, as: :turbo_stream
 
           expect(admin.reload.preferred_locale).to eq("en")

@@ -616,12 +616,16 @@
         all: "All",
         active: "Active",
         inactive: "Inactive",
+        suspended: "Suspended",
       },
       address_form_fields: {
         select_country: "Select country or region",
         select_state: "Select state, province, county, or territory",
       },
       no_records: {
+        no_users_to_display: "No users to display",
+        no_request_logs_to_display: "No request logs to display",
+        no_warehouses_to_display: "No warehouses to display",
         no_tax_rates_to_display: "No tax rates to display",
         no_legal_identifiers_to_display: "No legal identifiers to display",
       },
@@ -765,9 +769,9 @@
       },
       index: {
         title: "Users",
+        actions: "Actions",
       },
       user: {
-        no_users_to_display: "No users to display",
       },
       show: {
         basic_n_contact_details: "Basic & contact details",
@@ -831,7 +835,6 @@
         title: "Request logs",
       },
       request_log: {
-        no_request_logs_to_display: "No request logs to display"
       },
       show: {
         basic_details: "Basic details",
@@ -842,10 +845,16 @@
     },
     warehouses: {
       index: {
-        title: "Warehouses"
+        title: "Warehouses",
+        actions: "Actions",
+      },
+      active: {
+        title: "Active warehouses",
+      },
+      inactive: {
+        title: "Inactive warehouses",
       },
       warehouse: {
-        no_warehouses_to_display: "No warehouses to display",
         delete_warehouse_confirmation_text: "Are you sure you want to delete the warehouse ‘%{warehouse_name}’? All related data may be lost.",
       },
       new: {

@@ -23,13 +23,20 @@ Rails.application.routes.draw do
                registrations: "users/registrations"
              }
 
+  concern :toggleable do
+    collection do
+       get :active
+       get :inactive
+    end
+  end
+
   resource :profile, only: [:show, :edit, :update]
   resource :preference, only: [:show, :edit, :update]
   resource :locale, only: [:edit, :update]
 
   resources :users, only: [:index, :show]
   resources :request_logs, path: "request-logs", only: [:index, :show]
-  resources :warehouses
+  resources :warehouses, concerns: :toggleable
   resources :legal_identifiers, path: "legal-identifiers", except: :show
   resources :tax_rates, path: "tax-rates", except: :show
 
