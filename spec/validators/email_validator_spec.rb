@@ -18,24 +18,51 @@ RSpec.describe EmailValidator do
       validates :email, email: true
 
       def self.model_name
-        ActiveModel::Name.new(self, nil, "EmailValidatorTestClass")
+        ActiveModel::Name.new(self, nil, "EmailValidatorModel")
       end
-    end.new
+    end.new(email: email)
   end
 
-  where(:email, :is_valid) do
-    "admin@transpo-link.com"       | true
-    "admin@transpo-link.co.uk"     | true
-    "Abc"                    | false
-    "ABC"                    | false
-    "abC"                    | false
-  end
+  describe "#validate_each" do
+    context "when email is valid" do
+      where(:email) do
+      [
+        "admin@transpo-link.com",
+        "admin@transpo-link.co.uk",
+        "user.name+tag@example.com",
+        "valid_email123@example.org",
+        "valid.email@sub.domain.net",
+        "valid-email@domain.io",
+      ]
+    end
 
-  with_them do
-    it "only accepts valid email" do
-      subject.email = email
+      with_them do
+        it { is_expected.to be_valid }
+      end
+    end
 
-      expect(subject.valid?).to eq(is_valid)
+    context "when email is invalid" do
+      where(:email) do
+        [
+          "Abc",
+          "ABC",
+          "abC",
+          "plainaddress",
+          "@missingusername.com",
+          "username@",
+          "user@.com",
+          "user@com",
+          "user@domain.c",
+          "user@example.com.",
+          "user@example@domain.com",
+          "user name@example.com",
+          "user<name>@example.com"
+        ]
+      end
+
+      with_them do
+        it { is_expected.to be_invalid }
+      end
     end
   end
 end

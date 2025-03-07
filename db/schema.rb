@@ -18,8 +18,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_28_145537) do
   # Custom types defined in this database.
   # Note that some types may not work with other database engines. Be careful if changing database.
   create_enum "business_categories", ["b2b", "b2c"]
+  create_enum "business_number_types", ["ein", "duns", "cin", "roc", "acn", "abn", "nzbn", "cnpj", "bn", "siret", "siren", "crn", "uen", "rfc", "cuit", "ruc", "nit", "hrb", "ico", "npwp", "brn", "ssm", "ogrn", "brn_kr", "cbr", "cr"]
   create_enum "color_schemes", ["auto", "dark", "light"]
-  create_enum "tax_types", ["vat", "gst", "tin", "ein", "ssn", "itin", "pan", "tan", "gstin", "vatin", "eori", "nif", "cif", "siret", "siren", "utr", "bn", "qst", "abn", "acn", "tfn", "ird", "rfc", "cuit", "cuil", "ruc", "nit", "cnpj", "cpf", "npwp", "trn", "kra_pin", "brn", "corporate_number", "my_number", "inn", "kpp", "ogrn", "ogrnip", "brn_kr", "uscc", "mst", "tin_ph", "tin_th", "uen"]
+  create_enum "entity_types", ["business", "individual"]
 
   create_table "addresses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "addressable_type"
@@ -38,6 +39,29 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_28_145537) do
     t.check_constraint "char_length(address2::text) <= 100", name: "check_addresses_address2_length"
     t.check_constraint "char_length(postal_code::text) <= 20", name: "check_addresses_postal_code_length"
     t.check_constraint "country IS NOT NULL AND country::text <> ''::text", name: "check_addresses_country_presence"
+  end
+
+  create_table "legal_identifiers", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id"
+    t.string "country"
+    t.enum "entity_type", enum_type: "entity_types"
+    t.string "tax_identifier_type"
+    t.string "tax_identifier"
+    t.string "business_identifier_type"
+    t.string "business_identifier"
+    t.timestamptz "created_at", null: false
+    t.timestamptz "updated_at", null: false
+    t.index ["business_identifier", "business_identifier_type", "country"], name: "idx_on_business_identifier_business_identifier_type_ce079aa798", unique: true
+    t.index ["entity_type"], name: "index_legal_identifiers_on_entity_type"
+    t.index ["tax_identifier", "tax_identifier_type", "country", "entity_type"], name: "idx_on_tax_identifier_tax_identifier_type_country_e_6b3ba9dafd", unique: true
+    t.index ["user_id"], name: "index_legal_identifiers_on_user_id"
+    t.check_constraint "country IS NOT NULL AND country::text <> ''::text", name: "check_legal_identifiers_country_presence"
+    t.check_constraint "entity_type = 'business'::entity_types AND business_identifier IS NOT NULL AND business_identifier::text <> ''::text OR entity_type = 'individual'::entity_types AND business_identifier IS NULL", name: "check_legal_identifiers_business_identifier_based_on_entity"
+    t.check_constraint "entity_type = 'business'::entity_types AND business_identifier_type IS NOT NULL AND business_identifier_type::text <> ''::text OR entity_type = 'individual'::entity_types AND business_identifier_type IS NULL", name: "check_legal_identifiers_business_identifier_type_based_on_entit"
+    t.check_constraint "entity_type = ANY (ARRAY['business'::entity_types, 'individual'::entity_types])", name: "check_legal_identifiers_entity_type_inclusion"
+    t.check_constraint "entity_type IS NOT NULL", name: "check_legal_identifiers_entity_type_presence"
+    t.check_constraint "tax_identifier IS NOT NULL AND tax_identifier::text <> ''::text", name: "check_legal_identifiers_tax_identifier_presence"
+    t.check_constraint "tax_identifier_type IS NOT NULL AND tax_identifier_type::text <> ''::text", name: "check_legal_identifiers_tax_identifier_type_presence"
   end
 
   create_table "request_logs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -90,42 +114,25 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_28_145537) do
     t.check_constraint "name IS NOT NULL AND name::text <> ''::text", name: "check_roles_name_presence"
   end
 
-  create_table "tax_details", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.uuid "user_id"
-    t.enum "tax_type", enum_type: "tax_types"
-    t.string "tax_number"
-    t.string "country"
-    t.timestamptz "created_at", null: false
-    t.timestamptz "updated_at", null: false
-    t.index ["tax_number", "tax_type", "country"], name: "index_tax_details_on_tax_number_and_tax_type_and_country", unique: true
-    t.index ["user_id"], name: "index_tax_details_on_user_id"
-    t.check_constraint "country IS NOT NULL OR (tax_type <> ALL (ARRAY['vat'::tax_types, 'gst'::tax_types, 'tin'::tax_types, 'vatin'::tax_types, 'eori'::tax_types, 'ruc'::tax_types, 'nit'::tax_types, 'brn'::tax_types]))", name: "check_tax_details_tax_type_requires_country"
-    t.check_constraint "tax_number IS NOT NULL AND tax_number::text <> ''::text", name: "check_tax_details_tax_number_presence"
-    t.check_constraint "tax_type = ANY (ARRAY['vat'::tax_types, 'gst'::tax_types, 'tin'::tax_types, 'ein'::tax_types, 'ssn'::tax_types, 'itin'::tax_types, 'pan'::tax_types, 'tan'::tax_types, 'gstin'::tax_types, 'vatin'::tax_types, 'eori'::tax_types, 'nif'::tax_types, 'cif'::tax_types, 'siret'::tax_types, 'siren'::tax_types, 'utr'::tax_types, 'bn'::tax_types, 'qst'::tax_types, 'abn'::tax_types, 'acn'::tax_types, 'tfn'::tax_types, 'ird'::tax_types, 'rfc'::tax_types, 'cuit'::tax_types, 'cuil'::tax_types, 'ruc'::tax_types, 'nit'::tax_types, 'cnpj'::tax_types, 'cpf'::tax_types, 'npwp'::tax_types, 'trn'::tax_types, 'kra_pin'::tax_types, 'brn'::tax_types, 'corporate_number'::tax_types, 'my_number'::tax_types, 'inn'::tax_types, 'kpp'::tax_types, 'ogrn'::tax_types, 'ogrnip'::tax_types, 'brn_kr'::tax_types, 'uscc'::tax_types, 'mst'::tax_types, 'tin_ph'::tax_types, 'tin_th'::tax_types, 'uen'::tax_types])", name: "check_tax_details_tax_type_inclusion"
-    t.check_constraint "tax_type IS NOT NULL", name: "check_tax_details_tax_type_presence"
-  end
-
   create_table "tax_rates", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "country"
-    t.enum "tax_type", enum_type: "tax_types"
-    t.enum "business_category", default: "b2b", enum_type: "business_categories"
+    t.string "tax_identifier_type"
+    t.enum "business_category", enum_type: "business_categories"
     t.decimal "rate", precision: 5, scale: 2
     t.date "valid_from"
     t.date "valid_to"
     t.timestamptz "created_at", null: false
     t.timestamptz "updated_at", null: false
-    t.index ["country", "tax_type"], name: "index_tax_rates_on_country_and_tax_type"
-    t.index ["tax_type", "country", "business_category", "valid_from"], name: "idx_on_tax_type_country_business_category_valid_fro_2e1d816a7e", unique: true
+    t.index ["country", "tax_identifier_type"], name: "index_tax_rates_on_country_and_tax_identifier_type"
+    t.index ["tax_identifier_type", "country", "business_category", "valid_from"], name: "idx_on_tax_identifier_type_country_business_categor_1de789b661", unique: true
     t.index ["valid_from"], name: "index_tax_rates_on_valid_from"
     t.index ["valid_to"], name: "index_tax_rates_on_valid_to", where: "(valid_to IS NULL)"
     t.check_constraint "business_category = ANY (ARRAY['b2b'::business_categories, 'b2c'::business_categories])", name: "check_tax_rates_business_category_inclusion"
     t.check_constraint "business_category IS NOT NULL", name: "check_tax_rates_business_category_presence"
     t.check_constraint "country IS NOT NULL AND country::text <> ''::text", name: "check_tax_rates_country_presence"
-    t.check_constraint "country IS NOT NULL OR (tax_type <> ALL (ARRAY['vat'::tax_types, 'gst'::tax_types, 'tin'::tax_types, 'vatin'::tax_types, 'eori'::tax_types, 'ruc'::tax_types, 'nit'::tax_types, 'brn'::tax_types]))", name: "check_tax_rates_tax_type_requires_country"
     t.check_constraint "rate >= 0::numeric AND rate <= 100::numeric", name: "check_tax_rates_rate_numericality"
     t.check_constraint "rate IS NOT NULL", name: "check_tax_rates_rate_presence"
-    t.check_constraint "tax_type = ANY (ARRAY['vat'::tax_types, 'gst'::tax_types, 'tin'::tax_types, 'ein'::tax_types, 'ssn'::tax_types, 'itin'::tax_types, 'pan'::tax_types, 'tan'::tax_types, 'gstin'::tax_types, 'vatin'::tax_types, 'eori'::tax_types, 'nif'::tax_types, 'cif'::tax_types, 'siret'::tax_types, 'siren'::tax_types, 'utr'::tax_types, 'bn'::tax_types, 'qst'::tax_types, 'abn'::tax_types, 'acn'::tax_types, 'tfn'::tax_types, 'ird'::tax_types, 'rfc'::tax_types, 'cuit'::tax_types, 'cuil'::tax_types, 'ruc'::tax_types, 'nit'::tax_types, 'cnpj'::tax_types, 'cpf'::tax_types, 'npwp'::tax_types, 'trn'::tax_types, 'kra_pin'::tax_types, 'brn'::tax_types, 'corporate_number'::tax_types, 'my_number'::tax_types, 'inn'::tax_types, 'kpp'::tax_types, 'ogrn'::tax_types, 'ogrnip'::tax_types, 'brn_kr'::tax_types, 'uscc'::tax_types, 'mst'::tax_types, 'tin_ph'::tax_types, 'tin_th'::tax_types, 'uen'::tax_types])", name: "check_tax_rates_tax_type_inclusion"
-    t.check_constraint "tax_type IS NOT NULL", name: "check_tax_rates_tax_type_presence"
+    t.check_constraint "tax_identifier_type IS NOT NULL AND tax_identifier_type::text <> ''::text", name: "check_tax_rates_tax_identifier_type_presence"
     t.check_constraint "valid_from >= CURRENT_DATE", name: "check_tax_rates_valid_from_future"
     t.check_constraint "valid_from IS NOT NULL", name: "check_tax_rates_valid_from_presence"
     t.check_constraint "valid_to IS NULL OR valid_to > valid_from", name: "check_tax_rates_valid_to_comparison"
@@ -249,8 +256,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_28_145537) do
     t.check_constraint "total_capacity IS NOT NULL", name: "check_warehouses_total_capacity_presence"
   end
 
+  add_foreign_key "legal_identifiers", "users", name: "fk_legal_identifiers_user_id_on_users", on_delete: :cascade
   add_foreign_key "request_logs", "users", name: "fk_request_logs_user_id_on_users", on_delete: :nullify
-  add_foreign_key "tax_details", "users", name: "fk_tax_details_user_id_on_users", on_delete: :cascade
   add_foreign_key "user_details", "users", name: "fk_user_details_user_id_on_users", on_delete: :cascade
   add_foreign_key "user_preferences", "users", name: "fk_user_preferences_user_id_on_users", on_delete: :cascade
   add_foreign_key "users", "roles", name: "fk_users_role_id_on_roles", on_delete: :restrict

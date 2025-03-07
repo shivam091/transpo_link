@@ -55,8 +55,8 @@ RSpec.describe User, type: :model do
   end
 
   describe "constants" do
-    it { expect(described_class).to have_constant(:LAST_ACTIVITY_AT_INTERVAL).with_value(2.minutes) }
-    it { expect(described_class).to have_constant(:THROTTLE_RESET_PERIOD).with_value(2.minutes) }
+    it { is_expected.to have_constant(:LAST_ACTIVITY_AT_INTERVAL).with_value(2.minutes) }
+    it { is_expected.to have_constant(:THROTTLE_RESET_PERIOD).with_value(2.minutes) }
   end
 
   describe "included modules" do
@@ -86,7 +86,7 @@ RSpec.describe User, type: :model do
     it { is_expected.to have_one(:address).inverse_of(:addressable).dependent(:destroy) }
 
     it { is_expected.to have_many(:request_logs).inverse_of(:user).dependent(:nullify) }
-    it { is_expected.to have_many(:tax_details).inverse_of(:user) }
+    it { is_expected.to have_many(:legal_identifiers).inverse_of(:user) }
 
     it { is_expected.to have_many(:warehouse_managers).inverse_of(:manager).with_foreign_key(:manager_id).dependent(:restrict_with_exception) }
     it { is_expected.to have_many(:managed_warehouses).through(:warehouse_managers).inverse_of(:managers).source(:warehouse) }
@@ -289,7 +289,7 @@ RSpec.describe User, type: :model do
         let(:user) { build(:admin) }
 
         it "does not update last_activity_at" do
-          expect { user.update_last_activity_at }.not_to change(user, :last_activity_at)
+          expect { user.update_last_activity_at }.to not_change(user, :last_activity_at)
         end
       end
 
@@ -322,7 +322,7 @@ RSpec.describe User, type: :model do
 
         it "does not update last_activity_at" do
           expect { user.update_last_activity_at }
-            .not_to change { user.reload.last_activity_at }
+            .to not_change { user.reload.last_activity_at }
         end
       end
     end

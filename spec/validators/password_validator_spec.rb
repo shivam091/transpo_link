@@ -18,26 +18,45 @@ RSpec.describe PasswordValidator do
       validates :password, password: true
 
       def self.model_name
-        ActiveModel::Name.new(self, nil, "PasswordTestClass")
+        ActiveModel::Name.new(self, nil, "PasswordValidatorModel")
       end
-    end.new
+    end.new(password: password)
   end
 
-  where(:password, :is_valid) do
-    "Test@123"                | true
-    "Test@1234"               | true
-    "test@123"                | false
-    "test"                    | false
-    "test@"                   | false
-    "Test@12"                 | false
-    "TestTest@123233232223"   | false
-  end
+  describe "#validate_each" do
+    context "when password is valid" do
+      where(:password) do
+        [
+          "Test@123",
+          "Secure#456",
+          "Strong!Pass1",
+          "P@ssword99"
+        ]
+      end
 
-  with_them do
-    it "only accepts valid password" do
-      subject.password = password
+      with_them do
+        it { is_expected.to be_valid }
+      end
+    end
 
-      expect(subject.valid?).to eq(is_valid)
+    context "when password is invalid" do
+      where(:password) do
+        [
+          "test@123",
+          "TEST@123",
+          "TestTest@123233232223",
+          "test",
+          "test@",
+          "Test@12",
+          "Password123",
+          "!!!!!!123",
+          "TEST@test"
+        ]
+      end
+
+      with_them do
+        it { is_expected.to be_invalid }
+      end
     end
   end
 end

@@ -19,7 +19,7 @@ RSpec.describe ReduceValidator do
                 reduce: true
 
       def self.model_name
-        ActiveModel::Name.new(self, nil, "ReduceValidatorTestClass")
+        ActiveModel::Name.new(self, nil, "ReduceValidatorModel")
       end
     end.new
   end

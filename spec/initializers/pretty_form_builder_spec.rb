@@ -67,7 +67,7 @@ RSpec.describe PrettyFormBuilder, type: :helper do
 
     context "when :static option is passed" do
       before do
-        allow_any_instance_of(TestUser).to receive(:reference_code).and_return("ADM-00000001")
+        allow_any_instance_of(TestUser).to receive(:reference_code) { "ADM-00000001" }
       end
 
       it "adds the 'form-control-plaintext' class to text fields" do
