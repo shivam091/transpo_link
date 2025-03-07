@@ -2,7 +2,7 @@
   .card-header
     .d-flex.justify-content-between.align-items-center
       = render_if_exists("product_categories/nav_tabs")
-      = link_to "javascript:void(0)", class: "btn btn-primary" do
+      = link_to new_product_category_path, class: "btn btn-primary", data: {turbo_frame: :remote_modal} do
         = external_svg_tag("svgs/plus.svg")
         = button_text(:new)
   .card-body

@@ -694,6 +694,12 @@
           alert: "Tax rate could not be deleted."
         },
       },
+      product_categories: {
+        create: {
+          notice: "Product category was successfully created.",
+          alert: "Product category could not be created.",
+        },
+      },
     },
     measurement_units: {
       categories: {
@@ -929,6 +935,12 @@
       },
       product_category: {
       },
+      new: {
+        title: "New product category",
+      },
+      form: {
+        select_parent_category: "Select parent category",
+      }
     },
   },
 }
