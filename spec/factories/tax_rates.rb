@@ -4,10 +4,10 @@
 
 FactoryBot.define do
   factory :tax_rate do
-    country { "DE" }
-    tax_type { "vat" }
+    country { "IN" }
+    tax_identifier_type { "gstin" }
     business_category { "b2b" }
-    rate { 8.0 }
+    rate { 12.0 }
     valid_from { Date.current }
     valid_to { Date.current + 1.month }
   end

@@ -13,9 +13,9 @@ FactoryBot.define do
     end
   end
 
-  TaxRate.tax_types.keys.each do |tax_type|
-    trait tax_type do
-      tax_type { tax_type.to_s }
+  TaxRate.tax_identifier_types.keys.each do |tax_identifier_type|
+    trait tax_identifier_type do
+      tax_identifier_type { tax_identifier_type.to_s }
     end
   end
 end

@@ -9,8 +9,8 @@ require "spec_helper"
 RSpec.describe "TaxRates", type: :request do
   let!(:tax_rate) { create(:tax_rate) }
 
-  let(:valid_attributes) { attributes_for(:tax_rate, tax_type: "tin") }
-  let(:invalid_attributes) { attributes_for(:tax_rate, tax_type: "") }
+  let(:valid_attributes) { attributes_for(:tax_rate, tax_identifier_type: "pan") }
+  let(:invalid_attributes) { attributes_for(:tax_rate, tax_identifier_type: "") }
 
   context "when user is not signed in" do
     describe "GET /tax-rates" do
@@ -111,7 +111,7 @@ RSpec.describe "TaxRates", type: :request do
         it "updates the tax rate" do
           put tax_rate_path(tax_rate), params: {tax_rate: valid_attributes}, as: :turbo_stream
 
-          expect(tax_rate.reload.tax_type).to eq("tin")
+          expect(tax_rate.reload.tax_identifier_type).to eq("pan")
           expect(flash[:notice]).to eq("Tax rate was successfully updated.")
           expect(response).to redirect_to(tax_rates_path)
           expect(response).to have_http_status(:see_other)
