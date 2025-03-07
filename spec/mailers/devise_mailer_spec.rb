@@ -15,7 +15,7 @@ RSpec.describe DeviseMailer, type: :mailer do
     it "does not send an email" do
       mail = described_class.confirmation_instructions(user, token, options)
       expect(mail).to be_a(ActionMailer::MessageDelivery)
-      expect { mail.deliver_now }.not_to change { ActionMailer::Base.deliveries.count }
+      expect { mail.deliver_now }.to not_change { ActionMailer::Base.deliveries.count }
     end
   end
 
@@ -23,7 +23,7 @@ RSpec.describe DeviseMailer, type: :mailer do
     it "does not send an email" do
       mail = described_class.reset_password_instructions(user, token, options)
       expect(mail).to be_a(ActionMailer::MessageDelivery)
-      expect { mail.deliver_now }.not_to change { ActionMailer::Base.deliveries.count }
+      expect { mail.deliver_now }.to not_change { ActionMailer::Base.deliveries.count }
     end
   end
 
@@ -31,7 +31,7 @@ RSpec.describe DeviseMailer, type: :mailer do
     it "does not send an email" do
       mail = described_class.unlock_instructions(user, token, options)
       expect(mail).to be_a(ActionMailer::MessageDelivery)
-      expect { mail.deliver_now }.not_to change { ActionMailer::Base.deliveries.count }
+      expect { mail.deliver_now }.to not_change { ActionMailer::Base.deliveries.count }
     end
   end
 
@@ -39,7 +39,7 @@ RSpec.describe DeviseMailer, type: :mailer do
     it "does not send an email" do
       mail = described_class.email_changed(user, options)
       expect(mail).to be_a(ActionMailer::MessageDelivery)
-      expect { mail.deliver_now }.not_to change { ActionMailer::Base.deliveries.count }
+      expect { mail.deliver_now }.to not_change { ActionMailer::Base.deliveries.count }
     end
   end
 
@@ -47,7 +47,7 @@ RSpec.describe DeviseMailer, type: :mailer do
     it "does not send an email" do
       mail = described_class.password_change(user, options)
       expect(mail).to be_a(ActionMailer::MessageDelivery)
-      expect { mail.deliver_now }.not_to change { ActionMailer::Base.deliveries.count }
+      expect { mail.deliver_now }.to not_change { ActionMailer::Base.deliveries.count }
     end
   end
 end

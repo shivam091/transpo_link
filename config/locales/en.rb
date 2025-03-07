@@ -811,6 +811,10 @@
         select_time_zone: "Select time zone",
         select_currency: "Select currency",
         language_translation_percentage: "%{language} (%{percent_translated} translated)",
+        preferred_locale_help_text: "Specify your preferred language from a list of supported languages. This feature is experimental and translations are not complete yet.",
+        preferred_time_zone_help_text: "The chosen time zone influences the displayed dates and when notifications about overdue invoices are emailed.",
+        preferred_currency_help_text: "Select your preferred currency for displaying product prices, invoices, and financial summaries. The selected currency will be used to convert and show prices during transactions, so you’ll see costs in your preferred currency, even if the product is listed in another currency.",
+        preferred_color_scheme_help_text: "Choose your preferred color scheme for the interface."
       },
     },
     locales: {
@@ -854,7 +858,7 @@
         basic_details: "Basic details",
         address: "Address",
       },
-      warehouse_basic_details_fields: {
+      basic_details_fields: {
         select_capacity_unit: "Select capacity unit",
         select_managers: "Select managers",
         select_suppliers: "Select suppliers",
@@ -898,7 +902,7 @@
         title: "Tax rates",
       },
       tax_rate: {
-        delete_tax_rate_confirmation_text: "Are you sure you want to delete this '%{tax_identifier_type}' for '%{country}'? This cannot be undone.",
+        delete_tax_rate_confirmation_text: "Are you sure you want to delete this? This action cannot be undone.",
       },
       new: {
         title: "New tax rate",
