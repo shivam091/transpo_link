@@ -3,7 +3,9 @@
 # -*- warn_indent: true -*-
 
 class ProductCategory < ApplicationRecord
-  include Sortable, Toggleable
+  include Sortable, Toggleable, Pageable
+
+  LISTING_ATTRIBUTES = %i[name parent_category_id products_count].freeze
 
   attribute :is_active, default: false
 

@@ -210,6 +210,12 @@
           valid_from: "Valid from",
           valid_to: "Valid to",
         },
+        product_category: {
+          name: "Name",
+          products_count: "Products count",
+          parent_category_id: "Parent category",
+          is_active: "Is active",
+        },
       },
       errors: {
         format: "%{attribute} %{message}",
@@ -624,6 +630,7 @@
       no_records: {
         no_tax_rates_to_display: "No tax rates to display",
         no_legal_identifiers_to_display: "No legal identifiers to display",
+        no_product_categories_to_display: "No product categories to display",
       },
     },
     flashes: {
@@ -914,6 +921,13 @@
         select_country: "Select country or region",
         select_tax_identifier_type: "Select tax identifier type",
         select_business_category: "Select business category",
+      },
+    },
+    product_categories: {
+      index: {
+        title: "Product categories",
+      },
+      product_category: {
       },
     },
   },
