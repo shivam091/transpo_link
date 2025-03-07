@@ -5,6 +5,11 @@
 class LegalIdentifier < ApplicationRecord
   include Sortable, Pageable, Taxable, NullifyIfBlank
 
+  LISTING_ATTRIBUTES = %i[
+    country entity_type tax_identifier_type tax_identifier
+    business_identifier_type business_identifier
+  ].freeze
+
   enum :entity_type, {
     business: "business",
     individual: "individual"

@@ -9,8 +9,8 @@ require "spec_helper"
 describe TranspoLink::Regex do
   using RSpec::Parameterized::TableSyntax
 
-  describe ".strong_password_regex" do
-    subject { described_class.strong_password_regex }
+  describe "::STRONG_PASSWORD_REGEX" do
+    subject { described_class::STRONG_PASSWORD_REGEX }
 
     where(:password, :is_valid) do
       "Test@123"           | true
@@ -32,8 +32,8 @@ describe TranspoLink::Regex do
     end
   end
 
-  describe ".email_regex" do
-    subject { described_class.email_regex }
+  describe "::EMAIL_REGEX" do
+    subject { described_class::EMAIL_REGEX }
 
     where(:email, :is_valid) do
       "admin@transpo-link.com"       | true

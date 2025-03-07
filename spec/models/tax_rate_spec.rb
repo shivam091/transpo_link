@@ -49,6 +49,10 @@ RSpec.describe TaxRate, type: :model do
     it { is_expected.to define_enum_for(:business_category).with_values({b2b: "b2b", b2c: "b2c"}).backed_by_column_of_type(:enum) }
   end
 
+  describe "constants" do
+    it { is_expected.to have_constant(:LISTING_ATTRIBUTES) }
+  end
+
   describe "default values" do
     it "should set b2b as default value for #business_category" do
       expect(tax_rate.business_category).to eq("b2b")
@@ -98,14 +102,14 @@ RSpec.describe TaxRate, type: :model do
     describe ".active" do
       it "returns only active tax rates" do
         expect(described_class.active).to include(active_tax_rate)
-        expect(described_class.active).not_to include(future_tax_rate)
+        expect(described_class.active).to exclude(future_tax_rate)
       end
     end
 
     describe ".for_country" do
       it "returns tax rates for the given country" do
         expect(described_class.for_country("IN")).to include(future_tax_rate)
-        expect(described_class.for_country("DE")).not_to include(future_tax_rate)
+        expect(described_class.for_country("DE")).to exclude(future_tax_rate)
       end
     end
 
@@ -119,7 +123,7 @@ RSpec.describe TaxRate, type: :model do
     describe ".for_category" do
       it "returns tax rates for the given category" do
         expect(described_class.for_category("b2c")).to include(future_tax_rate)
-        expect(described_class.for_category("b2b")).not_to include(future_tax_rate)
+        expect(described_class.for_category("b2b")).to exclude(future_tax_rate)
       end
     end
 
@@ -132,7 +136,7 @@ RSpec.describe TaxRate, type: :model do
 
     describe ".valid_on" do
       it "returns tax rates valid on given date" do
-        expect(described_class.valid_on(Date.current + 1.year)).not_to include(active_tax_rate)
+        expect(described_class.valid_on(Date.current + 1.year)).to exclude(active_tax_rate)
         expect(described_class.valid_on(Date.current + 1.year)).to include(future_tax_rate)
       end
     end

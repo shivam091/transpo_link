@@ -1,41 +1,21 @@
-.table-responsive
-  %table.table.table-striped.table-borderless
-    %thead.border
-      %tr.table-active
-        %th{width: "25px", scope: "col"}#
-        %th{scope: "col"}= TaxRate.human_attribute_name(:country)
-        %th{scope: "col"}= TaxRate.human_attribute_name(:tax_identifier_type)
-        %th{scope: "col"}= TaxRate.human_attribute_name(:business_category)
-        %th{scope: "col"}= TaxRate.human_attribute_name(:rate)
-        %th{scope: "col"}= TaxRate.human_attribute_name(:valid_from)
-        %th{scope: "col"}= TaxRate.human_attribute_name(:valid_to)
-        %th{scope: "col"}= t(".actions")
-    %tbody.border
-      - if @tax_rates&.each.with_index(1) do |tax_rate, index|
-        - tax_identifier_type = enum_i18n(TaxRate, :tax_identifier_types, tax_rate.tax_identifier_type)
-        - country = TranspoLink::CountryInfo.new(tax_rate.country).country_name
-        %tr
-          %th{scope: "row"}= h(@pagination_metadata.offset + index)
-          %td= h(country)
-          %td= h(tax_identifier_type)
-          %td= h(enum_i18n(TaxRate, :business_categories, tax_rate.business_category))
-          %td= h(number_to_percentage(tax_rate.rate, precision: 2))
-          %td= h(tax_rate.valid_from.to_fs(:long))
-          %td= h(tax_rate.valid_to&.to_fs(:long))
-          %td.actions
-            = link_to "javascript:void(0)", class: "text-reset", data: {bs_toggle: "dropdown"}, aria: {expanded: false} do
-              = external_svg_tag("svgs/ellipsis-vertical.svg")
-            %ul.dropdown-menu
-              %li
-                = link_to edit_tax_rate_path(tax_rate), class: "dropdown-item", data: {turbo_frame: :remote_modal} do
-                  = external_svg_tag("svgs/pencil.svg")
-                  = button_text(:edit)
-              %li
-                = link_to tax_rate_path(tax_rate), class: "dropdown-item",
-                  data: {turbo_method: :delete, turbo_confirm: t(".delete_tax_rate_confirmation_text") % {tax_identifier_type: tax_identifier_type, country: country}} do
-                  = external_svg_tag("svgs/trash.svg")
-                  = button_text(:delete)
-      - end.empty?
-        %tr
-          %td.no-data{colspan: TaxRate.columns.count}
-            = t(".no_tax_rates_to_display")
+%tr
+  %th{scope: "row"}= h(@pagination_metadata.offset + index)
+  %td= h(TranspoLink::CountryInfo.new(tax_rate.country).country_name)
+  %td= h(enum_i18n(TaxRate, :tax_identifier_types, tax_rate.tax_identifier_type))
+  %td= h(enum_i18n(TaxRate, :business_categories, tax_rate.business_category))
+  %td= h(number_to_percentage(tax_rate.rate, precision: 2))
+  %td= h(tax_rate.valid_from.to_fs(:long))
+  %td= h(tax_rate.valid_to&.to_fs(:long))
+  %td.actions
+    = link_to "javascript:void(0)", class: "text-reset", data: {bs_toggle: "dropdown"}, aria: {expanded: false} do
+      = external_svg_tag("svgs/ellipsis-vertical.svg")
+    %ul.dropdown-menu
+      %li
+        = link_to edit_tax_rate_path(tax_rate), class: "dropdown-item", data: {turbo_frame: :remote_modal} do
+          = external_svg_tag("svgs/pencil.svg")
+          = button_text(:edit)
+      %li
+        = link_to tax_rate_path(tax_rate), class: "dropdown-item",
+          data: {turbo_method: :delete, turbo_confirm: t(".delete_tax_rate_confirmation_text")} do
+          = external_svg_tag("svgs/trash.svg")
+          = button_text(:delete)

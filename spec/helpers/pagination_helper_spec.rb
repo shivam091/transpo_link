@@ -115,14 +115,14 @@ RSpec.describe PaginationHelper, type: :helper do
       html = helper.send(:pagination_nav, pagination_metadata_first_page)
 
       expect(html).to include("class=\"page-item disabled\"")
-      expect(html).not_to include("page=0")
+      expect(html).to exclude("page=0")
     end
 
     it "does not include next page link if on last page" do
       html = helper.send(:pagination_nav, pagination_metadata_last_page)
 
       expect(html).to include("class=\"page-item disabled\"")
-      expect(html).not_to include("page=6")
+      expect(html).to exclude("page=6")
     end
   end
 
@@ -131,7 +131,7 @@ RSpec.describe PaginationHelper, type: :helper do
       html = helper.send(:first_page_item, pagination_metadata)
 
       expect(html).to include("page=1")
-      expect(html).not_to include("class=\"page-item disabled\"")
+      expect(html).to exclude("class=\"page-item disabled\"")
     end
 
     it "disables first page link when on first page" do
@@ -147,7 +147,7 @@ RSpec.describe PaginationHelper, type: :helper do
       html = helper.send(:last_page_item, pagination_metadata)
 
       expect(html).to include("page=5")
-      expect(html).not_to include("class=\"page-item disabled\"")
+      expect(html).to exclude("class=\"page-item disabled\"")
     end
 
     it "disables last page link when on last page" do

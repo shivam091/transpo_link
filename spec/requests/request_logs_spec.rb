@@ -27,20 +27,19 @@ RSpec.describe "RequestLogs", type: :request do
     include_context "sign in as admin"
 
     describe "GET /request-logs" do
-      before { get request_logs_path }
+      it "renders list of all request logs with pagination" do
+        get request_logs_path
 
-      it "returns :ok status" do
-        expect(controller_assigns(:request_logs)).to be_present
-        expect(controller_assigns(:pagination_metadata)).to be_present
         expect(controller_assigns(:request_logs)).to include(request_log)
+        expect(controller_assigns(:pagination_metadata)).to be_present
         expect(response).to have_http_status(:ok)
       end
     end
 
     describe "GET /request-logs/:id" do
-      before { get request_log_path(request_log) }
+      it "renders request log details page" do
+        get request_log_path(request_log)
 
-      it "returns :ok status" do
         expect(controller_assigns(:request_log)).to eq(request_log)
         expect(response).to have_http_status(:ok)
       end

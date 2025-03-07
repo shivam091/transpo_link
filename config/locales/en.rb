@@ -327,6 +327,7 @@
       cancel: "Cancel",
     },
     common: {
+      actions: "Actions",
       selected: "%{count} selected",
     },
     devise: {
@@ -617,10 +618,18 @@
         all: "All",
         active: "Active",
         inactive: "Inactive",
+        suspended: "Suspended",
       },
       address_form_fields: {
         select_country: "Select country or region",
         select_state: "Select state, province, county, or territory",
+      },
+      no_records: {
+        no_users_to_display: "No users to display",
+        no_request_logs_to_display: "No request logs to display",
+        no_warehouses_to_display: "No warehouses to display",
+        no_tax_rates_to_display: "No tax rates to display",
+        no_legal_identifiers_to_display: "No legal identifiers to display",
       },
     },
     flashes: {
@@ -762,10 +771,9 @@
       },
       index: {
         title: "Users",
+        actions: "Actions",
       },
       user: {
-        actions: "Actions",
-        no_users_to_display: "No users to display",
       },
       show: {
         basic_n_contact_details: "Basic & contact details",
@@ -809,6 +817,10 @@
         select_time_zone: "Select time zone",
         select_currency: "Select currency",
         language_translation_percentage: "%{language} (%{percent_translated} translated)",
+        preferred_locale_help_text: "Specify your preferred language from a list of supported languages. This feature is experimental and translations are not complete yet.",
+        preferred_time_zone_help_text: "The chosen time zone influences the displayed dates and when notifications about overdue invoices are emailed.",
+        preferred_currency_help_text: "Select your preferred currency for displaying product prices, invoices, and financial summaries. The selected currency will be used to convert and show prices during transactions, so you’ll see costs in your preferred currency, even if the product is listed in another currency.",
+        preferred_color_scheme_help_text: "Choose your preferred color scheme for the interface."
       },
     },
     locales: {
@@ -825,7 +837,6 @@
         title: "Request logs",
       },
       request_log: {
-        no_request_logs_to_display: "No request logs to display"
       },
       show: {
         basic_details: "Basic details",
@@ -836,11 +847,16 @@
     },
     warehouses: {
       index: {
-        title: "Warehouses"
+        title: "Warehouses",
+        actions: "Actions",
+      },
+      active: {
+        title: "Active warehouses",
+      },
+      inactive: {
+        title: "Inactive warehouses",
       },
       warehouse: {
-        actions: "Actions",
-        no_warehouses_to_display: "No warehouses to display",
         delete_warehouse_confirmation_text: "Are you sure you want to delete the warehouse ‘%{warehouse_name}’? All related data may be lost.",
       },
       new: {
@@ -853,7 +869,7 @@
         basic_details: "Basic details",
         address: "Address",
       },
-      warehouse_basic_details_fields: {
+      basic_details_fields: {
         select_capacity_unit: "Select capacity unit",
         select_managers: "Select managers",
         select_suppliers: "Select suppliers",
@@ -865,16 +881,19 @@
         title: "Your legal identifiers",
         your_legal_identifiers: "Your legal identifiers",
         your_legal_identifiers_help_text: "Manage your legal identifiers across different countries with ease.",
-        legal_identifiers_list_item_1: "Add multiple tax records based on the regions where your business operates.",
-        legal_identifiers_list_item_2: "These identifiers are essential for regulatory compliance, invoicing, and taxation.",
-        legal_identifiers_list_item_3: "Ensure accuracy to prevent processing delays, tax penalties, or compliance issues.",
-        legal_identifiers_list_item_4: "Your tax and business registration details will be used for automated tax calculations, invoice generation, and verification purposes.",
-        legal_identifiers_tip: "Keep your records updated to comply with local tax regulations and avoid potential business disruptions.",
       },
       legal_identifier: {
-        actions: "Actions",
-        no_legal_identifiers_to_display: "No legal identifiers to display",
         delete_legal_identifier_confirmation_text: "Are you sure you want to delete this? This action cannot be undone.",
+      },
+      help_texts: {
+        main: "Legal identifiers are crucial for tax compliance and business operations. They ensure smooth transactions, proper tax filings, and regulatory adherence.",
+        items: [
+          "Add multiple tax records based on the regions where your business operates.",
+          "These identifiers are essential for regulatory compliance, invoicing, and taxation.",
+          "Ensure accuracy to prevent processing delays, tax penalties, or compliance issues.",
+          "Your tax and business registration details will be used for automated tax calculations, invoice generation, and verification purposes.",
+        ],
+        tip: "Keep your records updated to comply with local tax regulations and avoid potential business disruptions.",
       },
       new: {
         title: "New legal identifier",
@@ -894,9 +913,7 @@
         title: "Tax rates",
       },
       tax_rate: {
-        actions: "Actions",
-        no_tax_rates_to_display: "No tax rates to display",
-        delete_tax_rate_confirmation_text: "Are you sure you want to delete this '%{tax_identifier_type}' for '%{country}'? This cannot be undone.",
+        delete_tax_rate_confirmation_text: "Are you sure you want to delete this? This action cannot be undone.",
       },
       new: {
         title: "New tax rate",

@@ -63,6 +63,7 @@ RSpec.describe LegalIdentifier, type: :model do
 
   describe "constants" do
     it { is_expected.to have_constant(:BUSINESS_IDENTIFIER_TYPE_COUNTRY_COMBINATIONS) }
+    it { is_expected.to have_constant(:LISTING_ATTRIBUTES) }
   end
 
   describe "associations" do

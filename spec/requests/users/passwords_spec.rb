@@ -11,7 +11,7 @@ RSpec.describe "Users::Passwords", type: :request do
   let(:dummy_password) { Rails.application.credentials.config[:TEST_PASSWORD] }
 
   describe "GET /users/password/new" do
-    it "renders the password reset request page" do
+    it "renders the password reset page" do
       get new_user_password_path
 
       expect(response).to have_http_status(:ok)
@@ -21,7 +21,7 @@ RSpec.describe "Users::Passwords", type: :request do
 
   describe "POST /users/password" do
     context "when the user has not recently requested a password reset" do
-      it "sends password reset instructions" do
+      it "sends password reset instructions and redirects" do
         expect {
           post user_password_path, params: {user: {email: user.email}}
         }.to change { ActionMailer::Base.deliveries.count }.by(0)
@@ -38,10 +38,10 @@ RSpec.describe "Users::Passwords", type: :request do
         allow_any_instance_of(User).to receive(:recently_sent_password_reset_instructions?) { true }
       end
 
-      it "throttles the password reset request" do
+      it "throttles the password reset request and redirects with an error message" do
         expect {
           post user_password_path, params: {user: {email: user.email}}
-        }.not_to change { ActionMailer::Base.deliveries.count }
+        }.to not_change { ActionMailer::Base.deliveries.count }
 
         expect(response).to redirect_to(new_user_session_path)
         expect(response).to have_http_status(:found)
@@ -54,7 +54,7 @@ RSpec.describe "Users::Passwords", type: :request do
       it "does not send password reset instructions but responds as if it did (for security)" do
         expect {
           post user_password_path, params: {user: {email: "nonexistent@example.com"}}
-        }.not_to change { ActionMailer::Base.deliveries.count }
+        }.to not_change { ActionMailer::Base.deliveries.count }
 
         expect(response).to have_http_status(:unprocessable_entity)
         expect(response.body).to include("Email address not found")
@@ -65,7 +65,7 @@ RSpec.describe "Users::Passwords", type: :request do
   describe "GET /users/password/edit" do
     let(:reset_token) { user.send_reset_password_instructions }
 
-    it "renders the password change page" do
+    it "renders the password edit page" do
       get edit_user_password_path, params: {reset_password_token: reset_token}
 
       expect(response).to have_http_status(:ok)
@@ -77,7 +77,7 @@ RSpec.describe "Users::Passwords", type: :request do
     let(:reset_token) { user.send_reset_password_instructions }
 
     context "with valid token and matching passwords" do
-      it "resets the password successfully" do
+      it "resets the password and redirects" do
         put user_password_path, params: {
           user: {
             reset_password_token: reset_token,
@@ -94,7 +94,7 @@ RSpec.describe "Users::Passwords", type: :request do
     end
 
     context "with invalid token" do
-      it "does not reset the password" do
+      it "does not reset the password and renders errors" do
         put user_password_path, params: {
           user: {
             reset_password_token: "invalidtoken",
@@ -109,7 +109,7 @@ RSpec.describe "Users::Passwords", type: :request do
     end
 
     context "with mismatched password and confirmation" do
-      it "does not reset the password" do
+      it "does not reset the password and renders errors" do
         put user_password_path, params: {
           user: {
             reset_password_token: reset_token,

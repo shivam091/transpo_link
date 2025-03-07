@@ -5,6 +5,10 @@
 class TaxRate < ApplicationRecord
   include Pageable, Taxable, Sortable
 
+  LISTING_ATTRIBUTES = %i[
+    country tax_identifier_type business_category rate valid_from valid_to
+  ].freeze
+
   enum :business_category, {
     b2b: "b2b",
     b2c: "b2c"

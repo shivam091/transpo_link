@@ -12,15 +12,20 @@
           = external_svg_tag("svgs/plus.svg")
           = button_text("new")
       .widget-body
-        %ul
-          %li= t(".legal_identifiers_list_item_1")
-          %li= t(".legal_identifiers_list_item_2")
-          %li= t(".legal_identifiers_list_item_3")
-          %li= t(".legal_identifiers_list_item_4")
-        %p
-          = external_svg_tag("svgs/bulb.svg")
-          = t(".legal_identifiers_tip")
-        = render_if_exists("legal_identifiers/legal_identifier")
+        = render_if_exists("legal_identifiers/help_texts")
+        .table-responsive
+          %table.table.table-striped.table-borderless
+            %thead.border
+              %tr.table-active
+                %th{width: "25px", scope: "col"}#
+                - LegalIdentifier::LISTING_ATTRIBUTES.each do |attribute|
+                  %th{scope: "col"}= LegalIdentifier.human_attribute_name(attribute)
+                %th{scope: "col"}= t("common.actions")
+            %tbody.border
+              - if @legal_identifiers&.each.with_index(1) do |legal_identifier, index|
+                = render_if_exists("legal_identifiers/legal_identifier", locals: {legal_identifier:, index:})
+              - end.empty?
+                = render_if_exists("shared/no_records", locals: {resource: LegalIdentifier})
       - if @pagination_metadata.total_pages > 1
         .widget-footer
           = render_pagination(@pagination_metadata)

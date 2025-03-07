@@ -8,6 +8,7 @@ require "spec_helper"
 
 RSpec.describe "Warehouses", type: :request do
   let!(:warehouse) { create(:warehouse, :active) }
+  let!(:inactive_warehouse) { create(:warehouse) }
   let!(:manager) { create(:manager) }
   let!(:supplier) { create(:supplier) }
 
@@ -20,6 +21,18 @@ RSpec.describe "Warehouses", type: :request do
   context "when user is not signed in" do
     describe "GET /warehouses" do
       subject { get warehouses_path }
+
+      it { is_expected.to require_sign_in }
+    end
+
+    describe "GET /warehouses/active" do
+      subject { get active_warehouses_path }
+
+      it { is_expected.to require_sign_in }
+    end
+
+    describe "GET /warehouses/inactive" do
+      subject { get inactive_warehouses_path }
 
       it { is_expected.to require_sign_in }
     end
@@ -65,12 +78,33 @@ RSpec.describe "Warehouses", type: :request do
     include_context "sign in as admin"
 
     describe "GET /warehouses" do
-      before { get warehouses_path }
+      it "renders list of all warehouses with pagination" do
+        get warehouses_path
 
-      it "renders warehouse list and returns :ok status" do
-        expect(controller_assigns(:warehouses)).to be_present
         expect(controller_assigns(:pagination_metadata)).to be_present
         expect(controller_assigns(:warehouses)).to include(warehouse)
+        expect(response).to have_http_status(:ok)
+      end
+    end
+
+    describe "GET /warehouses/active" do
+      it "renders list of active warehouses with pagination" do
+        get active_warehouses_path
+
+        expect(controller_assigns(:pagination_metadata)).to be_present
+        expect(controller_assigns(:warehouses)).to include(warehouse)
+        expect(controller_assigns(:warehouses)).to exclude(inactive_warehouse)
+        expect(response).to have_http_status(:ok)
+      end
+    end
+
+    describe "GET /warehouses/inactive" do
+      it "renders list of inactive warehouses with pagination" do
+        get inactive_warehouses_path
+
+        expect(controller_assigns(:pagination_metadata)).to be_present
+        expect(controller_assigns(:warehouses)).to include(inactive_warehouse)
+        expect(controller_assigns(:warehouses)).to exclude(warehouse)
         expect(response).to have_http_status(:ok)
       end
     end
@@ -79,15 +113,11 @@ RSpec.describe "Warehouses", type: :request do
       before { get new_warehouse_path }
 
       include_examples "initializes a new instance", :warehouse, Warehouse
-
-      it "returns :ok status" do
-        expect(response).to have_http_status(:ok)
-      end
     end
 
     describe "POST /warehouses" do
       context "when valid attributes" do
-        it "creates the warehouse" do
+        it "creates the warehouse and redirects" do
           post warehouses_path, params: {warehouse: valid_attributes}, as: :turbo_stream
 
           expect(flash[:notice]).to eq("Warehouse was successfully created.")
@@ -97,7 +127,7 @@ RSpec.describe "Warehouses", type: :request do
       end
 
       context "when invalid attributes" do
-        it "does not create new warehouse" do
+        it "does not create the warehouse and renders errors" do
           post warehouses_path, params: {warehouse: invalid_attributes}, as: :turbo_stream
 
           expect(flash[:alert]).to eq("Warehouse could not be created.")
@@ -109,7 +139,7 @@ RSpec.describe "Warehouses", type: :request do
     end
 
     describe "GET /warehouses/:id/edit" do
-      it "returns :ok status" do
+      it "renders warehouse edit page" do
         get edit_warehouse_path(warehouse)
 
         expect(controller_assigns(:warehouse)).to eq(warehouse)
@@ -119,18 +149,18 @@ RSpec.describe "Warehouses", type: :request do
 
     describe "PUT|PATCH /warehouses/:id" do
       context "when valid attributes" do
-        it "updates the warehouse" do
+        it "updates the warehouse and redirects" do
           put warehouse_path(warehouse), params: {warehouse: valid_attributes}, as: :turbo_stream
 
           expect(warehouse.reload.name).to eq("New warehouse")
-          expect(flash[:notice]).to eq("Warehouse was successfully updated.")
           expect(response).to redirect_to(warehouses_path)
+          expect(flash[:notice]).to eq("Warehouse was successfully updated.")
           expect(response).to have_http_status(:see_other)
         end
       end
 
       context "when invalid attributes" do
-        it "does not update the warehouse" do
+        it "does not update the warehouse and renders errors" do
           put warehouse_path(warehouse), params: {warehouse: invalid_attributes}, as: :turbo_stream
 
           expect(flash[:alert]).to eq("Warehouse could not be updated.")
@@ -145,14 +175,14 @@ RSpec.describe "Warehouses", type: :request do
       it "renders warehouse details page" do
         get warehouse_path(warehouse)
 
-        expect(response.body).to include("<div class='widget-help'>")
+        expect(controller_assigns(:warehouse)).to eq(warehouse)
         expect(response).to have_http_status(:ok)
       end
     end
 
     describe "DELETE /warehouse/:id" do
       context "when valid id" do
-        it "deletes the warehouse" do
+        it "deletes the warehouse and redirects" do
           delete warehouse_path(warehouse)
 
           expect(response).to redirect_to(warehouses_path)
@@ -161,14 +191,14 @@ RSpec.describe "Warehouses", type: :request do
         end
       end
 
-      context "when invalid id" do
+      context "when delete fails" do
         let(:service_response) { ServiceResponse.error(message: "Warehouse could not be deleted.") }
 
         before do
           allow(Warehouses::DestroyService).to receive(:call) { service_response }
         end
 
-        it "redirects with an error message" do
+        it "does not delete the warehouse and redirects with an error message" do
           delete warehouse_path(warehouse)
 
           expect(response).to redirect_to(warehouses_path)

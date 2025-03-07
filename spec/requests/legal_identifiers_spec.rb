@@ -55,12 +55,11 @@ RSpec.describe "LegalIdentifiers", type: :request do
     include_context "sign in as buyer"
 
     describe "GET /legal-identifiers" do
-      before { get legal_identifiers_path }
+      it "renders list of all legal identifiers with pagination" do
+        get legal_identifiers_path
 
-      it "renders legal identifiers list and returns :ok status" do
-        expect(controller_assigns(:legal_identifiers)).to be_present
-        expect(controller_assigns(:pagination_metadata)).to be_present
         expect(controller_assigns(:legal_identifiers)).to include(legal_identifier)
+        expect(controller_assigns(:pagination_metadata)).to be_present
         expect(response).to have_http_status(:ok)
       end
     end
@@ -69,25 +68,21 @@ RSpec.describe "LegalIdentifiers", type: :request do
       before { get new_legal_identifier_path }
 
       include_examples "initializes a new instance", :legal_identifier, LegalIdentifier
-
-      it "returns :ok status" do
-        expect(response).to have_http_status(:ok)
-      end
     end
 
     describe "POST /legal-identifiers" do
       context "when valid attributes" do
-        it "creates the legal identifier" do
+        it "creates the legal identifier and redirects" do
           post legal_identifiers_path, params: {legal_identifier: valid_attributes}, as: :turbo_stream
 
-          expect(flash[:notice]).to eq("Legal identifier was successfully added.")
           expect(response).to redirect_to(legal_identifiers_path)
+          expect(flash[:notice]).to eq("Legal identifier was successfully added.")
           expect(response).to have_http_status(:see_other)
         end
       end
 
       context "when invalid attributes" do
-        it "does not create new legal identifier" do
+        it "does not create the legal identifier and renders errors" do
           post legal_identifiers_path, params: {legal_identifier: invalid_attributes}, as: :turbo_stream
 
           expect(flash[:alert]).to eq("Legal identifier could not be added.")
@@ -99,7 +94,7 @@ RSpec.describe "LegalIdentifiers", type: :request do
     end
 
     describe "GET /legal-identifiers/:id/edit" do
-      it "returns :ok status" do
+      it "renders legal identifier edit page" do
         get edit_legal_identifier_path(legal_identifier)
 
         expect(controller_assigns(:legal_identifier)).to eq(legal_identifier)
@@ -109,18 +104,18 @@ RSpec.describe "LegalIdentifiers", type: :request do
 
     describe "PUT|PATCH /legal-identifiers/:id" do
       context "when valid attributes" do
-        it "updates the legal identifier" do
+        it "updates the legal identifier and redirects" do
           put legal_identifier_path(legal_identifier), params: {legal_identifier: valid_attributes}, as: :turbo_stream
 
           expect(legal_identifier.reload.tax_identifier).to eq("29AACCB3455A1Z9")
-          expect(flash[:notice]).to eq("Legal identifier was successfully updated.")
           expect(response).to redirect_to(legal_identifiers_path)
+          expect(flash[:notice]).to eq("Legal identifier was successfully updated.")
           expect(response).to have_http_status(:see_other)
         end
       end
 
       context "when invalid attributes" do
-        it "does not update the legal identifier" do
+        it "does not update the legal identifier and renders errors" do
           put legal_identifier_path(legal_identifier), params: {legal_identifier: invalid_attributes}, as: :turbo_stream
 
           expect(flash[:alert]).to eq("Legal identifier could not be updated.")
@@ -133,7 +128,7 @@ RSpec.describe "LegalIdentifiers", type: :request do
 
     describe "DELETE /legal-identifiers/:id" do
       context "when valid id" do
-        it "deletes the legal identifier" do
+        it "deletes the legal identifier and redirects" do
           delete legal_identifier_path(legal_identifier)
 
           expect(response).to redirect_to(legal_identifiers_path)
@@ -142,14 +137,14 @@ RSpec.describe "LegalIdentifiers", type: :request do
         end
       end
 
-      context "when invalid id" do
+      context "when delete fails" do
         let(:service_response) { ServiceResponse.error(message: "Legal identifier could not be deleted.") }
 
         before do
           allow(LegalIdentifiers::DestroyService).to receive(:call) { service_response }
         end
 
-        it "redirects with an error message" do
+        it "does not delete the legal identifier and redirects with an error message" do
           delete legal_identifier_path(legal_identifier)
 
           expect(response).to redirect_to(legal_identifiers_path)
