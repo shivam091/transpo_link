@@ -703,6 +703,10 @@
           notice: "Product category was successfully updated.",
           alert: "Product category could not be updated."
         },
+        destroy: {
+          info: "Product category was successfully deleted.",
+          alert: "Product category could not be deleted."
+        },
       },
     },
     measurement_units: {
@@ -938,6 +942,7 @@
         title: "Product categories",
       },
       product_category: {
+        delete_product_category_confirmation_text: "Are you sure you want to delete the product category ‘%{product_category_name}’? This cannot be undone.",
       },
       new: {
         title: "New product category",

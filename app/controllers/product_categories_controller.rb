@@ -61,6 +61,18 @@ class ProductCategoriesController < ApplicationController
     end
   end
 
+  # DELETE /product-categories/:id
+  def destroy
+    response = ProductCategories::DestroyService.(@product_category)
+    @product_category = response.payload[:product_category]
+    if response.success?
+      flash[:info] = response.message
+    else
+      flash[:alert] = response.message
+    end
+    redirect_to product_categories_path, status: :see_other
+  end
+
   private
 
   def product_category_params
