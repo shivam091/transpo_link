@@ -77,7 +77,7 @@ class TaxRatesController < ApplicationController
 
   def tax_rate_params
     params.require(:tax_rate).permit(
-      :tax_type,
+      :tax_identifier_type,
       :country,
       :business_category,
       :rate,

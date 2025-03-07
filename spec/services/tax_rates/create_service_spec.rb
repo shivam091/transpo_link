@@ -23,7 +23,7 @@ RSpec.describe TaxRates::CreateService, type: :service do
     end
 
     context "when tax rate is invalid" do
-      let(:tax_rate_attributes) { attributes_for(:tax_rate, tax_type: "") }
+      let(:tax_rate_attributes) { attributes_for(:tax_rate, tax_identifier_type: "") }
 
       include_examples "does not change count of objects", TaxRate
 

@@ -2,12 +2,14 @@
 # -*- frozen_string_literal: true -*-
 # -*- warn_indent: true -*-
 
-# Mixin module to provide shared functionality for managing tax-related attributes.
+# Mixin module to provide shared functionalities for managing tax-related attributes.
 module Taxable
   extend ActiveSupport::Concern
 
   included do
-    enum :tax_type, {
+    normalizes :tax_identifier, with: -> tax_identifier { tax_identifier.strip.upcase }
+
+    enum :tax_identifier_type, {
       # Global
       vat: "vat",                           # Value Added Tax
       gst: "gst",                           # Goods and Services Tax
@@ -25,11 +27,7 @@ module Taxable
 
       # European Union (EU)
       vatin: "vatin",                       # VAT Identification Number
-      eori: "eori",                         # Economic Operators Registration and Identification Number
       nif: "nif",                           # Tax Identification Number
-      cif: "cif",                           # Tax Identification Code
-      siret: "siret",                       # Business Identification System
-      siren: "siren",                       # Establishment Identification System
 
       # United Kingdom
       utr: "utr",                           # Unique Taxpayer Reference
@@ -40,7 +38,6 @@ module Taxable
 
       # Australia & New Zealand
       abn: "abn",                           # Australian Business Number
-      acn: "acn",                           # Australian Company Number
       tfn: "tfn",                           # Tax File Number
       ird: "ird",                           # Inland Revenue Department Number
 
@@ -62,24 +59,11 @@ module Taxable
       trn: "trn",                           # Tax Registration Number
       kra_pin: "kra_pin",                   # Kenya Revenue Authority PIN
 
-      # Hong Kong & Malaysia
-      brn: "brn",                           # Business Registration Number
-
-      # Japan
-      corporate_number: "corporate_number", # Corporate Number
-      my_number: "my_number",               # Individual Tax Number
-
       # Russia
       inn: "inn",                           # Taxpayer Identification Number
-      kpp: "kpp",                           # Tax Registration Reason Code
-      ogrn: "ogrn",                         # Principal State Registration Number
-      ogrnip: "ogrnip",                     # Individual Entrepreneur Registration Number
 
       # South Korea
       brn_kr: "brn_kr",                     # Business Registration Number
-
-      # China
-      uscc: "uscc",                         # Unified Social Credit Code
 
       # Vietnam
       mst: "mst",                           # Tax Identification Number
@@ -92,35 +76,75 @@ module Taxable
 
       # Singapore
       uen: "uen",                           # Unique Entity Number
+
+      # Colombia
+      rut: "rut"                            # Single Tax Registry
     }
 
-    validates :tax_type,
+    validates :tax_identifier_type,
               presence: true,
-              inclusion: {in: tax_types.values, message: :inclusion},
+              inclusion: {
+                in: tax_identifier_types.values,
+                message: :inclusion
+              },
               reduce: true
     validates :country,
               presence: true,
-              if: :requires_country?,
               reduce: true
+    validate :tax_identifier_type_country_combination
   end
 
   class_methods do
-    INTERNATIONAL_TAX_TYPES = %w[vat gst tin].freeze
-
-    REGIONAL_TAX_TYPES = %w[vatin eori].freeze
-
-    NATIONAL_TAX_TYPES = %w[
-      ein ssn itin pan tan gstin nif cif siret siren utr bn qst abn acn tfn ird rfc
-      cuit cuil cnpj cpf npwp trn kra_pin corporate_number my_number inn kpp ogrn
-      ogrnip brn_kr uscc mst tin_ph tin_th uen
+    EU_COUNTRIES = %w[
+      AT BE BG HR CY CZ DK EE FI FR DE GR HU IE IT LV LT LU MT NL PL PT RO SK SI
+      ES SE
     ].freeze
 
-    COUNTRY_REQUIRING_TAX_TYPES = INTERNATIONAL_TAX_TYPES + REGIONAL_TAX_TYPES + %w[ruc nit brn].freeze
+    TAX_IDENTIFIER_TYPE_COUNTRY_COMBINATIONS = {
+      vat:     EU_COUNTRIES + %w[GB CH NO TR BR ZA AE SA EG NG],
+      gst:     %w[AU NZ CA IN SG MY],
+      tin:     %w[US IN PH VN CN KE],
+      ein:     %w[US],
+      ssn:     %w[US],
+      itin:    %w[US],
+      pan:     %w[IN],
+      tan:     %w[IN],
+      gstin:   %w[IN],
+      vatin:   EU_COUNTRIES,
+      nif:     %w[ES],
+      utr:     %w[GB],
+      bn:      %w[CA],
+      qst:     %w[CA],
+      abn:     %w[AU],
+      tfn:     %w[AU],
+      ird:     %w[NZ],
+      rfc:     %w[MX CO AR PE PY EC PA BO SV GT],
+      cuit:    %w[AR],
+      cuil:    %w[AR],
+      ruc:     %w[PE PY EC PA],
+      nit:     %w[CO BO SV GT],
+      cnpj:    %w[BR],
+      cpf:     %w[BR],
+      npwp:    %w[ID],
+      trn:     %w[AE],
+      kra_pin: %w[KE],
+      inn:     %w[RU],
+      brn_kr:  %w[KR],
+      mst:     %w[VN],
+      tin_ph:  %w[PH],
+      tin_th:  %w[TH],
+      uen:     %w[SG],
+      rut:     %w[CO]
+    }
   end
 
   private
 
-  def requires_country?
-    tax_type.in?(COUNTRY_REQUIRING_TAX_TYPES)
+  def tax_identifier_type_country_combination
+    return unless country.present? && tax_identifier_type.present?
+
+    unless TAX_IDENTIFIER_TYPE_COUNTRY_COMBINATIONS[tax_identifier_type.to_sym].include?(country)
+      errors.add(:tax_identifier_type, :invalid)
+    end
   end
 end
