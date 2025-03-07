@@ -47,7 +47,7 @@ RSpec.describe FlashMessagesHelper, type: :helper do
       let(:flash_messages) { {unknown: "This should not be displayed."} }
 
       it "does not render unknown flash types" do
-        expect(helper.flash_messages).not_to include("This should not be displayed.")
+        expect(helper.flash_messages).to exclude("This should not be displayed.")
       end
     end
   end

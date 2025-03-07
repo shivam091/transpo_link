@@ -45,7 +45,7 @@ RSpec.describe ApplicationRecord, type: :model do
       expect(query_with_order.to_sql).to include("ORDER BY")
 
       query_without_order = query_with_order.without_order
-      expect(query_without_order.to_sql).not_to include("ORDER BY")
+      expect(query_without_order.to_sql).to exclude("ORDER BY")
     end
   end
 

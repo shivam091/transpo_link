@@ -41,7 +41,7 @@ RSpec.describe "Users::Passwords", type: :request do
       it "throttles the password reset request" do
         expect {
           post user_password_path, params: {user: {email: user.email}}
-        }.not_to change { ActionMailer::Base.deliveries.count }
+        }.to not_change { ActionMailer::Base.deliveries.count }
 
         expect(response).to redirect_to(new_user_session_path)
         expect(response).to have_http_status(:found)
@@ -54,7 +54,7 @@ RSpec.describe "Users::Passwords", type: :request do
       it "does not send password reset instructions but responds as if it did (for security)" do
         expect {
           post user_password_path, params: {user: {email: "nonexistent@example.com"}}
-        }.not_to change { ActionMailer::Base.deliveries.count }
+        }.to not_change { ActionMailer::Base.deliveries.count }
 
         expect(response).to have_http_status(:unprocessable_entity)
         expect(response.body).to include("Email address not found")
