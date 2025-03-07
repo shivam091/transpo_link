@@ -6,6 +6,7 @@ class CreateProductCategories < ActiveRecord::Migration[8.0]
   def change
     create_table :product_categories, id: :uuid do |t|
       t.string :name
+      t.integer :products_count, default: 0
       t.references :parent_category,
                    type: :uuid,
                    foreign_key: {

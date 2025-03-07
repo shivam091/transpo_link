@@ -17,6 +17,7 @@ RSpec.describe ProductCategory, type: :model do
   describe "attributes, indexes, foreign keys, and check constraints" do
     it { is_expected.to have_db_column(:id).of_type(:uuid) }
     it { is_expected.to have_db_column(:name).of_type(:string) }
+    it { is_expected.to have_db_column(:products_count).of_type(:integer).with_options(default: 0) }
     it { is_expected.to have_db_column(:parent_category_id).of_type(:uuid).with_options(null: true) }
     it { is_expected.to have_db_column(:is_active).of_type(:boolean).with_options(default: false) }
     it { is_expected.to have_db_column(:created_at).of_type(:timestamptz).with_options(null: false) }

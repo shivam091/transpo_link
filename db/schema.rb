@@ -66,6 +66,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_06_155901) do
 
   create_table "product_categories", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name"
+    t.integer "products_count", default: 0
     t.uuid "parent_category_id"
     t.boolean "is_active", default: false
     t.timestamptz "created_at", null: false
