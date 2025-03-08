@@ -17,9 +17,9 @@ class LegalIdentifiers::DestroyService < ApplicationService
 
   def destroy_legal_identifier
     if legal_identifier.destroy
-      ServiceResponse.success(message: t("legal_identifiers.destroy.info"), payload: {legal_identifier: legal_identifier})
+      ServiceResponse.success(payload: {legal_identifier:})
     else
-      ServiceResponse.error(message: t("legal_identifiers.destroy.alert"), payload: {legal_identifier: legal_identifier})
+      ServiceResponse.error(payload: {legal_identifier:})
     end
   end
 end
