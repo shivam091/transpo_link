@@ -116,7 +116,7 @@ RSpec.describe "Warehouses", type: :request do
     end
 
     describe "POST /warehouses" do
-      context "when valid attributes" do
+      context "when provided attributes are valid" do
         it "creates the warehouse and redirects" do
           post warehouses_path, params: {warehouse: valid_attributes}, as: :turbo_stream
 
@@ -126,7 +126,7 @@ RSpec.describe "Warehouses", type: :request do
         end
       end
 
-      context "when invalid attributes" do
+      context "when provided attributes are invalid" do
         it "does not create the warehouse and renders errors" do
           post warehouses_path, params: {warehouse: invalid_attributes}, as: :turbo_stream
 
@@ -148,7 +148,7 @@ RSpec.describe "Warehouses", type: :request do
     end
 
     describe "PUT|PATCH /warehouses/:id" do
-      context "when valid attributes" do
+      context "when provided attributes are valid" do
         it "updates the warehouse and redirects" do
           put warehouse_path(warehouse), params: {warehouse: valid_attributes}, as: :turbo_stream
 
@@ -159,7 +159,7 @@ RSpec.describe "Warehouses", type: :request do
         end
       end
 
-      context "when invalid attributes" do
+      context "when provided attributes are invalid" do
         it "does not update the warehouse and renders errors" do
           put warehouse_path(warehouse), params: {warehouse: invalid_attributes}, as: :turbo_stream
 
@@ -192,10 +192,8 @@ RSpec.describe "Warehouses", type: :request do
       end
 
       context "when delete fails" do
-        let(:service_response) { ServiceResponse.error(message: "Warehouse could not be deleted.") }
-
         before do
-          allow(Warehouses::DestroyService).to receive(:call) { service_response }
+          allow(Warehouses::DestroyService).to receive(:call) { ServiceResponse.error }
         end
 
         it "does not delete the warehouse and redirects with an error message" do
