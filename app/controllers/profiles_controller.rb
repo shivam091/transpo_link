@@ -16,10 +16,10 @@ class ProfilesController < ApplicationController
   def update
     response = Profiles::UpdateService.(current_user, profile_params)
     if response.success?
-      flash[:notice] = response.message
+      set_flash_message(:notice, :success)
       redirect_to profile_path, status: :see_other
     else
-      flash.now[:alert] = response.message
+      set_flash_message(:alert, :error, immediate: true)
       respond_to do |format|
         format.turbo_stream do
           render turbo_stream: [

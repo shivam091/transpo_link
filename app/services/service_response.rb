@@ -3,22 +3,21 @@
 # -*- warn_indent: true -*-
 
 class ServiceResponse
-  attr_reader :status, :message, :http_status, :payload
+  attr_reader :status, :http_status, :payload
 
-  def initialize(status:, message: nil, payload: {}, http_status: nil)
+  def initialize(status:, payload: {}, http_status: nil)
     self.status = status
-    self.message = message
     self.payload = payload
     self.http_status = http_status
   end
 
   class << self
-    def success(message: nil, payload: {})
-      new(status: :success, message: message, payload: payload, http_status: :ok)
+    def success(payload: {}, http_status: :ok)
+      new(status: :success, payload:, http_status:)
     end
 
-    def error(message: nil, payload: {}, http_status: nil)
-      new(status: :error, message: message, payload: payload, http_status: http_status)
+    def error(payload: {}, http_status: :unprocessable_entity)
+      new(status: :error, payload:, http_status:)
     end
   end
 
@@ -32,5 +31,5 @@ class ServiceResponse
 
   private
 
-  attr_writer :status, :message, :http_status, :payload
+  attr_writer :status, :http_status, :payload
 end

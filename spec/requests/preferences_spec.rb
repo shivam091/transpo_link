@@ -53,7 +53,7 @@ RSpec.describe "Preferences", type: :request do
     end
 
     describe "PUT|PATCH /preference" do
-      context "when valid attributes" do
+      context "when provided attributes are valid" do
         it "updates the preference and redirects" do
           put preference_path, params: {user: {user_preference_attributes: valid_attributes}}, as: :turbo_stream
 
@@ -64,7 +64,7 @@ RSpec.describe "Preferences", type: :request do
         end
       end
 
-      context "when invalid attributes" do
+      context "when provided attributes are invalid" do
         it "does not update the preference and renders errors" do
           put preference_path, params: {user: {user_preference_attributes: invalid_attributes}}, as: :turbo_stream
 

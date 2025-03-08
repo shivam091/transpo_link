@@ -16,10 +16,10 @@ class PreferencesController < ApplicationController
   def update
     response = Preferences::UpdateService.(current_user, preference_params)
     if response.success?
-      flash[:notice] = response.message
+      set_flash_message(:notice, :success)
       redirect_to preference_path, status: :see_other
     else
-      flash.now[:alert] = response.message
+      set_flash_message(:alert, :error, immediate: true)
       respond_to do |format|
         format.turbo_stream do
           render turbo_stream: [

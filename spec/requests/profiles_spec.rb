@@ -53,7 +53,7 @@ RSpec.describe "Profiles", type: :request do
     end
 
     describe "PUT|PATCH /profile" do
-      context "when valid attributes" do
+      context "when provided attributes are valid" do
         it "updates the profile and redirects" do
           put profile_path, params: {user: {user_detail_attributes: valid_attributes}}, as: :turbo_stream
 
@@ -64,7 +64,7 @@ RSpec.describe "Profiles", type: :request do
         end
       end
 
-      context "when invalid attributes" do
+      context "when provided attributes are invalid" do
         it "does not update the profile and renders errors" do
           put profile_path, params: {user: {user_detail_attributes: invalid_attributes}}, as: :turbo_stream
 

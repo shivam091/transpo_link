@@ -633,62 +633,62 @@
     flashes: {
       profiles: {
         update: {
-          notice: "Your profile was successfully updated.",
-          alert: "Your profile could not be updated."
+          success: "Your profile was successfully updated.",
+          error: "Your profile could not be updated."
         },
       },
       preferences: {
         update: {
-          notice: "Your preferences were successfully updated.",
-          alert: "Your preferences could not be updated."
+          success: "Your preferences were successfully updated.",
+          error: "Your preferences could not be updated."
         },
       },
       locales: {
         update: {
-          notice: "You've updated your language. Your change might take a while to show everywhere.",
-          alert: "Your language could not be updated."
+          success: "You've updated your language. Your change might take a while to show everywhere.",
+          error: "Your language could not be updated."
         },
       },
       warehouses: {
         create: {
-          notice: "Warehouse was successfully created.",
-          alert: "Warehouse could not be created.",
+          success: "Warehouse was successfully created.",
+          error: "Warehouse could not be created.",
         },
         update: {
-          notice: "Warehouse was successfully updated.",
-          alert: "Warehouse could not be updated."
+          success: "Warehouse was successfully updated.",
+          error: "Warehouse could not be updated."
         },
         destroy: {
-          info: "Warehouse was successfully deleted.",
-          alert: "Warehouse could not be deleted."
+          success: "Warehouse was successfully deleted.",
+          error: "Warehouse could not be deleted."
         },
       },
       legal_identifiers: {
         create: {
-          notice: "Legal identifier was successfully added.",
-          alert: "Legal identifier could not be added.",
+          success: "Legal identifier was successfully added.",
+          error: "Legal identifier could not be added.",
         },
         update: {
-          notice: "Legal identifier was successfully updated.",
-          alert: "Legal identifier could not be updated."
+          success: "Legal identifier was successfully updated.",
+          error: "Legal identifier could not be updated."
         },
         destroy: {
-          info: "Legal identifier was successfully deleted.",
-          alert: "Legal identifier could not be deleted."
+          success: "Legal identifier was successfully deleted.",
+          error: "Legal identifier could not be deleted."
         },
       },
       tax_rates: {
         create: {
-          notice: "Tax rate was successfully created.",
-          alert: "Tax rate could not be created.",
+          success: "Tax rate was successfully created.",
+          error: "Tax rate could not be created.",
         },
         update: {
-          notice: "Tax rate was successfully updated.",
-          alert: "Tax rate could not be updated."
+          success: "Tax rate was successfully updated.",
+          error: "Tax rate could not be updated."
         },
         destroy: {
-          info: "Tax rate was successfully deleted.",
-          alert: "Tax rate could not be deleted."
+          success: "Tax rate was successfully deleted.",
+          error: "Tax rate could not be deleted."
         },
       },
     },
