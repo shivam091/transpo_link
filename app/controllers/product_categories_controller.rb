@@ -41,7 +41,7 @@ class ProductCategoriesController < ApplicationController
   def edit
   end
 
-  # PUT|PATCH /product-categories/:id/edit
+  # PUT|PATCH /product-categories/:id
   def update
     response = ProductCategories::UpdateService.(@product_category, product_category_params)
     @product_category = response.payload[:product_category]
