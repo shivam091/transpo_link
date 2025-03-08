@@ -71,7 +71,7 @@ RSpec.describe "LegalIdentifiers", type: :request do
     end
 
     describe "POST /legal-identifiers" do
-      context "when valid attributes" do
+      context "when provided attributes are valid" do
         it "creates the legal identifier and redirects" do
           post legal_identifiers_path, params: {legal_identifier: valid_attributes}, as: :turbo_stream
 
@@ -81,7 +81,7 @@ RSpec.describe "LegalIdentifiers", type: :request do
         end
       end
 
-      context "when invalid attributes" do
+      context "when provided attributes are invalid" do
         it "does not create the legal identifier and renders errors" do
           post legal_identifiers_path, params: {legal_identifier: invalid_attributes}, as: :turbo_stream
 
@@ -103,7 +103,7 @@ RSpec.describe "LegalIdentifiers", type: :request do
     end
 
     describe "PUT|PATCH /legal-identifiers/:id" do
-      context "when valid attributes" do
+      context "when provided attributes are valid" do
         it "updates the legal identifier and redirects" do
           put legal_identifier_path(legal_identifier), params: {legal_identifier: valid_attributes}, as: :turbo_stream
 
@@ -114,7 +114,7 @@ RSpec.describe "LegalIdentifiers", type: :request do
         end
       end
 
-      context "when invalid attributes" do
+      context "when provided attributes are invalid" do
         it "does not update the legal identifier and renders errors" do
           put legal_identifier_path(legal_identifier), params: {legal_identifier: invalid_attributes}, as: :turbo_stream
 
@@ -138,10 +138,8 @@ RSpec.describe "LegalIdentifiers", type: :request do
       end
 
       context "when delete fails" do
-        let(:service_response) { ServiceResponse.error(message: "Legal identifier could not be deleted.") }
-
         before do
-          allow(LegalIdentifiers::DestroyService).to receive(:call) { service_response }
+          allow(LegalIdentifiers::DestroyService).to receive(:call) { ServiceResponse.error }
         end
 
         it "does not delete the legal identifier and redirects with an error message" do

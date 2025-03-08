@@ -70,7 +70,7 @@ RSpec.describe "TaxRates", type: :request do
     end
 
     describe "POST /tax-rates" do
-      context "when valid attributes" do
+      context "when provided attributes are valid" do
         it "creates the tax rate and redirects" do
           post tax_rates_path, params: {tax_rate: valid_attributes}, as: :turbo_stream
 
@@ -80,7 +80,7 @@ RSpec.describe "TaxRates", type: :request do
         end
       end
 
-      context "when invalid attributes" do
+      context "when provided attributes are invalid" do
         it "does not create the tax rate and renders errors" do
           post tax_rates_path, params: {tax_rate: invalid_attributes}, as: :turbo_stream
 
@@ -102,7 +102,7 @@ RSpec.describe "TaxRates", type: :request do
     end
 
     describe "PUT|PATCH /tax-rates/:id" do
-      context "when valid attributes" do
+      context "when provided attributes are valid" do
         it "updates the tax rate and redirects" do
           put tax_rate_path(tax_rate), params: {tax_rate: valid_attributes}, as: :turbo_stream
 
@@ -113,7 +113,7 @@ RSpec.describe "TaxRates", type: :request do
         end
       end
 
-      context "when invalid attributes" do
+      context "when provided attributes are invalid" do
         it "does not update the tax rate and renders errors" do
           put tax_rate_path(tax_rate), params: {tax_rate: invalid_attributes}, as: :turbo_stream
 
@@ -137,10 +137,8 @@ RSpec.describe "TaxRates", type: :request do
       end
 
       context "when delete fails" do
-        let(:service_response) { ServiceResponse.error(message: "Tax rate could not be deleted.") }
-
         before do
-          allow(TaxRates::DestroyService).to receive(:call) { service_response }
+          allow(TaxRates::DestroyService).to receive(:call) { ServiceResponse.error }
         end
 
         it "does not delete the tax rate and redirects with an error message" do
