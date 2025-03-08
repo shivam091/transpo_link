@@ -34,6 +34,7 @@ Rails.application.routes.draw do
   resource :preference, only: [:show, :edit, :update]
   resource :locale, only: [:edit, :update]
 
+  resources :roles, except: [:new, :create, :destroy]
   resources :users, only: [:index, :show]
   resources :request_logs, path: "request-logs", only: [:index, :show]
   resources :warehouses, concerns: :toggleable

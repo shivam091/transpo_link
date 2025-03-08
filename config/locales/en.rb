@@ -574,6 +574,7 @@
           reports: "Reports",
           feedbacks: "Feedbacks",
           tax_rates: "Tax rates",
+          roles: "Roles",
         },
         menu: {
           hello_username: "Hello %{username}",
@@ -624,6 +625,7 @@
       },
       no_records: {
         no_users_to_display: "No users to display",
+        no_roles_to_display: "No roles to display",
         no_request_logs_to_display: "No request logs to display",
         no_warehouses_to_display: "No warehouses to display",
         no_tax_rates_to_display: "No tax rates to display",
@@ -743,6 +745,13 @@
         ft: "Foot (ft)",
         yd: "Yard (yd)",
         mi: "Mile (mi)",
+      },
+    },
+    roles: {
+      index: {
+        title: "Roles",
+      },
+      role: {
       },
     },
     users: {

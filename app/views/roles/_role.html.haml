@@ -1,0 +1,9 @@
+%tr
+  %th{scope: "row"}= h(index)
+  %td= h(role.name)
+  %td= h(humanize_boolean(role.is_active))
+  %td.actions
+    .dropdown
+      = link_to "javascript:void(0)", class: "text-reset", data: {bs_toggle: "dropdown"}, aria: {expanded: false} do
+        = external_svg_tag("svgs/ellipsis-vertical.svg")
+      %ul.dropdown-menu
