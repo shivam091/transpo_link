@@ -1,6 +1,6 @@
 %tr
   %th{scope: "row"}= h(index)
-  %td= h(role.name)
+  %td= link_to role.name, role_path(role)
   %td= h(humanize_boolean(role.is_active))
   %td.actions
     .dropdown

@@ -95,6 +95,8 @@
         role: {
           name: "Name",
           is_active: "Is active",
+          created_at: "Created at",
+          updated_at: "Updated at",
         },
         request_log: {
           uuid: "UUID",

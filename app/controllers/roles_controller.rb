@@ -35,6 +35,10 @@ class RolesController < ApplicationController
     end
   end
 
+  # GET /roles/:id
+  def show
+  end
+
   private
 
   def role_params
