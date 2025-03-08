@@ -41,7 +41,7 @@ class TaxRatesController < ApplicationController
   def edit
   end
 
-  # PUT|PATCH /tax-rates/:id/edit
+  # PUT|PATCH /tax-rates/:id
   def update
     response = TaxRates::UpdateService.(@tax_rate, tax_rate_params)
     @tax_rate = response.payload[:tax_rate]
