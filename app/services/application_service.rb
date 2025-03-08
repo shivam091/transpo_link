@@ -8,9 +8,4 @@ class ApplicationService
       new(*args, &block).call
     end
   end
-
-  def t(key, options = {})
-    options.reverse_merge!(scope: "flashes")
-    I18n.t(key, **options)
-  end
 end
