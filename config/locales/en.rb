@@ -693,6 +693,12 @@
           error: "Tax rate could not be deleted."
         },
       },
+      roles: {
+        update: {
+          success: "Role was successfully updated.",
+          error: "Role could not be updated."
+        },
+      },
     },
     measurement_units: {
       categories: {
@@ -752,6 +758,11 @@
         title: "Roles",
       },
       role: {
+      },
+      edit: {
+        title: "Edit role"
+      },
+      form: {
       },
     },
     users: {
