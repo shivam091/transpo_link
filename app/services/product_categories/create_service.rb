@@ -19,15 +19,9 @@ class ProductCategories::CreateService < ApplicationService
     product_category = ProductCategory.new(product_category_attributes)
 
     if product_category.save
-      ServiceResponse.success(
-        message: t("product_categories.create.notice"),
-        payload: {product_category:}
-      )
+      ServiceResponse.success(payload: {product_category:})
     else
-      ServiceResponse.error(
-        message: t("product_categories.create.alert"),
-        payload: {product_category:}
-      )
+      ServiceResponse.error(payload: {product_category:})
     end
   end
 end

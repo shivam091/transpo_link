@@ -7,30 +7,20 @@
 require "spec_helper"
 
 RSpec.describe ProductCategories::CreateService, type: :service do
-  subject { described_class.(product_category_attributes) }
+  subject(:service_response) { described_class.(product_category_attributes) }
 
-  describe "#call" do
-    context "when product category is valid" do
+  describe ".call" do
+    context "when provided attributes are valid" do
       let(:product_category_attributes) { attributes_for(:product_category) }
 
-      include_examples "creates a new object", ProductCategory
-
-      it "sets flash message" do
-        expect(subject.message).to eq("Product category was successfully created.")
-      end
-
+      include_examples "creates a record", ProductCategory
       include_examples "returns a success response"
     end
 
-    context "when product category is invalid" do
+    context "when provided attributes are invalid" do
       let(:product_category_attributes) { attributes_for(:product_category, name: "") }
 
-      include_examples "does not change count of objects", ProductCategory
-
-      it "sets flash message" do
-        expect(subject.message).to eq("Product category could not be created.")
-      end
-
+      include_examples "does not change record count", ProductCategory
       include_examples "returns an error response"
     end
   end

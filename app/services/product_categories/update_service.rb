@@ -18,15 +18,9 @@ class ProductCategories::UpdateService < ApplicationService
 
   def update_product_category
     if product_category.update(product_category_attributes)
-      ServiceResponse.success(
-        message: t("product_categories.update.notice"),
-        payload: {product_category:}
-      )
+      ServiceResponse.success(payload: {product_category:})
     else
-      ServiceResponse.error(
-        message: t("product_categories.update.alert"),
-        payload: {product_category:}
-      )
+      ServiceResponse.error(payload: {product_category:})
     end
   end
 end

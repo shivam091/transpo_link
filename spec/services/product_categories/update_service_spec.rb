@@ -8,14 +8,14 @@ require "spec_helper"
 
 RSpec.describe ProductCategories::UpdateService, type: :service do
   let!(:product_category) { create(:product_category) }
-  let(:product_category_attributes) { attributes_for(:product_category, name: "New product category") }
-  subject { described_class.(product_category, product_category_attributes) }
+  let!(:product_category_attributes) { {name: "New product category"} }
 
-  describe "#call" do
+  subject(:service_response) { described_class.(product_category, product_category_attributes) }
+
+  describe ".call" do
     context "when update is successful" do
       it "updates the product category" do
-        expect(subject.payload[:product_category].name).to eq("New product category")
-        expect(subject.message).to eq("Product category was successfully updated.")
+        expect(service_response.payload[:product_category].name).to eq("New product category")
       end
 
       include_examples "returns a success response"
@@ -25,8 +25,7 @@ RSpec.describe ProductCategories::UpdateService, type: :service do
       before { allow(product_category).to receive(:update) { false } }
 
       it "does not update the product category" do
-        expect(subject.payload[:product_category].name).to eq(product_category.name)
-        expect(subject.message).to eq("Product category could not be updated.")
+        expect(service_response.payload[:product_category].name).to eq(product_category.name)
       end
 
       include_examples "returns an error response"
