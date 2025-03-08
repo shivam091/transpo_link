@@ -17,7 +17,7 @@
             %th{scope: "col"}= UserDetail.human_attribute_name(:alternate_contact_number)
             %th{scope: "col"}= UserDetail.human_attribute_name(:alternate_email)
             %th{scope: "col"}= User.human_attribute_name(:role_id)
-            %th{width: "25px", scope: "col"}= t(".actions")
+            %th{width: "25px", scope: "col"}= t("common.actions")
         %tbody.border
           - if @users&.each.with_index(1) do |user, index|
             = render_if_exists("users/user", locals: {user:, index:})
