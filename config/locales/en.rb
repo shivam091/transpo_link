@@ -700,16 +700,16 @@
       },
       product_categories: {
         create: {
-          notice: "Product category was successfully created.",
-          alert: "Product category could not be created.",
+          success: "Product category was successfully created.",
+          error: "Product category could not be created.",
         },
         update: {
-          notice: "Product category was successfully updated.",
-          alert: "Product category could not be updated."
+          success: "Product category was successfully updated.",
+          error: "Product category could not be updated."
         },
         destroy: {
-          info: "Product category was successfully deleted.",
-          alert: "Product category could not be deleted."
+          success: "Product category was successfully deleted.",
+          error: "Product category could not be deleted."
         },
       },
     },

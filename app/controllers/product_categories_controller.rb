@@ -22,10 +22,10 @@ class ProductCategoriesController < ApplicationController
     response = ProductCategories::CreateService.(product_category_params)
     @product_category = response.payload[:product_category]
     if response.success?
-      flash[:notice] = response.message
+      set_flash_message(:notice, :success)
       redirect_to product_categories_path, status: :see_other
     else
-      flash.now[:alert] = response.message
+      set_flash_message(:alert, :error, immediate: true)
       respond_to do |format|
         format.turbo_stream do
           render turbo_stream: [
@@ -46,10 +46,10 @@ class ProductCategoriesController < ApplicationController
     response = ProductCategories::UpdateService.(@product_category, product_category_params)
     @product_category = response.payload[:product_category]
     if response.success?
-      flash[:notice] = response.message
+      set_flash_message(:notice, :success)
       redirect_to product_categories_path, status: :see_other
     else
-      flash.now[:alert] = response.message
+      set_flash_message(:alert, :error, immediate: true)
       respond_to do |format|
         format.turbo_stream do
           render turbo_stream: [
@@ -66,9 +66,9 @@ class ProductCategoriesController < ApplicationController
     response = ProductCategories::DestroyService.(@product_category)
     @product_category = response.payload[:product_category]
     if response.success?
-      flash[:info] = response.message
+      set_flash_message(:info, :success)
     else
-      flash[:alert] = response.message
+      set_flash_message(:alert, :error)
     end
     redirect_to product_categories_path, status: :see_other
   end

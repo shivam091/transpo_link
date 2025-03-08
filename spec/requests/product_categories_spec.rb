@@ -67,7 +67,7 @@ RSpec.describe "ProductCategories", type: :request do
     end
 
     describe "POST /product-categories" do
-      context "when valid attributes" do
+      context "when provided attributes are valid" do
         it "creates the product category and redirects" do
           post product_categories_path, params: {product_category: valid_attributes}, as: :turbo_stream
 
@@ -77,7 +77,7 @@ RSpec.describe "ProductCategories", type: :request do
         end
       end
 
-      context "when invalid attributes" do
+      context "when provided attributes are invalid" do
         it "does not create the product category and renders errors" do
           post product_categories_path, params: {product_category: invalid_attributes}, as: :turbo_stream
 
@@ -99,7 +99,7 @@ RSpec.describe "ProductCategories", type: :request do
     end
 
     describe "PUT|PATCH /product-categories/:id" do
-      context "when valid attributes" do
+      context "when provided attributes are valid" do
         it "updates the product category and redirects" do
           put product_category_path(product_category), params: {product_category: valid_attributes}, as: :turbo_stream
 
@@ -110,7 +110,7 @@ RSpec.describe "ProductCategories", type: :request do
         end
       end
 
-      context "when invalid attributes" do
+      context "when provided attributes are invalid" do
         it "does not update the product category and renders errors" do
           put product_category_path(product_category), params: {product_category: invalid_attributes}, as: :turbo_stream
 
@@ -134,10 +134,8 @@ RSpec.describe "ProductCategories", type: :request do
       end
 
       context "when delete fails" do
-        let(:service_response) { ServiceResponse.error(message: "Product category could not be deleted.") }
-
         before do
-          allow(ProductCategories::DestroyService).to receive(:call) { service_response }
+          allow(ProductCategories::DestroyService).to receive(:call) { ServiceResponse.error }
         end
 
         it "does not delete the product category and redirects with an error message" do
