@@ -12,10 +12,10 @@ class LocalesController < ApplicationController
   def update
     response = Locales::UpdateService.(current_user, locale_params)
     if response.success?
-      flash[:notice] = response.message
+      set_flash_message(:notice, :success)
       redirect_to request.referrer
     else
-      flash.now[:alert] = response.message
+      set_flash_message(:alert, :error, immediate: true)
       respond_to do |format|
         format.turbo_stream do
           render turbo_stream: [

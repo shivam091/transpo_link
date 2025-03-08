@@ -39,7 +39,7 @@ RSpec.describe "Locales", type: :request do
     end
 
     describe "PUT|PATCH /locale" do
-      context "when valid attributes" do
+      context "when provided attributes are valid" do
         it "updates the locale and redirects" do
           put locale_path, params: {
             user: {user_preference_attributes: valid_attributes}
@@ -53,7 +53,7 @@ RSpec.describe "Locales", type: :request do
         end
       end
 
-      context "when invalid attributes" do
+      context "when provided attributes are invalid" do
         it "does not update the locale and renders errors" do
           put locale_path, params: {user: {user_preference_attributes: invalid_attributes}}, as: :turbo_stream
 

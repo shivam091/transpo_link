@@ -8,24 +8,22 @@ require "spec_helper"
 
 RSpec.describe ServiceResponse do
   describe ".success" do
-    subject { described_class.success(message: "Success message", payload: {key: "value"}) }
+    subject { described_class.success(payload: {key: "value"}) }
 
     it "returns a success ServiceResponse instance" do
       expect(subject.status).to eq(:success)
-      expect(subject.message).to eq("Success message")
       expect(subject.payload).to eq({key: "value"})
       expect(subject.http_status).to eq(:ok)
     end
   end
 
   describe ".error" do
-    subject { described_class.error(message: "Error message", payload: {key: "value"}, http_status: :unprocessable_entity) }
+    subject { described_class.error(payload: {key: "value"}, http_status: :unauthorized) }
 
     it "returns an error ServiceResponse instance" do
       expect(subject.status).to eq(:error)
-      expect(subject.message).to eq("Error message")
       expect(subject.payload).to eq({key: "value"})
-      expect(subject.http_status).to eq(:unprocessable_entity)
+      expect(subject.http_status).to eq(:unauthorized)
     end
   end
 

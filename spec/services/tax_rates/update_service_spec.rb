@@ -7,15 +7,15 @@
 require "spec_helper"
 
 RSpec.describe TaxRates::UpdateService, type: :service do
-  let(:tax_rate) { create(:tax_rate) }
-  let(:tax_rate_attributes) { attributes_for(:tax_rate, country: "US", tax_identifier_type: "ssn") }
-  subject { described_class.(tax_rate, tax_rate_attributes) }
+  let!(:tax_rate) { create(:tax_rate) }
+  let!(:tax_rate_attributes) { {tax_identifier_type: "pan"} }
 
-  describe "#call" do
+  subject(:service_response) { described_class.(tax_rate, tax_rate_attributes) }
+
+  describe ".call" do
     context "when update is successful" do
       it "updates the tax rate" do
-        expect(subject.payload[:tax_rate].tax_identifier_type).to eq("ssn")
-        expect(subject.message).to eq("Tax rate was successfully updated.")
+        expect(service_response.payload[:tax_rate].tax_identifier_type).to eq("pan")
       end
 
       include_examples "returns a success response"
@@ -25,8 +25,7 @@ RSpec.describe TaxRates::UpdateService, type: :service do
       before { allow(tax_rate).to receive(:update) { false } }
 
       it "does not update the tax rate" do
-        expect(subject.payload[:tax_rate].tax_identifier_type).to eq("gstin")
-        expect(subject.message).to eq("Tax rate could not be updated.")
+        expect(service_response.payload[:tax_rate].tax_identifier_type).to eq("gstin")
       end
 
       include_examples "returns an error response"

@@ -37,7 +37,7 @@ class Users::PasswordsController < Devise::PasswordsController
     user = User.with_email(user_params[:email])
 
     if user&.recently_sent_password_reset_instructions?
-      flash[:alert] = t(:throttle_reset, scope: translation_scope, count: (User::THROTTLE_RESET_PERIOD / 60))
+      set_flash_message(:alert, :throttle_reset, scope: translation_scope, count: (User::THROTTLE_RESET_PERIOD / 60))
       redirect_to new_session_path(user) and return
     end
   end

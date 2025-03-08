@@ -17,10 +17,11 @@ class LegalIdentifiers::CreateService < ApplicationService
 
   def create_legal_identifier
     legal_identifier = user.legal_identifiers.build(legal_identifier_attributes)
+
     if legal_identifier.save
-      ServiceResponse.success(message: t("legal_identifiers.create.notice"), payload: {legal_identifier: legal_identifier})
+      ServiceResponse.success(payload: {legal_identifier:})
     else
-      ServiceResponse.error(message: t("legal_identifiers.create.alert"), payload: {legal_identifier: legal_identifier})
+      ServiceResponse.error(payload: {legal_identifier:})
     end
   end
 end
