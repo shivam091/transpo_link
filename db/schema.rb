@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_03_09_131657) do
+ActiveRecord::Schema[8.0].define(version: 2025_03_09_140350) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -21,6 +21,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_09_131657) do
   create_enum "business_number_types", ["ein", "duns", "cin", "roc", "acn", "abn", "nzbn", "cnpj", "bn", "siret", "siren", "crn", "uen", "rfc", "cuit", "ruc", "nit", "hrb", "ico", "npwp", "brn", "ssm", "ogrn", "brn_kr", "cbr", "cr"]
   create_enum "color_schemes", ["auto", "dark", "light"]
   create_enum "entity_types", ["business", "individual"]
+  create_enum "movement_types", ["restock", "purchase", "sale", "return", "transfer_in", "transfer_out", "adjustment", "reservation"]
 
   create_table "addresses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "addressable_type"
