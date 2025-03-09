@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_03_06_155901) do
+ActiveRecord::Schema[8.0].define(version: 2025_03_09_062142) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -76,6 +76,38 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_06_155901) do
     t.index ["parent_category_id"], name: "index_product_categories_on_parent_category_id"
     t.check_constraint "char_length(name::text) <= 255 AND char_length(name::text) >= 2", name: "check_product_categories_name_length"
     t.check_constraint "name IS NOT NULL AND name::text <> ''::text", name: "check_product_categories_name_presence"
+  end
+
+  create_table "products", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "reference_code"
+    t.string "name"
+    t.text "description"
+    t.string "sku"
+    t.string "barcode"
+    t.integer "min_stock_threshold", default: 0
+    t.string "capacity_unit"
+    t.string "currency"
+    t.decimal "cost_price", precision: 12, scale: 2, default: "0.0"
+    t.uuid "product_category_id", null: false
+    t.boolean "is_active", default: false
+    t.timestamptz "created_at", null: false
+    t.timestamptz "updated_at", null: false
+    t.index ["barcode"], name: "index_products_on_barcode", unique: true
+    t.index ["is_active"], name: "index_products_on_is_active"
+    t.index ["product_category_id"], name: "index_products_on_product_category_id"
+    t.index ["reference_code"], name: "index_products_on_reference_code", unique: true
+    t.index ["sku"], name: "index_products_on_sku", unique: true
+    t.check_constraint "capacity_unit IS NOT NULL AND capacity_unit::text <> ''::text", name: "check_products_capacity_unit_presence"
+    t.check_constraint "char_length(description) <= 2000", name: "check_products_description_length"
+    t.check_constraint "char_length(name::text) <= 255 AND char_length(name::text) >= 2", name: "check_products_name_length"
+    t.check_constraint "char_length(sku::text) <= 50", name: "check_products_sku_length"
+    t.check_constraint "cost_price >= 0.0", name: "check_products_cost_price_numericality"
+    t.check_constraint "cost_price IS NOT NULL", name: "check_products_cost_price_presence"
+    t.check_constraint "currency IS NOT NULL AND currency::text <> ''::text", name: "check_products_currency_presence"
+    t.check_constraint "min_stock_threshold >= 0", name: "check_products_min_stock_threshold_numericality"
+    t.check_constraint "min_stock_threshold IS NOT NULL", name: "check_products_min_stock_threshold_presence"
+    t.check_constraint "name IS NOT NULL AND name::text <> ''::text", name: "check_products_name_presence"
+    t.check_constraint "sku IS NOT NULL AND sku::text <> ''::text", name: "check_products_sku_presence"
   end
 
   create_table "request_logs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -272,6 +304,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_06_155901) do
 
   add_foreign_key "legal_identifiers", "users", name: "fk_legal_identifiers_user_id_on_users", on_delete: :cascade
   add_foreign_key "product_categories", "product_categories", column: "parent_category_id", name: "fk_product_categories_parent_category_id_on_product_categories", on_delete: :cascade
+  add_foreign_key "products", "product_categories", name: "fk_products_product_category_id_on_product_categories", on_delete: :restrict
   add_foreign_key "request_logs", "users", name: "fk_request_logs_user_id_on_users", on_delete: :nullify
   add_foreign_key "user_details", "users", name: "fk_user_details_user_id_on_users", on_delete: :cascade
   add_foreign_key "user_preferences", "users", name: "fk_user_preferences_user_id_on_users", on_delete: :cascade
