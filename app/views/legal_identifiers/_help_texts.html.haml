@@ -1,0 +1,8 @@
+%p
+  = t(".main")
+%ul
+  - t(".items").each do |item|
+    %li= item
+%p
+  = external_svg_tag("svgs/bulb.svg")
+  = t(".tip")

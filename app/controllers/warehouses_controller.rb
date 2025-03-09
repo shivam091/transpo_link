@@ -4,11 +4,23 @@
 
 class WarehousesController < ApplicationController
 
-  before_action :find_warehouse, except: [:index, :new, :create]
+  before_action :find_warehouse, only: [:edit, :update, :show, :destroy]
 
   # GET /warehouses
   def index
     @warehouses = Warehouse.all
+    @warehouses, @pagination_metadata = @warehouses.paginate(page: params[:page])
+  end
+
+  # GET /warehouses/active
+  def active
+    @warehouses = Warehouse.active
+    @warehouses, @pagination_metadata = @warehouses.paginate(page: params[:page])
+  end
+
+  # GET /warehouses/inactive
+  def inactive
+    @warehouses = Warehouse.inactive
     @warehouses, @pagination_metadata = @warehouses.paginate(page: params[:page])
   end
 
@@ -22,10 +34,10 @@ class WarehousesController < ApplicationController
     response = Warehouses::CreateService.(warehouse_params)
     @warehouse = response.payload[:warehouse]
     if response.success?
-      flash[:notice] = response.message
+      set_flash_message(:notice, :success)
       redirect_to warehouses_path, status: :see_other
     else
-      flash.now[:alert] = response.message
+      set_flash_message(:alert, :error, immediate: true)
       respond_to do |format|
         format.turbo_stream do
           render turbo_stream: [
@@ -46,10 +58,10 @@ class WarehousesController < ApplicationController
     response = Warehouses::UpdateService.(@warehouse, warehouse_params)
     @warehouse = response.payload[:warehouse]
     if response.success?
-      flash[:notice] = response.message
+      set_flash_message(:notice, :success)
       redirect_to warehouses_path, status: :see_other
     else
-      flash.now[:alert] = response.message
+      set_flash_message(:alert, :error, immediate: true)
       respond_to do |format|
         format.turbo_stream do
           render turbo_stream: [
@@ -70,9 +82,9 @@ class WarehousesController < ApplicationController
     response = Warehouses::DestroyService.(@warehouse)
     @warehouse = response.payload[:warehouse]
     if response.success?
-      flash[:info] = response.message
+      set_flash_message(:info, :success)
     else
-      flash[:alert] = response.message
+      set_flash_message(:alert, :error)
     end
     redirect_to warehouses_path, status: :see_other
   end

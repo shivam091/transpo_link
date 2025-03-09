@@ -1,4 +1,0 @@
-= title(t(".title"))
-= render_modal(title: t(".title"), modal_id: "edit-tax-detail") do
-  = turbo_frame_tag :edit_tax_detail_form_frame, target: :_top do
-    = render_if_exists("tax_details/form")

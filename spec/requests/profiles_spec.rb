@@ -53,19 +53,19 @@ RSpec.describe "Profiles", type: :request do
     end
 
     describe "PUT|PATCH /profile" do
-      context "when valid attributes" do
-        it "updates the profile" do
+      context "when provided attributes are valid" do
+        it "updates the profile and redirects" do
           put profile_path, params: {user: {user_detail_attributes: valid_attributes}}, as: :turbo_stream
 
           expect(admin.reload.first_name).to eq("John")
-          expect(flash[:notice]).to eq("Your profile was successfully updated.")
           expect(response).to redirect_to(profile_path)
+          expect(flash[:notice]).to eq("Your profile was successfully updated.")
           expect(response).to have_http_status(:see_other)
         end
       end
 
-      context "when invalid attributes" do
-        it "does not update the profile" do
+      context "when provided attributes are invalid" do
+        it "does not update the profile and renders errors" do
           put profile_path, params: {user: {user_detail_attributes: invalid_attributes}}, as: :turbo_stream
 
           expect(admin.reload.first_name).to eq("TranspoLink")

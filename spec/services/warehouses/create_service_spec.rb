@@ -7,33 +7,23 @@
 require "spec_helper"
 
 RSpec.describe Warehouses::CreateService, type: :service do
-  subject { described_class.(warehouse_attributes) }
+  subject(:service_response) { described_class.(warehouse_attributes) }
 
-  describe "#call" do
+  describe ".call" do
     let(:manager) { create(:manager) }
     let(:supplier) { create(:supplier) }
 
     context "when warehouse is valid" do
       let(:warehouse_attributes) { attributes_for(:warehouse).merge(manager_ids: [manager.id], supplier_ids: [supplier.id]) }
 
-      include_examples "creates a new object", Warehouse
-
-      it "sets flash message" do
-        expect(subject.message).to eq("Warehouse was successfully created.")
-      end
-
+      include_examples "creates a record", Warehouse
       include_examples "returns a success response"
     end
 
     context "when warehouse is invalid" do
       let(:warehouse_attributes) { attributes_for(:warehouse, name: "") }
 
-      include_examples "does not change count of objects", Warehouse
-
-      it "sets flash message" do
-        expect(subject.message).to eq("Warehouse could not be created.")
-      end
-
+      include_examples "does not change record count", Warehouse
       include_examples "returns an error response"
     end
   end

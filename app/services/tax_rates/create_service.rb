@@ -17,10 +17,11 @@ class TaxRates::CreateService < ApplicationService
 
   def create_tax_rate
     tax_rate = TaxRate.new(tax_rate_attributes)
+
     if tax_rate.save
-      ServiceResponse.success(message: t("tax_rates.create.notice"), payload: {tax_rate: tax_rate})
+      ServiceResponse.success(payload: {tax_rate:})
     else
-      ServiceResponse.error(message: t("tax_rates.create.alert"), payload: {tax_rate: tax_rate})
+      ServiceResponse.error(payload: {tax_rate:})
     end
   end
 end

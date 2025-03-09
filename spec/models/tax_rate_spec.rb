@@ -16,8 +16,8 @@ RSpec.describe TaxRate, type: :model do
   describe "attributes, indexes, foreign keys, and check constraints" do
     it { is_expected.to have_db_column(:id).of_type(:uuid) }
     it { is_expected.to have_db_column(:country).of_type(:string) }
-    it { is_expected.to have_db_column(:tax_type).of_type(:enum) }
-    it { is_expected.to have_db_column(:business_category).of_type(:enum).with_options(default: "b2b") }
+    it { is_expected.to have_db_column(:tax_identifier_type).of_type(:string) }
+    it { is_expected.to have_db_column(:business_category).of_type(:enum) }
     it { is_expected.to have_db_column(:rate).of_type(:decimal).with_options(precision: 5, scale: 2) }
     it { is_expected.to have_db_column(:valid_from).of_type(:date) }
     it { is_expected.to have_db_column(:valid_to).of_type(:date) }
@@ -26,14 +26,12 @@ RSpec.describe TaxRate, type: :model do
 
     it { is_expected.to have_db_index(:valid_from) }
     it { is_expected.to have_db_index(:valid_to) }
-    it { is_expected.to have_db_index([:country, :tax_type]) }
-    it { is_expected.to have_db_index([:tax_type, :country, :business_category, :valid_from]).unique(true) }
+    it { is_expected.to have_db_index([:country, :tax_identifier_type]) }
+    it { is_expected.to have_db_index([:tax_identifier_type, :country, :business_category, :valid_from]).unique(true) }
 
     it { is_expected.to have_check_constraint(:check_tax_rates_country_presence).with_expression("country IS NOT NULL AND country::text <> ''::text") }
-    it { is_expected.to have_check_constraint(:check_tax_rates_tax_type_requires_country) }
 
-    it { is_expected.to have_check_constraint(:check_tax_rates_tax_type_presence).with_expression("tax_type IS NOT NULL") }
-    it { is_expected.to have_check_constraint(:check_tax_rates_tax_type_inclusion) }
+    it { is_expected.to have_check_constraint(:check_tax_rates_tax_identifier_type_presence).with_expression("tax_identifier_type IS NOT NULL AND tax_identifier_type::text <> ''::text") }
 
     it { is_expected.to have_check_constraint(:check_tax_rates_business_category_presence).with_expression("business_category IS NOT NULL") }
     it { is_expected.to have_check_constraint(:check_tax_rates_business_category_inclusion).with_expression("business_category = ANY (ARRAY['b2b'::business_categories, 'b2c'::business_categories])") }
@@ -47,10 +45,12 @@ RSpec.describe TaxRate, type: :model do
     it { is_expected.to have_check_constraint(:check_tax_rates_valid_to_comparison).with_expression("valid_to IS NULL OR valid_to > valid_from") }
   end
 
-  it_behaves_like "tax type"
-
   describe "enums" do
     it { is_expected.to define_enum_for(:business_category).with_values({b2b: "b2b", b2c: "b2c"}).backed_by_column_of_type(:enum) }
+  end
+
+  describe "constants" do
+    it { is_expected.to have_constant(:LISTING_ATTRIBUTES) }
   end
 
   describe "default values" do
@@ -66,9 +66,9 @@ RSpec.describe TaxRate, type: :model do
   end
 
   describe "validations" do
-    describe "#tax_type" do
+    describe "#tax_identifier_type" do
       # it do
-      #   is_expected.to validate_uniqueness_of(:tax_type)
+      #   is_expected.to validate_uniqueness_of(:tax_identifier_type)
       #     .scoped_to([:country, :business_category, :valid_from])
       #     .with_message("already exist for this country and business category for selected date")
       #     .case_insensitive
@@ -87,16 +87,16 @@ RSpec.describe TaxRate, type: :model do
 
     describe "#valid_from" do
       it { is_expected.to validate_presence_of(:valid_from) }
-      it { is_expected.to validate_comparison_of(:valid_from).is_greater_than_or_equal_to(Date.current).with_message("must be today or a future date") }
+      it { is_expected.to validate_comparison_of(:valid_from).is_greater_than_or_equal_to(Date.current).with_message("must be today or a future date").on(:create) }
     end
 
     describe "#valid_to" do
-      it { is_expected.to validate_comparison_of(:valid_to).is_greater_than(:valid_from) }
+      it { is_expected.to validate_comparison_of(:valid_to).is_greater_than(:valid_from).allow_nil }
     end
   end
 
   describe "scopes" do
-    let!(:active_tax_rate) { create(:tax_rate, :gstin) }
+    let!(:active_tax_rate) { create(:tax_rate, :pan) }
     let!(:future_tax_rate) { create(:tax_rate, :for_b2c, country: "IN", valid_from: Date.current + 1.year, valid_to: Date.current + 5.years) }
 
     describe ".active" do
@@ -113,10 +113,10 @@ RSpec.describe TaxRate, type: :model do
       end
     end
 
-    describe ".for_tax_type" do
-      it "returns tax rates for the given tax type" do
-        expect(described_class.for_tax_type("gstin")).to include(active_tax_rate)
-        expect(described_class.for_tax_type("vat")).to exclude(active_tax_rate)
+    describe ".for_tax_identifier_type" do
+      it "returns tax rates for the given tax identifier type" do
+        expect(described_class.for_tax_identifier_type("pan")).to include(active_tax_rate)
+        expect(described_class.for_tax_identifier_type("gstin")).not_to include(active_tax_rate)
       end
     end
 
@@ -128,9 +128,9 @@ RSpec.describe TaxRate, type: :model do
     end
 
     describe ".applicable_rates" do
-      it "returns applicable tax rates matching tax type, country, and category" do
-        expect(described_class.applicable_rates("gstin", "DE", "b2b")).to include(active_tax_rate)
-        expect(described_class.applicable_rates("gstin", "DE", "b2c")).to exclude(active_tax_rate)
+      it "returns applicable tax rates matching tax identifier type, country, and category" do
+        expect(described_class.applicable_rates("pan", "IN", "b2b")).to include(active_tax_rate)
+        expect(described_class.applicable_rates("gstin", "IN", "b2c")).not_to include(active_tax_rate)
       end
     end
 
@@ -150,15 +150,15 @@ RSpec.describe TaxRate, type: :model do
 
     describe ".active_rate" do
       it "returns the tax rate for a current date" do
-        expect(described_class.active_rate("DE", "gstin")).to eq(active_tax_rate)
-        expect(described_class.active_rate("DE", "gstin")).not_to eq(future_tax_rate)
+        expect(described_class.active_rate("IN", "gstin")).to eq(active_tax_rate)
+        expect(described_class.active_rate("IN", "gstin")).not_to eq(future_tax_rate)
       end
     end
 
     describe ".future_rate" do
       it "returns the tax rate for a future date" do
-        expect(described_class.future_rate("IN", "vat", Date.current + 1.year)).to eq(future_tax_rate)
-        expect(described_class.future_rate("IN", "vat", Date.current + 1.year)).not_to eq(active_tax_rate)
+        expect(described_class.future_rate("IN", "gstin", Date.current + 1.year)).to eq(future_tax_rate)
+        expect(described_class.future_rate("IN", "gstin", Date.current + 1.year)).not_to eq(active_tax_rate)
       end
     end
   end
@@ -172,7 +172,7 @@ RSpec.describe TaxRate, type: :model do
 
         it "is not valid" do
           expect(new_tax_rate).not_to be_valid
-          expect(new_tax_rate.errors[:base]).to include("There is already an active tax rate for this country, tax type, and business category in the selected date range")
+          expect(new_tax_rate.errors[:base]).to include("There is already an active tax rate for this country, tax identifier type, and business category in the selected date range")
         end
       end
 

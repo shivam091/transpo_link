@@ -58,6 +58,10 @@ RSpec.describe RequestLog, type: :model do
     it { is_expected.to belong_to(:user).inverse_of(:request_logs).optional }
   end
 
+  describe "constants" do
+    it { is_expected.to have_constant(:LISTING_ATTRIBUTES) }
+  end
+
   describe "normalized attributes" do
     it { is_expected.to normalize(:method).from("get").to("GET") }
   end

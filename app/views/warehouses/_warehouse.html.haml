@@ -1,42 +1,23 @@
-.table-responsive
-  %table.table.table-striped.table-borderless
-    %thead.border
-      %tr.table-active
-        %th{width: "25px", scope: "col"}#
-        %th{scope: "col"}= Warehouse.human_attribute_name(:reference_code)
-        %th{scope: "col"}= Warehouse.human_attribute_name(:name)
-        %th{scope: "col"}= Warehouse.human_attribute_name(:email_address)
-        %th{scope: "col"}= Warehouse.human_attribute_name(:contact_number)
-        %th{scope: "col"}= Warehouse.human_attribute_name(:capacity)
-        %th{scope: "col"}= Warehouse.human_attribute_name(:latitude)
-        %th{scope: "col"}= Warehouse.human_attribute_name(:longitude)
-        %th{scope: "col"}= t("common.actions")
-    %tbody.border
-      - if @warehouses&.each.with_index(1) do |warehouse, index|
-        - present(warehouse) do |warehouse|
-          %tr
-            %th{scope: "row"}= h(@pagination_metadata.offset + index)
-            %td= link_to warehouse.reference_code, warehouse_path(warehouse)
-            %td= h(warehouse.name)
-            %td= mail_to(warehouse.email_address)
-            %td= h(warehouse.contact_number)
-            %td= h(warehouse.capacity)
-            %td= h(warehouse.formatted_latitude)
-            %td= h(warehouse.formatted_longitude)
-            %td.actions
-              = link_to "javascript:void(0)", class: "text-reset", data: {bs_toggle: "dropdown"}, aria: {expanded: false} do
-                = external_svg_tag("svgs/ellipsis-vertical.svg")
-              %ul.dropdown-menu
-                %li
-                  = link_to edit_warehouse_path(warehouse), class: "dropdown-item" do
-                    = external_svg_tag("svgs/pencil.svg")
-                    = button_text(:edit)
-                %li
-                  = link_to warehouse_path(warehouse), class: "dropdown-item",
-                    data: {turbo_confirm: t(".delete_warehouse_confirmation_text", warehouse_name: warehouse.name), turbo_method: :delete} do
-                    = external_svg_tag("svgs/trash.svg")
-                    = button_text(:delete)
-      - end.empty?
-        %tr
-          %td.no-data{colspan: Warehouse.columns.count}
-            = t(".no_warehouses_to_display")
+- present(warehouse) do |warehouse|
+  %tr
+    %th{scope: "row"}= h(@pagination_metadata.offset + index)
+    %td= link_to warehouse.reference_code, warehouse_path(warehouse)
+    %td= h(warehouse.name)
+    %td= mail_to(warehouse.email_address)
+    %td= h(warehouse.contact_number)
+    %td= h(warehouse.capacity)
+    %td= h(warehouse.formatted_latitude)
+    %td= h(warehouse.formatted_longitude)
+    %td.actions
+      = link_to "javascript:void(0)", class: "text-reset", data: {bs_toggle: "dropdown"}, aria: {expanded: false} do
+        = external_svg_tag("svgs/ellipsis-vertical.svg")
+      %ul.dropdown-menu
+        %li
+          = link_to edit_warehouse_path(warehouse), class: "dropdown-item" do
+            = external_svg_tag("svgs/pencil.svg")
+            = button_text(:edit)
+        %li
+          = link_to warehouse_path(warehouse), class: "dropdown-item",
+            data: {turbo_confirm: t(".delete_warehouse_confirmation_text", warehouse_name: warehouse.name), turbo_method: :delete} do
+            = external_svg_tag("svgs/trash.svg")
+            = button_text(:delete)

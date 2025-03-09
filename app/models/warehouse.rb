@@ -5,6 +5,10 @@
 class Warehouse < ApplicationRecord
   include Toggleable, HasReferenceCode, Pageable, Sortable
 
+  LISTING_ATTRIBUTES = %i[
+    reference_code name email_address contact_number capacity latitude longitude
+  ].freeze
+
   attribute :is_active, default: false
 
   validates :name,

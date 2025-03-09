@@ -4,7 +4,7 @@
 
 FactoryBot.define do
   sequence :phone_number,
-           aliases: %i[mobile_number fax_number registration_number contact_number] do |n|
+           aliases: %i[mobile_number fax_number contact_number] do |n|
     n.to_s.rjust(10, "0")
   end
 

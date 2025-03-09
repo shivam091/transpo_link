@@ -7,15 +7,15 @@
 require "spec_helper"
 
 RSpec.describe Profiles::UpdateService, type: :service do
-  describe "#call" do
-    let(:user) { create(:admin, :active, :with_address, :confirmed) }
-    let(:profile_attributes) { {user_detail_attributes: {first_name: "First"}} }
-    subject { described_class.(user, profile_attributes) }
+  let!(:user) { create(:admin, :active, :with_address, :confirmed) }
+  let!(:profile_attributes) { {user_detail_attributes: {first_name: "First"}} }
 
+  subject(:service_response) { described_class.(user, profile_attributes) }
+
+  describe ".call" do
     context "when update is successful" do
       it "updates the user profile" do
-        expect(subject.payload[:user].first_name).to include("First")
-        expect(subject.message).to eq("Your profile was successfully updated.")
+        expect(service_response.payload[:user].first_name).to eq("First")
       end
 
       include_examples "returns a success response"
@@ -25,8 +25,7 @@ RSpec.describe Profiles::UpdateService, type: :service do
       before { allow(user).to receive(:update) { false } }
 
       it "does not update the user profile" do
-        expect(subject.payload[:user].first_name).to include("TranspoLink")
-        expect(subject.message).to eq("Your profile could not be updated.")
+        expect(service_response.payload[:user].first_name).to eq("TranspoLink")
       end
 
       include_examples "returns an error response"

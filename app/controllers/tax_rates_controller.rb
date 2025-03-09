@@ -22,10 +22,10 @@ class TaxRatesController < ApplicationController
     response = TaxRates::CreateService.(tax_rate_params)
     @tax_rate = response.payload[:tax_rate]
     if response.success?
-      flash[:notice] = response.message
+      set_flash_message(:notice, :success)
       redirect_to tax_rates_path, status: :see_other
     else
-      flash.now[:alert] = response.message
+      set_flash_message(:alert, :error, immediate: true)
       respond_to do |format|
         format.turbo_stream do
           render turbo_stream: [
@@ -46,10 +46,10 @@ class TaxRatesController < ApplicationController
     response = TaxRates::UpdateService.(@tax_rate, tax_rate_params)
     @tax_rate = response.payload[:tax_rate]
     if response.success?
-      flash[:notice] = response.message
+      set_flash_message(:notice, :success)
       redirect_to tax_rates_path, status: :see_other
     else
-      flash.now[:alert] = response.message
+      set_flash_message(:alert, :error, immediate: true)
       respond_to do |format|
         format.turbo_stream do
           render turbo_stream: [
@@ -66,9 +66,9 @@ class TaxRatesController < ApplicationController
     response = TaxRates::DestroyService.(@tax_rate)
     @tax_rate = response.payload[:tax_rate]
     if response.success?
-      flash[:info] = response.message
+      set_flash_message(:info, :success)
     else
-      flash[:alert] = response.message
+      set_flash_message(:alert, :error)
     end
     redirect_to tax_rates_path, status: :see_other
   end
@@ -77,7 +77,7 @@ class TaxRatesController < ApplicationController
 
   def tax_rate_params
     params.require(:tax_rate).permit(
-      :tax_type,
+      :tax_identifier_type,
       :country,
       :business_category,
       :rate,

@@ -4,7 +4,7 @@
 
 RSpec.shared_examples "returns an error response" do |klass|
   it "returns an error response" do
-    expect(subject).to be_a(ServiceResponse)
-    expect(subject).to be_error
+    expect(service_response).to be_a(ServiceResponse)
+    expect(service_response).to be_error
   end
 end

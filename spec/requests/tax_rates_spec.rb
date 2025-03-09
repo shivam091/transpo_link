@@ -9,8 +9,8 @@ require "spec_helper"
 RSpec.describe "TaxRates", type: :request do
   let!(:tax_rate) { create(:tax_rate) }
 
-  let(:valid_attributes) { attributes_for(:tax_rate, tax_type: "tin") }
-  let(:invalid_attributes) { attributes_for(:tax_rate, tax_type: "") }
+  let(:valid_attributes) { attributes_for(:tax_rate, tax_identifier_type: "pan") }
+  let(:invalid_attributes) { attributes_for(:tax_rate, tax_identifier_type: "") }
 
   context "when user is not signed in" do
     describe "GET /tax-rates" do
@@ -54,12 +54,11 @@ RSpec.describe "TaxRates", type: :request do
     include_context "sign in as admin"
 
     describe "GET /tax-rates" do
-      before { get tax_rates_path }
+      it "renders list of all tax rates with pagination" do
+        get tax_rates_path
 
-      it "renders user list and returns :ok status" do
-        expect(controller_assigns(:tax_rates)).to be_present
-        expect(controller_assigns(:pagination_metadata)).to be_present
         expect(controller_assigns(:tax_rates)).to include(tax_rate)
+        expect(controller_assigns(:pagination_metadata)).to be_present
         expect(response).to have_http_status(:ok)
       end
     end
@@ -68,25 +67,21 @@ RSpec.describe "TaxRates", type: :request do
       before { get new_tax_rate_path }
 
       include_examples "initializes a new instance", :tax_rate, TaxRate
-
-      it "returns :ok status" do
-        expect(response).to have_http_status(:ok)
-      end
     end
 
     describe "POST /tax-rates" do
-      context "when valid attributes" do
-        it "creates the tax rate" do
+      context "when provided attributes are valid" do
+        it "creates the tax rate and redirects" do
           post tax_rates_path, params: {tax_rate: valid_attributes}, as: :turbo_stream
 
-          expect(flash[:notice]).to eq("Tax rate was successfully created.")
           expect(response).to redirect_to(tax_rates_path)
+          expect(flash[:notice]).to eq("Tax rate was successfully created.")
           expect(response).to have_http_status(:see_other)
         end
       end
 
-      context "when invalid attributes" do
-        it "does not create new tax rate" do
+      context "when provided attributes are invalid" do
+        it "does not create the tax rate and renders errors" do
           post tax_rates_path, params: {tax_rate: invalid_attributes}, as: :turbo_stream
 
           expect(flash[:alert]).to eq("Tax rate could not be created.")
@@ -98,7 +93,7 @@ RSpec.describe "TaxRates", type: :request do
     end
 
     describe "GET /tax-rates/:id/edit" do
-      it "returns :ok status" do
+      it "renders tax rate edit page" do
         get edit_tax_rate_path(tax_rate)
 
         expect(controller_assigns(:tax_rate)).to eq(tax_rate)
@@ -107,19 +102,19 @@ RSpec.describe "TaxRates", type: :request do
     end
 
     describe "PUT|PATCH /tax-rates/:id" do
-      context "when valid attributes" do
-        it "updates the tax rate" do
+      context "when provided attributes are valid" do
+        it "updates the tax rate and redirects" do
           put tax_rate_path(tax_rate), params: {tax_rate: valid_attributes}, as: :turbo_stream
 
-          expect(tax_rate.reload.tax_type).to eq("tin")
-          expect(flash[:notice]).to eq("Tax rate was successfully updated.")
+          expect(tax_rate.reload.tax_identifier_type).to eq("pan")
           expect(response).to redirect_to(tax_rates_path)
+          expect(flash[:notice]).to eq("Tax rate was successfully updated.")
           expect(response).to have_http_status(:see_other)
         end
       end
 
-      context "when invalid attributes" do
-        it "does not update the tax rate" do
+      context "when provided attributes are invalid" do
+        it "does not update the tax rate and renders errors" do
           put tax_rate_path(tax_rate), params: {tax_rate: invalid_attributes}, as: :turbo_stream
 
           expect(flash[:alert]).to eq("Tax rate could not be updated.")
@@ -132,7 +127,7 @@ RSpec.describe "TaxRates", type: :request do
 
     describe "DELETE /tax-rates/:id" do
       context "when valid id" do
-        it "deletes the tax rate" do
+        it "deletes the tax rate and redirects" do
           delete tax_rate_path(tax_rate)
 
           expect(response).to redirect_to(tax_rates_path)
@@ -141,14 +136,12 @@ RSpec.describe "TaxRates", type: :request do
         end
       end
 
-      context "when invalid id" do
-        let(:service_response) { ServiceResponse.error(message: "Tax rate could not be deleted.") }
-
+      context "when delete fails" do
         before do
-          allow(TaxRates::DestroyService).to receive(:call) { service_response }
+          allow(TaxRates::DestroyService).to receive(:call) { ServiceResponse.error }
         end
 
-        it "redirects with an error message" do
+        it "does not delete the tax rate and redirects with an error message" do
           delete tax_rate_path(tax_rate)
 
           expect(response).to redirect_to(tax_rates_path)
