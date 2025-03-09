@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_03_09_073553) do
+ActiveRecord::Schema[8.0].define(version: 2025_03_09_131657) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -39,6 +39,32 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_09_073553) do
     t.check_constraint "char_length(address2::text) <= 100", name: "check_addresses_address2_length"
     t.check_constraint "char_length(postal_code::text) <= 20", name: "check_addresses_postal_code_length"
     t.check_constraint "country IS NOT NULL AND country::text <> ''::text", name: "check_addresses_country_presence"
+  end
+
+  create_table "inventories", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "product_id", null: false
+    t.uuid "warehouse_id", null: false
+    t.string "batch_number"
+    t.date "expiration_date"
+    t.integer "stock_quantity", default: 0
+    t.integer "reserved_stock", default: 0
+    t.string "inventory_unit"
+    t.decimal "cost_price", precision: 12, scale: 2, default: "0.0"
+    t.string "currency"
+    t.timestamptz "created_at", null: false
+    t.timestamptz "updated_at", null: false
+    t.index ["product_id", "warehouse_id"], name: "index_inventories_on_product_id_and_warehouse_id", unique: true
+    t.index ["product_id"], name: "index_inventories_on_product_id"
+    t.index ["warehouse_id"], name: "index_inventories_on_warehouse_id"
+    t.check_constraint "cost_price >= 0.0", name: "check_inventories_cost_price_numericality"
+    t.check_constraint "cost_price IS NOT NULL", name: "check_inventories_cost_price_presence"
+    t.check_constraint "currency IS NOT NULL AND currency::text <> ''::text", name: "check_inventories_currency_presence"
+    t.check_constraint "expiration_date >= CURRENT_DATE", name: "check_inventories_expiration_date_future"
+    t.check_constraint "inventory_unit IS NOT NULL AND inventory_unit::text <> ''::text", name: "check_inventories_inventory_unit_presence"
+    t.check_constraint "reserved_stock >= 0", name: "check_inventories_reserved_stock_numericality"
+    t.check_constraint "reserved_stock IS NOT NULL", name: "check_inventories_reserved_stock_presence"
+    t.check_constraint "stock_quantity >= 0", name: "check_inventories_stock_quantity_numericality"
+    t.check_constraint "stock_quantity IS NOT NULL", name: "check_inventories_stock_quantity_presence"
   end
 
   create_table "legal_identifiers", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -201,6 +227,21 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_09_073553) do
     t.check_constraint "valid_to IS NULL OR valid_to > valid_from", name: "check_tax_rates_valid_to_comparison"
   end
 
+  create_table "unit_conversions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "product_id", null: false
+    t.string "from_unit"
+    t.string "to_unit"
+    t.decimal "conversion_rate", precision: 10, scale: 4
+    t.timestamptz "created_at", null: false
+    t.timestamptz "updated_at", null: false
+    t.index ["product_id", "from_unit", "to_unit"], name: "index_unit_conversions_on_product_id_and_from_unit_and_to_unit", unique: true
+    t.index ["product_id"], name: "index_unit_conversions_on_product_id"
+    t.check_constraint "conversion_rate > 0.0", name: "check_unit_conversions_conversion_rate_numericality"
+    t.check_constraint "conversion_rate IS NOT NULL", name: "check_unit_conversions_conversion_rate_presence"
+    t.check_constraint "from_unit IS NOT NULL AND from_unit::text <> ''::text", name: "check_unit_conversions_from_unit_presence"
+    t.check_constraint "to_unit IS NOT NULL AND to_unit::text <> ''::text", name: "check_unit_conversions_to_unit_presence"
+  end
+
   create_table "user_details", primary_key: "user_id", id: :uuid, default: nil, force: :cascade do |t|
     t.string "first_name"
     t.string "last_name"
@@ -319,12 +360,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_09_073553) do
     t.check_constraint "total_capacity IS NOT NULL", name: "check_warehouses_total_capacity_presence"
   end
 
+  add_foreign_key "inventories", "products", name: "fk_inventories_product_id_on_products", on_delete: :cascade
+  add_foreign_key "inventories", "warehouses", name: "fk_inventories_warehouse_id_on_warehouses", on_delete: :restrict
   add_foreign_key "legal_identifiers", "users", name: "fk_legal_identifiers_user_id_on_users", on_delete: :cascade
   add_foreign_key "product_categories", "product_categories", column: "parent_category_id", name: "fk_product_categories_parent_category_id_on_product_categories", on_delete: :cascade
   add_foreign_key "product_prices", "products", name: "fk_product_prices_product_id_on_products", on_delete: :cascade
   add_foreign_key "product_prices", "warehouses", name: "fk_product_prices_warehouse_id_on_warehouses", on_delete: :restrict
   add_foreign_key "products", "product_categories", name: "fk_products_product_category_id_on_product_categories", on_delete: :restrict
   add_foreign_key "request_logs", "users", name: "fk_request_logs_user_id_on_users", on_delete: :nullify
+  add_foreign_key "unit_conversions", "products", name: "fk_unit_conversions_product_id_on_products", on_delete: :cascade
   add_foreign_key "user_details", "users", name: "fk_user_details_user_id_on_users", on_delete: :cascade
   add_foreign_key "user_preferences", "users", name: "fk_user_preferences_user_id_on_users", on_delete: :cascade
   add_foreign_key "users", "roles", name: "fk_users_role_id_on_roles", on_delete: :restrict
