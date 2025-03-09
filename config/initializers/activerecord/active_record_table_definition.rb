@@ -26,8 +26,6 @@ module ActiveRecord
       #   t.datetime_with_timezone :last_activity_at
       # end
       def datetime_with_timezone(column_name, **options)
-        options[:null] = false if options[:null].nil?
-
         column(column_name, :timestamptz, **options)
       end
     end

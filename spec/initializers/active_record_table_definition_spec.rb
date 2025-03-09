@@ -14,7 +14,7 @@ RSpec.describe ActiveRecord::ConnectionAdapters::TableDefinition do
       expect(table_definition).to receive(:column).with(:created_at, :timestamptz, null: false)
       expect(table_definition).to receive(:column).with(:updated_at, :timestamptz, null: false)
 
-      table_definition.timestamps_with_timezone
+      table_definition.timestamps_with_timezone null: false
     end
 
     it "respects passed options" do
