@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_03_09_140350) do
+ActiveRecord::Schema[8.0].define(version: 2025_03_09_141756) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -66,6 +66,36 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_09_140350) do
     t.check_constraint "reserved_stock IS NOT NULL", name: "check_inventories_reserved_stock_presence"
     t.check_constraint "stock_quantity >= 0", name: "check_inventories_stock_quantity_numericality"
     t.check_constraint "stock_quantity IS NOT NULL", name: "check_inventories_stock_quantity_presence"
+  end
+
+  create_table "inventory_movements", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "inventory_id", null: false
+    t.integer "quantity"
+    t.enum "movement_type", enum_type: "movement_types"
+    t.string "inventory_unit"
+    t.decimal "unit_cost", precision: 12, scale: 2
+    t.decimal "total_cost", precision: 12, scale: 2
+    t.string "currency"
+    t.timestamptz "movement_date", default: -> { "now()" }
+    t.string "source_type", null: false
+    t.uuid "source_id", null: false
+    t.jsonb "metadata", default: "{}"
+    t.timestamptz "created_at", null: false
+    t.timestamptz "updated_at", null: false
+    t.index ["inventory_id", "source_id", "source_type", "movement_type"], name: "idx_on_inventory_id_source_id_source_type_movement__dc133791ed", unique: true
+    t.index ["inventory_id"], name: "index_inventory_movements_on_inventory_id"
+    t.index ["metadata"], name: "index_inventory_movements_on_metadata", using: :gin
+    t.index ["source_type", "source_id"], name: "index_inventory_movements_on_source"
+    t.check_constraint "currency IS NOT NULL AND currency::text <> ''::text", name: "check_inventory_movements_currency_presence"
+    t.check_constraint "inventory_unit IS NOT NULL AND inventory_unit::text <> ''::text", name: "check_inventory_movements_inventory_unit_presence"
+    t.check_constraint "movement_type = ANY (ARRAY['restock'::movement_types, 'purchase'::movement_types, 'sale'::movement_types, 'return'::movement_types, 'transfer_in'::movement_types, 'transfer_out'::movement_types, 'adjustment'::movement_types, 'reservation'::movement_types])", name: "check_inventory_movements_movement_type_inclusion"
+    t.check_constraint "movement_type IS NOT NULL", name: "check_inventory_movements_movement_type_presence"
+    t.check_constraint "quantity <> 0", name: "check_inventory_movements_quantity_nonzero"
+    t.check_constraint "quantity IS NOT NULL", name: "check_inventory_movements_quantity_presence"
+    t.check_constraint "total_cost >= unit_cost", name: "check_inventory_movements_total_cost_numericality"
+    t.check_constraint "total_cost IS NOT NULL", name: "check_inventory_movements_total_cost_presence"
+    t.check_constraint "unit_cost >= 0.0", name: "check_inventory_movements_unit_cost_numericality"
+    t.check_constraint "unit_cost IS NOT NULL", name: "check_inventory_movements_unit_cost_presence"
   end
 
   create_table "legal_identifiers", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -363,6 +393,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_09_140350) do
 
   add_foreign_key "inventories", "products", name: "fk_inventories_product_id_on_products", on_delete: :cascade
   add_foreign_key "inventories", "warehouses", name: "fk_inventories_warehouse_id_on_warehouses", on_delete: :restrict
+  add_foreign_key "inventory_movements", "inventories", name: "fk_inventory_movements_inventory_id_on_inventories", on_delete: :cascade
   add_foreign_key "legal_identifiers", "users", name: "fk_legal_identifiers_user_id_on_users", on_delete: :cascade
   add_foreign_key "product_categories", "product_categories", column: "parent_category_id", name: "fk_product_categories_parent_category_id_on_product_categories", on_delete: :cascade
   add_foreign_key "product_prices", "products", name: "fk_product_prices_product_id_on_products", on_delete: :cascade

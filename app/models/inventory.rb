@@ -8,6 +8,8 @@ class Inventory < ApplicationRecord
   attribute :cost_price, default: 0.0
   attribute :currency, default: Money.default_currency.iso_code
 
+  has_many :inventory_movements, inverse_of: :inventory, dependent: :destroy
+
   belongs_to :warehouse, inverse_of: :inventories
   belongs_to :product, inverse_of: :inventories
 end
