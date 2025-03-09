@@ -7,6 +7,6 @@ class ProductPrice < ApplicationRecord
   attribute :unit_price, default: 0.0
   attribute :currency, default: Money.default_currency.iso_code
 
-  belongs_to :product
-  belongs_to :warehouse, optional: true
+  belongs_to :product, inverse_of: :product_prices
+  belongs_to :warehouse, inverse_of: :product_prices, optional: true
 end

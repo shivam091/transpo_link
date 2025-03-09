@@ -31,6 +31,8 @@ class CreateInventories < ActiveRecord::Migration[8.0]
       t.decimal :cost_price, precision: 12, scale: 2, default: 0.0 # Procurement cost
       t.string :currency
 
+      t.timestamps_with_timezone null: false
+
       t.index [:product_id, :warehouse_id], unique: true
 
       t.check_constraint "currency IS NOT NULL AND currency  <> ''", name: :check_inventories_currency_presence
@@ -47,8 +49,6 @@ class CreateInventories < ActiveRecord::Migration[8.0]
       t.check_constraint "inventory_unit IS NOT NULL AND inventory_unit  <> ''", name: :check_inventories_inventory_unit_presence
 
       t.check_constraint "expiration_date >= CURRENT_DATE", name: :check_inventories_expiration_date_future
-
-      t.timestamps_with_timezone null: false
     end
   end
 end
