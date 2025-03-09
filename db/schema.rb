@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_03_09_062142) do
+ActiveRecord::Schema[8.0].define(version: 2025_03_09_073553) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -76,6 +76,23 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_09_062142) do
     t.index ["parent_category_id"], name: "index_product_categories_on_parent_category_id"
     t.check_constraint "char_length(name::text) <= 255 AND char_length(name::text) >= 2", name: "check_product_categories_name_length"
     t.check_constraint "name IS NOT NULL AND name::text <> ''::text", name: "check_product_categories_name_presence"
+  end
+
+  create_table "product_prices", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "product_id", null: false
+    t.uuid "warehouse_id"
+    t.integer "min_quantity", default: 1
+    t.decimal "unit_price", precision: 12, scale: 2, default: "0.0"
+    t.string "currency"
+    t.timestamptz "created_at", null: false
+    t.timestamptz "updated_at", null: false
+    t.index ["product_id"], name: "index_product_prices_on_product_id"
+    t.index ["warehouse_id"], name: "index_product_prices_on_warehouse_id"
+    t.check_constraint "currency IS NOT NULL AND currency::text <> ''::text", name: "check_product_prices_currency_presence"
+    t.check_constraint "min_quantity >= 1", name: "check_product_prices_min_quantity_numericality"
+    t.check_constraint "min_quantity IS NOT NULL", name: "check_product_prices_min_quantity_presence"
+    t.check_constraint "unit_price >= 0.0", name: "check_product_prices_unit_price_numericality"
+    t.check_constraint "unit_price IS NOT NULL", name: "check_product_prices_unit_price_presence"
   end
 
   create_table "products", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -304,6 +321,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_09_062142) do
 
   add_foreign_key "legal_identifiers", "users", name: "fk_legal_identifiers_user_id_on_users", on_delete: :cascade
   add_foreign_key "product_categories", "product_categories", column: "parent_category_id", name: "fk_product_categories_parent_category_id_on_product_categories", on_delete: :cascade
+  add_foreign_key "product_prices", "products", name: "fk_product_prices_product_id_on_products", on_delete: :cascade
+  add_foreign_key "product_prices", "warehouses", name: "fk_product_prices_warehouse_id_on_warehouses", on_delete: :restrict
   add_foreign_key "products", "product_categories", name: "fk_products_product_category_id_on_product_categories", on_delete: :restrict
   add_foreign_key "request_logs", "users", name: "fk_request_logs_user_id_on_users", on_delete: :nullify
   add_foreign_key "user_details", "users", name: "fk_user_details_user_id_on_users", on_delete: :cascade

@@ -65,6 +65,8 @@ class Warehouse < ApplicationRecord
   has_many :warehouse_suppliers, inverse_of: :warehouse, dependent: :destroy
   has_many :suppliers, through: :warehouse_suppliers, inverse_of: :supplied_warehouses, source: :supplier
 
+  has_many :product_prices, inverse_of: :warehouse, dependent: :restrict_with_exception
+
   default_scope -> { order_created_desc }
 
   accepts_nested_attributes_for :address, update_only: true
