@@ -23,7 +23,23 @@ RSpec.describe ActiveRecord::ConnectionAdapters::TableDefinition do
       expect(table_definition).to receive(:column).with(:created_at, :timestamptz, null: true, default: default_value)
       expect(table_definition).to receive(:column).with(:updated_at, :timestamptz, null: true, default: default_value)
 
-      table_definition.timestamps_with_timezone(null: true, default: default_value)
+      table_definition.timestamps_with_timezone null: true, default: default_value
+    end
+  end
+
+  describe "#datetime_with_timezone" do
+    it "adds column with timestamptz type" do
+      expect(table_definition).to receive(:column).with(:last_activity_at, :timestamptz, null: false)
+
+      table_definition.datetime_with_timezone :last_activity_at, null: false
+    end
+
+    it "respects passed options" do
+      default_value = -> { "NOW()" }
+
+      expect(table_definition).to receive(:column).with(:last_activity_at, :timestamptz, null: true, default: default_value)
+
+      table_definition.datetime_with_timezone :last_activity_at, null: true, default: default_value
     end
   end
 end
