@@ -15,8 +15,8 @@ RSpec.describe WarehouseManager, type: :model do
 
   describe "attributes, indexes, foreign keys, and check constraints" do
     it { is_expected.to have_db_column(:id).of_type(:uuid) }
-    it { is_expected.to have_db_column(:warehouse_id).of_type(:uuid) }
-    it { is_expected.to have_db_column(:manager_id).of_type(:uuid) }
+    it { is_expected.to have_db_column(:warehouse_id).of_type(:uuid).with_options(null: false) }
+    it { is_expected.to have_db_column(:manager_id).of_type(:uuid).with_options(null: false) }
     it { is_expected.to have_db_column(:created_at).of_type(:timestamptz).with_options(null: false) }
     it { is_expected.to have_db_column(:updated_at).of_type(:timestamptz).with_options(null: false) }
 
