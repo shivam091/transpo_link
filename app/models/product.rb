@@ -10,6 +10,7 @@ class Product < ApplicationRecord
   attribute :currency, default: Money.default_currency.iso_code
   attribute :is_active, default: false
 
+  has_many :inventories, inverse_of: :product, dependent: :destroy
   has_many :product_prices, inverse_of: :product, dependent: :destroy
 
   belongs_to :product_category, counter_cache: true

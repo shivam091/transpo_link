@@ -66,6 +66,7 @@ class Warehouse < ApplicationRecord
   has_many :suppliers, through: :warehouse_suppliers, inverse_of: :supplied_warehouses, source: :supplier
 
   has_many :product_prices, inverse_of: :warehouse, dependent: :restrict_with_exception
+  has_many :inventories, inverse_of: :warehouse, dependent: :restrict_with_exception
 
   default_scope -> { order_created_desc }
 
