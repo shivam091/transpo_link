@@ -51,7 +51,7 @@ RSpec.describe HasReferenceCode do
 
     context "when reference_code column does not exist" do
       before do
-        allow(ReferenceCodeModel).to receive(:column_names).and_return(%w[id])
+        allow(ReferenceCodeModel).to receive(:column_names) { %w[id] }
       end
 
       it "returns false" do
