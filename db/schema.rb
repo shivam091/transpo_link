@@ -42,7 +42,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_06_155901) do
   end
 
   create_table "legal_identifiers", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.uuid "user_id"
+    t.uuid "user_id", null: false
     t.string "country"
     t.enum "entity_type", enum_type: "entity_types"
     t.string "tax_identifier_type"
@@ -207,7 +207,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_06_155901) do
     t.timestamptz "locked_at"
     t.boolean "is_active", default: false
     t.boolean "is_banned", default: false
-    t.uuid "role_id"
+    t.uuid "role_id", null: false
     t.timestamptz "created_at", null: false
     t.timestamptz "updated_at", null: false
     t.timestamptz "last_activity_at"
@@ -225,8 +225,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_06_155901) do
   end
 
   create_table "warehouse_managers", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.uuid "warehouse_id"
-    t.uuid "manager_id"
+    t.uuid "warehouse_id", null: false
+    t.uuid "manager_id", null: false
     t.timestamptz "created_at", null: false
     t.timestamptz "updated_at", null: false
     t.index ["manager_id"], name: "index_warehouse_managers_on_manager_id"
@@ -234,8 +234,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_06_155901) do
   end
 
   create_table "warehouse_suppliers", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.uuid "warehouse_id"
-    t.uuid "supplier_id"
+    t.uuid "warehouse_id", null: false
+    t.uuid "supplier_id", null: false
     t.timestamptz "created_at", null: false
     t.timestamptz "updated_at", null: false
     t.index ["supplier_id"], name: "index_warehouse_suppliers_on_supplier_id"

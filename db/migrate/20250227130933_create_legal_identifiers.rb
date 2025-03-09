@@ -14,6 +14,7 @@ class CreateLegalIdentifiers < ActiveRecord::Migration[8.0]
                      name: "fk_legal_identifiers_user_id_on_users",
                      on_delete: :cascade
                    },
+                   null: false,
                    index: {using: "btree"}
       t.string :country
       t.enum :entity_type, enum_type: :entity_types
