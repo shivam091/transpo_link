@@ -14,6 +14,8 @@ class InventoryMovement < ApplicationRecord
     reservation: "reservation"
   }
 
+  has_many :inventory_audit_logs, inverse_of: :inventory_movement, dependent: :destroy
+
   belongs_to :inventory, inverse_of: :inventory_movements
   belongs_to :source, polymorphic: true, optional: true
 end
