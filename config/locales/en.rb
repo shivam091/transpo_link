@@ -212,6 +212,12 @@
           valid_from: "Valid from",
           valid_to: "Valid to",
         },
+        product_category: {
+          name: "Name",
+          products_count: "Products count",
+          parent_category_id: "Parent category",
+          is_active: "Is active",
+        },
       },
       errors: {
         format: "%{attribute} %{message}",
@@ -632,6 +638,7 @@
         no_warehouses_to_display: "No warehouses to display",
         no_tax_rates_to_display: "No tax rates to display",
         no_legal_identifiers_to_display: "No legal identifiers to display",
+        no_product_categories_to_display: "No product categories to display",
       },
     },
     flashes: {
@@ -693,6 +700,20 @@
         destroy: {
           success: "Tax rate was successfully deleted.",
           error: "Tax rate could not be deleted."
+        },
+      },
+      product_categories: {
+        create: {
+          success: "Product category was successfully created.",
+          error: "Product category could not be created.",
+        },
+        update: {
+          success: "Product category was successfully updated.",
+          error: "Product category could not be updated."
+        },
+        destroy: {
+          success: "Product category was successfully deleted.",
+          error: "Product category could not be deleted."
         },
       },
       roles: {
@@ -791,7 +812,6 @@
       },
       index: {
         title: "Users",
-        actions: "Actions",
       },
       user: {
       },
@@ -868,7 +888,6 @@
     warehouses: {
       index: {
         title: "Warehouses",
-        actions: "Actions",
       },
       active: {
         title: "Active warehouses",
@@ -946,6 +965,23 @@
         select_tax_identifier_type: "Select tax identifier type",
         select_business_category: "Select business category",
       },
+    },
+    product_categories: {
+      index: {
+        title: "Product categories",
+      },
+      product_category: {
+        delete_product_category_confirmation_text: "Are you sure you want to delete the product category ‘%{product_category_name}’? This cannot be undone.",
+      },
+      new: {
+        title: "New product category",
+      },
+      edit: {
+        title: "Edit product category",
+      },
+      form: {
+        select_parent_category: "Select parent category",
+      }
     },
   },
 }

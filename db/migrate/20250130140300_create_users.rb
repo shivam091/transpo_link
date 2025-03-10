@@ -44,6 +44,7 @@ class CreateUsers < ActiveRecord::Migration[8.0]
                      name: :fk_users_role_id_on_roles,
                      on_delete: :restrict
                    },
+                   null: false,
                    index: {using: :btree}
 
       t.timestamps_with_timezone null: false

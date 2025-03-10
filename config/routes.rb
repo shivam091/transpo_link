@@ -40,6 +40,7 @@ Rails.application.routes.draw do
   resources :warehouses, concerns: :toggleable
   resources :legal_identifiers, path: "legal-identifiers", except: :show
   resources :tax_rates, path: "tax-rates", except: :show
+  resources :product_categories, path: "product-categories", except: :show
 
   root to: "dashboards#show"
 end
