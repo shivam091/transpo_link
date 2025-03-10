@@ -1,0 +1,13 @@
+%tr
+  %th{scope: "row"}= h(index)
+  %td= link_to role.name, role_path(role)
+  %td= h(humanize_boolean(role.is_active))
+  %td.actions
+    .dropdown
+      = link_to "javascript:void(0)", class: "text-reset", data: {bs_toggle: "dropdown"}, aria: {expanded: false} do
+        = external_svg_tag("svgs/ellipsis-vertical.svg")
+      %ul.dropdown-menu
+        %li
+          = link_to edit_role_path(role), class: "dropdown-item" do
+            = external_svg_tag("svgs/pencil.svg")
+            = button_text(:edit)

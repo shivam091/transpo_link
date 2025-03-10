@@ -95,6 +95,8 @@
         role: {
           name: "Name",
           is_active: "Is active",
+          created_at: "Created at",
+          updated_at: "Updated at",
         },
         request_log: {
           uuid: "UUID",
@@ -580,6 +582,7 @@
           reports: "Reports",
           feedbacks: "Feedbacks",
           tax_rates: "Tax rates",
+          roles: "Roles",
         },
         menu: {
           hello_username: "Hello %{username}",
@@ -630,6 +633,7 @@
       },
       no_records: {
         no_users_to_display: "No users to display",
+        no_roles_to_display: "No roles to display",
         no_request_logs_to_display: "No request logs to display",
         no_warehouses_to_display: "No warehouses to display",
         no_tax_rates_to_display: "No tax rates to display",
@@ -712,6 +716,12 @@
           error: "Product category could not be deleted."
         },
       },
+      roles: {
+        update: {
+          success: "Role was successfully updated.",
+          error: "Role could not be updated."
+        },
+      },
     },
     measurement_units: {
       categories: {
@@ -766,6 +776,18 @@
         mi: "Mile (mi)",
       },
     },
+    roles: {
+      index: {
+        title: "Roles",
+      },
+      role: {
+      },
+      edit: {
+        title: "Edit role"
+      },
+      form: {
+      },
+    },
     users: {
       sessions: {
         new: {
@@ -790,7 +812,6 @@
       },
       index: {
         title: "Users",
-        actions: "Actions",
       },
       user: {
       },
@@ -867,7 +888,6 @@
     warehouses: {
       index: {
         title: "Warehouses",
-        actions: "Actions",
       },
       active: {
         title: "Active warehouses",

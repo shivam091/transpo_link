@@ -33,3 +33,6 @@
     = link_to tax_rates_path, class: class_names("nav-link", "active": current_controller?(:tax_rates)) do
       = external_svg_tag("svgs/percentage.svg")
       = t(".tax_rates")
+    = link_to roles_path, class: class_names("nav-link", "active": current_controller?(:roles)) do
+      = external_svg_tag("svgs/security.svg")
+      = t(".roles")
