@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_03_06_155901) do
+ActiveRecord::Schema[8.0].define(version: 2025_03_09_163115) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -18,9 +18,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_06_155901) do
   # Custom types defined in this database.
   # Note that some types may not work with other database engines. Be careful if changing database.
   create_enum "business_categories", ["b2b", "b2c"]
-  create_enum "business_number_types", ["ein", "duns", "cin", "roc", "acn", "abn", "nzbn", "cnpj", "bn", "siret", "siren", "crn", "uen", "rfc", "cuit", "ruc", "nit", "hrb", "ico", "npwp", "brn", "ssm", "ogrn", "brn_kr", "cbr", "cr"]
   create_enum "color_schemes", ["auto", "dark", "light"]
   create_enum "entity_types", ["business", "individual"]
+  create_enum "movement_types", ["restock", "purchase", "sale", "return", "transfer_in", "transfer_out", "adjustment", "reservation"]
 
   create_table "addresses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "addressable_type"
@@ -39,6 +39,83 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_06_155901) do
     t.check_constraint "char_length(address2::text) <= 100", name: "check_addresses_address2_length"
     t.check_constraint "char_length(postal_code::text) <= 20", name: "check_addresses_postal_code_length"
     t.check_constraint "country IS NOT NULL AND country::text <> ''::text", name: "check_addresses_country_presence"
+  end
+
+  create_table "inventories", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "product_id", null: false
+    t.uuid "warehouse_id", null: false
+    t.string "batch_number"
+    t.date "expiration_date"
+    t.integer "stock_quantity", default: 0
+    t.integer "reserved_stock", default: 0
+    t.string "inventory_unit"
+    t.decimal "cost_price", precision: 12, scale: 2, default: "0.0"
+    t.string "currency"
+    t.timestamptz "created_at", null: false
+    t.timestamptz "updated_at", null: false
+    t.index ["product_id", "warehouse_id"], name: "index_inventories_on_product_id_and_warehouse_id", unique: true
+    t.index ["product_id"], name: "index_inventories_on_product_id"
+    t.index ["warehouse_id"], name: "index_inventories_on_warehouse_id"
+    t.check_constraint "cost_price >= 0.0", name: "check_inventories_cost_price_numericality"
+    t.check_constraint "cost_price IS NOT NULL", name: "check_inventories_cost_price_presence"
+    t.check_constraint "currency IS NOT NULL AND currency::text <> ''::text", name: "check_inventories_currency_presence"
+    t.check_constraint "expiration_date >= CURRENT_DATE", name: "check_inventories_expiration_date_future"
+    t.check_constraint "inventory_unit IS NOT NULL AND inventory_unit::text <> ''::text", name: "check_inventories_inventory_unit_presence"
+    t.check_constraint "reserved_stock >= 0", name: "check_inventories_reserved_stock_numericality"
+    t.check_constraint "reserved_stock IS NOT NULL", name: "check_inventories_reserved_stock_presence"
+    t.check_constraint "stock_quantity >= 0", name: "check_inventories_stock_quantity_numericality"
+    t.check_constraint "stock_quantity IS NOT NULL", name: "check_inventories_stock_quantity_presence"
+  end
+
+  create_table "inventory_audit_logs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "inventory_id", null: false
+    t.uuid "inventory_movement_id"
+    t.uuid "user_id", null: false
+    t.string "movement_type"
+    t.integer "previous_quantity"
+    t.integer "new_quantity"
+    t.jsonb "metadata", default: "{}"
+    t.timestamptz "created_at", null: false
+    t.timestamptz "updated_at", null: false
+    t.index ["inventory_id", "movement_type"], name: "index_inventory_audit_logs_on_inventory_id_and_movement_type"
+    t.index ["inventory_id"], name: "index_inventory_audit_logs_on_inventory_id"
+    t.index ["inventory_movement_id"], name: "index_inventory_audit_logs_on_inventory_movement_id"
+    t.index ["metadata"], name: "index_inventory_audit_logs_on_metadata", using: :gin
+    t.index ["movement_type"], name: "index_inventory_audit_logs_on_movement_type"
+    t.index ["user_id"], name: "index_inventory_audit_logs_on_user_id"
+    t.check_constraint "movement_type IS NOT NULL", name: "check_inventory_audit_logs_movement_type_presence"
+    t.check_constraint "new_quantity IS NOT NULL", name: "check_inventory_audit_logs_new_quantity_presence"
+    t.check_constraint "previous_quantity IS NOT NULL", name: "check_inventory_audit_logs_previous_quantity_presence"
+  end
+
+  create_table "inventory_movements", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "inventory_id", null: false
+    t.integer "quantity"
+    t.enum "movement_type", enum_type: "movement_types"
+    t.string "inventory_unit"
+    t.decimal "unit_cost", precision: 12, scale: 2
+    t.decimal "total_cost", precision: 12, scale: 2
+    t.string "currency"
+    t.timestamptz "movement_date", default: -> { "now()" }
+    t.string "source_type", null: false
+    t.uuid "source_id", null: false
+    t.jsonb "metadata", default: "{}"
+    t.timestamptz "created_at", null: false
+    t.timestamptz "updated_at", null: false
+    t.index ["inventory_id", "source_id", "source_type", "movement_type"], name: "idx_on_inventory_id_source_id_source_type_movement__dc133791ed", unique: true
+    t.index ["inventory_id"], name: "index_inventory_movements_on_inventory_id"
+    t.index ["metadata"], name: "index_inventory_movements_on_metadata", using: :gin
+    t.index ["source_type", "source_id"], name: "index_inventory_movements_on_source"
+    t.check_constraint "currency IS NOT NULL AND currency::text <> ''::text", name: "check_inventory_movements_currency_presence"
+    t.check_constraint "inventory_unit IS NOT NULL AND inventory_unit::text <> ''::text", name: "check_inventory_movements_inventory_unit_presence"
+    t.check_constraint "movement_type = ANY (ARRAY['restock'::movement_types, 'purchase'::movement_types, 'sale'::movement_types, 'return'::movement_types, 'transfer_in'::movement_types, 'transfer_out'::movement_types, 'adjustment'::movement_types, 'reservation'::movement_types])", name: "check_inventory_movements_movement_type_inclusion"
+    t.check_constraint "movement_type IS NOT NULL", name: "check_inventory_movements_movement_type_presence"
+    t.check_constraint "quantity <> 0", name: "check_inventory_movements_quantity_nonzero"
+    t.check_constraint "quantity IS NOT NULL", name: "check_inventory_movements_quantity_presence"
+    t.check_constraint "total_cost >= unit_cost", name: "check_inventory_movements_total_cost_numericality"
+    t.check_constraint "total_cost IS NOT NULL", name: "check_inventory_movements_total_cost_presence"
+    t.check_constraint "unit_cost >= 0.0", name: "check_inventory_movements_unit_cost_numericality"
+    t.check_constraint "unit_cost IS NOT NULL", name: "check_inventory_movements_unit_cost_presence"
   end
 
   create_table "legal_identifiers", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -76,6 +153,55 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_06_155901) do
     t.index ["parent_category_id"], name: "index_product_categories_on_parent_category_id"
     t.check_constraint "char_length(name::text) <= 255 AND char_length(name::text) >= 2", name: "check_product_categories_name_length"
     t.check_constraint "name IS NOT NULL AND name::text <> ''::text", name: "check_product_categories_name_presence"
+  end
+
+  create_table "product_prices", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "product_id", null: false
+    t.uuid "warehouse_id"
+    t.integer "min_quantity", default: 1
+    t.decimal "unit_price", precision: 12, scale: 2, default: "0.0"
+    t.string "currency"
+    t.timestamptz "created_at", null: false
+    t.timestamptz "updated_at", null: false
+    t.index ["product_id"], name: "index_product_prices_on_product_id"
+    t.index ["warehouse_id"], name: "index_product_prices_on_warehouse_id"
+    t.check_constraint "currency IS NOT NULL AND currency::text <> ''::text", name: "check_product_prices_currency_presence"
+    t.check_constraint "min_quantity >= 1", name: "check_product_prices_min_quantity_numericality"
+    t.check_constraint "min_quantity IS NOT NULL", name: "check_product_prices_min_quantity_presence"
+    t.check_constraint "unit_price >= 0.0", name: "check_product_prices_unit_price_numericality"
+    t.check_constraint "unit_price IS NOT NULL", name: "check_product_prices_unit_price_presence"
+  end
+
+  create_table "products", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "reference_code"
+    t.string "name"
+    t.text "description"
+    t.string "sku"
+    t.string "barcode"
+    t.integer "min_stock_threshold", default: 0
+    t.string "capacity_unit"
+    t.string "currency"
+    t.decimal "cost_price", precision: 12, scale: 2, default: "0.0"
+    t.uuid "product_category_id", null: false
+    t.boolean "is_active", default: false
+    t.timestamptz "created_at", null: false
+    t.timestamptz "updated_at", null: false
+    t.index ["barcode"], name: "index_products_on_barcode", unique: true
+    t.index ["is_active"], name: "index_products_on_is_active"
+    t.index ["product_category_id"], name: "index_products_on_product_category_id"
+    t.index ["reference_code"], name: "index_products_on_reference_code", unique: true
+    t.index ["sku"], name: "index_products_on_sku", unique: true
+    t.check_constraint "capacity_unit IS NOT NULL AND capacity_unit::text <> ''::text", name: "check_products_capacity_unit_presence"
+    t.check_constraint "char_length(description) <= 2000", name: "check_products_description_length"
+    t.check_constraint "char_length(name::text) <= 255 AND char_length(name::text) >= 2", name: "check_products_name_length"
+    t.check_constraint "char_length(sku::text) <= 50", name: "check_products_sku_length"
+    t.check_constraint "cost_price >= 0.0", name: "check_products_cost_price_numericality"
+    t.check_constraint "cost_price IS NOT NULL", name: "check_products_cost_price_presence"
+    t.check_constraint "currency IS NOT NULL AND currency::text <> ''::text", name: "check_products_currency_presence"
+    t.check_constraint "min_stock_threshold >= 0", name: "check_products_min_stock_threshold_numericality"
+    t.check_constraint "min_stock_threshold IS NOT NULL", name: "check_products_min_stock_threshold_presence"
+    t.check_constraint "name IS NOT NULL AND name::text <> ''::text", name: "check_products_name_presence"
+    t.check_constraint "sku IS NOT NULL AND sku::text <> ''::text", name: "check_products_sku_presence"
   end
 
   create_table "request_logs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -150,6 +276,21 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_06_155901) do
     t.check_constraint "valid_from >= CURRENT_DATE", name: "check_tax_rates_valid_from_future"
     t.check_constraint "valid_from IS NOT NULL", name: "check_tax_rates_valid_from_presence"
     t.check_constraint "valid_to IS NULL OR valid_to > valid_from", name: "check_tax_rates_valid_to_comparison"
+  end
+
+  create_table "unit_conversions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "product_id", null: false
+    t.string "from_unit"
+    t.string "to_unit"
+    t.decimal "conversion_rate", precision: 10, scale: 4
+    t.timestamptz "created_at", null: false
+    t.timestamptz "updated_at", null: false
+    t.index ["product_id", "from_unit", "to_unit"], name: "index_unit_conversions_on_product_id_and_from_unit_and_to_unit", unique: true
+    t.index ["product_id"], name: "index_unit_conversions_on_product_id"
+    t.check_constraint "conversion_rate > 0.0", name: "check_unit_conversions_conversion_rate_numericality"
+    t.check_constraint "conversion_rate IS NOT NULL", name: "check_unit_conversions_conversion_rate_presence"
+    t.check_constraint "from_unit IS NOT NULL AND from_unit::text <> ''::text", name: "check_unit_conversions_from_unit_presence"
+    t.check_constraint "to_unit IS NOT NULL AND to_unit::text <> ''::text", name: "check_unit_conversions_to_unit_presence"
   end
 
   create_table "user_details", primary_key: "user_id", id: :uuid, default: nil, force: :cascade do |t|
@@ -270,9 +411,19 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_06_155901) do
     t.check_constraint "total_capacity IS NOT NULL", name: "check_warehouses_total_capacity_presence"
   end
 
+  add_foreign_key "inventories", "products", name: "fk_inventories_product_id_on_products", on_delete: :cascade
+  add_foreign_key "inventories", "warehouses", name: "fk_inventories_warehouse_id_on_warehouses", on_delete: :restrict
+  add_foreign_key "inventory_audit_logs", "inventories", name: "fk_inventory_audit_logs_inventory_id_on_inventories", on_delete: :cascade
+  add_foreign_key "inventory_audit_logs", "inventory_movements", name: "fk_inventory_audit_logs_inventory_movement_id_on_inventory_move", on_delete: :cascade
+  add_foreign_key "inventory_audit_logs", "users", name: "fk_inventory_audit_logs_user_id_on_users", on_delete: :nullify
+  add_foreign_key "inventory_movements", "inventories", name: "fk_inventory_movements_inventory_id_on_inventories", on_delete: :cascade
   add_foreign_key "legal_identifiers", "users", name: "fk_legal_identifiers_user_id_on_users", on_delete: :cascade
   add_foreign_key "product_categories", "product_categories", column: "parent_category_id", name: "fk_product_categories_parent_category_id_on_product_categories", on_delete: :cascade
+  add_foreign_key "product_prices", "products", name: "fk_product_prices_product_id_on_products", on_delete: :cascade
+  add_foreign_key "product_prices", "warehouses", name: "fk_product_prices_warehouse_id_on_warehouses", on_delete: :restrict
+  add_foreign_key "products", "product_categories", name: "fk_products_product_category_id_on_product_categories", on_delete: :restrict
   add_foreign_key "request_logs", "users", name: "fk_request_logs_user_id_on_users", on_delete: :nullify
+  add_foreign_key "unit_conversions", "products", name: "fk_unit_conversions_product_id_on_products", on_delete: :cascade
   add_foreign_key "user_details", "users", name: "fk_user_details_user_id_on_users", on_delete: :cascade
   add_foreign_key "user_preferences", "users", name: "fk_user_preferences_user_id_on_users", on_delete: :cascade
   add_foreign_key "users", "roles", name: "fk_users_role_id_on_roles", on_delete: :restrict

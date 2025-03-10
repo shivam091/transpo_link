@@ -51,6 +51,7 @@ RSpec.describe ProductCategory, type: :model do
 
   describe "associations" do
     it { is_expected.to have_many(:sub_categories).class_name("ProductCategory").with_foreign_key(:parent_category_id).inverse_of(:parent_category).dependent(:destroy) }
+    it { is_expected.to have_many(:products).inverse_of(:product_category).dependent(:restrict_with_exception) }
 
     it { is_expected.to belong_to(:parent_category).class_name("ProductCategory").inverse_of(:sub_categories).optional }
   end
