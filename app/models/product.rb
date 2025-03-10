@@ -13,6 +13,7 @@ class Product < ApplicationRecord
   has_many :inventories, inverse_of: :product, dependent: :destroy
   has_many :product_prices, inverse_of: :product, dependent: :destroy
   has_many :unit_conversions, inverse_of: :product, dependent: :destroy
+  has_many :feedbacks, as: :reviewable, inverse_of: :reviewable, dependent: :nullify
 
   belongs_to :product_category, counter_cache: true, inverse_of: :products
 
