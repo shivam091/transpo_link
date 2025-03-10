@@ -22,10 +22,10 @@ class LegalIdentifiersController < ApplicationController
     response = LegalIdentifiers::CreateService.(current_user, legal_identifier_params)
     @legal_identifier = response.payload[:legal_identifier]
     if response.success?
-      flash[:notice] = response.message
+      set_flash_message(:notice, :success)
       redirect_to legal_identifiers_path, status: :see_other
     else
-      flash.now[:alert] = response.message
+      set_flash_message(:alert, :error, immediate: true)
       respond_to do |format|
         format.turbo_stream do
           render turbo_stream: [
@@ -46,10 +46,10 @@ class LegalIdentifiersController < ApplicationController
     response = LegalIdentifiers::UpdateService.(@legal_identifier, legal_identifier_params)
     @legal_identifier = response.payload[:legal_identifier]
     if response.success?
-      flash[:notice] = response.message
+      set_flash_message(:notice, :success)
       redirect_to legal_identifiers_path, status: :see_other
     else
-      flash.now[:alert] = response.message
+      set_flash_message(:alert, :error, immediate: true)
       respond_to do |format|
         format.turbo_stream do
           render turbo_stream: [
@@ -66,9 +66,9 @@ class LegalIdentifiersController < ApplicationController
     response = LegalIdentifiers::DestroyService.(@legal_identifier)
     @legal_identifier = response.payload[:legal_identifier]
     if response.success?
-      flash[:info] = response.message
+      set_flash_message(:info, :success)
     else
-      flash[:alert] = response.message
+      set_flash_message(:alert, :error)
     end
     redirect_to legal_identifiers_path, status: :see_other
   end

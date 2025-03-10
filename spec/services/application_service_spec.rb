@@ -26,25 +26,4 @@ RSpec.describe ApplicationService do
       expect(result).to eq(:service_result)
     end
   end
-
-  describe "#t" do
-    let(:service) { ApplicationService.new }
-    let(:count) { 2 }
-
-    it "translates using the flashes scope by default" do
-      allow(I18n).to receive(:t).with("test.key", scope: "flashes") { "Translated Message" }
-
-      result = service.t("test.key")
-
-      expect(result).to eq("Translated Message")
-    end
-
-    it "merges custom options with default scope" do
-      allow(I18n).to receive(:t).with("test.key", scope: "flashes", count: 2) { "Translated Message #{count}" }
-
-      result = service.t("test.key", count: count)
-
-      expect(result).to eq("Translated Message #{count}")
-    end
-  end
 end

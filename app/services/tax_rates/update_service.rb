@@ -17,9 +17,9 @@ class TaxRates::UpdateService < ApplicationService
 
   def update_tax_rate
     if tax_rate.update(tax_rate_attributes)
-      ServiceResponse.success(message: t("tax_rates.update.notice"), payload: {tax_rate: tax_rate})
+      ServiceResponse.success(payload: {tax_rate:})
     else
-      ServiceResponse.error(message: t("tax_rates.update.alert"), payload: {tax_rate: tax_rate})
+      ServiceResponse.error(payload: {tax_rate:})
     end
   end
 end

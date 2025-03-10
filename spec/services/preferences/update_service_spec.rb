@@ -7,15 +7,15 @@
 require "spec_helper"
 
 RSpec.describe Preferences::UpdateService, type: :service do
-  describe "#call" do
-    let(:user) { create(:admin, :active, :with_address, :confirmed) }
-    let(:preference_attributes) { {user_preference_attributes: {preferred_currency: "GBP"}} }
-    subject { described_class.(user, preference_attributes) }
+  let!(:user) { create(:admin, :active, :with_address, :confirmed) }
+  let!(:preference_attributes) { {user_preference_attributes: {preferred_currency: "GBP"}} }
 
+  subject(:service_response) { described_class.(user, preference_attributes) }
+
+  describe ".call" do
     context "when update is successful" do
       it "updates the user preferences" do
-        expect(subject.payload[:user].preferred_currency).to include("GBP")
-        expect(subject.message).to eq("Your preferences were successfully updated.")
+        expect(service_response.payload[:user].preferred_currency).to eq("GBP")
       end
 
       include_examples "returns a success response"
@@ -25,8 +25,7 @@ RSpec.describe Preferences::UpdateService, type: :service do
       before { allow(user).to receive(:update) { false } }
 
       it "does not update the user preferences" do
-        expect(subject.payload[:user].preferred_currency).to include("INR")
-        expect(subject.message).to eq("Your preferences could not be updated.")
+        expect(service_response.payload[:user].preferred_currency).to eq("INR")
       end
 
       include_examples "returns an error response"
