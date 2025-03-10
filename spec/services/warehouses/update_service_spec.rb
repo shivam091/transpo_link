@@ -7,7 +7,7 @@
 require "spec_helper"
 
 RSpec.describe Warehouses::UpdateService, type: :service do
-  let!(:warehouse) { create(:warehouse) }
+  let!(:warehouse) { create(:warehouse, name: "TranspoLink Logistics LLP") }
   let!(:warehouse_attributes) { {name: "New warehouse"} }
 
   subject(:service_response) { described_class.(warehouse, warehouse_attributes) }
@@ -25,7 +25,7 @@ RSpec.describe Warehouses::UpdateService, type: :service do
       before { allow(warehouse).to receive(:update) { false } }
 
       it "does not update the warehouse" do
-        expect(service_response.payload[:warehouse].name).to eq("TranspoLink Logistics")
+        expect(service_response.payload[:warehouse].name).to eq("TranspoLink Logistics LLP")
       end
 
       include_examples "returns an error response"
