@@ -74,7 +74,7 @@ RSpec.describe Warehouse, type: :model do
   end
 
   describe "callbacks" do
-    it { is_expected.to have_callback(:before, :create, :set_reference_code) }
+    it { is_expected.to have_callback(:after, :initialize, :set_reference_code) }
   end
 
   include_examples "apply default scope on created_at:desc"

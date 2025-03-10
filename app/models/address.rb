@@ -17,7 +17,6 @@ class Address < ApplicationRecord
             allow_blank: true,
             reduce: true
   validates :country, presence: true, reduce: true
-  validates :addressable_id, :addressable_type, presence: true, reduce: true
 
   belongs_to :addressable, polymorphic: true, touch: true
 
