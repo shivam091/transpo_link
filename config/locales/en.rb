@@ -95,6 +95,8 @@
         role: {
           name: "Name",
           is_active: "Is active",
+          created_at: "Created at",
+          updated_at: "Updated at",
         },
         request_log: {
           uuid: "UUID",
@@ -209,6 +211,12 @@
           rate: "Rate",
           valid_from: "Valid from",
           valid_to: "Valid to",
+        },
+        product_category: {
+          name: "Name",
+          products_count: "Products count",
+          parent_category_id: "Parent category",
+          is_active: "Is active",
         },
       },
       errors: {
@@ -576,6 +584,7 @@
           reports: "Reports",
           feedbacks: "Feedbacks",
           tax_rates: "Tax rates",
+          roles: "Roles",
         },
         menu: {
           hello_username: "Hello %{username}",
@@ -626,10 +635,12 @@
       },
       no_records: {
         no_users_to_display: "No users to display",
+        no_roles_to_display: "No roles to display",
         no_request_logs_to_display: "No request logs to display",
         no_warehouses_to_display: "No warehouses to display",
         no_tax_rates_to_display: "No tax rates to display",
         no_legal_identifiers_to_display: "No legal identifiers to display",
+        no_product_categories_to_display: "No product categories to display",
       },
     },
     flashes: {
@@ -693,6 +704,26 @@
           error: "Tax rate could not be deleted."
         },
       },
+      product_categories: {
+        create: {
+          success: "Product category was successfully created.",
+          error: "Product category could not be created.",
+        },
+        update: {
+          success: "Product category was successfully updated.",
+          error: "Product category could not be updated."
+        },
+        destroy: {
+          success: "Product category was successfully deleted.",
+          error: "Product category could not be deleted."
+        },
+      },
+      roles: {
+        update: {
+          success: "Role was successfully updated.",
+          error: "Role could not be updated."
+        },
+      },
     },
     measurement_units: {
       categories: {
@@ -747,6 +778,18 @@
         mi: "Mile (mi)",
       },
     },
+    roles: {
+      index: {
+        title: "Roles",
+      },
+      role: {
+      },
+      edit: {
+        title: "Edit role"
+      },
+      form: {
+      },
+    },
     users: {
       sessions: {
         new: {
@@ -771,7 +814,6 @@
       },
       index: {
         title: "Users",
-        actions: "Actions",
       },
       user: {
       },
@@ -848,7 +890,6 @@
     warehouses: {
       index: {
         title: "Warehouses",
-        actions: "Actions",
       },
       active: {
         title: "Active warehouses",
@@ -926,6 +967,23 @@
         select_tax_identifier_type: "Select tax identifier type",
         select_business_category: "Select business category",
       },
+    },
+    product_categories: {
+      index: {
+        title: "Product categories",
+      },
+      product_category: {
+        delete_product_category_confirmation_text: "Are you sure you want to delete the product category ‘%{product_category_name}’? This cannot be undone.",
+      },
+      new: {
+        title: "New product category",
+      },
+      edit: {
+        title: "Edit product category",
+      },
+      form: {
+        select_parent_category: "Select parent category",
+      }
     },
   },
 }
