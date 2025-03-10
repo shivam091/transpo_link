@@ -70,4 +70,14 @@ RSpec.describe TranspoLink::MeasurementUnits do
       expect(described_class.all_units.uniq.length).to eq(described_class.all_units.length)
     end
   end
+
+  describe ".units_for" do
+    it "returns an array of units for the specified category" do
+      expect(described_class.units_for(:count)).to eq(%i[item pack box carton pallet bundle dz case roll])
+    end
+
+    it "returns an empty array if the specified category is invalid" do
+      expect(described_class.units_for(:angle)).to be_empty
+    end
+  end
 end
