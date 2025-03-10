@@ -38,6 +38,7 @@ class User < ApplicationRecord
   has_many :request_logs, inverse_of: :user, dependent: :nullify
   has_many :legal_identifiers, inverse_of: :user, dependent: :destroy
   has_many :inventory_audit_logs, inverse_of: :user, dependent: :nullify
+  has_many :feedbacks, inverse_of: :user, dependent: :nullify
 
   has_many :warehouse_managers, inverse_of: :manager, foreign_key: :manager_id, dependent: :restrict_with_exception
   has_many :managed_warehouses, through: :warehouse_managers, inverse_of: :managers, source: :warehouse

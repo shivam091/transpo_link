@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_03_09_163115) do
+ActiveRecord::Schema[8.0].define(version: 2025_03_10_041232) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -39,6 +39,25 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_09_163115) do
     t.check_constraint "char_length(address2::text) <= 100", name: "check_addresses_address2_length"
     t.check_constraint "char_length(postal_code::text) <= 20", name: "check_addresses_postal_code_length"
     t.check_constraint "country IS NOT NULL AND country::text <> ''::text", name: "check_addresses_country_presence"
+  end
+
+  create_table "feedbacks", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id", null: false
+    t.string "reviewable_type", null: false
+    t.uuid "reviewable_id", null: false
+    t.decimal "rating", precision: 3, scale: 1
+    t.text "comment"
+    t.boolean "is_unread", default: true
+    t.timestamptz "created_at", null: false
+    t.timestamptz "updated_at", null: false
+    t.index ["is_unread"], name: "index_feedbacks_on_is_unread"
+    t.index ["reviewable_type", "reviewable_id"], name: "index_feedbacks_on_reviewable"
+    t.index ["user_id"], name: "index_feedbacks_on_user_id"
+    t.check_constraint "(rating * 2::numeric) = floor(rating * 2::numeric)", name: "check_feedbacks_rating_step"
+    t.check_constraint "char_length(comment) <= 1000 AND char_length(comment) > 0", name: "check_feedbacks_comment_length"
+    t.check_constraint "comment IS NOT NULL AND comment <> ''::text", name: "check_feedbacks_comment_presence"
+    t.check_constraint "rating >= 0.0 AND rating <= 10.0", name: "check_feedbacks_rating_numericality"
+    t.check_constraint "rating IS NOT NULL", name: "check_feedbacks_rating_presence"
   end
 
   create_table "inventories", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -411,6 +430,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_09_163115) do
     t.check_constraint "total_capacity IS NOT NULL", name: "check_warehouses_total_capacity_presence"
   end
 
+  add_foreign_key "feedbacks", "users", name: "fk_feedbacks_user_id_on_users", on_delete: :nullify
   add_foreign_key "inventories", "products", name: "fk_inventories_product_id_on_products", on_delete: :cascade
   add_foreign_key "inventories", "warehouses", name: "fk_inventories_warehouse_id_on_warehouses", on_delete: :restrict
   add_foreign_key "inventory_audit_logs", "inventories", name: "fk_inventory_audit_logs_inventory_id_on_inventories", on_delete: :cascade
