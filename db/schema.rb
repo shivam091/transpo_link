@@ -18,7 +18,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_09_163115) do
   # Custom types defined in this database.
   # Note that some types may not work with other database engines. Be careful if changing database.
   create_enum "business_categories", ["b2b", "b2c"]
-  create_enum "business_number_types", ["ein", "duns", "cin", "roc", "acn", "abn", "nzbn", "cnpj", "bn", "siret", "siren", "crn", "uen", "rfc", "cuit", "ruc", "nit", "hrb", "ico", "npwp", "brn", "ssm", "ogrn", "brn_kr", "cbr", "cr"]
   create_enum "color_schemes", ["auto", "dark", "light"]
   create_enum "entity_types", ["business", "individual"]
   create_enum "movement_types", ["restock", "purchase", "sale", "return", "transfer_in", "transfer_out", "adjustment", "reservation"]
