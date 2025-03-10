@@ -24,36 +24,38 @@ RSpec.describe ReduceValidator do
     end.new
   end
 
-  context "when there are multiple errors on the attribute" do
-    before do
-      subject.attribute = "invalid value"
-      subject.valid?
-      subject.errors.add(:attribute, "second error message")
+  describe "#validates_each" do
+    context "when there are multiple errors on the attribute" do
+      before do
+        subject.attribute = "invalid value"
+        subject.valid?
+        subject.errors.add(:attribute, "second error message")
+      end
+
+      it "reduces the errors to a single error message" do
+        expect(subject.errors[:attribute].size).to eq(2)
+
+        ReduceValidator.new(attributes: :attribute).validate(subject)
+
+        expect(subject.errors[:attribute].size).to eq(1)
+        expect(subject.errors[:attribute].first).to eq("is too long (maximum is 5 characters)")
+      end
     end
 
-    it "reduces the errors to a single error message" do
-      expect(subject.errors[:attribute].size).to eq(2)
+    context "when there is a single error on the attribute" do
+      before do
+        subject.attribute = "invalid value"
+        subject.valid?
+      end
 
-      ReduceValidator.new(attributes: :attribute).validate(subject)
+      it "does not change the error message" do
+        expect(subject.errors[:attribute].size).to eq(1)
 
-      expect(subject.errors[:attribute].size).to eq(1)
-      expect(subject.errors[:attribute].first).to eq("is too long (maximum is 5 characters)")
-    end
-  end
+        ReduceValidator.new(attributes: :attribute).validate(subject)
 
-  context "when there is a single error on the attribute" do
-    before do
-      subject.attribute = "invalid value"
-      subject.valid?
-    end
-
-    it "does not change the error message" do
-      expect(subject.errors[:attribute].size).to eq(1)
-
-      ReduceValidator.new(attributes: :attribute).validate(subject)
-
-      expect(subject.errors[:attribute].size).to eq(1)
-      expect(subject.errors[:attribute].first).to eq("is too long (maximum is 5 characters)")
+        expect(subject.errors[:attribute].size).to eq(1)
+        expect(subject.errors[:attribute].first).to eq("is too long (maximum is 5 characters)")
+      end
     end
   end
 end

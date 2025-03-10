@@ -10,14 +10,7 @@ RSpec.describe PrettyFormHelper, type: :helper do
   before(:all) do
     ActiveRecord::Schema.define(version: 1) do
       create_table :test_users, force: true do |t|
-        t.string :reference_code
         t.string :name
-        t.string :password
-        t.string :email
-        t.string :role
-        t.integer :age
-        t.text :bio
-        t.boolean :is_active
         t.timestamps
       end
     end
@@ -31,7 +24,7 @@ RSpec.describe PrettyFormHelper, type: :helper do
     Object.send(:remove_const, :TestUser)
   end
 
-  let(:object) { TestUser.new(name: "Test", email: "test@example.com", role: "admin") }
+  let(:object) { TestUser.new(name: "Test") }
 
   describe "#pretty_form_for" do
     it "renders form tag" do

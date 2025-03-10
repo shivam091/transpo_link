@@ -53,7 +53,7 @@ class WarehousesController < ApplicationController
   def edit
   end
 
-  # PUT|PATCH /warehouses/:id/edit
+  # PUT|PATCH /warehouses/:id
   def update
     response = Warehouses::UpdateService.(@warehouse, warehouse_params)
     @warehouse = response.payload[:warehouse]
