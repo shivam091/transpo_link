@@ -4,5 +4,14 @@
 
 FactoryBot.define do
   factory :product do
+    name { Faker::Commerce.product_name }
+    description { Faker::Lorem.paragraph(sentence_count: 3) }
+    sku { Faker::Alphanumeric.alphanumeric(number: 12).upcase }
+    barcode { Faker::Barcode.ean }
+    min_stock_threshold { Faker::Number.between(from: 1, to: 100) }
+    capacity_unit { "kg" }
+    currency { Money.default_currency.iso_code }
+    cost_price { Faker::Commerce.price(range: 5.0..1000.0, as_string: true) }
+    association :product_category
   end
 end
