@@ -145,4 +145,7 @@ p {
   &:active, &.active {
     color: rgba(var(--bs-emphasis-color-rgb), 1);
   }
+  &.active {
+    font-weight: 500; // applied separately because creates conflicts with :active.
+  }
 }

@@ -12,14 +12,14 @@ RSpec.describe LegalIdentifiers::CreateService, type: :service do
   subject(:service_response) { described_class.(user, legal_identifier_attributes) }
 
   describe ".call" do
-    context "when legal identifier is valid" do
+    context "when provided attributes are valid" do
       let(:legal_identifier_attributes) { attributes_for(:legal_identifier) }
 
       include_examples "creates a record", LegalIdentifier
       include_examples "returns a success response"
     end
 
-    context "when legal identifier is invalid" do
+    context "when provided attributes are invalid" do
       let(:legal_identifier_attributes) { {tax_identifier_type: ""} }
 
       include_examples "does not change record count", LegalIdentifier

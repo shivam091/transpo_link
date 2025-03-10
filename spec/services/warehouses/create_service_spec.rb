@@ -13,14 +13,14 @@ RSpec.describe Warehouses::CreateService, type: :service do
     let(:manager) { create(:manager) }
     let(:supplier) { create(:supplier) }
 
-    context "when warehouse is valid" do
+    context "when provided attributes are valid" do
       let(:warehouse_attributes) { attributes_for(:warehouse).merge(manager_ids: [manager.id], supplier_ids: [supplier.id]) }
 
       include_examples "creates a record", Warehouse
       include_examples "returns a success response"
     end
 
-    context "when warehouse is invalid" do
+    context "when provided attributes are invalid" do
       let(:warehouse_attributes) { attributes_for(:warehouse, name: "") }
 
       include_examples "does not change record count", Warehouse
