@@ -14,8 +14,6 @@ module ActiveRecord
       #   t.timestamps_with_timezone
       # end
       def timestamps_with_timezone(**options)
-        options[:null] = false if options[:null].nil?
-
         [:created_at, :updated_at].each do |column_name|
           column(column_name, :timestamptz, **options)
         end

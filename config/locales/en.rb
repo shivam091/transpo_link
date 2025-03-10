@@ -580,6 +580,7 @@
           reports: "Reports",
           feedbacks: "Feedbacks",
           tax_rates: "Tax rates",
+          roles: "Roles",
         },
         menu: {
           hello_username: "Hello %{username}",
@@ -790,7 +791,6 @@
       },
       index: {
         title: "Users",
-        actions: "Actions",
       },
       user: {
       },
@@ -867,7 +867,6 @@
     warehouses: {
       index: {
         title: "Warehouses",
-        actions: "Actions",
       },
       active: {
         title: "Active warehouses",

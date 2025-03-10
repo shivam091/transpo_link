@@ -41,7 +41,7 @@ class LegalIdentifiersController < ApplicationController
   def edit
   end
 
-  # PUT|PATCH /legal-identifiers/:id/edit
+  # PUT|PATCH /legal-identifiers/:id
   def update
     response = LegalIdentifiers::UpdateService.(@legal_identifier, legal_identifier_params)
     @legal_identifier = response.payload[:legal_identifier]
