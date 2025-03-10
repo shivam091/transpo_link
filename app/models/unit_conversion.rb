@@ -3,5 +3,5 @@
 # -*- warn_indent: true -*-
 
 class UnitConversion < ApplicationRecord
-  belongs_to :product, inverse_of: :unit_conversions
+  belongs_to :product, inverse_of: :unit_conversions, touch: true
 end

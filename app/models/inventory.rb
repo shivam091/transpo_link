@@ -12,5 +12,5 @@ class Inventory < ApplicationRecord
   has_many :inventory_audit_logs, inverse_of: :inventory, dependent: :destroy
 
   belongs_to :warehouse, inverse_of: :inventories
-  belongs_to :product, inverse_of: :inventories
+  belongs_to :product, inverse_of: :inventories, touch: true
 end

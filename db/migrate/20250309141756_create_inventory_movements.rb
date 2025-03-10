@@ -22,7 +22,7 @@ class CreateInventoryMovements < ActiveRecord::Migration[8.0]
       t.decimal :unit_cost, precision: 12, scale: 2 # Cost per unit at the time of movement
       t.decimal :total_cost, precision: 12, scale: 2 # Total cost of the movement
       t.string :currency
-      t.datetime_with_timezone :movement_date, default: -> { "NOW()" }
+      t.timestamptz :movement_date, default: -> { "NOW()" }
       t.references :source,
                    type: :uuid,
                    polymorphic: true,
