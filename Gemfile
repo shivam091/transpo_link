@@ -104,6 +104,9 @@ group :development, :test do
 
   # Help to kill N+1 queries and unused eager loading
   gem "bullet", "~> 8"
+
+  # Generate realistic test data
+  gem "faker"
 end
 
 group :development do
