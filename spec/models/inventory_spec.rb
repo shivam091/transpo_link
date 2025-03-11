@@ -15,6 +15,7 @@ RSpec.describe Inventory, type: :model do
 
   describe "attributes, indexes, foreign keys, and check constraints" do
     it { is_expected.to have_db_column(:id).of_type(:uuid) }
+    it { is_expected.to have_db_column(:reference_code).of_type(:string) }
     it { is_expected.to have_db_column(:product_id).of_type(:uuid).with_options(null: false) }
     it { is_expected.to have_db_column(:warehouse_id).of_type(:uuid).with_options(null: false) }
     it { is_expected.to have_db_column(:batch_number).of_type(:string) }
@@ -27,6 +28,7 @@ RSpec.describe Inventory, type: :model do
     it { is_expected.to have_db_column(:created_at).of_type(:timestamptz).with_options(null: false) }
     it { is_expected.to have_db_column(:updated_at).of_type(:timestamptz).with_options(null: false) }
 
+    it { is_expected.to have_db_index(:reference_code).unique }
     it { is_expected.to have_db_index([:product_id, :warehouse_id]).unique }
     it { is_expected.to have_db_index(:product_id) }
     it { is_expected.to have_db_index(:warehouse_id) }
@@ -63,6 +65,10 @@ RSpec.describe Inventory, type: :model do
     it "should set Money's default currency as default value for #currency" do
       expect(inventory.currency).to eq(Money.default_currency.iso_code)
     end
+  end
+
+  describe "included modules" do
+    it { is_expected.to include_module(HasReferenceCode) }
   end
 
   describe "associations" do

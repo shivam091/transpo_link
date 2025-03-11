@@ -5,6 +5,7 @@
 class CreateInventories < ActiveRecord::Migration[8.0]
   def change
     create_table :inventories, id: :uuid do |t|
+      t.string :reference_code, index: {using: :btree, unique: true}
       t.references :product,
                    type: :uuid,
                    foreign_key: {
