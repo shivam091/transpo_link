@@ -25,34 +25,47 @@ RSpec.describe HasReferenceCode do
     Object.send(:remove_const, :ReferenceCodeModel)
   end
 
-  describe "after_initialize callback" do
-    it "calls set_reference_code if required" do
+  describe "before_create callback" do
+    it "calls set_reference_code before creation" do
       ref_code_model = ReferenceCodeModel.new
-      expect(ref_code_model.reference_code).not_to be_blank
+
+      expect(ref_code_model).to receive(:set_reference_code)
+
+      ref_code_model.run_callbacks(:create)
     end
   end
 
   describe "#set_reference_code" do
-    it "generates a random alphanumeric reference code" do
-      ref_code_model = ReferenceCodeModel.new
-      expect(ref_code_model.reference_code).to match(/^[A-Z0-9]{10}$/)
+    context "when reference_code column exists" do
+      before do
+        allow(ReferenceCodeModel::REFERENCE_CODE_CONFIG).to receive(:fetch).with("ReferenceCodeModel") { {prefix: "WH", seq_name: "warehouse_reference_code_seq"} }
+        allow(ActiveRecord::Base.connection).to receive(:select_value).with("SELECT nextval('warehouse_reference_code_seq')") { 1 }
+      end
+
+      it "generates a new reference code with correct prefix and sequence" do
+        ref_code_model = ReferenceCodeModel.new
+        ref_code_model.send(:set_reference_code)
+
+        expect(ref_code_model.reference_code).to eq("WH-0001")
+      end
     end
 
-    it "does not override an existing reference code" do
-      ref_code_model = ReferenceCodeModel.new(reference_code: "CUSTOM1234")
-      expect(ref_code_model.reference_code).to eq("CUSTOM1234")
-    end
-  end
+    context "when no existing reference codes are present" do
+      before do
+        allow(ReferenceCodeModel::REFERENCE_CODE_CONFIG).to receive(:fetch).with("ReferenceCodeModel") { {prefix: "PRD", seq_name: "product_reference_code_seq"} }
+        allow(ActiveRecord::Base.connection).to receive(:select_value).with("SELECT nextval('product_reference_code_seq')") { 1 }
+      end
 
-  describe "#has_reference_code_column?" do
-    it "returns true when the column exists" do
-      expect(ReferenceCodeModel.new.send(:has_reference_code_column?)).to be_truthy
+      it "generates reference code starting from 1" do
+        ref_code_model = ReferenceCodeModel.new
+        ref_code_model.send(:set_reference_code)
+
+        expect(ref_code_model.reference_code).to eq("PRD-0001")
+      end
     end
 
     context "when reference_code column does not exist" do
-      before do
-        allow(ReferenceCodeModel).to receive(:column_names) { %w[id] }
-      end
+      before { allow(ReferenceCodeModel).to receive(:column_names) { %w[id] } }
 
       it "returns false" do
         expect(ReferenceCodeModel.new.send(:has_reference_code_column?)).to be_falsy
@@ -60,10 +73,12 @@ RSpec.describe HasReferenceCode do
     end
   end
 
-  describe "#code_required?" do
-    it "returns false when reference_code is already set" do
-      ref_code_model = ReferenceCodeModel.new(reference_code: "ABC123")
-      expect(ref_code_model.send(:code_required?)).to be_falsy
-    end
+  describe "constants" do
+    it { expect(HasReferenceCode).to have_constant(:REFERENCE_CODE_LENGTH) }
+    it { expect(HasReferenceCode).to have_constant(:REFERENCE_CODE_CONFIG) }
+  end
+
+  describe "callbacks" do
+    it { expect(ReferenceCodeModel).to have_callback(:before, :create, :set_reference_code) }
   end
 end
