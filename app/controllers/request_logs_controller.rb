@@ -19,6 +19,6 @@ class RequestLogsController < ApplicationController
   private
 
   def find_request_log
-    @request_log = RequestLog.find(params[:id])
+    @request_log ||= RequestLog.find(params[:id])
   end
 end

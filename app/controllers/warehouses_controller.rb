@@ -116,6 +116,6 @@ class WarehousesController < ApplicationController
   end
 
   def find_warehouse
-    @warehouse = Warehouse.find(params[:id])
+    @warehouse ||= Warehouse.find(params[:id])
   end
 end

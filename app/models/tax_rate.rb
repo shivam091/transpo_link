@@ -14,6 +14,8 @@ class TaxRate < ApplicationRecord
     b2c: "b2c"
   }
 
+  attribute :business_category, :enum, default: business_categories[:b2b]
+
   validates :tax_identifier_type,
             uniqueness: {
               scope: [:country, :business_category, :valid_from],
