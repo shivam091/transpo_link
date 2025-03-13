@@ -1,6 +1,6 @@
 import { Controller } from "@hotwired/stimulus";
 
-export default class extends Controller {
+export default class NestedFormsController extends Controller {
   static targets = ["target", "template"];
   static values = { wrapperSelector: String };
 

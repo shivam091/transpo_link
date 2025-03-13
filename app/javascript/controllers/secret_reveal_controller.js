@@ -1,6 +1,6 @@
 import { Controller } from "@hotwired/stimulus";
 
-export default class extends Controller {
+export default class SecretRevealController extends Controller {
   static targets = ["input", "icon"];
   static classes = ["hidden"];
 
