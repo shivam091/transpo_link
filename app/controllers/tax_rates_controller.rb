@@ -87,6 +87,6 @@ class TaxRatesController < ApplicationController
   end
 
   def find_tax_rate
-    @tax_rate = TaxRate.find(params[:id])
+    @tax_rate ||= TaxRate.find(params[:id])
   end
 end

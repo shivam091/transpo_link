@@ -7,13 +7,7 @@
 require "spec_helper"
 
 RSpec.describe "Money configuration for TranspoLink" do
-  def load_initializers
-    load Rails.root.join("config/initializers/money.rb")
-  end
-
-  before do
-    load_initializers
-  end
+  before { load_file("config/initializers/money.rb") }
 
   describe "default currency" do
     it "sets the default currency" do

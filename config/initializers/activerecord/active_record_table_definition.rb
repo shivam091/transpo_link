@@ -15,18 +15,8 @@ module ActiveRecord
       # end
       def timestamps_with_timezone(**options)
         [:created_at, :updated_at].each do |column_name|
-          datetime_with_timezone(column_name, **options)
+          column(column_name, :timestamptz, **options)
         end
-      end
-
-      # Adds specified column with appropriate timestamp type
-      #
-      # It is used in table creation like:
-      # create_table 'users' do |t|
-      #   t.datetime_with_timezone :last_activity_at
-      # end
-      def datetime_with_timezone(column_name, **options)
-        column(column_name, :timestamptz, **options)
       end
     end
   end

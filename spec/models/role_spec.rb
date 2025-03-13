@@ -7,7 +7,7 @@
 require "spec_helper"
 
 RSpec.describe Role, type: :model do
-  subject(:admin_role) { build(:admin_role) }
+  subject { build(:admin_role) }
 
   describe "valid factory" do
     it { is_expected.to have_a_valid_factory(:admin_role).with_traits(:active) }
@@ -24,13 +24,15 @@ RSpec.describe Role, type: :model do
     it { is_expected.to have_db_column(:created_at).of_type(:timestamptz).with_options(null: false) }
     it { is_expected.to have_db_column(:updated_at).of_type(:timestamptz).with_options(null: false) }
 
-    it { is_expected.to have_db_index(:name).unique(true) }
+    it { is_expected.to have_db_index(:name).unique }
 
     it { is_expected.to have_check_constraint(:check_roles_name_length).with_expression("char_length(name::text) <= 55 AND char_length(name::text) >= 2") }
     it { is_expected.to have_check_constraint(:check_roles_name_presence).with_expression("name IS NOT NULL AND name::text <> ''::text") }
   end
 
   describe "default values" do
+    let(:admin_role) { described_class.new }
+
     it "should set false as default value for #is_active" do
       expect(admin_role.is_active).to be_falsy
     end

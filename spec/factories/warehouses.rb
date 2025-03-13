@@ -4,25 +4,21 @@
 
 FactoryBot.define do
   factory :warehouse do
-    name { "TranspoLink Logistics" }
-    email_address
-    contact_number
-    description { "Description of TranspoLink Logistics" }
-    total_capacity { 10**8 } # 100,000,000 lb
-    capacity_unit { "lb" }
-    latitude { 19.2578818 }
-    longitude { 73.144015 }
+    name { Faker::Company.name }
+    email_address { Faker::Internet.email }
+    contact_number { Faker::PhoneNumber.phone_number_with_country_code }
+    description { Faker::Company.bs }
+    total_capacity { 10**6 } # 1,000,000
+    capacity_unit { TranspoLink::MeasurementUnits.units_for(:weight).sample }
+    latitude { Faker::Address.latitude }
+    longitude { Faker::Address.longitude }
 
     trait :small_capacity do
-      total_capacity { 10**5 } # 100,000 lb
-    end
-
-    trait :medium_capacity do
-      total_capacity { 10**6 } # 1,000,000 lb
+      total_capacity { 10**3 } # 1,000
     end
 
     trait :large_capacity do
-      total_capacity { 10**9 } # 1,000,000,000 lb
+      total_capacity { 10**9 } # 1,000,000,000
     end
 
     before(:create) do |warehouse|

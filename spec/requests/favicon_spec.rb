@@ -7,7 +7,7 @@
 require "spec_helper"
 
 RSpec.describe "Favicon", type: :request do
-  let(:favicon_url) { ActionController::Base.helpers.asset_url(TranspoLink::Favicon.main) }
+  let!(:favicon_url) { ActionController::Base.helpers.asset_url(TranspoLink::Favicon.main) }
 
   describe "GET /favicon.png" do
     it "redirects to the correct favicon asset URL" do

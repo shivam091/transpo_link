@@ -8,7 +8,7 @@ require "spec_helper"
 
 RSpec.describe ModalsHelper, type: :helper do
   describe "#render_modal" do
-    let(:default_options) do
+    let!(:default_options) do
       {
         title: "",
         modal_id: "modal-window",
@@ -16,9 +16,7 @@ RSpec.describe ModalsHelper, type: :helper do
       }
     end
 
-    before do
-      allow(helper).to receive(:render_if_exists)
-    end
+    before { allow(helper).to receive(:render_if_exists) }
 
     context "when no options are provided" do
       it "uses the default options" do
@@ -105,8 +103,9 @@ RSpec.describe ModalsHelper, type: :helper do
     end
 
     context "when a block is provided" do
+      let(:block) { proc { "Modal content" } }
+
       it "yields the block to the partial" do
-        block = proc { "Modal content" }
         helper.render_modal(&block)
 
         expect(helper).to have_received(:render_if_exists).with(

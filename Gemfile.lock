@@ -244,6 +244,9 @@ GEM
       racc
     pg (1.5.9)
     popper_js (2.11.8)
+    postgresql_adapter_extensions (1.0.0)
+      activerecord (~> 8)
+      pg (~> 1.5)
     pp (0.6.2)
       prettyprint
     prettyprint (0.2.0)
@@ -492,6 +495,7 @@ DEPENDENCIES
   jbuilder
   money (= 6.19)
   pg (~> 1.5)
+  postgresql_adapter_extensions (~> 1)
   propshaft
   puma (>= 5.0)
   rails (~> 8.0.1)

@@ -7,8 +7,8 @@
 require "spec_helper"
 
 RSpec.describe "Locales", type: :request do
-  let(:valid_attributes) { {preferred_locale: "es"} }
-  let(:invalid_attributes) { {preferred_locale: ""} }
+  let!(:valid_attributes) { {preferred_locale: "es"} }
+  let!(:invalid_attributes) { {preferred_locale: ""} }
 
   context "when user is not signed in" do
     describe "GET /locale/edit" do

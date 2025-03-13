@@ -5,11 +5,7 @@
 RSpec.shared_context "sign in as admin" do
   let(:admin) { create(:admin, :active, :confirmed, :with_address) }
 
-  before do
-    sign_in(admin)
-  end
+  before { sign_in(admin) }
 
-  after do
-    sign_out(admin)
-  end
+  after { sign_out(admin) }
 end

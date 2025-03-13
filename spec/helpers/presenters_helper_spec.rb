@@ -20,7 +20,7 @@ RSpec.describe PresentersHelper, type: :helper do
   end
 
   after(:all) do
-    ActiveRecord::Base.connection.drop_table(:presentable_models, if_exists: true)
+    connection.drop_table(:presentable_models, if_exists: true)
     Object.send(:remove_const, :PresentableModel)
   end
 
@@ -45,18 +45,21 @@ RSpec.describe PresentersHelper, type: :helper do
     it "returns an instance of the correct presenter" do
       presenter = nil
       helper.present(presentable_model) { |p| presenter = p }
+
       expect(presenter).to be_a(PresentableModelPresenter)
     end
 
     it "passes the correct model to the presenter" do
       presenter = nil
       helper.present(presentable_model) { |p| presenter = p }
+
       expect(presenter.model).to eq(presentable_model)
     end
 
     it "provides access to the view context" do
       presenter = nil
       helper.present(presentable_model) { |p| presenter = p }
+
       expect(presenter.view_context).to eq(helper)
     end
   end

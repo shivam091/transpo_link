@@ -9,20 +9,20 @@ class CreateWarehouseSuppliers < ActiveRecord::Migration[8.0]
                    type: :uuid,
                    foreign_key: {
                      to_table: :warehouses,
-                     name: "fk_warehouse_suppliers_warehouse_id_on_warehouses",
+                     name: :fk_warehouse_suppliers_warehouse_id_on_warehouses,
                      on_delete: :cascade
                    },
                    null: false,
-                   index: {using: "btree"}
+                   index: {using: :btree}
       t.references :supplier,
                    type: :uuid,
                    foreign_key: {
                      to_table: :users,
-                     name: "fk_warehouse_suppliers_supplier_id_on_users",
+                     name: :fk_warehouse_suppliers_supplier_id_on_users,
                      on_delete: :restrict
                    },
                    null: false,
-                   index: {using: "btree"}
+                   index: {using: :btree}
       t.timestamps_with_timezone null: false
     end
   end

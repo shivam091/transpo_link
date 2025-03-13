@@ -10,8 +10,8 @@ RSpec.describe "LegalIdentifiers", type: :request do
   let!(:buyer) { create(:buyer) }
   let!(:legal_identifier) { create(:legal_identifier, user: buyer) }
 
-  let(:valid_attributes) { attributes_for(:legal_identifier, tax_identifier: "27PQRST1234D1Z9").merge(user_id: buyer.id) }
-  let(:invalid_attributes) { attributes_for(:legal_identifier, tax_identifier: "") }
+  let!(:valid_attributes) { attributes_for(:legal_identifier, tax_identifier: "27PQRST1234D1Z9").merge(user_id: buyer.id) }
+  let!(:invalid_attributes) { attributes_for(:legal_identifier, tax_identifier: "") }
 
   context "when user is not signed in" do
     describe "GET /legal-identifiers" do
@@ -138,11 +138,9 @@ RSpec.describe "LegalIdentifiers", type: :request do
       end
 
       context "when delete fails" do
-        before do
-          allow(LegalIdentifiers::DestroyService).to receive(:call) { ServiceResponse.error }
-        end
-
         it "does not delete the legal identifier and redirects with an error message" do
+          allow(LegalIdentifiers::DestroyService).to receive(:call) { ServiceResponse.error }
+
           delete legal_identifier_path(legal_identifier)
 
           expect(response).to redirect_to(legal_identifiers_path)

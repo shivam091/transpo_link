@@ -2,4 +2,8 @@
 # -*- frozen_string_literal: true -*-
 # -*- warn_indent: true -*-
 
-RSpec::Matchers.define_negated_matcher :not_change, :change
+module MigrationHelpers
+  def connection
+    ActiveRecord::Base.connection
+  end
+end

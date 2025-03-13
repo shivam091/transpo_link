@@ -82,7 +82,7 @@ RSpec.describe Product, type: :model do
     it { is_expected.to have_many(:product_prices).inverse_of(:product).dependent(:destroy) }
     it { is_expected.to have_many(:unit_conversions).inverse_of(:product).dependent(:destroy) }
 
-    it { is_expected.to belong_to(:product_category).inverse_of(:products).counter_cache(true) }
+    it { is_expected.to belong_to(:product_category).inverse_of(:products).counter_cache }
   end
 
   describe "delegates" do

@@ -7,7 +7,7 @@
 require "spec_helper"
 
 RSpec.describe UserPreference, type: :model do
-  subject(:user_preference) { build(:user_preference) }
+  subject { build(:user_preference) }
 
   describe "valid factory" do
     it { is_expected.to have_a_valid_factory(:user_preference) }
@@ -32,6 +32,8 @@ RSpec.describe UserPreference, type: :model do
   end
 
   describe "default values" do
+    let(:user_preference) { described_class.new }
+
     it "should set en as default value for #preferred_locale" do
       expect(user_preference.preferred_locale).to eq("en")
     end

@@ -40,13 +40,16 @@ RSpec.describe DurationHelper, type: :helper do
       expect(helper.prettify_seconds(0)).to eq("0 seconds")
     end
 
-    it "uses the provided locale and scope" do
-      custom_locale = :es
-      custom_scope = "custom.datetime.units"
-      options = {locale: custom_locale, scope: custom_scope}
+    context "when providing a custom locale and scope" do
+      let(:custom_locale) { :es }
+      let(:custom_scope) { "custom.datetime.units" }
+      let(:options) { {locale: custom_locale, scope: custom_scope} }
 
-      expect(I18n).to receive(:with_options).with(**options).and_call_original
-      helper.prettify_seconds(3600, options)
+      it "uses the provided locale and scope" do
+        expect(I18n).to receive(:with_options).with(**options).and_call_original
+
+        helper.prettify_seconds(3600, options)
+      end
     end
   end
 end

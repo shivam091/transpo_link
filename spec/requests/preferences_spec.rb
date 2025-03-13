@@ -7,8 +7,8 @@
 require "spec_helper"
 
 RSpec.describe "Preferences", type: :request do
-  let(:valid_attributes) { {preferred_currency: "GBP"} }
-  let(:invalid_attributes) { {preferred_currency: ""} }
+  let!(:valid_attributes) { {preferred_currency: "GBP"} }
+  let!(:invalid_attributes) { {preferred_currency: ""} }
 
   context "when user is not signed in" do
     describe "GET /preference" do

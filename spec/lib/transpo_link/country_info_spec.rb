@@ -7,9 +7,9 @@
 require "spec_helper"
 
 RSpec.describe TranspoLink::CountryInfo do
-  let(:country_code) { "IN" }
-  let(:subdivision_code) { "MH" }
-  let(:country_info) { described_class.new(country_code, subdivision_code) }
+  let!(:country_code) { "IN" }
+  let!(:subdivision_code) { "MH" }
+  let!(:country_info) { described_class.new(country_code, subdivision_code) }
 
   describe "#country" do
     it "returns the country object for the given code" do
@@ -47,6 +47,7 @@ RSpec.describe TranspoLink::CountryInfo do
     context "when country translation is missing" do
       it "falls back to the country alpha2" do
         allow(country_info.country).to receive(:translations) { {} }
+
         expect(country_info.country_name).to eq("IN")
       end
     end
@@ -64,6 +65,7 @@ RSpec.describe TranspoLink::CountryInfo do
     context "when subdivision translation is missing" do
       it "falls back to the subdivision name" do
         allow(country_info.subdivision).to receive(:translations) { {} }
+
         expect(country_info.subdivision_name).to eq("Maharashtra")
       end
     end
@@ -81,8 +83,7 @@ RSpec.describe TranspoLink::CountryInfo do
     context "when country has subdivisions" do
       it "returns an array of subdivision options for select" do
         I18n.with_locale(:en) do
-          options = country_info.options_for_subdivisions
-          expect(options).to include(["Maharashtra", "MH"])
+          expect(country_info.options_for_subdivisions).to include(["Maharashtra", "MH"])
         end
       end
     end
@@ -98,9 +99,8 @@ RSpec.describe TranspoLink::CountryInfo do
 
   describe ".options_for_countries" do
     it "returns an array of country options for select" do
-      I18n.with_locale(:es) do
-        options = described_class.options_for_countries
-        expect(options).to include(["India", "IN"])
+      I18n.with_locale(:en) do
+        expect(described_class.options_for_countries).to include(["India", "IN"])
       end
     end
   end

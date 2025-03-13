@@ -60,6 +60,7 @@ RSpec.describe TranspoLink::I18n do
   describe ".locale" do
     it "returns the current I18n locale" do
       I18n.locale = :en
+
       expect(described_class.locale).to eq(:en)
     end
   end
@@ -79,6 +80,7 @@ RSpec.describe TranspoLink::I18n do
   describe ".locale=" do
     it "sets the I18n locale" do
       described_class.locale = :en
+
       expect(I18n.locale).to eq(:en)
     end
   end
@@ -86,6 +88,7 @@ RSpec.describe TranspoLink::I18n do
   describe ".with_locale" do
     it "temporarily changes the locale for the block" do
       I18n.locale = :en
+
       described_class.with_locale(:es) do
         expect(I18n.locale).to eq(:es)
       end
@@ -110,6 +113,7 @@ RSpec.describe TranspoLink::I18n do
 
     it "reverts to the original locale after the block" do
       TranspoLink::I18n.with_user_locale(user) {}
+
       expect(I18n.locale).to eq(default_locale)
     end
   end
@@ -134,6 +138,7 @@ RSpec.describe TranspoLink::I18n do
 
     it "reverts to the original locale after the block" do
       TranspoLink::I18n.with_default_locale {}
+
       expect(I18n.locale).to eq(:es)
     end
   end
@@ -169,7 +174,9 @@ RSpec.describe TranspoLink::I18n do
   end
 
   describe "#options_for_languages" do
-    before do
+    let(:result) { described_class.options_for_languages }
+
+    it "returns locales that meet the translation threshold with formatted strings" do
       allow(TranspoLink::I18n).to receive(:selectable_locales) {
         {
           en: "English",
@@ -178,13 +185,9 @@ RSpec.describe TranspoLink::I18n do
       }
       allow(TranspoLink::I18n).to receive(:percentage_translated_for).with(:en) { 100 }
       allow(TranspoLink::I18n).to receive(:percentage_translated_for).with(:es) { 10 }
-    end
 
-    it "returns locales that meet the translation threshold with formatted strings" do
       expect(I18n).to receive(:t).with("preferences.preference_form.language_translation_percentage", locale: :en) { "%{language} (%{percent_translated} translated)" }
       expect(I18n).to receive(:t).with("preferences.preference_form.language_translation_percentage", locale: :es) { "%{language} (%{percent_translated} translated)" }
-
-      result = described_class.options_for_languages
 
       expect(result).to eq([
         ["English (100% translated)", :en],

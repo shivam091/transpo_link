@@ -91,6 +91,6 @@ class LegalIdentifiersController < ApplicationController
   end
 
   def find_legal_identifier
-    @legal_identifier = @legal_identifiers.find(params[:id])
+    @legal_identifier ||= @legal_identifiers.find(params[:id])
   end
 end
