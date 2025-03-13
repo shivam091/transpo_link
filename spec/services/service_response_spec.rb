@@ -8,57 +8,57 @@ require "spec_helper"
 
 RSpec.describe ServiceResponse do
   describe ".success" do
-    subject { described_class.success(payload: {key: "value"}) }
+    let(:service_response) { described_class.success(payload: {key: "value"}) }
 
     it "returns a success ServiceResponse instance" do
-      expect(subject.status).to eq(:success)
-      expect(subject.payload).to eq({key: "value"})
-      expect(subject.http_status).to eq(:ok)
+      expect(service_response.status).to eq(:success)
+      expect(service_response.payload).to eq({key: "value"})
+      expect(service_response.http_status).to eq(:ok)
     end
   end
 
   describe ".error" do
-    subject { described_class.error(payload: {key: "value"}, http_status: :unauthorized) }
+    let(:service_response) { described_class.error(payload: {key: "value"}, http_status: :unauthorized) }
 
     it "returns an error ServiceResponse instance" do
-      expect(subject.status).to eq(:error)
-      expect(subject.payload).to eq({key: "value"})
-      expect(subject.http_status).to eq(:unauthorized)
+      expect(service_response.status).to eq(:error)
+      expect(service_response.payload).to eq({key: "value"})
+      expect(service_response.http_status).to eq(:unauthorized)
     end
   end
 
   describe "#success?" do
     context "when status is :success" do
-      subject { described_class.success }
+      let(:service_response) { described_class.success }
 
       it "returns true" do
-        expect(subject.success?).to be_truthy
+        expect(service_response.success?).to be_truthy
       end
     end
 
     context "when status is not :success" do
-      subject { described_class.error }
+      let(:service_response) { described_class.error }
 
       it "returns false" do
-        expect(subject.success?).to be_falsey
+        expect(service_response.success?).to be_falsy
       end
     end
   end
 
   describe "#error?" do
     context "when status is :error" do
-      subject { described_class.error }
+      let(:service_response) { described_class.error }
 
       it "returns true" do
-        expect(subject.error?).to be_truthy
+        expect(service_response.error?).to be_truthy
       end
     end
 
     context "when status is not :error" do
-      subject { described_class.success }
+      let(:service_response) { described_class.success }
 
       it "returns false" do
-        expect(subject.error?).to be_falsey
+        expect(service_response.error?).to be_falsy
       end
     end
   end

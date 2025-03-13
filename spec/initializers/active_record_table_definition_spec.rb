@@ -10,6 +10,8 @@ RSpec.describe ActiveRecord::ConnectionAdapters::TableDefinition do
   let(:table_definition) { described_class.new(ActiveRecord::Base.connection, nil) }
 
   describe "#timestamps_with_timezone" do
+    let!(:default_value) { -> { "NOW()" } }
+
     it "adds created_at and updated_at columns with timestamptz type" do
       expect(table_definition).to receive(:column).with(:created_at, :timestamptz, null: false)
       expect(table_definition).to receive(:column).with(:updated_at, :timestamptz, null: false)
@@ -18,8 +20,6 @@ RSpec.describe ActiveRecord::ConnectionAdapters::TableDefinition do
     end
 
     it "respects passed options" do
-      default_value = -> { "NOW()" }
-
       expect(table_definition).to receive(:column).with(:created_at, :timestamptz, null: true, default: default_value)
       expect(table_definition).to receive(:column).with(:updated_at, :timestamptz, null: true, default: default_value)
 

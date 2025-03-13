@@ -91,6 +91,7 @@ RSpec.configure do |config|
   config.include RailsHelpers
   config.include TestHelpers
   config.include ControllerAssignsHelper
+  config.include MigrationHelpers
 
   config.around do |example|
     ActiveRecord::Base.transaction do

@@ -6,8 +6,8 @@ require "spec_helper"
 
 RSpec.describe "ProductCategories", type: :request do
   let!(:product_category) { create(:product_category) }
-  let(:valid_attributes) { attributes_for(:product_category, name: "New product category") }
-  let(:invalid_attributes) { attributes_for(:product_category, name: "") }
+  let!(:valid_attributes) { attributes_for(:product_category, name: "New product category") }
+  let!(:invalid_attributes) { attributes_for(:product_category, name: "") }
 
   context "when user is not signed in" do
     describe "GET /product-categories" do
@@ -134,11 +134,9 @@ RSpec.describe "ProductCategories", type: :request do
       end
 
       context "when delete fails" do
-        before do
-          allow(ProductCategories::DestroyService).to receive(:call) { ServiceResponse.error }
-        end
-
         it "does not delete the product category and redirects with an error message" do
+          allow(ProductCategories::DestroyService).to receive(:call) { ServiceResponse.error }
+
           delete product_category_path(product_category)
 
           expect(response).to redirect_to(product_categories_path)

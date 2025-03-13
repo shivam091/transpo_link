@@ -34,11 +34,9 @@ RSpec.describe "Users::Passwords", type: :request do
     end
 
     context "when the user has recently requested a password reset" do
-      before do
-        allow_any_instance_of(User).to receive(:recently_sent_password_reset_instructions?) { true }
-      end
-
       it "throttles the password reset request and redirects with an error message" do
+        allow_any_instance_of(User).to receive(:recently_sent_password_reset_instructions?) { true }
+
         expect {
           post user_password_path, params: {user: {email: user.email}}
         }.to not_change { ActionMailer::Base.deliveries.count }

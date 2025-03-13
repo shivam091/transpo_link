@@ -7,7 +7,7 @@
 require "spec_helper"
 
 RSpec.describe Address, type: :model do
-  subject(:address) { build(:address) }
+  subject { build(:address) }
 
   describe "valid factory" do
     it { is_expected.to have_a_valid_factory(:address) }

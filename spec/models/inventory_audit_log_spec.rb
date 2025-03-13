@@ -43,7 +43,7 @@ RSpec.describe InventoryAuditLog, type: :model do
 
   describe "associations" do
     it { is_expected.to belong_to(:inventory).inverse_of(:inventory_audit_logs) }
-    it { is_expected.to belong_to(:inventory_movement).inverse_of(:inventory_audit_logs).optional(true) }
+    it { is_expected.to belong_to(:inventory_movement).inverse_of(:inventory_audit_logs).optional }
     it { is_expected.to belong_to(:user).inverse_of(:inventory_audit_logs) }
   end
 end

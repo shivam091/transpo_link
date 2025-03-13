@@ -9,8 +9,8 @@ require "spec_helper"
 RSpec.describe "Roles", type: :request do
   let!(:role) { create(:manager_role) }
 
-  let(:valid_attributes) { {name: "New name"} }
-  let(:invalid_attributes) { {name: ""} }
+  let!(:valid_attributes) { {name: "New name"} }
+  let!(:invalid_attributes) { {name: ""} }
 
   context "when user is not signed in" do
     describe "GET /roles" do

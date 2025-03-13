@@ -22,7 +22,7 @@ RSpec.describe CaseSensitivity do
   end
 
   after(:all) do
-    ActiveRecord::Base.connection.drop_table(:case_sensitive_models, if_exists: true)
+    connection.drop_table(:case_sensitive_models, if_exists: true)
     Object.send(:remove_const, :CaseSensitiveModel)
   end
 
@@ -50,18 +50,15 @@ RSpec.describe CaseSensitivity do
 
     context "when querying with arrays" do
       it "finds records case-insensitively with multiple names" do
-        results = CaseSensitiveModel.iwhere(name: ["alice", "CHARLIE"])
-        expect(results).to include(record1, record3)
+        expect(CaseSensitiveModel.iwhere(name: ["alice", "CHARLIE"])).to include(record1, record3)
       end
 
       it "finds records case-insensitively with multiple emails" do
-        results = CaseSensitiveModel.iwhere(email: ["bob@example.com", "CHARLIE@example.COM"])
-        expect(results).to include(record2, record3)
+        expect(CaseSensitiveModel.iwhere(email: ["bob@example.com", "CHARLIE@example.COM"])).to include(record2, record3)
       end
 
       it "returns no records if no matches found in array" do
-        results = CaseSensitiveModel.iwhere(name: ["david", "john"])
-        expect(results).to be_empty
+        expect(CaseSensitiveModel.iwhere(name: ["david", "john"])).to be_empty
       end
     end
 

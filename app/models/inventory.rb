@@ -3,6 +3,8 @@
 # -*- warn_indent: true -*-
 
 class Inventory < ApplicationRecord
+  include HasReferenceCode
+
   attribute :stock_quantity, default: 0
   attribute :reserved_stock, default: 0
   attribute :cost_price, default: 0.0
