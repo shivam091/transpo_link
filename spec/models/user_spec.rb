@@ -7,8 +7,9 @@
 require "spec_helper"
 
 RSpec.describe User, type: :model do
+  let!(:dummy_password) { Rails.application.credentials.config[:TEST_PASSWORD] }
+
   subject { create(:admin, :confirmed) }
-  let(:dummy_password) { Rails.application.credentials.config[:TEST_PASSWORD] }
 
   describe "valid factory" do
     it { is_expected.to have_a_valid_factory(:admin) }
@@ -39,11 +40,11 @@ RSpec.describe User, type: :model do
     it { is_expected.to have_db_column(:created_at).of_type(:timestamptz).with_options(null: false) }
     it { is_expected.to have_db_column(:updated_at).of_type(:timestamptz).with_options(null: false) }
 
-    it { is_expected.to have_db_index(:email).unique(true) }
-    it { is_expected.to have_db_index(:confirmation_token).unique(true) }
-    it { is_expected.to have_db_index(:reset_password_token).unique(true) }
+    it { is_expected.to have_db_index(:email).unique }
+    it { is_expected.to have_db_index(:confirmation_token).unique }
+    it { is_expected.to have_db_index(:reset_password_token).unique }
     it { is_expected.to have_db_index(:role_id) }
-    it { is_expected.to have_db_index(:unlock_token).unique(true) }
+    it { is_expected.to have_db_index(:unlock_token).unique }
     it { is_expected.to have_db_index(:is_active) }
     it { is_expected.to have_db_index(:is_banned) }
 
@@ -67,12 +68,14 @@ RSpec.describe User, type: :model do
   end
 
   describe "default values" do
+    let(:user) { described_class.new }
+
     it "should set false as default value for #is_banned" do
-      expect(subject.is_banned).to be_falsy
+      expect(user.is_banned).to be_falsy
     end
 
     it "should set false as default value for #is_active" do
-      expect(subject.is_active).to be_falsy
+      expect(user.is_active).to be_falsy
     end
   end
 
@@ -148,15 +151,19 @@ RSpec.describe User, type: :model do
       end
 
       context "when password is present and not password_confirmation" do
-        before { allow(subject).to receive(:password) { dummy_password } }
-        before { allow(subject).to receive(:password_confirmation) { "" } }
+        before do
+          allow(subject).to receive(:password) { dummy_password }
+          allow(subject).to receive(:password_confirmation) { "" }
+        end
 
         it { is_expected.to be_invalid }
       end
 
       context "when both password and password_confirmation are present" do
-        before { allow(subject).to receive(:password) { dummy_password } }
-        before { allow(subject).to receive(:password_confirmation) { dummy_password } }
+        before do
+          allow(subject).to receive(:password) { dummy_password }
+          allow(subject).to receive(:password_confirmation) { dummy_password }
+        end
 
         it { is_expected.to be_valid }
       end
@@ -200,25 +207,25 @@ RSpec.describe User, type: :model do
 
   describe "class methods" do
     describe ".with_email" do
-      it "returns user with provided email" do
-        admin = create(:admin, :confirmed, :active)
+      let(:admin) { create(:admin, :confirmed, :active) }
 
+      it "returns user with provided email" do
         expect(described_class.with_email(admin.email)).to eq(admin)
       end
     end
 
     describe ".select_options" do
-      it "returns array of users for select list" do
-        supplier = create(:supplier, :confirmed, :active)
+      let!(:supplier) { create(:supplier, :confirmed, :active) }
 
+      it "returns array of users for select list" do
         expect(described_class.select_options).to eq([[supplier.full_name, supplier.id]])
       end
     end
 
     describe ".with_role" do
-      it "returns array of users having given role" do
-        buyer = create(:buyer, :confirmed, :active)
+      let(:buyer) { create(:buyer, :confirmed, :active) }
 
+      it "returns array of users having given role" do
         expect(buyer).to be_one_of(described_class.with_role("buyer"))
       end
     end
@@ -227,23 +234,19 @@ RSpec.describe User, type: :model do
       let!(:existing_user) { create(:admin) }
 
       it "finds the user with matching email" do
-        found_user = described_class.find_for_database_authentication(email: existing_user.email)
-        expect(found_user).to eq(existing_user)
+        expect(described_class.find_for_database_authentication(email: existing_user.email)).to eq(existing_user)
       end
 
       it "returns nil if email does not match" do
-        found_user = described_class.find_for_database_authentication(email: "wrong@example.com")
-        expect(found_user).to be_nil
+        expect(described_class.find_for_database_authentication(email: "wrong@example.com")).to be_nil
       end
 
       it "trims whitespace from email before searching" do
-        found_user = described_class.find_for_database_authentication(email: "  #{existing_user.email}  ")
-        expect(found_user).to eq(existing_user)
+        expect(described_class.find_for_database_authentication(email: "  #{existing_user.email}  ")).to eq(existing_user)
       end
 
       it "ignores attributes other than email" do
-        found_user = described_class.find_for_database_authentication(email: existing_user.email, is_active: false)
-        expect(found_user).to eq(existing_user)
+        expect(described_class.find_for_database_authentication(email: existing_user.email, is_active: false)).to eq(existing_user)
       end
     end
   end
@@ -252,20 +255,22 @@ RSpec.describe User, type: :model do
     describe "#active_for_authentication?" do
       it "returns true if the user is active" do
         subject.is_active = true
+
         expect(subject.active_for_authentication?).to be_truthy
       end
 
       it "returns false if the user is not active" do
         subject.is_active = false
-        expect(subject.active_for_authentication?).to be_falsey
+
+        expect(subject.active_for_authentication?).to be_falsy
       end
     end
 
     describe "#update_password_updated_at" do
+      let!(:original_timestamp) { subject.password_updated_at }
+
       context "when the password is updated" do
         it "updates the password_updated_at timestamp" do
-          original_timestamp = subject.password_updated_at
-
           subject.update(password: dummy_password, password_confirmation: dummy_password)
           subject.reload
 
@@ -275,8 +280,6 @@ RSpec.describe User, type: :model do
 
       context "when other attributes are updated" do
         it "does not change the password_updated_at timestamp" do
-          original_timestamp = subject.password_updated_at
-
           subject.update(email: "new_email@example.com")
 
           expect(subject.password_updated_at).to eq(original_timestamp)
@@ -330,53 +333,57 @@ RSpec.describe User, type: :model do
     end
 
     describe "#recently_sent_password_reset_instructions?" do
+      let(:buyer) { create(:buyer, :confirmed) }
+
       context "when reset_password_sent_at is nil" do
         it "returns false" do
-          subject.reset_password_sent_at = nil
-          expect(subject.recently_sent_password_reset_instructions?).to be_falsey
+          buyer.reset_password_sent_at = nil
+
+          expect(buyer.recently_sent_password_reset_instructions?).to be_falsy
         end
       end
 
       context "when reset_password_sent_at is older than the throttle period" do
         it "returns false" do
-          subject.reset_password_sent_at = 3.minutes.ago
-          expect(subject.recently_sent_password_reset_instructions?).to be_falsey
+          buyer.reset_password_sent_at = 3.minutes.ago
+
+          expect(buyer.recently_sent_password_reset_instructions?).to be_falsy
         end
       end
 
       context "when reset_password_sent_at is within the throttle period" do
         it "returns true" do
-          subject.reset_password_sent_at = 1.minute.ago
-          expect(subject.recently_sent_password_reset_instructions?).to be_truthy
+          buyer.reset_password_sent_at = 1.minute.ago
+
+          expect(buyer.recently_sent_password_reset_instructions?).to be_truthy
         end
       end
     end
 
     describe "#admin?" do
-      it "returns true" do
-        expect(subject.admin?).to be_truthy
-      end
+      it { expect(subject.admin?).to be_truthy }
+      it { expect(subject.supplier?).to be_falsy }
     end
 
     describe "#buyer?" do
-      it "returns true" do
-        buyer = create(:buyer, :confirmed)
-        expect(buyer.buyer?).to be_truthy
-      end
+      let(:buyer) { create(:buyer, :confirmed) }
+
+      it { expect(buyer.buyer?).to be_truthy }
+      it { expect(buyer.supplier?).to be_falsy }
     end
 
     describe "#supplier?" do
-      it "returns true" do
-        supplier = create(:supplier, :confirmed)
-        expect(supplier.supplier?).to be_truthy
-      end
+      let(:supplier) { create(:supplier, :confirmed) }
+
+      it { expect(supplier.supplier?).to be_truthy }
+      it { expect(supplier.manager?).to be_falsy }
     end
 
     describe "#manager?" do
-      it "returns true" do
-        manager = create(:manager, :confirmed)
-        expect(manager.manager?).to be_truthy
-      end
+      let(:manager) { create(:manager, :confirmed) }
+
+      it { expect(manager.manager?).to be_truthy }
+      it { expect(manager.supplier?).to be_falsy }
     end
   end
 end

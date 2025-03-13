@@ -20,11 +20,11 @@ RSpec.describe PrettyFormHelper, type: :helper do
   end
 
   after(:all) do
-    ActiveRecord::Base.connection.drop_table(:test_users, if_exists: true)
+    connection.drop_table(:test_users, if_exists: true)
     Object.send(:remove_const, :TestUser)
   end
 
-  let(:object) { TestUser.new(name: "Test") }
+  let!(:object) { TestUser.new(name: "Test") }
 
   describe "#pretty_form_for" do
     it "renders form tag" do

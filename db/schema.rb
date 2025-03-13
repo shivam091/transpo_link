@@ -61,6 +61,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_10_041232) do
   end
 
   create_table "inventories", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "reference_code"
     t.uuid "product_id", null: false
     t.uuid "warehouse_id", null: false
     t.string "batch_number"
@@ -74,6 +75,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_10_041232) do
     t.timestamptz "updated_at", null: false
     t.index ["product_id", "warehouse_id"], name: "index_inventories_on_product_id_and_warehouse_id", unique: true
     t.index ["product_id"], name: "index_inventories_on_product_id"
+    t.index ["reference_code"], name: "index_inventories_on_reference_code", unique: true
     t.index ["warehouse_id"], name: "index_inventories_on_warehouse_id"
     t.check_constraint "cost_price >= 0.0", name: "check_inventories_cost_price_numericality"
     t.check_constraint "cost_price IS NOT NULL", name: "check_inventories_cost_price_presence"

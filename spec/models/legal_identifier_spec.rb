@@ -26,8 +26,8 @@ RSpec.describe LegalIdentifier, type: :model do
     it { is_expected.to have_db_column(:updated_at).of_type(:timestamptz).with_options(null: false) }
 
     it { is_expected.to have_db_index(:user_id) }
-    it { is_expected.to have_db_index([:tax_identifier, :tax_identifier_type, :country, :entity_type]).unique(true) }
-    it { is_expected.to have_db_index([:business_identifier, :business_identifier_type, :country]).unique(true) }
+    it { is_expected.to have_db_index([:tax_identifier, :tax_identifier_type, :country, :entity_type]).unique }
+    it { is_expected.to have_db_index([:business_identifier, :business_identifier_type, :country]).unique }
     it { is_expected.to have_db_index(:entity_type) }
 
     it { is_expected.to have_foreign_key(:user_id).with_name(:fk_legal_identifiers_user_id_on_users).on_delete(:cascade) }

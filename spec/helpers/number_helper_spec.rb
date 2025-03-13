@@ -8,7 +8,6 @@ require "spec_helper"
 
 RSpec.describe NumberHelper, type: :helper do
   describe "#number_to_angle" do
-
     it "handles zero correctly" do
       expect(helper.number_to_angle(0)).to eq("0°")
     end

@@ -7,7 +7,7 @@
 require "spec_helper"
 
 RSpec.describe UserDetail, type: :model do
-  subject(:user_detail) { build(:user_detail) }
+  subject { build(:user_detail) }
 
   describe "valid factory" do
     it { is_expected.to have_a_valid_factory(:user_detail) }
@@ -23,8 +23,8 @@ RSpec.describe UserDetail, type: :model do
     it { is_expected.to have_db_column(:created_at).of_type(:timestamptz).with_options(null: false) }
     it { is_expected.to have_db_column(:updated_at).of_type(:timestamptz).with_options(null: false) }
 
-    it { is_expected.to have_db_index(:user_id).unique(true) }
-    it { is_expected.to have_db_index(:mobile_number).unique(true) }
+    it { is_expected.to have_db_index(:user_id).unique }
+    it { is_expected.to have_db_index(:mobile_number).unique }
 
     it { is_expected.to have_foreign_key(:user_id).with_name(:fk_user_details_user_id_on_users).on_delete(:cascade) }
 

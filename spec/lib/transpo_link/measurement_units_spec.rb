@@ -7,14 +7,26 @@
 require "spec_helper"
 
 RSpec.describe TranspoLink::MeasurementUnits do
+  let!(:all_units) do
+    [
+      :cm², :m², :km², :in², :ft², :yd², :ac, :ha,
+      :mg, :g, :kg, :q, :t, :lb, :oz,
+      :ml, :L, :cm³, :m³, :in³, :ft³, :gal, :pt, :qt, :bbl,
+      :mm, :cm, :m, :km, :in, :ft, :yd, :mi,
+      :item, :pack, :box, :carton, :pallet, :bundle, :dz, :case, :roll
+    ]
+  end
+  let!(:area_units) { %i[cm² m² km² in² ft² yd² ac ha] }
+  let!(:count_units) { %i[item pack box carton pallet bundle dz case roll] }
+
   describe "::UNITS" do
     it "is a frozen hash" do
       expect(described_class::UNITS).to be_frozen
     end
 
     it "allows access using symbols and strings" do
-      expect(described_class::UNITS[:area]).to eq(%i[cm² m² km² in² ft² yd² ac ha])
-      expect(described_class::UNITS["area"]).to eq(%i[cm² m² km² in² ft² yd² ac ha])
+      expect(described_class::UNITS[:area]).to eq(area_units)
+      expect(described_class::UNITS["area"]).to eq(area_units)
     end
   end
 
@@ -51,15 +63,7 @@ RSpec.describe TranspoLink::MeasurementUnits do
 
   describe ".all_units" do
     it "returns a flattened array of all measurement units" do
-      expected_units = [
-        :cm², :m², :km², :in², :ft², :yd², :ac, :ha,
-        :mg, :g, :kg, :q, :t, :lb, :oz,
-        :ml, :L, :cm³, :m³, :in³, :ft³, :gal, :pt, :qt, :bbl,
-        :mm, :cm, :m, :km, :in, :ft, :yd, :mi,
-        :item, :pack, :box, :carton, :pallet, :bundle, :dz, :case, :roll
-      ]
-
-      expect(described_class.all_units).to match_array(expected_units)
+      expect(described_class.all_units).to match_array(all_units)
     end
 
     it "returns an array" do
@@ -68,6 +72,16 @@ RSpec.describe TranspoLink::MeasurementUnits do
 
     it "does not contain duplicates" do
       expect(described_class.all_units.uniq.length).to eq(described_class.all_units.length)
+    end
+  end
+
+  describe ".units_for" do
+    it "returns an array of units for the specified category" do
+      expect(described_class.units_for(:count)).to eq(count_units)
+    end
+
+    it "returns an empty array if the specified category is invalid" do
+      expect(described_class.units_for(:angle)).to be_empty
     end
   end
 end

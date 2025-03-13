@@ -10,8 +10,8 @@ class CreateRoles < ActiveRecord::Migration[8.0]
 
       t.timestamps_with_timezone null: false
 
-      t.check_constraint "name IS NOT NULL AND name  <> ''", name: "check_roles_name_presence"
-      t.check_constraint "CHAR_LENGTH(name) <= 55 AND CHAR_LENGTH(name) >= 2", name: "check_roles_name_length"
+      t.check_constraint "name IS NOT NULL AND name  <> ''", name: :check_roles_name_presence
+      t.check_constraint "CHAR_LENGTH(name) <= 55 AND CHAR_LENGTH(name) >= 2", name: :check_roles_name_length
     end
   end
 end

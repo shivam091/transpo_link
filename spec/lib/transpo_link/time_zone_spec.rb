@@ -25,8 +25,7 @@ RSpec.describe TranspoLink::TimeZone do
 
   describe ".options_for_time_zones" do
     it "returns a collection of formatted time zones" do
-      options = described_class.options_for_time_zones
-      expect(options).to include(["(GMT +05:30) Mumbai", "Asia/Kolkata"])
+      expect(described_class.options_for_time_zones).to include(["(GMT +05:30) Mumbai", "Asia/Kolkata"])
     end
   end
 

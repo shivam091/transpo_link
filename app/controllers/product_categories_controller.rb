@@ -80,6 +80,6 @@ class ProductCategoriesController < ApplicationController
   end
 
   def find_product_category
-    @product_category = ProductCategory.find(params[:id])
+    @product_category ||= ProductCategory.find(params[:id])
   end
 end

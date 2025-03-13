@@ -21,7 +21,7 @@ RSpec.describe Toggleable do
   end
 
   after(:all) do
-    ActiveRecord::Base.connection.drop_table(:toggleable_models, if_exists: true)
+    connection.drop_table(:toggleable_models, if_exists: true)
     Object.send(:remove_const, :ToggleableModel)
   end
 
@@ -73,6 +73,7 @@ RSpec.describe Toggleable do
 
     it "runs after_deactivate callback" do
       called = false
+
       ToggleableModel.after_deactivate { called = true }
 
       active_record.deactivate

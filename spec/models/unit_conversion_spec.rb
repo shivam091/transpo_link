@@ -23,7 +23,7 @@ RSpec.describe UnitConversion, type: :model do
     it { is_expected.to have_db_column(:updated_at).of_type(:timestamptz).with_options(null: false) }
 
     it { is_expected.to have_db_index(:product_id) }
-    it { is_expected.to have_db_index([:product_id, :from_unit, :to_unit]).unique(true) }
+    it { is_expected.to have_db_index([:product_id, :from_unit, :to_unit]).unique }
 
     it { is_expected.to have_foreign_key(:product_id).with_name(:fk_unit_conversions_product_id_on_products).on_delete(:cascade) }
 
@@ -34,6 +34,6 @@ RSpec.describe UnitConversion, type: :model do
   end
 
   describe "associations" do
-    it { is_expected.to belong_to(:product).inverse_of(:unit_conversions).touch(true) }
+    it { is_expected.to belong_to(:product).inverse_of(:unit_conversions).touch }
   end
 end

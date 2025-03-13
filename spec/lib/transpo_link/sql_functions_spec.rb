@@ -8,13 +8,13 @@ require "spec_helper"
 
 RSpec.describe TranspoLink::SqlFunctions do
   describe ".lower" do
-    let(:value) { "TEST_STRING" }
-    let(:quoted_value) { Arel::Nodes.build_quoted(value) }
+    let!(:value) { "TEST_STRING" }
+    let!(:quoted_value) { Arel::Nodes.build_quoted(value) }
 
     context "when column_alias is not provided" do
-      it "returns a LOWER SQL function without alias" do
-        result = described_class.lower(value)
+      let(:result) { described_class.lower(value) }
 
+      it "returns a LOWER SQL function without alias" do
         expect(result).to be_a(Arel::Nodes::NamedFunction)
         expect(result.name).to eq('LOWER')
         expect(result.expressions).to eq([quoted_value])
@@ -23,10 +23,9 @@ RSpec.describe TranspoLink::SqlFunctions do
 
     context "when column_alias is provided" do
       let(:column_alias) { 'lowered_value' }
+      let(:result) { described_class.lower(value, column_alias) }
 
       it "returns a LOWER SQL function with an alias" do
-        result = described_class.lower(value, column_alias)
-
         expect(result).to be_a(Arel::Nodes::As)
         expect(result.left).to be_a(Arel::Nodes::NamedFunction)
         expect(result.left.name).to eq("LOWER")

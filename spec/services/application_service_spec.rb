@@ -17,12 +17,11 @@ RSpec.describe ApplicationService do
     end
 
     let(:service_instance) { instance_double("DummyService") }
+    let(:result) { dummy_service_class.call }
 
     it "instantiates a new instance of the service class and calls #call on it" do
       expect(dummy_service_class).to receive(:new) { service_instance }
       expect(service_instance).to receive(:call) { :service_result }
-
-      result = dummy_service_class.call
       expect(result).to eq(:service_result)
     end
   end

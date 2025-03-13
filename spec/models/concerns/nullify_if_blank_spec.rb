@@ -24,7 +24,7 @@ RSpec.describe NullifyIfBlank do
   end
 
   after(:all) do
-    ActiveRecord::Base.connection.drop_table(:nullify_if_blank_models, if_exists: true)
+    connection.drop_table(:nullify_if_blank_models, if_exists: true)
     Object.send(:remove_const, :NullifyIfBlankModel)
   end
 
@@ -37,6 +37,7 @@ RSpec.describe NullifyIfBlank do
     it "nullifies attributes that are blank before validation" do
       record = NullifyIfBlankModel.new(name: "", email: "  ")
       record.valid?
+
       expect(record.name).to be_nil
       expect(record.email).to be_nil
     end
@@ -44,6 +45,7 @@ RSpec.describe NullifyIfBlank do
     it "does not nullify attributes that are not blank" do
       record = NullifyIfBlankModel.new(name: "John Doe", email: "john@example.com")
       record.valid?
+
       expect(record.name).to eq("John Doe")
       expect(record.email).to eq("john@example.com")
     end
