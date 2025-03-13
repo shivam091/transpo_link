@@ -7,9 +7,9 @@
 require "spec_helper"
 
 RSpec.describe RequestLogger do
-  let(:app) { -> (env) { [200, { "Content-Type" => "text/plain" }, ["OK"]] } }
-  let(:middleware) { described_class.new(app) }
-  let(:env) do
+  let!(:app) { -> (env) { [200, { "Content-Type" => "text/plain" }, ["OK"]] } }
+  let!(:middleware) { described_class.new(app) }
+  let!(:env) do
     {
       "REQUEST_METHOD" => "GET",
       "PATH_INFO" => "/test",

@@ -28,12 +28,12 @@ RSpec.describe PrettyFormBuilder, type: :helper do
   end
 
   after(:all) do
-    ActiveRecord::Base.connection.drop_table(:test_users, if_exists: true)
+    connection.drop_table(:test_users, if_exists: true)
     Object.send(:remove_const, :TestUser)
   end
 
-  let(:object) { TestUser.new(name: "Test", email: "test@example.com", role: "admin") }
-  let(:builder) { described_class.new(:test_user, object, self, {}) }
+  let!(:object) { TestUser.new(name: "Test", email: "test@example.com", role: "admin") }
+  let!(:builder) { described_class.new(:test_user, object, self, {}) }
 
   describe "#text_field" do
     context "when :static option is not passed" do
@@ -66,11 +66,9 @@ RSpec.describe PrettyFormBuilder, type: :helper do
     end
 
     context "when :static option is passed" do
-      before do
-        allow_any_instance_of(TestUser).to receive(:reference_code) { "ADM-00000001" }
-      end
-
       it "adds the 'form-control-plaintext' class to text fields" do
+        allow_any_instance_of(TestUser).to receive(:reference_code) { "ADM-00000001" }
+
         expected = <<~HTML
           <input readonly="readonly" disabled="disabled" class="form-control-plaintext" type="text" value="ADM-00000001" name="test_user[reference_code]" id="test_user_reference_code" />
         HTML

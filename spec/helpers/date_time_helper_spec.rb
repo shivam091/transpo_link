@@ -8,11 +8,9 @@ require "spec_helper"
 
 RSpec.describe DateTimeHelper, type: :helper do
   describe "#time_ago" do
-    let(:now) { Time.zone.now }
+    let!(:now) { Time.zone.now }
 
-    before do
-      allow(I18n).to receive(:t).and_call_original
-    end
+    before { allow(I18n).to receive(:t).and_call_original }
 
     context "when time difference is in seconds" do
       it "returns just now" do
@@ -111,12 +109,13 @@ RSpec.describe DateTimeHelper, type: :helper do
     end
 
     context "when providing a custom locale and scope" do
-      it "uses the provided locale and scope" do
-        custom_locale = :es
-        custom_scope = "custom.datetime.time_ago"
-        options = { locale: custom_locale, scope: custom_scope }
+      let(:custom_locale) { :es }
+      let(:custom_scope) { "custom.datetime.time_ago" }
+      let(:options) { {locale: custom_locale, scope: custom_scope} }
 
+      it "uses the provided locale and scope" do
         expect(I18n).to receive(:with_options).with(locale: custom_locale, scope: custom_scope).and_call_original
+
         helper.time_ago(now - 1.hour, now, options)
       end
     end
@@ -127,6 +126,7 @@ RSpec.describe DateTimeHelper, type: :helper do
 
     it "returns a time tag with default attributes" do
       result = helper.time_ago_with_tooltip(time)
+
       expect(result).to include("class=\"js-timeago\"")
       expect(result).to include("title=\"#{time.to_fs(:long)}\"")
       expect(result).to include("datetime=\"#{time.utc.iso8601}\"")
@@ -135,21 +135,15 @@ RSpec.describe DateTimeHelper, type: :helper do
     end
 
     it "includes js-short-timeago class when short_format is true" do
-      result = helper.time_ago_with_tooltip(time, short_format: true)
-
-      expect(result).to include("class=\"js-short-timeago\"")
+      expect(helper.time_ago_with_tooltip(time, short_format: true)).to include("class=\"js-short-timeago\"")
     end
 
     it "appends custom HTML classes" do
-      result = helper.time_ago_with_tooltip(time, html_class: "custom-class")
-
-      expect(result).to include("class=\"js-timeago custom-class\"")
+      expect(helper.time_ago_with_tooltip(time, html_class: "custom-class")).to include("class=\"js-timeago custom-class\"")
     end
 
     it "sets tooltip placement correctly" do
-      result = helper.time_ago_with_tooltip(time, placement: "bottom")
-
-      expect(result).to include("data-bs-placement=\"bottom\"")
+      expect(helper.time_ago_with_tooltip(time, placement: "bottom")).to include("data-bs-placement=\"bottom\"")
     end
   end
 end

@@ -12,6 +12,7 @@ RSpec.describe TranspoLink::Utils do
       it "downcases the string in place" do
         str = "HeLLo"
         result = described_class.safe_downcase!(str)
+
         expect(result).to eq("hello")
         expect(str).to eq("hello")
       end
@@ -19,6 +20,7 @@ RSpec.describe TranspoLink::Utils do
       it "returns the original string if it is already lowercase" do
         str = "hello"
         result = described_class.safe_downcase!(str)
+
         expect(result).to eq("hello")
         expect(str).to eq("hello")
       end
@@ -28,6 +30,7 @@ RSpec.describe TranspoLink::Utils do
       it "returns a downcased copy of the string" do
         str = "HeLLo".freeze
         result = described_class.safe_downcase!(str)
+
         expect(result).to eq("hello")
         expect(str).to eq("HeLLo") # Original string remains unchanged
       end
@@ -35,6 +38,7 @@ RSpec.describe TranspoLink::Utils do
       it "returns the original string if it is already lowercase" do
         str = "hello".freeze
         result = described_class.safe_downcase!(str)
+
         expect(result).to eq("hello")
         expect(str).to eq("hello") # Original string remains unchanged
       end
@@ -44,12 +48,14 @@ RSpec.describe TranspoLink::Utils do
       it "handles empty strings" do
         str = ""
         result = described_class.safe_downcase!(str)
+
         expect(result).to eq("")
       end
 
       it "handles strings with no alphabetic characters" do
         str = "1234!@#"
         result = described_class.safe_downcase!(str)
+
         expect(result).to eq("1234!@#")
       end
     end

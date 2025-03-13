@@ -5,11 +5,7 @@
 RSpec.shared_context "sign in as supplier" do
   let(:supplier) { create(:supplier, :active, :confirmed, :with_address) }
 
-  before do
-    sign_in(supplier)
-  end
+  before { sign_in(supplier) }
 
-  after do
-    sign_out(supplier)
-  end
+  after { sign_out(supplier) }
 end

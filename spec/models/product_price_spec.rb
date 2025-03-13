@@ -53,7 +53,7 @@ RSpec.describe ProductPrice, type: :model do
   end
 
   describe "associations" do
-    it { is_expected.to belong_to(:product).inverse_of(:product_prices).touch(true) }
-    it { is_expected.to belong_to(:warehouse).inverse_of(:product_prices).optional(true) }
+    it { is_expected.to belong_to(:product).inverse_of(:product_prices).touch }
+    it { is_expected.to belong_to(:warehouse).inverse_of(:product_prices).optional }
   end
 end

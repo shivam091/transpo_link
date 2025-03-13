@@ -8,17 +8,13 @@ FactoryBot.define do
     email_address { Faker::Internet.email }
     contact_number { Faker::PhoneNumber.phone_number_with_country_code }
     description { Faker::Company.bs }
-    total_capacity { 10**8 } # 100,000,000
+    total_capacity { 10**6 } # 1,000,000
     capacity_unit { TranspoLink::MeasurementUnits.units_for(:weight).sample }
     latitude { Faker::Address.latitude }
     longitude { Faker::Address.longitude }
 
     trait :small_capacity do
-      total_capacity { 10**5 } # 100,000
-    end
-
-    trait :medium_capacity do
-      total_capacity { 10**6 } # 1,000,000
+      total_capacity { 10**3 } # 1,000
     end
 
     trait :large_capacity do

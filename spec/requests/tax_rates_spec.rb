@@ -9,8 +9,8 @@ require "spec_helper"
 RSpec.describe "TaxRates", type: :request do
   let!(:tax_rate) { create(:tax_rate) }
 
-  let(:valid_attributes) { attributes_for(:tax_rate, tax_identifier_type: "pan") }
-  let(:invalid_attributes) { attributes_for(:tax_rate, tax_identifier_type: "") }
+  let!(:valid_attributes) { attributes_for(:tax_rate, tax_identifier_type: "pan") }
+  let!(:invalid_attributes) { attributes_for(:tax_rate, tax_identifier_type: "") }
 
   context "when user is not signed in" do
     describe "GET /tax-rates" do
@@ -137,11 +137,9 @@ RSpec.describe "TaxRates", type: :request do
       end
 
       context "when delete fails" do
-        before do
-          allow(TaxRates::DestroyService).to receive(:call) { ServiceResponse.error }
-        end
-
         it "does not delete the tax rate and redirects with an error message" do
+          allow(TaxRates::DestroyService).to receive(:call) { ServiceResponse.error }
+
           delete tax_rate_path(tax_rate)
 
           expect(response).to redirect_to(tax_rates_path)

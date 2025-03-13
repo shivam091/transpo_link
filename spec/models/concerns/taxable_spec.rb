@@ -22,7 +22,7 @@ RSpec.describe Taxable do
   end
 
   after(:all) do
-    ActiveRecord::Base.connection.drop_table(:taxable_models, if_exists: true)
+    connection.drop_table(:taxable_models, if_exists: true)
     Object.send(:remove_const, :TaxableModel)
   end
 
@@ -55,6 +55,8 @@ RSpec.describe Taxable do
   describe "#tax_identifier_type_country_combination" do
     let(:taxable_model) { TaxableModel.new(tax_identifier_type: tax_identifier_type, country: country) }
 
+    before { taxable_model.valid? }
+
     context "when tax identifier type and country combination is valid" do
       where(:tax_identifier_type, :country) do
         Taxable::TAX_IDENTIFIER_TYPE_COUNTRY_COMBINATIONS.flat_map do |type, countries|
@@ -64,8 +66,6 @@ RSpec.describe Taxable do
 
       with_them do
         it "allows #{params[:tax_identifier_type]} for #{params[:country]}" do
-          taxable_model.valid?
-
           expect(taxable_model.errors[:tax_identifier_type]).to be_empty
         end
       end
@@ -86,8 +86,6 @@ RSpec.describe Taxable do
 
       with_them do
         it "does not allow #{params[:tax_identifier_type]} for #{params[:country]}" do
-          taxable_model.valid?
-
           expect(taxable_model.errors[:tax_identifier_type]).to be_present
         end
       end
