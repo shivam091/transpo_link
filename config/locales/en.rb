@@ -738,6 +738,12 @@
           error: "Role could not be updated."
         },
       },
+      products: {
+        create: {
+          success: "Product was successfully created.",
+          error: "Product could not be created.",
+        },
+      },
     },
     measurement_units: {
       categories: {
