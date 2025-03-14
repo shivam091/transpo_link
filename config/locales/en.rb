@@ -1018,6 +1018,17 @@
         title: "Products",
       },
       product: {
+      new: {
+        title: "New product",
+      },
+      form: {
+      },
+      basic_details_fields: {
+        basic_details: "Basic details",
+        select_product_category: "Select product category",
+        select_capacity_unit: "Select capacity unit",
+        select_currency: "Select currency",
+      },
       },
     },
   },
