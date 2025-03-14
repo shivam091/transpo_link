@@ -6,7 +6,11 @@ class ProductsController < ApplicationController
 
   # GET /products
   def index
-    @products = params[:status].present? ? Product.send(params[:status]) : Product.all
+    @products = case params[:status]
+                when "active"   then Product.active
+                when "inactive" then Product.inactive
+                else                 Product.all
+                end
     @products, @pagination_metadata = @products.paginate(page: params[:page])
   end
 end
