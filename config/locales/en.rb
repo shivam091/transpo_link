@@ -218,6 +218,21 @@
           parent_category_id: "Parent category",
           is_active: "Is active",
         },
+        product: {
+          reference_code: "Reference code",
+          name: "Name",
+          sku: "SKU",
+          description: "Description",
+          barcode: "Barcode",
+          min_stock_threshold: "Min. stock threshold",
+          capacity_unit: "Capacity unit",
+          currency: "Currency",
+          cost_price: "Cost price",
+          product_category_id: "Product category",
+          is_active: "Is active",
+          created_at: "Created at",
+          updated_at: "Updated at",
+        },
       },
       errors: {
         format: "%{attribute} %{message}",
@@ -639,6 +654,7 @@
         no_tax_rates_to_display: "No tax rates to display",
         no_legal_identifiers_to_display: "No legal identifiers to display",
         no_product_categories_to_display: "No product categories to display",
+        no_products_to_display: "No products to display",
       },
     },
     flashes: {
@@ -982,6 +998,13 @@
       form: {
         select_parent_category: "Select parent category",
       }
+    },
+    products: {
+      index: {
+        title: "Products",
+      },
+      product: {
+      },
     },
   },
 }

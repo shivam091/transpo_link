@@ -3,7 +3,11 @@
 # -*- warn_indent: true -*-
 
 class Product < ApplicationRecord
-  include Toggleable, HasReferenceCode, Pageable, Sortable
+  include Toggleable, HasReferenceCode, Pageable, Sortable, ActsAsMoney
+
+  LISTING_ATTRIBUTES = %i[
+    reference_code name sku barcode cost_price product_category_id
+  ].freeze
 
   attribute :min_stock_threshold, default: 0
   attribute :cost_price, default: 0.0

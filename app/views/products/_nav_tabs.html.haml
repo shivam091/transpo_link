@@ -1,0 +1,4 @@
+= render_if_exists("shared/inline_navigations") do
+  %ul.nav.nav-pills.flex-row
+    %li.nav-item
+      = link_to t(".all"), products_path, class: class_names("nav-link", "active": current_action?(:index))
