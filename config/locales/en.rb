@@ -747,6 +747,10 @@
           success: "Product was successfully updated.",
           error: "Product could not be updated."
         },
+        destroy: {
+          success: "Product was successfully deleted.",
+          error: "Product could not be deleted."
+        },
       },
     },
     measurement_units: {
