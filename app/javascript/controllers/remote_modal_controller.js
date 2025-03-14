@@ -18,7 +18,6 @@ export default class RemoteModalController extends Controller {
 
   hideBeforeRender(event) {
     if (this.isOpen()) {
-      event.preventDefault();
       this.element.addEventListener("hidden.bs.modal", event.detail.resume, {once: true});
       this.hide();
     }

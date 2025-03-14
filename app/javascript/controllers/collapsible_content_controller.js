@@ -2,10 +2,7 @@ import { Controller } from "@hotwired/stimulus";
 
 export default class CollapsibleContentController extends Controller {
   static targets = ["collapsedContent", "expandedContent"];
-  static values = {
-    showMoreText: String,
-    showLessText: String
-  };
+  static values = {showMoreText: String, showLessText: String};
 
   connect() {
     this.open = false;

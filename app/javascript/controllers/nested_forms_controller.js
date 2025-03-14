@@ -5,7 +5,6 @@ export default class NestedFormsController extends Controller {
   static values = { wrapperSelector: String };
 
   addAssociation(event) {
-    event.preventDefault();
     const timestamp = Date.now().toString();
     this.targetTarget.insertAdjacentHTML(
       "beforebegin",
@@ -14,7 +13,6 @@ export default class NestedFormsController extends Controller {
   }
 
   removeAssociation(event) {
-    event.preventDefault();
     const wrapper = event.target.closest(this.wrapperSelectorValue || ".nested-form-wrapper");
 
     if (!wrapper) return;

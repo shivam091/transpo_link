@@ -2,25 +2,25 @@ import { Controller } from "@hotwired/stimulus";
 import moment from "moment-timezone";
 
 export default class LiveColckController extends Controller {
-
   static targets = ["date", "time"];
-  static values = {
-    userTimeZone: String
-  }
-
-  initialize() {
-    this.updateClock = this.updateClock.bind(this);
-  }
+  static values = {userTimeZone: String};
 
   connect() {
-    setInterval(() => {
+    this.updateClock();
+    this.startClock();
+  }
+
+  startClock() {
+    const tick = () => {
       this.updateClock();
-    }, 1000);
+      setTimeout(() => requestAnimationFrame(tick), 1000);
+    };
+    tick();
   }
 
   updateClock() {
-    var $momentObject = moment().tz(this.userTimeZoneValue);
-    this.dateTarget.innerHTML = $momentObject.format("ddd, MMMM D, YYYY")
-    this.timeTarget.innerHTML = $momentObject.format("HH:mm:ss")
+    const now = moment().tz(this.userTimeZoneValue);
+    this.dateTarget.textContent = now.format("ddd, MMMM D, YYYY");
+    this.timeTarget.textContent = now.format("HH:mm:ss");
   }
 }
