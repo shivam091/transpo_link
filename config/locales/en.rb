@@ -743,6 +743,10 @@
           success: "Product was successfully created.",
           error: "Product could not be created.",
         },
+        update: {
+          success: "Product was successfully updated.",
+          error: "Product could not be updated."
+        },
       },
     },
     measurement_units: {
