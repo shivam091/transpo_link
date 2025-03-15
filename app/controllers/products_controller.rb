@@ -4,6 +4,8 @@
 
 class ProductsController < ApplicationController
 
+  before_action :find_product, only: [:edit, :update, :show, :destroy]
+
   # GET /products
   def index
     @products = case params[:status]
@@ -32,6 +34,30 @@ class ProductsController < ApplicationController
         format.turbo_stream do
           render turbo_stream: [
             turbo_stream.update(:new_product_form_frame, partial: "products/form"),
+            render_flash
+          ], status: :unprocessable_entity
+        end
+      end
+    end
+  end
+
+  # GET /products/:id/edit
+  def edit
+  end
+
+  # PUT|PATCH /products/:id
+  def update
+    response = Products::UpdateService.(@product, product_params)
+    @product = response.payload[:product]
+    if response.success?
+      set_flash_message(:notice, :success)
+      redirect_to products_path, status: :see_other
+    else
+      set_flash_message(:alert, :error, immediate: true)
+      respond_to do |format|
+        format.turbo_stream do
+          render turbo_stream: [
+            turbo_stream.update(:edit_product_form_frame, partial: "products/form"),
             render_flash
           ], status: :unprocessable_entity
         end
@@ -69,5 +95,9 @@ class ProductsController < ApplicationController
         :currency
       ]
     )
+  end
+
+  def find_product
+    @product ||= Product.find(params[:id])
   end
 end

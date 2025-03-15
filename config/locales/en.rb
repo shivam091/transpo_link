@@ -1032,6 +1032,9 @@
       new: {
         title: "New product",
       },
+      edit: {
+        title: "Edit product",
+      },
       form: {
         basic_details: "Basic details",
         unit_conversions: "Unit conversions",
