@@ -1,5 +1,7 @@
 = pretty_form_with model: @product do |form|
-  = render_if_exists("products/basic_details_fields", locals: {form: form})
+  .subheader
+    = t(".basic_details")
+  = render_if_exists("products/basic_details_fields", locals: {form:})
   .actions
     = button_tag type: :submit, class: "btn btn-primary" do
       = external_svg_tag("svgs/floppy.svg")
