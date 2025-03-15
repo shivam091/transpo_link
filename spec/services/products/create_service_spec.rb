@@ -7,4 +7,23 @@
 require "spec_helper"
 
 RSpec.describe Products::CreateService, type: :service do
+  let!(:product_category) { create(:product_category) }
+
+  subject(:service_response) { described_class.(product_attributes) }
+
+  describe ".call" do
+    context "when provided attributes are valid" do
+      let(:product_attributes) { attributes_for(:product).merge(product_category_id: product_category.id) }
+
+      include_examples "creates a record", Product
+      include_examples "returns a success response"
+    end
+
+    context "when provided attributes are invalid" do
+      let(:product_attributes) { {name: ""} }
+
+      include_examples "does not change record count", Product
+      include_examples "returns an error response"
+    end
+  end
 end
