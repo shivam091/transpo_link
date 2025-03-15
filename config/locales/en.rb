@@ -299,6 +299,13 @@
               }
             },
           },
+          product: {
+            attributes: {
+              capacity_unit: {
+                inclusion: "%{value} is not a valid unit",
+              },
+            },
+          },
         },
         messages: {
           label_already_exists_at_group_level: "already exists at group level for %{group}. Please choose another one.",

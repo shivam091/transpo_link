@@ -13,6 +13,18 @@ class ProductPrice < ApplicationRecord
   attribute :unit_price, default: 0.0
   attribute :currency, default: Money.default_currency.iso_code
 
+  validates :min_quantity,
+            presence: true,
+            numericality: {
+              only_integer: true,
+              greater_than_or_equal_to: 1
+            },
+            reduce: true
+  validates :unit_price,
+            presence: true,
+            numericality: {greater_than: 0.0},
+            reduce: true
+
   belongs_to :product, inverse_of: :product_prices, touch: true
   belongs_to :warehouse, inverse_of: :product_prices, optional: true
 

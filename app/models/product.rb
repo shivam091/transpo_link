@@ -14,6 +14,43 @@ class Product < ApplicationRecord
   attribute :currency, default: Money.default_currency.iso_code
   attribute :is_active, default: false
 
+  validates :name,
+            presence: true,
+            length: {in: 2..255},
+            reduce: true
+  validates :description,
+            length: {maximum: 2000},
+            allow_blank: true,
+            reduce: true
+  validates :sku,
+            presence: true,
+            length: {maximum: 50},
+            uniqueness: true,
+            reduce: true
+  validates :barcode,
+            length: {maximum: 50},
+            uniqueness: true,
+            allow_blank: true,
+            reduce: true
+  validates :min_stock_threshold,
+            presence: true,
+            numericality: {
+              only_integer: true,
+              greater_than: 0
+            },
+            reduce: true
+  validates :capacity_unit,
+            presence: true,
+            inclusion: {in: TranspoLink::MeasurementUnits.all_units.map(&:to_s)},
+            reduce: true
+  validates :cost_price,
+            presence: true,
+            numericality: {greater_than: 0.0},
+            reduce: true
+  validates :product_category_id,
+            presence: true,
+            reduce: true
+
   has_many :inventories, inverse_of: :product, dependent: :destroy
   has_many :product_prices, inverse_of: :product, dependent: :destroy
   has_many :unit_conversions, inverse_of: :product, dependent: :destroy
