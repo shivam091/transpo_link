@@ -53,6 +53,13 @@ class ProductsController < ApplicationController
       :cost_price,
       :product_category_id,
       :is_active,
+      unit_conversions_attributes: [
+        :id,
+        :_destroy,
+        :from_unit,
+        :to_unit,
+        :conversion_rate
+      ],
     )
   end
 end

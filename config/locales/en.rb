@@ -233,6 +233,11 @@
           created_at: "Created at",
           updated_at: "Updated at",
         },
+        unit_conversion: {
+          from_unit: "Source unit",
+          to_unit: "Target unit",
+          conversion_rate: "Conversion rate",
+        },
       },
       errors: {
         format: "%{attribute} %{message}",
@@ -1023,11 +1028,20 @@
       },
       form: {
         basic_details: "Basic details",
+        unit_conversions: "Unit conversions",
       },
       basic_details_fields: {
         select_product_category: "Select product category",
         select_capacity_unit: "Select capacity unit",
         select_currency: "Select currency",
+      },
+      unit_conversions: {
+        form: {
+        },
+        field: {
+          select_source_unit: "Select source unit",
+          select_target_unit: "Select target unit",
+        },
       },
       },
     },

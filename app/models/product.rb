@@ -24,4 +24,18 @@ class Product < ApplicationRecord
   delegate :name, to: :product_category, prefix: true
 
   default_scope -> { order_created_desc }
+
+  with_options allow_destroy: true do |n|
+    n.accepts_nested_attributes_for :unit_conversions, reject_if: :reject_unit_conversion?
+  end
+
+  private
+
+  def reject_unit_conversion?(attributes)
+    [
+      attributes[:from_unit],
+      attributes[:to_unit],
+      attributes[:conversion_rate]
+    ].all?(&:blank?)
+  end
 end
