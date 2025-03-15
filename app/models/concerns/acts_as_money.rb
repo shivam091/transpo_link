@@ -6,8 +6,12 @@ module ActsAsMoney
   extend ActiveSupport::Concern
 
   included do
+    validates :currency,
+              presence: true,
+              reduce: true
+
     def currency
-      Money::Currency.new(self[:currency])
+      Money::Currency.new(self[:currency]) if self[:currency].present?
     end
   end
 end

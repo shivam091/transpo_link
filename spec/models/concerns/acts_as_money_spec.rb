@@ -42,4 +42,10 @@ RSpec.describe ActsAsMoney do
       expect { subject.currency }.to raise_error(Money::Currency::UnknownCurrency)
     end
   end
+
+  describe "validations" do
+    describe "#currency" do
+      it { is_expected.to validate_presence_of(:currency) }
+    end
+  end
 end
