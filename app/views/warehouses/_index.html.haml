@@ -5,12 +5,16 @@
       = link_to new_warehouse_path, class: "btn btn-primary" do
         = external_svg_tag("svgs/plus.svg")
         = button_text(:new)
-  .card-body
+  .card-body{data: {controller: "checkbox-selection"}}
+    .mb-2{data: {checkbox_selection_target: "selectedCount", label_template: t("common.selected", count: "%{count}")}}
     .table-responsive
       %table.table.table-striped.table-borderless
         %thead.border
           %tr.table-active
             %th{width: "25px", scope: "col"}#
+            - if @warehouses.size > 0
+              %th{width: "25px", scope: "col"}
+                = check_box_tag "checkbox", nil, false, class: "form-check-input", data: {checkbox_selection_target: "selectAll"}
             - Warehouse::LISTING_ATTRIBUTES.each do |attribute|
               %th{scope: "col"}= Warehouse.human_attribute_name(attribute)
             %th{scope: "col"}= t("common.actions")
