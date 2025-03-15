@@ -2,7 +2,7 @@
   %th{scope: "row"}= h(@pagination_metadata.offset + index)
   %td
     = check_box_tag "product_ids[]", product.id, false, class: "form-check-input", data: {checkbox_selection_target: "itemCheckbox"}
-  %td= link_to product.reference_code, "javascript:void(0)"
+  %td= link_to product.reference_code, product_path(product)
   %td= h(product.name)
   %td= h(product.sku)
   %td= h(product.barcode)

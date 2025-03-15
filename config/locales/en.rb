@@ -666,6 +666,8 @@
         no_legal_identifiers_to_display: "No legal identifiers to display",
         no_product_categories_to_display: "No product categories to display",
         no_products_to_display: "No products to display",
+        no_unit_conversions_to_display: "No unit conversions to display",
+        no_product_prices_to_display: "No product prices to display"
       },
     },
     flashes: {
@@ -1046,6 +1048,11 @@
         select_product_category: "Select product category",
         select_capacity_unit: "Select capacity unit",
         select_currency: "Select currency",
+      },
+      show: {
+        basic_details: "Basic details",
+        unit_conversions: "Unit conversions",
+        product_prices: "Product prices",
       },
       unit_conversions: {
         form: {

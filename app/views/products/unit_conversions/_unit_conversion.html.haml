@@ -1,0 +1,5 @@
+%tr
+  %th{scope: "row"}= h(index)
+  %td= t(unit_conversion.from_unit, scope: "measurement_units.sub_categories")
+  %td= t(unit_conversion.to_unit, scope: "measurement_units.sub_categories")
+  %td= number_to_delimited(unit_conversion.conversion_rate)

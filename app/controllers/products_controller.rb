@@ -65,6 +65,10 @@ class ProductsController < ApplicationController
     end
   end
 
+  # GET /products/:id
+  def show
+  end
+
   # DELETE /products/:id
   def destroy
     response = Products::DestroyService.(@product)
