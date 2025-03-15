@@ -1,6 +1,6 @@
 import { Controller } from "@hotwired/stimulus";
 
-export default class extends Controller {
+export default class SecretRevealController extends Controller {
   static targets = ["input", "icon"];
   static classes = ["hidden"];
 
@@ -9,7 +9,6 @@ export default class extends Controller {
   }
 
   toggle(event) {
-    event.preventDefault();
     this.hidden = !this.hidden;
     this.inputTarget.type = this.hidden ? "password" : "text";
     this.iconTargets.forEach(icon => icon.classList.toggle(this.hiddenClass));
@@ -20,6 +19,6 @@ export default class extends Controller {
   }
 
   set hidden(value) {
-    this.data.set("hidden", value);
+    this.data.set("hidden", value.toString());
   }
 }
