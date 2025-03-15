@@ -72,6 +72,12 @@ class Warehouse < ApplicationRecord
 
   accepts_nested_attributes_for :address, update_only: true
 
+  class << self
+    def select_options
+      active.pluck(:name, :id)
+    end
+  end
+
   def address
     super.presence || build_address
   end

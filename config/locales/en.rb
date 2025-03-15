@@ -238,6 +238,12 @@
           to_unit: "Target unit",
           conversion_rate: "Conversion rate",
         },
+        product_price: {
+          warehouse_id: "Warehouse",
+          min_quantity: "Min. quantity",
+          cost_price: "Cost price",
+          currency: "Currency",
+        },
       },
       errors: {
         format: "%{attribute} %{message}",
@@ -1029,6 +1035,7 @@
       form: {
         basic_details: "Basic details",
         unit_conversions: "Unit conversions",
+        product_prices: "Product prices",
       },
       basic_details_fields: {
         select_product_category: "Select product category",
@@ -1043,6 +1050,13 @@
           select_target_unit: "Select target unit",
         },
       },
+      product_prices: {
+        form: {
+        },
+        field: {
+          select_warehouse: "Select warehouse",
+          select_currency: "Select currency",
+        },
       },
     },
   },

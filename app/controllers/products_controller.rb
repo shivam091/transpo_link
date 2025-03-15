@@ -60,6 +60,14 @@ class ProductsController < ApplicationController
         :to_unit,
         :conversion_rate
       ],
+      product_prices_attributes: [
+        :id,
+        :_destroy,
+        :warehouse_id,
+        :min_quantity,
+        :unit_price,
+        :currency
+      ]
     )
   end
 end

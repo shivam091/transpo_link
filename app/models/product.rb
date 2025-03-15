@@ -27,6 +27,7 @@ class Product < ApplicationRecord
 
   with_options allow_destroy: true do |n|
     n.accepts_nested_attributes_for :unit_conversions, reject_if: :reject_unit_conversion?
+    n.accepts_nested_attributes_for :product_prices, reject_if: :reject_product_price?
   end
 
   private
@@ -36,6 +37,15 @@ class Product < ApplicationRecord
       attributes[:from_unit],
       attributes[:to_unit],
       attributes[:conversion_rate]
+    ].all?(&:blank?)
+  end
+
+  def reject_product_price?(attribute)
+    [
+      attributes[:warehouse_id],
+      attributes[:min_quantity],
+      attributes[:unit_price],
+      attribute[:currency]
     ].all?(&:blank?)
   end
 end
