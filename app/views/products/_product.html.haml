@@ -16,3 +16,8 @@
         = link_to edit_product_path(product), class: "dropdown-item" do
           = external_svg_tag("svgs/pencil.svg")
           = button_text(:edit)
+      %li
+        = link_to product_path(product), class: "dropdown-item",
+          data: {turbo_confirm: t(".delete_product_confirmation_text", product_name: product.name), turbo_method: :delete} do
+          = external_svg_tag("svgs/trash.svg")
+          = button_text(:delete)

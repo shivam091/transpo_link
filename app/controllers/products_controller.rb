@@ -65,6 +65,18 @@ class ProductsController < ApplicationController
     end
   end
 
+  # DELETE /products/:id
+  def destroy
+    response = Products::DestroyService.(@product)
+    @product = response.payload[:product]
+    if response.success?
+      set_flash_message(:info, :success)
+    else
+      set_flash_message(:alert, :error)
+    end
+    redirect_to products_path, status: :see_other
+  end
+
   private
 
   def product_params
