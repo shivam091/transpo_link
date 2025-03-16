@@ -371,6 +371,8 @@
       remove: "Remove",
       save: "Save",
       cancel: "Cancel",
+      leave_feedback: "Leave feedback",
+      submit: "Submit",
     },
     common: {
       actions: "Actions",
@@ -784,6 +786,12 @@
           error: "Product could not be deleted."
         },
       },
+      feedbacks: {
+        create: {
+          success: "Your feedback helps us improve. Thanks for being a part of our community!",
+          error: "We encountered a problem submitting your feedback. Please try again."
+        },
+      },
     },
     measurement_units: {
       categories: {
@@ -1095,6 +1103,11 @@
         title: "Feedbacks",
       },
       feedback: {
+      },
+      new: {
+        title: "Leave feedback",
+      },
+      form: {
       },
     }
   },

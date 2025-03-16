@@ -1,0 +1,14 @@
+= pretty_form_with model: [@reviewable, @feedback] do |form|
+  .col-12.mb-2
+    = form.label :rating, class: "form-label required"
+    = form.range_field :rating, min: 0, max: 10, step: 0.5, autofocus: true
+  .col-12.mb-2
+    = form.label :comment, class: "form-label required"
+    = form.text_area :comment, rows: 5
+  .modal-actions
+    = button_tag type: :submit, class: "btn btn-primary" do
+      = external_svg_tag("svgs/floppy.svg")
+      = button_text(:submit)
+    = button_tag type: :button, class: "btn btn-secondary", data: {action: "click->remote-modal#hide"} do
+      = external_svg_tag("svgs/cancel.svg")
+      = button_text(:cancel)
