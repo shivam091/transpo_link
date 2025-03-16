@@ -1,0 +1,21 @@
+- user, reviewable = feedback.user, feedback.reviewable
+%tr
+  %th{scope: "row", class: class_names("list-item-unread-indicator": feedback.is_unread?)}
+    = h(index)
+  %td
+    = link_to user.full_name, user_path(user), target: :_blank
+  %td
+    = link_to reviewable_name_with_type(reviewable), reviewable_link(reviewable), target: :_blank
+  %td
+    = h(feedback.rating)
+  %td{data: {controller: "collapsible-content", collapsible_content_show_more_text_value: t("common.show_more"), collapsible_content_show_less_text_value: t("common.show_less")}}
+    %span{data: {collapsible_content_target: "collapsedContent"}}
+      = h(truncate(feedback.comment, truncate_at: 80).html_safe)
+    - if feedback.comment.length > 80
+      = link_to t("common.show_more"), "javascript:void(0)", data: {action: "click->collapsible-content#toggle"}
+    %template{data: {collapsible_content_target: "expandedContent"}}
+      = h(word_wrap(feedback.comment, wrap_length: 120).html_safe)
+  %td.actions
+    = link_to "javascript:void(0)", class: "text-reset", data: {bs_toggle: "dropdown"}, aria: {expanded: false} do
+      = external_svg_tag("svgs/ellipsis-vertical.svg")
+    %ul.dropdown-menu

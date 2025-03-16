@@ -212,6 +212,13 @@
           valid_from: "Valid from",
           valid_to: "Valid to",
         },
+        feedback: {
+          rating: "Rating",
+          comment: "Comment",
+          is_unread: "Is unread",
+          reviewable: "Given for",
+          user_id: "Given by",
+        },
         product_category: {
           name: "Name",
           products_count: "Products count",
@@ -368,6 +375,8 @@
     common: {
       actions: "Actions",
       selected: "%{count} selected",
+      show_more: "Show more",
+      show_less: "Show less",
     },
     devise: {
       confirmations: {
@@ -659,6 +668,8 @@
         active: "Active",
         inactive: "Inactive",
         suspended: "Suspended",
+        read: "Read",
+        unread: "Unread",
       },
       address_form_fields: {
         select_country: "Select country or region",
@@ -671,6 +682,7 @@
         no_warehouses_to_display: "No warehouses to display",
         no_tax_rates_to_display: "No tax rates to display",
         no_legal_identifiers_to_display: "No legal identifiers to display",
+        no_feedbacks_to_display: "No feedbacks to display",
         no_product_categories_to_display: "No product categories to display",
         no_products_to_display: "No products to display",
         no_unit_conversions_to_display: "No unit conversions to display",
@@ -1078,5 +1090,12 @@
         },
       },
     },
+    feedbacks: {
+      index: {
+        title: "Feedbacks",
+      },
+      feedback: {
+      },
+    }
   },
 }
