@@ -137,6 +137,35 @@ RSpec.describe PrettyFormBuilder, type: :helper do
     end
   end
 
+  describe "#range_field" do
+    it "adds the 'form-range' class to range fields" do
+      expected = <<~HTML
+        <input class="form-range" type="range" name="test_user[age]" id="test_user_age" />
+      HTML
+      output = builder.range_field(:age)
+
+      expect(output).to match_html(expected)
+    end
+
+    it "preserves existing classes and adds 'form-range'" do
+      expected = <<~HTML
+        <input class="custom-class form-range" type="range" name="test_user[age]" id="test_user_age" />
+      HTML
+      output = builder.range_field(:age, class: "custom-class")
+
+      expect(output).to match_html(expected)
+    end
+
+    it "does not add duplicate classes" do
+      expected = <<~HTML
+        <input class="form-range custom-class" type="range" name="test_user[age]" id="test_user_age" />
+      HTML
+      output = builder.range_field(:age, class: "form-range custom-class")
+
+      expect(output).to match_html(expected)
+    end
+  end
+
   describe "#date_field" do
     it "adds the 'form-control' class to date fields" do
       expected = <<~HTML
