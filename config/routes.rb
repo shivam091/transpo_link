@@ -51,7 +51,12 @@ Rails.application.routes.draw do
       get "inactive", action: :index, defaults: {status: "inactive"}
     end
   end
-  resources :feedbacks, only: :index
+  resources :feedbacks, only: :index do
+    collection do
+      get "read", action: :index, defaults: {status: "read"}
+      get "unread", action: :index, defaults: {status: "unread"}
+    end
+  end
 
   root to: "dashboards#show"
 end

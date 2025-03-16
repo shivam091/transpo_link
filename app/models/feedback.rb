@@ -12,6 +12,8 @@ class Feedback < ApplicationRecord
   belongs_to :user, inverse_of: :feedbacks
   belongs_to :reviewable, inverse_of: :feedbacks, polymorphic: true
 
+  scope :unread, -> { where(arel_table[:is_unread].eq(true)) }
+  scope :read, -> { where(arel_table[:is_unread].eq(false)) }
   default_scope -> { order_created_desc }
 
   class << self
