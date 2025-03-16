@@ -9,6 +9,19 @@ class Feedback < ApplicationRecord
 
   attribute :is_unread, default: true
 
+  validates :rating,
+            presence: true,
+            numericality: {
+              greater_than_or_equal_to: 0,
+              less_than_or_equal_to: 10
+            },
+            reduce: true
+  validate :rating_in_valid_steps
+  validates :comment,
+            presence: true,
+            length: {maximum: 1000},
+            reduce: true
+
   belongs_to :user, inverse_of: :feedbacks
   belongs_to :reviewable, inverse_of: :feedbacks, polymorphic: true
 
@@ -20,5 +33,13 @@ class Feedback < ApplicationRecord
     def accessible(user)
       all
     end
+  end
+
+  private
+
+  def rating_in_valid_steps
+    return if rating.nil?
+
+    errors.add(:rating, :invalid) unless (rating * 2) == (rating * 2).floor
   end
 end
