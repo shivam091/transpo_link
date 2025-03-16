@@ -28,6 +28,11 @@ class PrettyFormBuilder < ActionView::Helpers::FormBuilder
     super(attribute, options)
   end
 
+  def range_field(attribute, options = {})
+    options[:class] = append_class(options[:class], "form-range")
+    super(attribute, options)
+  end
+
   def password_field(attribute, options = {})
     options[:class] = append_class(options[:class], "form-control")
     super(attribute, options)
