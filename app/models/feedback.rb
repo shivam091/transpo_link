@@ -33,6 +33,28 @@ class Feedback < ApplicationRecord
     def accessible(user)
       all
     end
+
+    # Unread feedbacks for a specific user.
+    def unread_for_user(user)
+      where(arel_table[:user_id].eq(user.id).and(arel_table[:is_unread].eq(true)))
+    end
+
+    # Average rating for a specific reviewable entity.
+    def average_rating_for(reviewable)
+      avg_rating = TranspoLink::SqlFunctions.avg(arel_table[:rating])
+      query = arel_table.project(avg_rating).where(arel_table[:reviewable_type].eq(reviewable.class.name).and(arel_table[:reviewable_id].eq(reviewable.id)))
+      
+      connection.select_value(query.to_sql).to_f.round(1)
+    end
+
+    # Fetch feedback for a specific user and reviewable object.
+    def for_user_and_reviewable(user, reviewable)
+      where(
+        arel_table[:user_id].eq(user.id)
+          .and(arel_table[:reviewable_type].eq(reviewable.class.name))
+          .and(arel_table[:reviewable_id].eq(reviewable.id))
+      )
+    end
   end
 
   def mark_as_read!
