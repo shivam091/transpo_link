@@ -35,6 +35,10 @@ class Feedback < ApplicationRecord
     end
   end
 
+  def mark_as_read!
+    update!(is_unread: false) if is_unread?
+  end
+
   private
 
   def rating_in_valid_steps
