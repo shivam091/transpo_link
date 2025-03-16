@@ -4,6 +4,8 @@
 
 class FeedbacksController < ApplicationController
 
+  before_action :find_feedback, only: :show
+
   # GET /feedbacks
   def index
     @feedbacks = Feedback.accessible(current_user)
@@ -43,6 +45,11 @@ class FeedbacksController < ApplicationController
     end
   end
 
+
+  # GET /feedbacks/:id
+  def show
+  end
+
   private
 
   def feedback_params
@@ -53,5 +60,9 @@ class FeedbacksController < ApplicationController
     if params[:product_id]
       Product.find(params[:product_id])
     end
+  end
+
+  def find_feedback
+    @feedback ||= Feedback.find(params[:id])
   end
 end

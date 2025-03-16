@@ -218,6 +218,7 @@
           is_unread: "Is unread",
           reviewable: "Given for",
           user_id: "Given by",
+          created_at: "Submitted at",
         },
         product_category: {
           name: "Name",
@@ -380,6 +381,7 @@
       cancel: "Cancel",
       leave_feedback: "Leave feedback",
       submit: "Submit",
+      mark_as_read: "Mark as read",
     },
     common: {
       actions: "Actions",
