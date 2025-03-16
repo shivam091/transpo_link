@@ -56,6 +56,9 @@ Rails.application.routes.draw do
       get "read", action: :index, defaults: {status: "read"}
       get "unread", action: :index, defaults: {status: "unread"}
     end
+    member do
+      match :mark_as_read, path: "mark-as-read", via: [:put, :patch]
+    end
   end
 
   root to: "dashboards#show"

@@ -19,3 +19,8 @@
     = link_to "javascript:void(0)", class: "text-reset", data: {bs_toggle: "dropdown"}, aria: {expanded: false} do
       = external_svg_tag("svgs/ellipsis-vertical.svg")
     %ul.dropdown-menu
+      - if feedback.is_unread?
+        %li
+          = link_to mark_as_read_feedback_path(feedback), class: "dropdown-item", data: {turbo_method: :patch} do
+            = external_svg_tag("svgs/check-circle.svg")
+            = button_text(:mark_as_read)

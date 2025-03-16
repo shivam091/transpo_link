@@ -4,7 +4,7 @@
 
 class FeedbacksController < ApplicationController
 
-  before_action :find_feedback, only: :show
+  before_action :find_feedback, only: [:show, :mark_as_read]
 
   # GET /feedbacks
   def index
@@ -45,6 +45,18 @@ class FeedbacksController < ApplicationController
     end
   end
 
+  # PUT|PATCH /feedbacks/:id/mark-as-read
+  def mark_as_read
+    response = Feedbacks::MarkAsReadService.(@feedback)
+    @feedback = response.payload[:feedback]
+
+    if response.success?
+      set_flash_message(:info, :success)
+    else
+      set_flash_message(:alert, :error)
+    end
+    redirect_to request.referrer, status: :see_other
+  end
 
   # GET /feedbacks/:id
   def show

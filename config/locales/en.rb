@@ -800,6 +800,10 @@
           success: "Your feedback helps us improve. Thanks for being a part of our community!",
           error: "We encountered a problem submitting your feedback. Please try again."
         },
+        mark_as_read: {
+          success: "Feedback was successfully marked as read.",
+          error: "We encountered a problem marking the feedback as read. Please try again."
+        },
       },
     },
     measurement_units: {
