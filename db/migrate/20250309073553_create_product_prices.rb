@@ -36,7 +36,7 @@ class CreateProductPrices < ActiveRecord::Migration[8.0]
       t.check_constraint "min_quantity >= 1", name: :check_product_prices_min_quantity_numericality
 
       t.check_constraint "unit_price IS NOT NULL", name: :check_product_prices_unit_price_presence
-      t.check_constraint "unit_price >= 0.0", name: :check_product_prices_unit_price_numericality
+      t.check_constraint "unit_price > 0.0", name: :check_product_prices_unit_price_numericality
     end
   end
 end

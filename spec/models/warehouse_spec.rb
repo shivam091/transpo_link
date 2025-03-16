@@ -129,4 +129,14 @@ RSpec.describe Warehouse, type: :model do
   describe "nested attributes" do
     it { is_expected.to accept_nested_attributes_for(:address).update_only(true) }
   end
+
+  describe "class methods" do
+    describe ".select_options" do
+      let!(:warehouse) { create(:warehouse, :active) }
+
+      it "should return array of warehouses for select list" do
+        expect(described_class.select_options).to eq([[warehouse.name, warehouse.id]])
+      end
+    end
+  end
 end

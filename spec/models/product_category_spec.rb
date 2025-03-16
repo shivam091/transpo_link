@@ -47,6 +47,10 @@ RSpec.describe ProductCategory, type: :model do
     end
   end
 
+  describe "constants" do
+    it { is_expected.to have_constant(:LISTING_ATTRIBUTES) }
+  end
+
   describe "delegates" do
     it { is_expected.to delegate_method(:name).to(:parent_category).allow_nil.with_prefix }
   end

@@ -218,6 +218,32 @@
           parent_category_id: "Parent category",
           is_active: "Is active",
         },
+        product: {
+          reference_code: "Reference code",
+          name: "Name",
+          sku: "SKU",
+          description: "Description",
+          barcode: "Barcode",
+          min_stock_threshold: "Min. stock threshold",
+          capacity_unit: "Capacity unit",
+          currency: "Currency",
+          cost_price: "Cost price",
+          product_category_id: "Product category",
+          is_active: "Is active",
+          created_at: "Created at",
+          updated_at: "Updated at",
+        },
+        unit_conversion: {
+          from_unit: "Source unit",
+          to_unit: "Target unit",
+          conversion_rate: "Conversion rate",
+        },
+        product_price: {
+          warehouse_id: "Warehouse",
+          min_quantity: "Min. quantity",
+          cost_price: "Cost price",
+          currency: "Currency",
+        },
       },
       errors: {
         format: "%{attribute} %{message}",
@@ -271,6 +297,13 @@
               valid_from: {
                 greater_than_or_equal_to: "must be today or a future date"
               }
+            },
+          },
+          product: {
+            attributes: {
+              capacity_unit: {
+                inclusion: "%{value} is not a valid unit",
+              },
             },
           },
         },
@@ -639,6 +672,9 @@
         no_tax_rates_to_display: "No tax rates to display",
         no_legal_identifiers_to_display: "No legal identifiers to display",
         no_product_categories_to_display: "No product categories to display",
+        no_products_to_display: "No products to display",
+        no_unit_conversions_to_display: "No unit conversions to display",
+        no_product_prices_to_display: "No product prices to display"
       },
     },
     flashes: {
@@ -720,6 +756,20 @@
         update: {
           success: "Role was successfully updated.",
           error: "Role could not be updated."
+        },
+      },
+      products: {
+        create: {
+          success: "Product was successfully created.",
+          error: "Product could not be created.",
+        },
+        update: {
+          success: "Product was successfully updated.",
+          error: "Product could not be updated."
+        },
+        destroy: {
+          success: "Product was successfully deleted.",
+          error: "Product could not be deleted."
         },
       },
     },
@@ -982,6 +1032,51 @@
       form: {
         select_parent_category: "Select parent category",
       }
+    },
+    products: {
+      index: {
+        title: "Products",
+      },
+      product: {
+        delete_product_confirmation_text: "Are you sure you want to delete the product ‘%{product_name}’? This cannot be undone.",
+      },
+      new: {
+        title: "New product",
+      },
+      edit: {
+        title: "Edit product",
+      },
+      form: {
+        basic_details: "Basic details",
+        unit_conversions: "Unit conversions",
+        product_prices: "Product prices",
+      },
+      basic_details_fields: {
+        select_product_category: "Select product category",
+        select_capacity_unit: "Select capacity unit",
+        select_currency: "Select currency",
+      },
+      show: {
+        basic_details: "Basic details",
+        unit_conversions: "Unit conversions",
+        product_prices: "Product prices",
+      },
+      unit_conversions: {
+        form: {
+        },
+        field: {
+          select_source_unit: "Select source unit",
+          select_target_unit: "Select target unit",
+        },
+      },
+      product_prices: {
+        form: {
+        },
+        field: {
+          select_warehouse: "Select warehouse",
+          select_currency: "Select currency",
+        },
+      },
     },
   },
 }

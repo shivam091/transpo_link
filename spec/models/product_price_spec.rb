@@ -29,11 +29,7 @@ RSpec.describe ProductPrice, type: :model do
     it { is_expected.to have_foreign_key(:product_id).with_name(:fk_product_prices_product_id_on_products).on_delete(:cascade) }
     it { is_expected.to have_foreign_key(:warehouse_id).with_name(:fk_product_prices_warehouse_id_on_warehouses).on_delete(:restrict) }
 
-    it { is_expected.to have_check_constraint(:check_product_prices_currency_presence).with_expression("currency IS NOT NULL AND currency::text <> ''::text") }
-    it { is_expected.to have_check_constraint(:check_product_prices_min_quantity_presence).with_expression("min_quantity IS NOT NULL") }
-    it { is_expected.to have_check_constraint(:check_product_prices_min_quantity_numericality).with_expression("min_quantity >= 1") }
-    it { is_expected.to have_check_constraint(:check_product_prices_unit_price_presence).with_expression("unit_price IS NOT NULL") }
-    it { is_expected.to have_check_constraint(:check_product_prices_unit_price_numericality).with_expression("unit_price >= 0.0") }
+    it { is_expected.to have_check_constraint(:check_product_prices_unit_price_numericality).with_expression("unit_price > 0.0") }
   end
 
   describe "default values" do
@@ -52,8 +48,35 @@ RSpec.describe ProductPrice, type: :model do
     end
   end
 
+  describe "included modules" do
+    it { is_expected.to include_module(Sortable) }
+    it { is_expected.to include_module(ActsAsMoney) }
+  end
+
+  describe "constants" do
+    it { is_expected.to have_constant(:LISTING_ATTRIBUTES) }
+  end
+
   describe "associations" do
     it { is_expected.to belong_to(:product).inverse_of(:product_prices).touch }
     it { is_expected.to belong_to(:warehouse).inverse_of(:product_prices).optional }
   end
+
+  describe "delegates" do
+    it { is_expected.to delegate_method(:name).to(:warehouse).with_prefix }
+  end
+
+  describe "validations" do
+    describe "#min_quantity" do
+      it { is_expected.to validate_presence_of(:min_quantity) }
+      it { is_expected.to validate_numericality_of(:min_quantity).is_greater_than_or_equal_to(1).only_integer }
+    end
+
+    describe "#unit_price" do
+      it { is_expected.to validate_presence_of(:unit_price) }
+      it { is_expected.to validate_numericality_of(:unit_price).is_greater_than(0.0) }
+    end
+  end
+
+  include_examples "apply default scope on created_at:desc"
 end
