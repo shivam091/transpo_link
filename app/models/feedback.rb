@@ -42,8 +42,12 @@ class Feedback < ApplicationRecord
     # Average rating for a specific reviewable entity.
     def average_rating_for(reviewable)
       avg_rating = TranspoLink::SqlFunctions.avg(arel_table[:rating])
-      query = arel_table.project(avg_rating).where(arel_table[:reviewable_type].eq(reviewable.class.name).and(arel_table[:reviewable_id].eq(reviewable.id)))
-      
+      query = arel_table.project(avg_rating)
+        .where(
+          arel_table[:reviewable_type].eq(reviewable.class.name)
+            .and(arel_table[:reviewable_id].eq(reviewable.id))
+        )
+
       connection.select_value(query.to_sql).to_f.round(1)
     end
 
