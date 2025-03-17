@@ -24,6 +24,7 @@ class LegalIdentifier < ApplicationRecord
 
     # India
     cin: "cin",                             # Corporate Identification Number
+    llpin: "llpin",                         # Limited Liability Partnership Identification Number
 
     # India & Pakistan
     roc: "roc",                             # Registrar of Companies Number
@@ -106,6 +107,7 @@ class LegalIdentifier < ApplicationRecord
     ein:      %w[US],
     duns:     %w[US CA GB AU DE FR IT ES NL BR MX ZA IN JP CN KR SG HK AE SA AR CL RU NZ BE DK IE CH],
     cin:      %w[IN],
+    llpin:    %w[IN],
     roc:      %w[IN PK],
     acn:      %w[AU],
     abn:      %w[AU],

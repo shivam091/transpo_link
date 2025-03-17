@@ -512,6 +512,7 @@
           ein: "EIN – Employer Identification Number",
           duns: "DUNS – Data Universal Numbering System (Issued by Dun & Bradstreet (D&B))",
           cin: "CIN – Corporate Identification Number",
+          llpin: "LLPIN - Limited Liability Partnership Identification Number",
           roc: "ROC – Registrar of Companies",
           acn: "ACN – Australian Company Number",
           abn: "ABN – Australian Business Number",

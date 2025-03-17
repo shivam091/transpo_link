@@ -39,7 +39,9 @@ RSpec.describe BusinessIdentifierValidator do
         where(:business_identifier) do
           [
             "12-3456789",
-            "12-2324252"
+            "50-1234567",
+            "83-9876543",
+            "01-2345678"
           ]
         end
 
@@ -51,8 +53,56 @@ RSpec.describe BusinessIdentifierValidator do
       context "when business identifier is invalid for country" do
         where(:business_identifier) do
           [
-            "123456789",
-            "123-456789"
+            "90-1234567",
+            "00-1234567",
+            "9X-XXXXXXX"
+          ]
+        end
+
+        with_them do
+          it { expect(legal_identifier).to be_invalid }
+        end
+      end
+    end
+
+    describe "llpin" do
+      let(:legal_identifier) do
+        BusinessIdentifier.new(business_identifier: business_identifier, business_identifier_type: "llpin", country: "IN")
+      end
+
+      context "when business identifier is valid for country" do
+        where(:business_identifier) do
+          [
+            "A123456",
+            "B987654",
+            "Z000001",
+            "M765432",
+            "K543210"
+          ]
+        end
+
+        with_them do
+          it { expect(legal_identifier).to be_valid }
+        end
+      end
+
+      context "when business identifier is invalid for country" do
+        where(:business_identifier) do
+          [
+            "1234567",
+            "AB12345",
+            "A12B456",
+            "a123456",
+            "A1234567",
+            "X1234"
+          ]
+        end
+
+        with_them do
+          it { expect(legal_identifier).to be_invalid }
+        end
+      end
+    end
           ]
         end
 

@@ -36,8 +36,11 @@ module TranspoLink
 
     BUSINESS_IDENTIFIER_PATTERNS = {
       ein: {
-        US: /^\d{2}-\d{7}$/
-      }
+        US: /^(?!00)(?!9)[0-9]{2}-[0-9]{7}$/
+      },
+      llpin: {
+        IN: /^[A-Z]{1}[0-9]{6}$/
+      },
     }.freeze
   end
 end
