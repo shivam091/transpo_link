@@ -571,5 +571,39 @@ RSpec.describe TaxIdentifierValidator do
         end
       end
     end
+
+    describe "abn" do
+      let(:legal_identifier) do
+        TaxIdentifier.new(tax_identifier: tax_identifier, tax_identifier_type: "abn", country: "AU")
+      end
+
+      context "when tax identifier is valid for country" do
+        where(:tax_identifier) do
+          [
+            "51 824 753 556",
+            "83 914 571 673",
+            "51824753556"
+          ]
+        end
+
+        with_them do
+          it { expect(legal_identifier).to be_valid }
+        end
+      end
+
+      context "when business identifier is invalid for country" do
+        where(:tax_identifier) do
+          [
+            "100 123 456 789",
+            "51 000 1000 000",
+            "99 999 999 9991"
+          ]
+        end
+
+        with_them do
+          it { expect(legal_identifier).to be_invalid }
+        end
+      end
+    end
   end
 end
