@@ -82,7 +82,7 @@ RSpec.describe TaxIdentifierValidator do
             "12-3456789",
             "50-1234567",
             "83-9876543",
-            "01-2345678",
+            "01-2345678"
           ]
         end
 
@@ -171,7 +171,7 @@ RSpec.describe TaxIdentifierValidator do
             "912-90-0000",
             "999-92-9999",
             "900-94-0000",
-            "999-99-9999",
+            "999-99-9999"
           ]
         end
 
@@ -189,7 +189,7 @@ RSpec.describe TaxIdentifierValidator do
             "999-89-9999",
             "999-93-9999",
             "999-01-9999",
-            "999-12-3456",
+            "999-12-3456"
           ]
         end
 
@@ -267,7 +267,7 @@ RSpec.describe TaxIdentifierValidator do
             "07ABCDE1234F12Z",
             "07ABCDE1234F1Z0",
             "40AACCB1234A1Z9",
-            "98AACCB1234A1Z9",
+            "98AACCB1234A1Z9"
           ]
         end
 
@@ -287,7 +287,7 @@ RSpec.describe TaxIdentifierValidator do
           [
             "PDES03028F",
             "ABCX12345A",
-            "RAJA99999B",
+            "RAJA99999B"
           ]
         end
 
@@ -302,6 +302,82 @@ RSpec.describe TaxIdentifierValidator do
             "12345A1234",
             "ABCDE12345",
             "XYZA11111C4"
+          ]
+        end
+
+        with_them do
+          it { expect(legal_identifier).to be_invalid }
+        end
+      end
+    end
+
+    describe "bn" do
+      let(:legal_identifier) do
+        TaxIdentifier.new(tax_identifier: tax_identifier, tax_identifier_type: "bn", country: "CA")
+      end
+
+      context "when tax identifier is valid for country" do
+        where(:tax_identifier) do
+          [
+            "123456789",
+            "987654321 RT0001",
+            "123456789 RC0002",
+            "567890123 RP9999",
+            "162738490 RM9876"
+          ]
+        end
+
+        with_them do
+          it { expect(legal_identifier).to be_valid }
+        end
+      end
+
+      context "when tax identifier is invalid for country" do
+        where(:tax_identifier) do
+          [
+            "012345678",
+            "12345678",
+            "123456789 R0001",
+            "123456789 RT000",
+            "567890123 AB9999"
+          ]
+        end
+
+        with_them do
+          it { expect(legal_identifier).to be_invalid }
+        end
+      end
+    end
+
+    describe "uen" do
+      let(:legal_identifier) do
+        TaxIdentifier.new(tax_identifier: tax_identifier, tax_identifier_type: "uen", country: "SG")
+      end
+
+      context "when tax identifier is valid for country" do
+        where(:tax_identifier) do
+          [
+            "S12345678A",
+            "T98765432Z",
+            "201234567K",
+            "T08GA1234A",
+            "F21LL1234B",
+            "S21LL1234B",
+            "G21LL1234B"
+          ]
+        end
+
+        with_them do
+          it { expect(legal_identifier).to be_valid }
+        end
+      end
+
+      context "when tax identifier is invalid for country" do
+        where(:tax_identifier) do
+          [
+            "X1234567A",
+            "T1234567890A",
+            "12345678",
           ]
         end
 
