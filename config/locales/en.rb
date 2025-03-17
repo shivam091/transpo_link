@@ -536,7 +536,7 @@
           brn_kr: "BRN_KR – Business Registration Number",
           cbr: "CBR – Central Business Register",
           cr: "CR – Commercial Registration Number",
-          trn: "TRN – Tax Registration Number",
+          vkn: "VKN – Vergi Kimlik Numarası",
           cip: "CIP – Company Identification Number",
           brn_bd: "BRN_BD – Business Registration Number",
         }

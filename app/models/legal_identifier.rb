@@ -90,7 +90,7 @@ class LegalIdentifier < ApplicationRecord
     cr: "cr",                               # Commercial Registration Number
 
     # Turkey
-    trn: "trn",                             # Tax Registration Number
+    vkn: "vkn",                             # Tax Registration Number
 
     # South Africa
     cip: "cip",                             # Company Identification Number
@@ -131,7 +131,7 @@ class LegalIdentifier < ApplicationRecord
     brn_kr:   %w[KR],
     cbr:      %w[KE],
     cr:       %w[SA AE BH QA OM],
-    trn:      %w[TR],
+    vkn:      %w[TR],
     cip:      %w[ZA],
     brn_bd:   %w[BD],
   }
