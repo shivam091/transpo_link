@@ -24,17 +24,18 @@ RSpec.describe WithoutTimestamps do
 
   # Clean up the virtual table after tests are done
   after(:all) do
-    ActiveRecord::Base.connection.drop_table(:test_models, if_exists: true)
+    connection.drop_table(:test_models, if_exists: true)
     Object.send(:remove_const, :TestModel)  # Remove TestModel constant
   end
 
-  let(:record) { TestModel.create(name: "Initial Name") }
+  let!(:record) { TestModel.create(name: "Initial Name") }
 
   describe ".without_timestamps" do
-    it "does not update timestamps inside the block" do
-      original_updated_at = record.updated_at
+    let!(:original_updated_at) { record.updated_at }
 
+    it "does not update timestamps inside the block" do
       sleep(1)  # Ensure there"s a noticeable time gap
+
       TestModel.without_timestamps do
         record.update(name: "Updated Name")
       end
@@ -43,13 +44,12 @@ RSpec.describe WithoutTimestamps do
     end
 
     it "restores timestamp behavior after the block" do
-      original_updated_at = record.updated_at
-
       TestModel.without_timestamps do
         record.update(name: "Temporary Update")
       end
 
       sleep(1)
+
       record.update(name: "Final Update")
 
       expect(record.reload.updated_at).to be > original_updated_at
@@ -64,7 +64,7 @@ RSpec.describe WithoutTimestamps do
         end
       }.to raise_error(StandardError, "Intentional Error")
 
-      expect(ActiveRecord::Base.record_timestamps).to be true
+      expect(ActiveRecord::Base.record_timestamps).to be_truthy
     end
   end
 end

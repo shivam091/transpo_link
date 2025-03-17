@@ -284,11 +284,13 @@ RSpec.describe PaginationHelper, type: :helper do
 
     it "interpolates variables in translation" do
       translation = helper.send(:p_t, "record_info", start: 1, end: 10, total: 100)
+
       expect(translation).to eq("Showing 1 to 10 of 100 entries")
     end
 
     it "allows overriding the default scope" do
       I18n.backend.store_translations(:en, {custom_scope: {test_key: "Custom Scope Value"}})
+
       expect(helper.send(:p_t, "test_key", scope: "custom_scope")).to eq("Custom Scope Value")
     end
   end
@@ -296,6 +298,7 @@ RSpec.describe PaginationHelper, type: :helper do
   describe "#full_page_range" do
     it "renders all pages when total pages are small" do
       html = helper.send(:full_page_range, 1, 5)
+
       (2..5).each { |page| expect(html).to include("page=#{page}") }
     end
   end
@@ -304,6 +307,7 @@ RSpec.describe PaginationHelper, type: :helper do
     it "renders page items with ellipsis correctly" do
       pages = [1, "...", 5]
       html = helper.send(:generate_page_items, pages, 3)
+
       expect(html).to include("...")
       expect(html).to include("page=1")
       expect(html).to include("page=5")
@@ -313,6 +317,7 @@ RSpec.describe PaginationHelper, type: :helper do
   describe "#disabled_page_ellipsis" do
     it "renders a disabled page item for ellipsis" do
       html = helper.send(:disabled_page_ellipsis)
+
       expect(html).to include("class=\"page-item disabled\"")
       expect(html).to include("<a role=\"link\" class=\"page-link\">&hellip;</a>")
     end
@@ -321,12 +326,14 @@ RSpec.describe PaginationHelper, type: :helper do
   describe "#page_item" do
     it "renders an active page item for the current page" do
       html = helper.send(:page_item, 3, 3)
+
       expect(html).to include("class=\"page-item active\"")
       expect(html).to include("<a role=\"link\" class=\"page-link\" aria-current=\"page\">3</a>")
     end
 
     it "renders a clickable page item for other pages" do
       html = helper.send(:page_item, 2, 3)
+
       expect(html).to include("page=2")
       expect(html).to include("class=\"page-item\"")
     end

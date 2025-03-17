@@ -1,0 +1,30 @@
+.widget-row
+  .widget-row-content
+    .widget-row-title= Product.human_attribute_name(:name)
+    .widget-row-body= h(product.name)
+.widget-row
+  .widget-row-content
+    .widget-row-title= Product.human_attribute_name(:product_category_id)
+    .widget-row-body= h(product.product_category_name)
+.widget-row
+  .widget-row-content
+    .widget-row-title= Product.human_attribute_name(:sku)
+    .widget-row-body= h(product.sku)
+.widget-row
+  .widget-row-content
+    .widget-row-title= Product.human_attribute_name(:barcode)
+    .widget-row-body= h(product.barcode)
+.widget-row
+  .widget-row-content
+    .widget-row-title= Product.human_attribute_name(:description)
+    .widget-row-body= h(product.description)
+.widget-row
+  .widget-row-content
+    .widget-row-title= Product.human_attribute_name(:cost_price)
+    .widget-row-body= number_to_currency(product.cost_price, unit: product.currency.symbol)
+.widget-row
+  .widget-row-content
+    .widget-row-title= Product.human_attribute_name(:min_stock_threshold)
+    .widget-row-body
+      = h(product.min_stock_threshold)
+      = h(product.capacity_unit)

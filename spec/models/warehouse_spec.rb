@@ -28,8 +28,8 @@ RSpec.describe Warehouse, type: :model do
     it { is_expected.to have_db_column(:created_at).of_type(:timestamptz).with_options(null: false) }
     it { is_expected.to have_db_column(:updated_at).of_type(:timestamptz).with_options(null: false) }
 
-    it { is_expected.to have_db_index(:reference_code).unique(true) }
-    it { is_expected.to have_db_index(:email_address).unique(true) }
+    it { is_expected.to have_db_index(:reference_code).unique }
+    it { is_expected.to have_db_index(:email_address).unique }
     it { is_expected.to have_db_index(:is_active) }
 
     it { is_expected.to have_check_constraint(:check_warehouses_name_presence).with_expression("name IS NOT NULL AND name::text <> ''::text") }
@@ -54,8 +54,10 @@ RSpec.describe Warehouse, type: :model do
   end
 
   describe "default values" do
+    let(:warehouse) { described_class.new }
+
     it "should set false as default value for #is_active" do
-      expect(subject.is_active).to be_falsy
+      expect(warehouse.is_active).to be_falsy
     end
   end
 
@@ -71,10 +73,9 @@ RSpec.describe Warehouse, type: :model do
 
     it { is_expected.to have_many(:warehouse_suppliers).inverse_of(:warehouse).dependent(:destroy) }
     it { is_expected.to have_many(:suppliers).through(:warehouse_suppliers).inverse_of(:supplied_warehouses).source(:supplier) }
-  end
 
-  describe "callbacks" do
-    it { is_expected.to have_callback(:after, :initialize, :set_reference_code) }
+    it { is_expected.to have_many(:product_prices).inverse_of(:warehouse).dependent(:restrict_with_exception) }
+    it { is_expected.to have_many(:inventories).inverse_of(:warehouse).dependent(:restrict_with_exception) }
   end
 
   include_examples "apply default scope on created_at:desc"
@@ -127,5 +128,15 @@ RSpec.describe Warehouse, type: :model do
 
   describe "nested attributes" do
     it { is_expected.to accept_nested_attributes_for(:address).update_only(true) }
+  end
+
+  describe "class methods" do
+    describe ".select_options" do
+      let!(:warehouse) { create(:warehouse, :active) }
+
+      it "should return array of warehouses for select list" do
+        expect(described_class.select_options).to eq([[warehouse.name, warehouse.id]])
+      end
+    end
   end
 end

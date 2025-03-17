@@ -138,11 +138,9 @@ RSpec.describe "LegalIdentifiers", type: :request do
       end
 
       context "when delete fails" do
-        before do
-          allow(LegalIdentifiers::DestroyService).to receive(:call) { ServiceResponse.error }
-        end
-
         it "does not delete the legal identifier and redirects with an error message" do
+          allow(LegalIdentifiers::DestroyService).to receive(:call) { ServiceResponse.error }
+
           delete legal_identifier_path(legal_identifier)
 
           expect(response).to redirect_to(legal_identifiers_path)

@@ -145,6 +145,8 @@ GEM
     factory_bot_rails (6.4.4)
       factory_bot (~> 6.5)
       railties (>= 5.0.0)
+    faker (3.5.1)
+      i18n (>= 1.8.11, < 2)
     faraday (2.12.2)
       faraday-net_http (>= 2.0, < 3.5)
       json
@@ -242,6 +244,9 @@ GEM
       racc
     pg (1.5.9)
     popper_js (2.11.8)
+    postgresql_adapter_extensions (1.0.0)
+      activerecord (~> 8)
+      pg (~> 1.5)
     pp (0.6.2)
       prettyprint
     prettyprint (0.2.0)
@@ -262,7 +267,7 @@ GEM
       nio4r (~> 2.0)
     raabro (1.4.0)
     racc (1.8.1)
-    rack (3.1.11)
+    rack (3.1.12)
     rack-session (2.1.0)
       base64 (>= 0.1.0)
       rack (>= 3.0.0)
@@ -483,12 +488,14 @@ DEPENDENCIES
   debug
   devise (= 4.9.4)
   factory_bot_rails (~> 6.4)
+  faker
   generator_spec
   haml (~> 6.3)
   importmap-rails (~> 2.1)
   jbuilder
   money (= 6.19)
   pg (~> 1.5)
+  postgresql_adapter_extensions (~> 1)
   propshaft
   puma (>= 5.0)
   rails (~> 8.0.1)

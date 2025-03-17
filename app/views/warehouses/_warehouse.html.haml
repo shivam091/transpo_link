@@ -1,6 +1,8 @@
 - present(warehouse) do |warehouse|
   %tr
     %th{scope: "row"}= h(@pagination_metadata.offset + index)
+    %td
+      = check_box_tag "warehouse_ids[]", warehouse.id, false, class: "form-check-input", data: {checkbox_selection_target: "itemCheckbox"}
     %td= link_to warehouse.reference_code, warehouse_path(warehouse)
     %td= h(warehouse.name)
     %td= mail_to(warehouse.email_address)

@@ -21,32 +21,30 @@ RSpec.describe EnumsHelper, type: :helper do
       end
     end
 
-    allow(I18n).to receive(:t).with("light", scope: "enumerations.preference.color_schemes") { "Light Mode" }
-    allow(I18n).to receive(:t).with("dark", scope: "enumerations.preference.color_schemes") { "Dark Mode" }
-    allow(I18n).to receive(:t).with("auto", scope: "enumerations.preference.color_schemes") { "Auto Mode" }
+    allow(I18n).to receive(:t).with("light", scope: "enumerations.preference.color_schemes") { "Light" }
+    allow(I18n).to receive(:t).with("dark", scope: "enumerations.preference.color_schemes") { "Dark" }
+    allow(I18n).to receive(:t).with("auto", scope: "enumerations.preference.color_schemes") { "Auto" }
   end
 
   describe "#enum_options_for_select" do
+    let(:expected_result) { [["Light", 0], ["Dark", 1], ["Auto", 2]] }
+
     it "returns an array of translated enum options with their values" do
-      expected_result = [
-        ["Light Mode", 0],
-        ["Dark Mode", 1],
-        ["Auto Mode", 2]
-      ]
       expect(helper.enum_options_for_select(Preference, :color_scheme)).to eq(expected_result)
     end
   end
 
   describe "#enum_l" do
+    let(:preference) { Preference.new(color_scheme: :dark) }
+
     it "returns the translated string for the current enum value of a model" do
-      preference = Preference.new(color_scheme: :dark)
-      expect(helper.enum_l(preference, :color_scheme)).to eq("Dark Mode")
+      expect(helper.enum_l(preference, :color_scheme)).to eq("Dark")
     end
   end
 
   describe "#enum_i18n" do
     it "returns the translated string for a given enum key" do
-      expect(helper.enum_i18n(Preference, :color_scheme, :auto)).to eq("Auto Mode")
+      expect(helper.enum_i18n(Preference, :color_scheme, :auto)).to eq("Auto")
     end
   end
 

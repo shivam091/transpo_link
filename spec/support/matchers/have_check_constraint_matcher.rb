@@ -18,7 +18,7 @@ RSpec::Matchers.define :have_check_constraint do |constraint_name|
   match do |record|
     @table_name = record.class.table_name.to_s
     @constraint_name = constraint_name.to_s
-    check_constraints = ActiveRecord::Base.connection.check_constraints(@table_name)
+    check_constraints = connection.check_constraints(@table_name)
 
     check_constraints.any? do |check_constraint|
       check_constraint.name == @constraint_name &&

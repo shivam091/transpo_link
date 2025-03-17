@@ -10,9 +10,7 @@ RSpec.describe PresenterGenerator, type: :generator do
   destination test_directory_path
   arguments %w[Users::Preference user_preference]
 
-  before(:all) do
-    run_generator
-  end
+  before(:all) { run_generator }
 
   it "creates a presenter file with correct path and name" do
     expect(File).to exist(File.join(destination_root, "app/presenters/users/preference_presenter.rb"))
@@ -22,18 +20,23 @@ RSpec.describe PresenterGenerator, type: :generator do
     expect(File).to exist(File.join(destination_root, "spec/presenters/users/preference_presenter_spec.rb"))
   end
 
-  it "ensures generated presenter class does not append 'Presenter' if already included" do
-    content = File.read(File.join(destination_root, "app/presenters/users/preference_presenter.rb"))
-    expect(content).to match(/class Users::PreferencePresenter < ApplicationPresenter/)
+  describe "Presenter file" do
+    let!(:content) { File.read(File.join(destination_root, "app/presenters/users/preference_presenter.rb")) }
+
+    it "ensures generated presenter class does not append 'Presenter' if already included" do
+      expect(content).to match(/class Users::PreferencePresenter < ApplicationPresenter/)
+    end
+
+    it "includes the specified method names inside the presenter class" do
+      expect(content).to include("presents :user_preference")
+    end
   end
 
-  it "includes the specified method names inside the presenter class" do
-    content = File.read(File.join(destination_root, "app/presenters/users/preference_presenter.rb"))
-    expect(content).to include("presents :user_preference")
-  end
+  describe "Presenter test file" do
+    let!(:content) { File.read(File.join(destination_root, "spec/presenters/users/preference_presenter_spec.rb")) }
 
-  it "creates a valid presenter test file" do
-    content = File.read(File.join(destination_root, "spec/presenters/users/preference_presenter_spec.rb"))
-    expect(content).to include("RSpec.describe Users::PreferencePresenter, type: :presenter")
+    it "creates a valid presenter test file" do
+      expect(content).to include("RSpec.describe Users::PreferencePresenter, type: :presenter")
+    end
   end
 end

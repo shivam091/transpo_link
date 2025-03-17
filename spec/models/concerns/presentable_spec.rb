@@ -20,7 +20,7 @@ RSpec.describe Presentable do
   end
 
   after(:all) do
-    ActiveRecord::Base.connection.drop_table(:presentable_models, if_exists: true)
+    connection.drop_table(:presentable_models, if_exists: true)
     Object.send(:remove_const, :PresentableModel)
   end
 

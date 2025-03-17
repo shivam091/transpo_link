@@ -7,7 +7,6 @@
 require "spec_helper"
 
 RSpec.describe "Dashboards", type: :request do
-
   context "when user is not signed in" do
     describe "GET /" do
       subject { get root_path }
@@ -20,9 +19,9 @@ RSpec.describe "Dashboards", type: :request do
     include_context "sign in as admin"
 
     describe "GET /" do
-      before { get root_path }
-
       it "renders dashboard page" do
+        get root_path
+
         expect(response).to have_http_status(:ok)
       end
     end

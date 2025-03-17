@@ -10,7 +10,6 @@ RSpec.describe ApplicationRecord, type: :model do
   before(:all) do
     ActiveRecord::Schema.define(version: 1) do
       create_table :dummy_models, force: true do |t|
-        t.string :name
         t.string :email
         t.timestamps
       end
@@ -21,11 +20,11 @@ RSpec.describe ApplicationRecord, type: :model do
   end
 
   after(:all) do
-    ActiveRecord::Base.connection.drop_table(:dummy_models, if_exists: true)
+    connection.drop_table(:dummy_models, if_exists: true)
     Object.send(:remove_const, :DummyModel)
   end
 
-  subject { DummyModel.new(name: "Test", email: "test@example.com") }
+  subject { DummyModel.new(email: "test@example.com") }
 
   describe ".[]" do
     it "returns the arel table attribute" do
@@ -40,11 +39,11 @@ RSpec.describe ApplicationRecord, type: :model do
   end
 
   describe ".without_order" do
-    it "removes ordering from the query" do
-      query_with_order = DummyModel.order(:created_at)
-      expect(query_with_order.to_sql).to include("ORDER BY")
+    let(:query_with_order) { DummyModel.order(:created_at) }
+    let(:query_without_order) { query_with_order.without_order }
 
-      query_without_order = query_with_order.without_order
+    it "removes ordering from the query" do
+      expect(query_with_order.to_sql).to include("ORDER BY")
       expect(query_without_order.to_sql).to exclude("ORDER BY")
     end
   end
@@ -66,16 +65,17 @@ RSpec.describe ApplicationRecord, type: :model do
 
     context "when the record exists" do
       let!(:existing_user) { DummyModel.create!(attributes) }
+      let!(:found_user) { DummyModel.safe_find_or_create_by!(attributes) }
 
       it "returns the existing record" do
-        found_user = DummyModel.safe_find_or_create_by!(attributes)
         expect(found_user).to eq(existing_user)
       end
     end
 
     context "when the record does not exist" do
+      let(:new_user) { DummyModel.safe_find_or_create_by!(attributes) }
+
       it "creates and returns the new record" do
-        new_user = DummyModel.safe_find_or_create_by!(attributes)
         expect(new_user).to be_persisted
         expect(new_user.email).to eq("test@example.com")
       end
@@ -87,27 +87,29 @@ RSpec.describe ApplicationRecord, type: :model do
 
     context "when the record exists" do
       let!(:existing_user) { DummyModel.create!(attributes) }
+      let!(:found_user) { DummyModel.safe_find_or_create_by(attributes) }
 
       it "returns the existing record" do
-        found_user = DummyModel.safe_find_or_create_by(attributes)
         expect(found_user).to eq(existing_user)
       end
     end
 
     context "when the record does not exist" do
+      let(:new_user) { DummyModel.safe_find_or_create_by(attributes) }
+
       it "creates and returns the new record" do
-        new_user = DummyModel.safe_find_or_create_by(attributes)
         expect(new_user).to be_persisted
         expect(new_user.email).to eq("test@example.com")
       end
     end
 
     context "when a unique constraint is violated" do
-      before { DummyModel.create!(attributes) }
+      let(:found_user) { DummyModel.safe_find_or_create_by(attributes) }
 
       it "rescues from RecordNotUnique and returns the existing record" do
+        DummyModel.create!(attributes)
         allow(DummyModel).to receive(:create).and_raise(ActiveRecord::RecordNotUnique)
-        found_user = DummyModel.safe_find_or_create_by(attributes)
+
         expect(found_user.email).to eq("test@example.com")
       end
     end

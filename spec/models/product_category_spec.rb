@@ -25,7 +25,7 @@ RSpec.describe ProductCategory, type: :model do
 
     it { is_expected.to have_db_index(:is_active) }
     it { is_expected.to have_db_index(:parent_category_id) }
-    it { is_expected.to have_db_index([:name, :parent_category_id]).unique(true) }
+    it { is_expected.to have_db_index([:name, :parent_category_id]).unique }
 
     it { is_expected.to have_foreign_key(:parent_category_id).with_name(:fk_product_categories_parent_category_id_on_product_categories).on_delete(:cascade) }
 
@@ -40,9 +40,15 @@ RSpec.describe ProductCategory, type: :model do
   end
 
   describe "default values" do
+    let(:product_category) { described_class.new }
+
     it "should set false as default value for #is_active" do
-      expect(subject.is_active).to be_falsy
+      expect(product_category.is_active).to be_falsy
     end
+  end
+
+  describe "constants" do
+    it { is_expected.to have_constant(:LISTING_ATTRIBUTES) }
   end
 
   describe "delegates" do
@@ -51,6 +57,7 @@ RSpec.describe ProductCategory, type: :model do
 
   describe "associations" do
     it { is_expected.to have_many(:sub_categories).class_name("ProductCategory").with_foreign_key(:parent_category_id).inverse_of(:parent_category).dependent(:destroy) }
+    it { is_expected.to have_many(:products).inverse_of(:product_category).dependent(:restrict_with_exception) }
 
     it { is_expected.to belong_to(:parent_category).class_name("ProductCategory").inverse_of(:sub_categories).optional }
   end
@@ -67,9 +74,9 @@ RSpec.describe ProductCategory, type: :model do
 
   describe "class methods" do
     describe ".select_options" do
-      it "should return array of product categories for select list" do
-        product_category = create(:product_category, :active)
+      let!(:product_category) { create(:product_category, :active) }
 
+      it "should return array of product categories for select list" do
         expect(described_class.select_options).to eq([[product_category.name, product_category.id]])
       end
     end

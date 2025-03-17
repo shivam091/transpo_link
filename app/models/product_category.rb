@@ -20,6 +20,7 @@ class ProductCategory < ApplicationRecord
            foreign_key: :parent_category_id,
            inverse_of: :parent_category,
            dependent: :destroy
+  has_many :products, inverse_of: :product_category, dependent: :restrict_with_exception
 
   belongs_to :parent_category, class_name: "ProductCategory", optional: true, inverse_of: :sub_categories
 

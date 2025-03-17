@@ -7,7 +7,7 @@
 require "spec_helper"
 
 RSpec.describe TaxRate, type: :model do
-  subject(:tax_rate) { build(:tax_rate) }
+  subject { build(:tax_rate) }
 
   describe "valid factory" do
     it { is_expected.to have_a_valid_factory(:tax_rate) }
@@ -27,7 +27,7 @@ RSpec.describe TaxRate, type: :model do
     it { is_expected.to have_db_index(:valid_from) }
     it { is_expected.to have_db_index(:valid_to) }
     it { is_expected.to have_db_index([:country, :tax_identifier_type]) }
-    it { is_expected.to have_db_index([:tax_identifier_type, :country, :business_category, :valid_from]).unique(true) }
+    it { is_expected.to have_db_index([:tax_identifier_type, :country, :business_category, :valid_from]).unique }
 
     it { is_expected.to have_check_constraint(:check_tax_rates_country_presence).with_expression("country IS NOT NULL AND country::text <> ''::text") }
 
@@ -54,6 +54,8 @@ RSpec.describe TaxRate, type: :model do
   end
 
   describe "default values" do
+    let(:tax_rate) { described_class.new }
+
     it "should set b2b as default value for #business_category" do
       expect(tax_rate.business_category).to eq("b2b")
     end

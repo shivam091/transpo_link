@@ -28,5 +28,9 @@ module TranspoLink
     def all_units
       UNITS.values.flatten
     end
+
+    def units_for(category)
+      UNITS[category.to_sym] || []
+    end
   end
 end

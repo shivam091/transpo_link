@@ -12,11 +12,11 @@ RSpec.describe "Warehouses", type: :request do
   let!(:manager) { create(:manager) }
   let!(:supplier) { create(:supplier) }
 
-  let(:valid_attributes) do
+  let!(:valid_attributes) do
     attributes_for(:warehouse, name: "New warehouse")
       .merge(manager_ids: [manager.id], supplier_ids: [supplier.id])
   end
-  let(:invalid_attributes) { attributes_for(:warehouse, name: "") }
+  let!(:invalid_attributes) { attributes_for(:warehouse, name: "") }
 
   context "when user is not signed in" do
     describe "GET /warehouses" do
@@ -192,11 +192,9 @@ RSpec.describe "Warehouses", type: :request do
       end
 
       context "when delete fails" do
-        before do
-          allow(Warehouses::DestroyService).to receive(:call) { ServiceResponse.error }
-        end
-
         it "does not delete the warehouse and redirects with an error message" do
+          allow(Warehouses::DestroyService).to receive(:call) { ServiceResponse.error }
+
           delete warehouse_path(warehouse)
 
           expect(response).to redirect_to(warehouses_path)

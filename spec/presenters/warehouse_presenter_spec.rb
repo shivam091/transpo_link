@@ -5,9 +5,9 @@
 # spec/presenters/warehouse_presenter_spec.rb
 
 RSpec.describe WarehousePresenter, type: :presenter do
-  let(:warehouse) { instance_double("Warehouse", total_capacity: 1000, capacity_unit: "kg", latitude: 45.6789, longitude: -123.4567) }
-  let(:view_context) { double("view_context") }
-  let(:presenter) { described_class.new(warehouse, view_context) }
+  let!(:warehouse) { instance_double("Warehouse", total_capacity: 1000, capacity_unit: "kg", latitude: 45.6789, longitude: -123.4567) }
+  let!(:view_context) { double("view_context") }
+  let!(:presenter) { described_class.new(warehouse, view_context) }
 
   describe "#capacity" do
     it "returns formatted capacity with unit" do
@@ -15,8 +15,8 @@ RSpec.describe WarehousePresenter, type: :presenter do
     end
 
     it "returns blank if values are nil" do
-      allow(warehouse).to receive(:total_capacity){ nil }
-      allow(warehouse).to receive(:capacity_unit){ nil }
+      allow(warehouse).to receive(:total_capacity) { nil }
+      allow(warehouse).to receive(:capacity_unit) { nil }
 
       expect(presenter.capacity).to eq("")
     end
@@ -28,7 +28,7 @@ RSpec.describe WarehousePresenter, type: :presenter do
     end
 
     it "returns nil if latitude is nil" do
-      allow(warehouse).to receive(:latitude){ nil }
+      allow(warehouse).to receive(:latitude) { nil }
 
       expect(presenter.formatted_latitude).to be_nil
     end
@@ -40,7 +40,7 @@ RSpec.describe WarehousePresenter, type: :presenter do
     end
 
     it "returns nil if longitude is nil" do
-      allow(warehouse).to receive(:longitude){ nil }
+      allow(warehouse).to receive(:longitude) { nil }
 
       expect(presenter.formatted_longitude).to be_nil
     end

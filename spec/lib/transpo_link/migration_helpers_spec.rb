@@ -7,16 +7,16 @@
 require "spec_helper"
 
 RSpec.describe TranspoLink::MigrationHelpers do
-  let(:dummy_class) { Class.new { extend TranspoLink::MigrationHelpers } }
-  let(:enum_name) { "business_categories" }
+  let!(:dummy_class) { Class.new { extend TranspoLink::MigrationHelpers } }
+  let!(:enum_name) { "business_categories" }
 
   describe "#enum_values" do
     before do
       allow(ActiveRecord::Base.connection).to receive(:execute) {
         [
-          { "enumlabel" => "small" },
-          { "enumlabel" => "medium" },
-          { "enumlabel" => "large" }
+          {"enumlabel" => "small"},
+          {"enumlabel" => "medium"},
+          {"enumlabel" => "large"}
         ]
       }
     end
@@ -36,6 +36,7 @@ RSpec.describe TranspoLink::MigrationHelpers do
       SQL
 
       expect(ActiveRecord::Base.connection).to receive(:execute).with(query)
+
       dummy_class.enum_values(enum_name)
     end
 

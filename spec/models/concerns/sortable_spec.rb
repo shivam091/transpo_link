@@ -20,7 +20,7 @@ RSpec.describe Sortable do
   end
 
   after(:all) do
-    ActiveRecord::Base.connection.drop_table(:sortable_models, if_exists: true)
+    connection.drop_table(:sortable_models, if_exists: true)
     Object.send(:remove_const, :SortableModel)
   end
 

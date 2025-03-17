@@ -21,20 +21,20 @@ class CreateTaxRates < ActiveRecord::Migration[8.0]
       t.index [:country, :tax_identifier_type], using: :btree
       t.index [:tax_identifier_type, :country, :business_category, :valid_from], using: :btree, unique: true
 
-      t.check_constraint "country IS NOT NULL AND country <> ''", name: "check_tax_rates_country_presence"
+      t.check_constraint "country IS NOT NULL AND country <> ''", name: :check_tax_rates_country_presence
 
-      t.check_constraint "tax_identifier_type IS NOT NULL AND tax_identifier_type <> ''", name: "check_tax_rates_tax_identifier_type_presence"
+      t.check_constraint "tax_identifier_type IS NOT NULL AND tax_identifier_type <> ''", name: :check_tax_rates_tax_identifier_type_presence
 
-      t.check_constraint "business_category IS NOT NULL", name: "check_tax_rates_business_category_presence"
-      t.check_constraint "business_category IN (#{enum_values('business_categories')})", name: "check_tax_rates_business_category_inclusion"
+      t.check_constraint "business_category IS NOT NULL", name: :check_tax_rates_business_category_presence
+      t.check_constraint "business_category IN (#{enum_values('business_categories')})", name: :check_tax_rates_business_category_inclusion
 
-      t.check_constraint "rate IS NOT NULL", name: "check_tax_rates_rate_presence"
-      t.check_constraint "rate >= 0 AND rate <= 100", name: "check_tax_rates_rate_numericality"
+      t.check_constraint "rate IS NOT NULL", name: :check_tax_rates_rate_presence
+      t.check_constraint "rate >= 0 AND rate <= 100", name: :check_tax_rates_rate_numericality
 
-      t.check_constraint "valid_from IS NOT NULL", name: "check_tax_rates_valid_from_presence"
-      t.check_constraint "valid_from >= CURRENT_DATE", name: "check_tax_rates_valid_from_future"
+      t.check_constraint "valid_from IS NOT NULL", name: :check_tax_rates_valid_from_presence
+      t.check_constraint "valid_from >= CURRENT_DATE", name: :check_tax_rates_valid_from_future
 
-      t.check_constraint "valid_to IS NULL OR valid_to > valid_from", name: "check_tax_rates_valid_to_comparison"
+      t.check_constraint "valid_to IS NULL OR valid_to > valid_from", name: :check_tax_rates_valid_to_comparison
     end
   end
 end

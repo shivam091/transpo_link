@@ -7,14 +7,14 @@
 require "spec_helper"
 
 RSpec.describe ApplicationPresenter do
-  let(:model) { double("Model", name: "Test Model") }
-  let(:view_context) { double("view_context") }
-  let(:presenter_class) do
+  let!(:model) { double("Model", name: "Test Model") }
+  let!(:view_context) { double("view_context") }
+  let!(:presenter_class) do
     Class.new(ApplicationPresenter) do
       presents :model
     end
   end
-  let(:presenter) { presenter_class.new(model, view_context) }
+  let!(:presenter) { presenter_class.new(model, view_context) }
 
   describe "#initialize" do
     it "assigns the model and view context" do

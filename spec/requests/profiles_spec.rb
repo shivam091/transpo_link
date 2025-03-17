@@ -7,8 +7,8 @@
 require "spec_helper"
 
 RSpec.describe "Profiles", type: :request do
-  let(:valid_attributes) { {first_name: "John"} }
-  let(:invalid_attributes) { {first_name: ""} }
+  let!(:valid_attributes) { {first_name: "John"} }
+  let!(:invalid_attributes) { {first_name: ""} }
 
   context "when user is not signed in" do
     describe "GET /profile" do
