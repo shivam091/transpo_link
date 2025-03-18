@@ -467,8 +467,8 @@ RSpec.describe TaxIdentifierValidator do
       context "when tax identifier is valid for country" do
         where(:tax_identifier, :country) do
           "10-12345678-9" | "PE"
-          "20-12345678-0" | "PE"
-          "21-12345678-0" | "PE"
+          "15-87654321-0" | "PE"
+          "17-16273849-0" | "PE"
           "8-12345678"    | "PA"
           "8-87654321"    | "PA"
           "1101234567890" | "EC"
@@ -484,7 +484,7 @@ RSpec.describe TaxIdentifierValidator do
 
       context "when tax identifier is invalid for country" do
         where(:tax_identifier, :country) do
-          "10123456789"   | "PE"
+          "20-87654321-0" | "PE"
           "20123456780"   | "PE"
           "21123456780"   | "PE"
           "2-12345678"    | "PA"

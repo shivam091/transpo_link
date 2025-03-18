@@ -357,9 +357,8 @@ RSpec.describe BusinessIdentifierValidator do
 
       context "when business identifier is valid for country" do
         where(:business_identifier, :country) do
-          "10-12345678-9" | "PE"
+          "20-87654321-0" | "PE"
           "20-12345678-0" | "PE"
-          "21-12345678-0" | "PE"
           "8-12345678"    | "PA"
           "8-87654321"    | "PA"
           "1101234567890" | "EC"
@@ -493,6 +492,7 @@ RSpec.describe BusinessIdentifierValidator do
         end
       end
     end
+
     describe "cif" do
       let(:legal_identifier) do
         BusinessIdentifier.new(business_identifier: business_identifier, business_identifier_type: "cif", country: "ES")
