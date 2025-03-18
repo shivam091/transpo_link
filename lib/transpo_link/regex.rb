@@ -112,7 +112,10 @@ module TranspoLink
       },
       nif: {
         ES: /^[0-9]{8}[A-Z]$/
-      }
+      },
+      kpp: {
+        RU: /^[0-9]{9}$/
+      },
     }.freeze
 
     BUSINESS_IDENTIFIER_PATTERNS = {

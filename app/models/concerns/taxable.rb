@@ -62,6 +62,7 @@ module Taxable
 
       # Russia
       inn: "inn",                           # Taxpayer Identification Number
+      kpp: "kpp",                           # Tax Registration Reason Code
 
       # South Korea
       brn_kr: "brn_kr",                     # Business Registration Number
@@ -131,6 +132,7 @@ module Taxable
       trn:     %w[AE],
       kra_pin: %w[KE],
       inn:     %w[RU],
+      kpp:     %w[RU],
       brn_kr:  %w[KR],
       mst:     %w[VN],
       tin_ph:  %w[PH],

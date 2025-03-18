@@ -1078,5 +1078,37 @@ RSpec.describe TaxIdentifierValidator do
         end
       end
     end
+
+    describe "kpp" do
+      let(:legal_identifier) do
+        TaxIdentifier.new(tax_identifier: tax_identifier, tax_identifier_type: "kpp", country: "RU")
+      end
+
+      context "when tax identifier is valid for country" do
+        where(:tax_identifier) do
+          [
+            "123412345",
+            "987698765"
+          ]
+        end
+
+        with_them do
+          it { expect(legal_identifier).to be_valid }
+        end
+      end
+
+      context "when tax identifier is invalid for country" do
+        where(:tax_identifier) do
+          [
+            "1234AB567",
+            "1234123456"
+          ]
+        end
+
+        with_them do
+          it { expect(legal_identifier).to be_invalid }
+        end
+      end
+    end
   end
 end
