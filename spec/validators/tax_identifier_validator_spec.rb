@@ -616,9 +616,9 @@ RSpec.describe TaxIdentifierValidator do
         where(:tax_identifier) do
           [
             "20-12345678-9",
-            "27-87654321-0",
             "23-12345678-9",
-            "30-87654321-0"
+            "25-87654321-0",
+            "27-87654321-0"
           ]
         end
 

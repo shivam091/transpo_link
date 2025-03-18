@@ -322,10 +322,9 @@ RSpec.describe BusinessIdentifierValidator do
       context "when business identifier is valid for country" do
         where(:business_identifier) do
           [
-            "20-12345678-9",
-            "27-87654321-0",
-            "23-12345678-9",
-            "30-87654321-0"
+            "30-87654321-0",
+            "33-12345678-9",
+            "34-87654321-0"
           ]
         end
 
