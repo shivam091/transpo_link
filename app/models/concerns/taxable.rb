@@ -27,6 +27,7 @@ module Taxable
 
       # European Union (EU)
       vatin: "vatin",                       # VAT Identification Number
+      nie: "nie",                           # Foreigner Identification Number
       nif: "nif",                           # Tax Identification Number
 
       # United Kingdom
@@ -111,6 +112,7 @@ module Taxable
       tan:     %w[IN],
       gstin:   %w[IN],
       vatin:   EU_COUNTRIES,
+      nie:     %w[ES],
       nif:     %w[ES],
       utr:     %w[GB],
       bn:      %w[CA],

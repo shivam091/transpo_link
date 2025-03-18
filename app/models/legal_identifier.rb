@@ -42,6 +42,9 @@ class LegalIdentifier < ApplicationRecord
     # Canada
     bn: "bn",                               # Business Number
 
+    # Spain
+    cif: "cif",                             # Tax Identification Certificate
+
     # France
     siret: "siret",                         # Business Establishment Identification Number
     siren: "siren",                         # Business Identification Number
@@ -114,6 +117,7 @@ class LegalIdentifier < ApplicationRecord
     nzbn:     %w[NZ],
     cnpj:     %w[BR],
     bn:       %w[CA],
+    cif:      %w[ES],
     siret:    %w[FR],
     siren:    %w[FR],
     crn:      %w[GB IE],

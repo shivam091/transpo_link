@@ -74,6 +74,12 @@ module TranspoLink
       inn: {
         RU: /^(?!0{10,12}|([0-9])\1{9,11})([0-9]{4}\s?[0-9]{5}\s?[0-9]{1}|[0-9]{4}\s?[0-9]{6}\s?[0-9]{2})$/
       },
+      nie: {
+        ES: /^[XY][0-9]{7}[A-Z]$/
+      },
+      nif: {
+        ES: /^[0-9]{8}[A-Z]$/
+      }
     }.freeze
 
     BUSINESS_IDENTIFIER_PATTERNS = {
@@ -119,6 +125,9 @@ module TranspoLink
       vkn: {
         TR: /^(?!0{10}|([0-9])\1{9})[0-9]{10}$/
       },
+      cif: {
+        ES: /^[A-Z][0-9]{8}$/
+      }
     }.freeze
   end
 end
