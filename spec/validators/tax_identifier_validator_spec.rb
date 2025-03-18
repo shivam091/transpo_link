@@ -1110,5 +1110,37 @@ RSpec.describe TaxIdentifierValidator do
         end
       end
     end
+
+    describe "rtn" do
+      let(:legal_identifier) do
+        TaxIdentifier.new(tax_identifier: tax_identifier, tax_identifier_type: "rtn", country: "HN")
+      end
+
+      context "when tax identifier is valid for country" do
+        where(:tax_identifier) do
+          [
+            "08011985123456",
+            "08011990123457"
+          ]
+        end
+
+        with_them do
+          it { expect(legal_identifier).to be_valid }
+        end
+      end
+
+      context "when tax identifier is invalid for country" do
+        where(:tax_identifier) do
+          [
+            "12345678901234",
+            "08011985A23456"
+          ]
+        end
+
+        with_them do
+          it { expect(legal_identifier).to be_invalid }
+        end
+      end
+    end
   end
 end

@@ -80,7 +80,10 @@ module Taxable
       uen: "uen",                           # Unique Entity Number
 
       # Colombia
-      rut: "rut"                            # Single Tax Registry
+      rut: "rut",                           # Single Tax Registry
+
+      # Honduras
+      rtn: "rtn"                            # Registro Tributario Nacional
     }
 
     validates :tax_identifier_type,
@@ -138,7 +141,8 @@ module Taxable
       tin_ph:  %w[PH],
       tin_th:  %w[TH],
       uen:     %w[SG],
-      rut:     %w[CO]
+      rut:     %w[CO],
+      rtn:     %w[HN]
     }
   end
 

@@ -116,6 +116,9 @@ module TranspoLink
       kpp: {
         RU: /^[0-9]{9}$/
       },
+      rtn: {
+        HN: /^(0[1-9]|1[0-2])(0[1-9]|[12][0-9]|3[01])[0-9]{4}[0-9]{5}[0-9]$/
+      },
     }.freeze
 
     BUSINESS_IDENTIFIER_PATTERNS = {
@@ -163,7 +166,10 @@ module TranspoLink
       },
       cif: {
         ES: /^[A-Z][0-9]{8}$/
-      }
+      },
+      rtn: {
+        HN: /^(0[1-9]|1[0-2])(0[1-9]|[12][0-9]|3[01])[0-9]{4}[0-9]{5}[0-9]$/
+      },
     }.freeze
   end
 end

@@ -524,5 +524,37 @@ RSpec.describe BusinessIdentifierValidator do
         end
       end
     end
+
+    describe "rtn" do
+      let(:legal_identifier) do
+        BusinessIdentifier.new(business_identifier: business_identifier, business_identifier_type: "rtn", country: "HN")
+      end
+
+      context "when business identifier is valid for country" do
+        where(:business_identifier) do
+          [
+            "08011985123456",
+            "08011990123457"
+          ]
+        end
+
+        with_them do
+          it { expect(legal_identifier).to be_valid }
+        end
+      end
+
+      context "when business identifier is invalid for country" do
+        where(:business_identifier) do
+          [
+            "12345678901234",
+            "08011985A23456"
+          ]
+        end
+
+        with_them do
+          it { expect(legal_identifier).to be_invalid }
+        end
+      end
+    end
   end
 end

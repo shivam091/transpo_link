@@ -100,6 +100,9 @@ class LegalIdentifier < ApplicationRecord
 
     # Bangladesh
     brn_bd: "brn_bd",                       # Business Registration Number
+
+    # Honduras
+    rtn: "rtn",                             # Registro Tributario Nacional
   }, prefix: true
 
   normalizes :business_identifier, with: -> business_identifier { business_identifier.strip.upcase }
@@ -125,7 +128,7 @@ class LegalIdentifier < ApplicationRecord
     rfc:      %w[MX],
     cuit:     %w[AR],
     ruc:      %w[PE PY EC PA],
-    nit:      %w[CO BO GT SV HN],
+    nit:      %w[CO BO GT SV],
     hrb:      %w[DE],
     ico:      %w[CZ SK],
     npwp:     %w[ID],
@@ -138,6 +141,7 @@ class LegalIdentifier < ApplicationRecord
     vkn:      %w[TR],
     cip:      %w[ZA],
     brn_bd:   %w[BD],
+    rtn:      %w[HN]
   }
 
   validates :user_id,

@@ -504,7 +504,8 @@
           tin_ph: "TIN_PH – Taxpayer Identification Number",
           tin_th: "TIN_TH – Taxpayer Identification Number",
           uen: "UEN – Unique Entity Number",
-          rut: "RUT – Single Tax Registry"
+          rut: "RUT – Single Tax Registry",
+          rtn: "RTN – Registro Tributario Nacional",
         },
         entity_types: {
           business: "Business",
@@ -542,6 +543,7 @@
           vkn: "VKN – Vergi Kimlik Numarası",
           cip: "CIP – Company Identification Number",
           brn_bd: "BRN_BD – Business Registration Number",
+          rtn: "RTN – Registro Tributario Nacional",
         }
       },
       tax_rate: {
@@ -581,7 +583,8 @@
           tin_ph: "TIN_PH – Taxpayer Identification Number",
           tin_th: "TIN_TH – Taxpayer Identification Number",
           uen: "UEN – Unique Entity Number",
-          rut: "RUT – Single Tax Registry"
+          rut: "RUT – Single Tax Registry",
+          rtn: "RTN – Registro Tributario Nacional",
         },
         business_categories: {
           b2b: "Business to Business (B2B)",
