@@ -102,7 +102,7 @@ module Taxable
     ].freeze
 
     TAX_IDENTIFIER_TYPE_COUNTRY_COMBINATIONS = {
-      vat:     EU_COUNTRIES + %w[GB CH NO TR BR ZA AE SA EG NG],
+      vat:     EU_COUNTRIES + %w[GB CH NO RS ZA SA EG NG],
       gst:     %w[AU NZ CA IN SG MY],
       tin:     %w[US IN PH VN CN KE],
       ein:     %w[US],
