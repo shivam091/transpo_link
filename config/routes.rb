@@ -3,11 +3,11 @@
 # -*- warn_indent: true -*-
 
 Rails.application.routes.draw do
-  get "up" => "rails/health#show", as: :rails_health_check
-
   favicon_redirect = redirect do |_params, _request|
     ActionController::Base.helpers.asset_url(TranspoLink::Favicon.main)
   end
+
+  get "up" => "rails/health#show", as: :rails_health_check
   get "favicon.png", to: favicon_redirect, as: :favicon_png
   get "favicon.ico", to: favicon_redirect, as: :favicon_ico
 
@@ -25,8 +25,8 @@ Rails.application.routes.draw do
 
   concern :toggleable do
     collection do
-       get :active
-       get :inactive
+      get :active, action: :index, defaults: {status: "active"}
+      get :inactive, action: :index, defaults: {status: "inactive"}
     end
   end
 
@@ -45,16 +45,11 @@ Rails.application.routes.draw do
   resources :legal_identifiers, path: "legal-identifiers", except: :show
   resources :tax_rates, path: "tax-rates", except: :show
   resources :product_categories, path: "product-categories", except: :show
-  resources :products, concerns: :reviewable do
-    collection do
-      get "active", action: :index, defaults: {status: "active"}
-      get "inactive", action: :index, defaults: {status: "inactive"}
-    end
-  end
+  resources :products, concerns: [:reviewable, :toggleable]
   resources :feedbacks, only: [:index, :show] do
     collection do
-      get "read", action: :index, defaults: {status: "read"}
-      get "unread", action: :index, defaults: {status: "unread"}
+      get :read, action: :index, defaults: {status: "read"}
+      get :unread, action: :index, defaults: {status: "unread"}
     end
     member do
       match :mark_as_read, path: "mark-as-read", via: [:put, :patch]

@@ -7,32 +7,20 @@
 require "spec_helper"
 
 RSpec.describe "Warehouses", type: :request do
-  let!(:warehouse) { create(:warehouse, :active) }
-  let!(:inactive_warehouse) { create(:warehouse) }
   let!(:manager) { create(:manager) }
   let!(:supplier) { create(:supplier) }
 
+  let!(:active_warehouse) { create(:warehouse, :active) }
+  let!(:inactive_warehouse) { create(:warehouse) }
+
   let!(:valid_attributes) do
-    attributes_for(:warehouse, name: "New warehouse")
-      .merge(manager_ids: [manager.id], supplier_ids: [supplier.id])
+    attributes_for(:warehouse, name: "New warehouse").merge(manager_ids: [manager.id], supplier_ids: [supplier.id])
   end
   let!(:invalid_attributes) { attributes_for(:warehouse, name: "") }
 
   context "when user is not signed in" do
     describe "GET /warehouses" do
       subject { get warehouses_path }
-
-      it { is_expected.to require_sign_in }
-    end
-
-    describe "GET /warehouses/active" do
-      subject { get active_warehouses_path }
-
-      it { is_expected.to require_sign_in }
-    end
-
-    describe "GET /warehouses/inactive" do
-      subject { get inactive_warehouses_path }
 
       it { is_expected.to require_sign_in }
     end
@@ -50,25 +38,25 @@ RSpec.describe "Warehouses", type: :request do
     end
 
     describe "GET /warehouses/:id/edit" do
-      subject { get edit_warehouse_path(warehouse) }
+      subject { get edit_warehouse_path(active_warehouse) }
 
       it { is_expected.to require_sign_in }
     end
 
     describe "PUT|PATCH /warehouses/:id" do
-      subject { put warehouse_path(warehouse) }
+      subject { put warehouse_path(active_warehouse) }
 
       it { is_expected.to require_sign_in }
     end
 
     describe "GET /warehouses/:id" do
-      subject { get warehouse_path(warehouse) }
+      subject { get warehouse_path(active_warehouse) }
 
       it { is_expected.to require_sign_in }
     end
 
     describe "DELETE /warehouses/:id" do
-      subject { delete warehouse_path(warehouse) }
+      subject { delete warehouse_path(active_warehouse) }
 
       it { is_expected.to require_sign_in }
     end
@@ -81,30 +69,27 @@ RSpec.describe "Warehouses", type: :request do
       it "renders list of all warehouses with pagination" do
         get warehouses_path
 
+        expect(controller_assigns(:warehouses)).to include(active_warehouse)
+        expect(controller_assigns(:warehouses)).to include(inactive_warehouse)
         expect(controller_assigns(:pagination_metadata)).to be_present
-        expect(controller_assigns(:warehouses)).to include(warehouse)
         expect(response).to have_http_status(:ok)
       end
-    end
 
-    describe "GET /warehouses/active" do
       it "renders list of active warehouses with pagination" do
         get active_warehouses_path
 
-        expect(controller_assigns(:pagination_metadata)).to be_present
-        expect(controller_assigns(:warehouses)).to include(warehouse)
+        expect(controller_assigns(:warehouses)).to include(active_warehouse)
         expect(controller_assigns(:warehouses)).to exclude(inactive_warehouse)
+        expect(controller_assigns(:pagination_metadata)).to be_present
         expect(response).to have_http_status(:ok)
       end
-    end
 
-    describe "GET /warehouses/inactive" do
       it "renders list of inactive warehouses with pagination" do
         get inactive_warehouses_path
 
-        expect(controller_assigns(:pagination_metadata)).to be_present
         expect(controller_assigns(:warehouses)).to include(inactive_warehouse)
-        expect(controller_assigns(:warehouses)).to exclude(warehouse)
+        expect(controller_assigns(:warehouses)).to exclude(active_warehouse)
+        expect(controller_assigns(:pagination_metadata)).to be_present
         expect(response).to have_http_status(:ok)
       end
     end
@@ -140,9 +125,9 @@ RSpec.describe "Warehouses", type: :request do
 
     describe "GET /warehouses/:id/edit" do
       it "renders warehouse edit page" do
-        get edit_warehouse_path(warehouse)
+        get edit_warehouse_path(active_warehouse)
 
-        expect(controller_assigns(:warehouse)).to eq(warehouse)
+        expect(controller_assigns(:warehouse)).to eq(active_warehouse)
         expect(response).to have_http_status(:ok)
       end
     end
@@ -150,9 +135,9 @@ RSpec.describe "Warehouses", type: :request do
     describe "PUT|PATCH /warehouses/:id" do
       context "when provided attributes are valid" do
         it "updates the warehouse and redirects" do
-          put warehouse_path(warehouse), params: {warehouse: valid_attributes}, as: :turbo_stream
+          put warehouse_path(active_warehouse), params: {warehouse: valid_attributes}, as: :turbo_stream
 
-          expect(warehouse.reload.name).to eq("New warehouse")
+          expect(active_warehouse.reload.name).to eq("New warehouse")
           expect(response).to redirect_to(warehouses_path)
           expect(flash[:notice]).to eq("Warehouse was successfully updated.")
           expect(response).to have_http_status(:see_other)
@@ -161,7 +146,7 @@ RSpec.describe "Warehouses", type: :request do
 
       context "when provided attributes are invalid" do
         it "does not update the warehouse and renders errors" do
-          put warehouse_path(warehouse), params: {warehouse: invalid_attributes}, as: :turbo_stream
+          put warehouse_path(active_warehouse), params: {warehouse: invalid_attributes}, as: :turbo_stream
 
           expect(flash[:alert]).to eq("Warehouse could not be updated.")
           expect(response.media_type).to eq(Mime[:turbo_stream])
@@ -173,9 +158,9 @@ RSpec.describe "Warehouses", type: :request do
 
     describe "GET /warehouse/:id" do
       it "renders warehouse details page" do
-        get warehouse_path(warehouse)
+        get warehouse_path(active_warehouse)
 
-        expect(controller_assigns(:warehouse)).to eq(warehouse)
+        expect(controller_assigns(:warehouse)).to eq(active_warehouse)
         expect(response).to have_http_status(:ok)
       end
     end
@@ -183,7 +168,7 @@ RSpec.describe "Warehouses", type: :request do
     describe "DELETE /warehouse/:id" do
       context "when valid id" do
         it "deletes the warehouse and redirects" do
-          delete warehouse_path(warehouse)
+          delete warehouse_path(active_warehouse)
 
           expect(response).to redirect_to(warehouses_path)
           expect(flash[:info]).to eq("Warehouse was successfully deleted.")
@@ -195,7 +180,7 @@ RSpec.describe "Warehouses", type: :request do
         it "does not delete the warehouse and redirects with an error message" do
           allow(Warehouses::DestroyService).to receive(:call) { ServiceResponse.error }
 
-          delete warehouse_path(warehouse)
+          delete warehouse_path(active_warehouse)
 
           expect(response).to redirect_to(warehouses_path)
           expect(flash[:alert]).to eq("Warehouse could not be deleted.")

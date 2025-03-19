@@ -8,19 +8,11 @@ class WarehousesController < ApplicationController
 
   # GET /warehouses
   def index
-    @warehouses = Warehouse.all
-    @warehouses, @pagination_metadata = @warehouses.paginate(page: params[:page])
-  end
-
-  # GET /warehouses/active
-  def active
-    @warehouses = Warehouse.active
-    @warehouses, @pagination_metadata = @warehouses.paginate(page: params[:page])
-  end
-
-  # GET /warehouses/inactive
-  def inactive
-    @warehouses = Warehouse.inactive
+    @warehouses = case params[:status]
+                  when "active"   then Warehouse.active
+                  when "inactive" then Warehouse.inactive
+                  else                 Warehouse.all
+                  end
     @warehouses, @pagination_metadata = @warehouses.paginate(page: params[:page])
   end
 
