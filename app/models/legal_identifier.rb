@@ -167,6 +167,10 @@ class LegalIdentifier < ApplicationRecord
             },
             tax_identifier: true,
             reduce: true
+  validates :business_identifier_type, :business_identifier,
+            absence: {message: :absence},
+            if: :individual?,
+            reduce: true
   validates :business_identifier_type,
             presence: true,
             inclusion: {
@@ -184,10 +188,6 @@ class LegalIdentifier < ApplicationRecord
             },
             business_identifier: true,
             if: :business?,
-            reduce: true
-  validates :business_identifier_type, :business_identifier,
-            absence: {message: :absence},
-            if: :individual?,
             reduce: true
   validate :business_identifier_type_country_combination
 

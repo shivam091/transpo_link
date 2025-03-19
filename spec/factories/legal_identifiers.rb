@@ -13,7 +13,7 @@ FactoryBot.define do
     trait :for_business do
       entity_type { "business" }
       business_identifier_type { "cin" }
-      business_identifier { "L12345MH2025LLP67890" }
+      business_identifier { "L12345MH2023PLC000789" }
     end
   end
 end

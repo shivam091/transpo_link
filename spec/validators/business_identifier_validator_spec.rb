@@ -65,6 +65,38 @@ RSpec.describe BusinessIdentifierValidator do
       end
     end
 
+    describe "cin" do
+      let(:legal_identifier) do
+        BusinessIdentifier.new(business_identifier: business_identifier, business_identifier_type: "cin", country: "IN")
+      end
+
+      context "when business identifier is valid for country" do
+        where(:business_identifier) do
+          [
+            "L12345MH2023PLC000789",
+            "U12345MH2021OPC123456"
+          ]
+        end
+
+        with_them do
+          it { expect(legal_identifier).to be_valid }
+        end
+      end
+
+      context "when business identifier is invalid for country" do
+        where(:business_identifier) do
+          [
+            "L123456MH2023PLC00078",
+            "Z12345MH2021OPC123456"
+          ]
+        end
+
+        with_them do
+          it { expect(legal_identifier).to be_invalid }
+        end
+      end
+    end
+
     describe "llpin" do
       let(:legal_identifier) do
         BusinessIdentifier.new(business_identifier: business_identifier, business_identifier_type: "llpin", country: "IN")
@@ -659,6 +691,72 @@ RSpec.describe BusinessIdentifierValidator do
             "913A0110579334423J",
             "9131011@579334423J",
             "91310110579334423"
+          ]
+        end
+
+        with_them do
+          it { expect(legal_identifier).to be_invalid }
+        end
+      end
+    end
+
+    describe "nzbn" do
+      let(:legal_identifier) do
+        BusinessIdentifier.new(business_identifier: business_identifier, business_identifier_type: "nzbn", country: "NZ")
+      end
+
+      context "when business identifier is valid for country" do
+        where(:business_identifier) do
+          [
+            "9429038398761",
+            "9429039501974"
+          ]
+        end
+
+        with_them do
+          it { expect(legal_identifier).to be_valid }
+        end
+      end
+
+      context "when business identifier is invalid for country" do
+        where(:business_identifier) do
+          [
+            "171003406287654",
+            "1710034062",
+            "AR1234567"
+          ]
+        end
+
+        with_them do
+          it { expect(legal_identifier).to be_invalid }
+        end
+      end
+    end
+
+    describe "brn_kr" do
+      let(:legal_identifier) do
+        BusinessIdentifier.new(business_identifier: business_identifier, business_identifier_type: "brn_kr", country: "KR")
+      end
+
+      context "when business identifier is valid for country" do
+        where(:business_identifier) do
+          [
+            "123-45-67890",
+            "987-65-43210"
+          ]
+        end
+
+        with_them do
+          it { expect(legal_identifier).to be_valid }
+        end
+      end
+
+      context "when business identifier is invalid for country" do
+        where(:business_identifier) do
+          [
+            "123-456-7890",
+            "1234-56-78901",
+            "123-45-6789A"
           ]
         end
 

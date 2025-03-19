@@ -70,12 +70,6 @@ module Taxable
       # Vietnam
       mst: "mst",                           # Tax Identification Number
 
-      # Philippines
-      tin_ph: "tin_ph",                     # Taxpayer Identification Number
-
-      # Thailand
-      tin_th: "tin_th",                     # Taxpayer Identification Number
-
       # Singapore
       uen: "uen",                           # Unique Entity Number
 
@@ -108,7 +102,7 @@ module Taxable
     TAX_IDENTIFIER_TYPE_COUNTRY_COMBINATIONS = {
       vat:     EU_COUNTRIES + %w[GB CH NO RS ZA SA EG NG],
       gst:     %w[AU NZ CA IN SG MY],
-      tin:     %w[US IN PH VN CN KE],
+      tin:     %w[US IN PH TH VN CN KE],
       ein:     %w[US],
       ssn:     %w[US],
       itin:    %w[US],
@@ -138,8 +132,6 @@ module Taxable
       kpp:     %w[RU],
       brn_kr:  %w[KR],
       mst:     %w[VN],
-      tin_ph:  %w[PH],
-      tin_th:  %w[TH],
       uen:     %w[SG],
       rut:     %w[CO],
       rtn:     %w[HN]

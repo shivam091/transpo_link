@@ -58,7 +58,7 @@ RSpec.describe LegalIdentifier, type: :model do
   end
 
   describe "normalized attributes" do
-    it { is_expected.to normalize(:business_identifier).from("  l12345Mh2025llP67890  ").to("L12345MH2025LLP67890") }
+    it { is_expected.to normalize(:business_identifier).from("  l12345mh2023PLC000789  ").to("L12345MH2023PLC000789") }
   end
 
   describe "constants" do
