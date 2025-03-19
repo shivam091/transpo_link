@@ -633,5 +633,39 @@ RSpec.describe BusinessIdentifierValidator do
         end
       end
     end
+
+    describe "uscc" do
+      let(:legal_identifier) do
+        BusinessIdentifier.new(business_identifier: business_identifier, business_identifier_type: "uscc", country: "CN")
+      end
+
+      context "when business identifier is valid for country" do
+        where(:business_identifier) do
+          [
+            "91310110579334423J",
+            "91110108100012345X",
+            "123456789012345678"
+          ]
+        end
+
+        with_them do
+          it { expect(legal_identifier).to be_valid }
+        end
+      end
+
+      context "when business identifier is invalid for country" do
+        where(:business_identifier) do
+          [
+            "913A0110579334423J",
+            "9131011@579334423J",
+            "91310110579334423"
+          ]
+        end
+
+        with_them do
+          it { expect(legal_identifier).to be_invalid }
+        end
+      end
+    end
   end
 end

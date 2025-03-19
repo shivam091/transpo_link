@@ -544,6 +544,7 @@
           cip: "CIP – Company Identification Number",
           brn_bd: "BRN_BD – Business Registration Number",
           rtn: "RTN – Registro Tributario Nacional",
+          uscc: "USCC – Unified Social Credit Code",
         }
       },
       tax_rate: {

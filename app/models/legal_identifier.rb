@@ -103,6 +103,9 @@ class LegalIdentifier < ApplicationRecord
 
     # Honduras
     rtn: "rtn",                             # Registro Tributario Nacional
+
+    # China
+    uscc: "uscc"                            # Unified Social Credit Code
   }, prefix: true
 
   normalizes :business_identifier, with: -> business_identifier { business_identifier.strip.upcase }
@@ -141,7 +144,8 @@ class LegalIdentifier < ApplicationRecord
     vkn:      %w[TR],
     cip:      %w[ZA],
     brn_bd:   %w[BD],
-    rtn:      %w[HN]
+    rtn:      %w[HN],
+    uscc:     %w[CN]
   }
 
   validates :user_id,
