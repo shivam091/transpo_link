@@ -36,14 +36,14 @@ class CreateProducts < ActiveRecord::Migration[8.0]
       t.check_constraint "CHAR_LENGTH(sku) <= 50", name: :check_products_sku_length
 
       t.check_constraint "min_stock_threshold IS NOT NULL", name: :check_products_min_stock_threshold_presence
-      t.check_constraint "min_stock_threshold >= 0", name: :check_products_min_stock_threshold_numericality
+      t.check_constraint "min_stock_threshold > 0", name: :check_products_min_stock_threshold_numericality
 
       t.check_constraint "capacity_unit IS NOT NULL AND capacity_unit  <> ''", name: :check_products_capacity_unit_presence
 
       t.check_constraint "currency IS NOT NULL AND currency  <> ''", name: :check_products_currency_presence
 
       t.check_constraint "cost_price IS NOT NULL", name: :check_products_cost_price_presence
-      t.check_constraint "cost_price >= 0.0", name: :check_products_cost_price_numericality
+      t.check_constraint "cost_price > 0.0", name: :check_products_cost_price_numericality
     end
   end
 end

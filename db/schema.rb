@@ -189,7 +189,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_10_041232) do
     t.check_constraint "currency IS NOT NULL AND currency::text <> ''::text", name: "check_product_prices_currency_presence"
     t.check_constraint "min_quantity >= 1", name: "check_product_prices_min_quantity_numericality"
     t.check_constraint "min_quantity IS NOT NULL", name: "check_product_prices_min_quantity_presence"
-    t.check_constraint "unit_price >= 0.0", name: "check_product_prices_unit_price_numericality"
+    t.check_constraint "unit_price > 0.0", name: "check_product_prices_unit_price_numericality"
     t.check_constraint "unit_price IS NOT NULL", name: "check_product_prices_unit_price_presence"
   end
 
@@ -216,10 +216,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_10_041232) do
     t.check_constraint "char_length(description) <= 2000", name: "check_products_description_length"
     t.check_constraint "char_length(name::text) <= 255 AND char_length(name::text) >= 2", name: "check_products_name_length"
     t.check_constraint "char_length(sku::text) <= 50", name: "check_products_sku_length"
-    t.check_constraint "cost_price >= 0.0", name: "check_products_cost_price_numericality"
+    t.check_constraint "cost_price > 0.0", name: "check_products_cost_price_numericality"
     t.check_constraint "cost_price IS NOT NULL", name: "check_products_cost_price_presence"
     t.check_constraint "currency IS NOT NULL AND currency::text <> ''::text", name: "check_products_currency_presence"
-    t.check_constraint "min_stock_threshold >= 0", name: "check_products_min_stock_threshold_numericality"
+    t.check_constraint "min_stock_threshold > 0", name: "check_products_min_stock_threshold_numericality"
     t.check_constraint "min_stock_threshold IS NOT NULL", name: "check_products_min_stock_threshold_presence"
     t.check_constraint "name IS NOT NULL AND name::text <> ''::text", name: "check_products_name_presence"
     t.check_constraint "sku IS NOT NULL AND sku::text <> ''::text", name: "check_products_sku_presence"

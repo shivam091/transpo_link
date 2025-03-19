@@ -30,6 +30,10 @@ Rails.application.routes.draw do
     end
   end
 
+  concern :reviewable do
+    resources :feedbacks, only: [:new, :create]
+  end
+
   resource :profile, only: [:show, :edit, :update]
   resource :preference, only: [:show, :edit, :update]
   resource :locale, only: [:edit, :update]
@@ -41,6 +45,21 @@ Rails.application.routes.draw do
   resources :legal_identifiers, path: "legal-identifiers", except: :show
   resources :tax_rates, path: "tax-rates", except: :show
   resources :product_categories, path: "product-categories", except: :show
+  resources :products, concerns: :reviewable do
+    collection do
+      get "active", action: :index, defaults: {status: "active"}
+      get "inactive", action: :index, defaults: {status: "inactive"}
+    end
+  end
+  resources :feedbacks, only: [:index, :show] do
+    collection do
+      get "read", action: :index, defaults: {status: "read"}
+      get "unread", action: :index, defaults: {status: "unread"}
+    end
+    member do
+      match :mark_as_read, path: "mark-as-read", via: [:put, :patch]
+    end
+  end
 
   root to: "dashboards#show"
 end
