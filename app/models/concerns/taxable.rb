@@ -10,74 +10,41 @@ module Taxable
     normalizes :tax_identifier, with: -> tax_identifier { tax_identifier.strip.upcase }
 
     enum :tax_identifier_type, {
-      # Global
-      vat: "vat",                           # Value Added Tax
-      gst: "gst",                           # Goods and Services Tax
-      tin: "tin",                           # Taxpayer Identification Number
-
-      # United States
-      ein: "ein",                           # Employer Identification Number
-      ssn: "ssn",                           # Social Security Number
-      itin: "itin",                         # Individual Taxpayer Identification Number
-
-      # India
-      pan: "pan",                           # Permanent Account Number
-      tan: "tan",                           # Tax Deduction and Collection Account Number
-      gstin: "gstin",                       # GST Identification Number
-
-      # European Union (EU)
-      vatin: "vatin",                       # VAT Identification Number
-      nie: "nie",                           # Foreigner Identification Number
-      nif: "nif",                           # Tax Identification Number
-
-      # United Kingdom
-      utr: "utr",                           # Unique Taxpayer Reference
-
-      # Canada
-      bn: "bn",                             # Business Number
-      qst: "qst",                           # Quebec Sales Tax
-
-      # Australia & New Zealand
-      abn: "abn",                           # Australian Business Number
-      tfn: "tfn",                           # Tax File Number
-      ird: "ird",                           # Inland Revenue Department Number
-
-      # Latin America
-      rfc: "rfc",                           # Federal Taxpayer Registry
-      cuit: "cuit",                         # Unique Tax Identification Code
-      cuil: "cuil",                         # Unique Labor Identification Code
-      ruc: "ruc",                           # Single Taxpayer Registry
-      nit: "nit",                           # Tax Identification Number
-
-      # Brazil
-      cnpj: "cnpj",                         # National Register of Legal Entities
-      cpf: "cpf",                           # Register of Natural Persons
-
-      # Indonesia
-      npwp: "npwp",                         # Taxpayer Identification Number
-
-      # Middle East & Africa
-      trn: "trn",                           # Tax Registration Number
-      kra_pin: "kra_pin",                   # Kenya Revenue Authority PIN
-
-      # Russia
-      inn: "inn",                           # Taxpayer Identification Number
-      kpp: "kpp",                           # Tax Registration Reason Code
-
-      # South Korea
-      brn_kr: "brn_kr",                     # Business Registration Number
-
-      # Vietnam
-      mst: "mst",                           # Tax Identification Number
-
-      # Singapore
-      uen: "uen",                           # Unique Entity Number
-
-      # Colombia
-      rut: "rut",                           # Single Tax Registry
-
-      # Honduras
-      rtn: "rtn"                            # Registro Tributario Nacional
+      vat: "vat",
+      gst: "gst",
+      tin: "tin",
+      ein: "ein",
+      ssn: "ssn",
+      itin: "itin",
+      pan: "pan",
+      tan: "tan",
+      gstin: "gstin",
+      vatin: "vatin",
+      nie: "nie",
+      nif: "nif",
+      utr: "utr",
+      bn: "bn",
+      qst: "qst",
+      abn: "abn",
+      tfn: "tfn",
+      ird: "ird",
+      rfc: "rfc",
+      cuit: "cuit",
+      cuil: "cuil",
+      ruc: "ruc",
+      nit: "nit",
+      cnpj: "cnpj",
+      cpf: "cpf",
+      npwp: "npwp",
+      trn: "trn",
+      kra_pin: "kra_pin",
+      inn: "inn",
+      kpp: "kpp",
+      brn_kr: "brn_kr",
+      mst: "mst",
+      uen: "uen",
+      rut: "rut",
+      rtn: "rtn"
     }
 
     validates :tax_identifier_type,

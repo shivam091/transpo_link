@@ -16,96 +16,38 @@ class LegalIdentifier < ApplicationRecord
   }
 
   enum :business_identifier_type, {
-    # USA
-    ein: "ein",                             # Employer Identification Number
-
-    # International
-    duns: "duns",                           # Dun & Bradstreet Number
-
-    # India
-    cin: "cin",                             # Corporate Identification Number
-    llpin: "llpin",                         # Limited Liability Partnership Identification Number
-
-    # India & Pakistan
-    roc: "roc",                             # Registrar of Companies Number
-
-    # Australia
-    acn: "acn",                             # Australian Company Number
-    abn: "abn",                             # Australian Business Number
-
-    # New Zealand
-    nzbn: "nzbn",                           # New Zealand Business Number
-
-    # Brazil
-    cnpj: "cnpj",                           # National Register of Legal Entities
-
-    # Canada
-    bn: "bn",                               # Business Number
-
-    # Spain
-    cif: "cif",                             # Tax Identification Certificate
-
-    # France
-    siret: "siret",                         # Business Establishment Identification Number
-    siren: "siren",                         # Business Identification Number
-
-    # United Kingdom, Ireland
-    crn: "crn",                             # Company Registration Number
-
-    # Singapore
-    uen: "uen",                             # Unique Entity Number
-
-    # Mexico
-    rfc: "rfc",                             # Federal Taxpayer Registry
-
-    # Argentina
-    cuit: "cuit",                           # Unique Tax Identification Code
-
-    # Peru, Paraguay, Ecuador, Panama
-    ruc: "ruc",                             # Single Taxpayer Registry
-
-    # Colombia, Bolivia, Guatemala, El Salvador, Honduras
-    nit: "nit",                             # Tax Identification Number
-
-    # Germany
-    hrb: "hrb",                             # Handelsregisternummer
-
-    # Czech Republic, Slovakia
-    ico: "ico",                             # Business Registration Number
-
-    # Indonesia
-    npwp: "npwp",                           # Taxpayer Identification Number
-
-    # Malaysia
-    brn: "brn",                             # Business Registration Number
-    ssm: "ssm",                             # Companies Commission of Malaysia Number
-
-    # Russia
-    ogrn: "ogrn",                           # Primary State Registration Number
-
-    # South Korea
-    brn_kr: "brn_kr",                       # Business Registration Number
-
-    # Kenya
-    cbr: "cbr",                             # Company Business Registration Number
-
-    # Saudi Arabia, UAE, Bahrain, Qatar, Oman
-    cr: "cr",                               # Commercial Registration Number
-
-    # Turkey
-    vkn: "vkn",                             # Tax Registration Number
-
-    # South Africa
-    cip: "cip",                             # Company Identification Number
-
-    # Bangladesh
-    brn_bd: "brn_bd",                       # Business Registration Number
-
-    # Honduras
-    rtn: "rtn",                             # Registro Tributario Nacional
-
-    # China
-    uscc: "uscc"                            # Unified Social Credit Code
+    ein: "ein",
+    duns: "duns",
+    cin: "cin",
+    llpin: "llpin",
+    roc: "roc",
+    acn: "acn",
+    abn: "abn",
+    nzbn: "nzbn",
+    cnpj: "cnpj",
+    bn: "bn",
+    cif: "cif",
+    siret: "siret",
+    siren: "siren",
+    crn: "crn",
+    uen: "uen",
+    rfc: "rfc",
+    cuit: "cuit",
+    ruc: "ruc",
+    nit: "nit",
+    hrb: "hrb",
+    ico: "ico",
+    npwp: "npwp",
+    brn: "brn",
+    ssm: "ssm",
+    ogrn: "ogrn",
+    brn_kr: "brn_kr",
+    cr: "cr",
+    vkn: "vkn",
+    cip: "cip",
+    brn_bd: "brn_bd",
+    rtn: "rtn",
+    uscc: "uscc"
   }, prefix: true
 
   normalizes :business_identifier, with: -> business_identifier { business_identifier.strip.upcase }
@@ -139,7 +81,6 @@ class LegalIdentifier < ApplicationRecord
     ssm:      %w[MY],
     ogrn:     %w[RU],
     brn_kr:   %w[KR],
-    cbr:      %w[KE],
     cr:       %w[SA AE BH QA OM],
     vkn:      %w[TR],
     cip:      %w[ZA],
