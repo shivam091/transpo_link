@@ -11,13 +11,13 @@
       %table.table.table-striped.table-borderless
         %thead.border
           %tr.table-active
-            %th{width: "25px", scope: "col"}#
+            %th{width: "3%", scope: "col"}#
             - if @warehouses.size > 0
-              %th{width: "25px", scope: "col"}
+              %th{width: "1%", scope: "col"}
                 = check_box_tag "checkbox", nil, false, class: "form-check-input", data: {checkbox_selection_target: "selectAll"}
             - Warehouse::LISTING_ATTRIBUTES.each do |attribute|
               %th{scope: "col"}= Warehouse.human_attribute_name(attribute)
-            %th{scope: "col"}= t("shared.actions")
+            %th{width: "3%", scope: "col"}= t("shared.actions")
         %tbody.border
           - if @warehouses&.each.with_index(1) do |warehouse, index|
             = render_if_exists("warehouses/warehouse", locals: {warehouse:, index:})

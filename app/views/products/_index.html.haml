@@ -11,13 +11,13 @@
       %table.table.table-striped.table-borderless
         %thead.border
           %tr.table-active
-            %th{width: "25px", scope: "col"}#
+            %th{width: "3%", scope: "col"}#
             - if @products.size > 0
-              %th{width: "25px", scope: "col"}
+              %th{width: "1%", scope: "col"}
                 = check_box_tag "checkbox", nil, false, class: "form-check-input", data: {checkbox_selection_target: "selectAll"}
             - Product::LISTING_ATTRIBUTES.each do |attribute|
               %th{scope: "col"}= Product.human_attribute_name(attribute)
-            %th{scope: "col"}= t("shared.actions")
+            %th{width: "3%", scope: "col"}= t("shared.actions")
         %tbody.border
           - if @products&.each.with_index(1) do |product, index|
             = render_if_exists("products/product", locals: {product:, index:})

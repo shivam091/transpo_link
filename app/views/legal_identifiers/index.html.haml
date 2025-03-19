@@ -17,10 +17,10 @@
           %table.table.table-striped.table-borderless
             %thead.border
               %tr.table-active
-                %th{width: "25px", scope: "col"}#
+                %th{width: "3%", scope: "col"}#
                 - LegalIdentifier::LISTING_ATTRIBUTES.each do |attribute|
                   %th{scope: "col"}= LegalIdentifier.human_attribute_name(attribute)
-                %th{scope: "col"}= t("shared.actions")
+                %th{width: "3%", scope: "col"}= t("shared.actions")
             %tbody.border
               - if @legal_identifiers&.each.with_index(1) do |legal_identifier, index|
                 = render_if_exists("legal_identifiers/legal_identifier", locals: {legal_identifier:, index:})
