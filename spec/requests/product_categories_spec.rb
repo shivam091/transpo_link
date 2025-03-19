@@ -5,7 +5,9 @@
 require "spec_helper"
 
 RSpec.describe "ProductCategories", type: :request do
-  let!(:product_category) { create(:product_category) }
+  let!(:active_product_category) { create(:product_category, :active) }
+  let!(:inactive_product_category) { create(:product_category) }
+
   let!(:valid_attributes) { attributes_for(:product_category, name: "New product category") }
   let!(:invalid_attributes) { attributes_for(:product_category, name: "") }
 
@@ -29,19 +31,19 @@ RSpec.describe "ProductCategories", type: :request do
     end
 
     describe "GET /product-categories/:id/edit" do
-      subject { get edit_product_category_path(product_category) }
+      subject { get edit_product_category_path(active_product_category) }
 
       it { is_expected.to require_sign_in }
     end
 
     describe "PUT|PATCH /product-categories/:id" do
-      subject { put product_category_path(product_category) }
+      subject { put product_category_path(active_product_category) }
 
       it { is_expected.to require_sign_in }
     end
 
     describe "DELETE /product-categories/:id" do
-      subject { delete product_category_path(product_category) }
+      subject { delete product_category_path(active_product_category) }
 
       it { is_expected.to require_sign_in }
     end
@@ -54,7 +56,26 @@ RSpec.describe "ProductCategories", type: :request do
       it "renders list of all product categories with pagination" do
         get product_categories_path
 
-        expect(controller_assigns(:product_categories)).to include(product_category)
+        expect(controller_assigns(:product_categories)).to include(active_product_category)
+        expect(controller_assigns(:product_categories)).to include(inactive_product_category)
+        expect(controller_assigns(:pagination_metadata)).to be_present
+        expect(response).to have_http_status(:ok)
+      end
+
+      it "renders list of active product categories with pagination" do
+        get active_product_categories_path
+
+        expect(controller_assigns(:product_categories)).to include(active_product_category)
+        expect(controller_assigns(:product_categories)).to exclude(inactive_product_category)
+        expect(controller_assigns(:pagination_metadata)).to be_present
+        expect(response).to have_http_status(:ok)
+      end
+
+      it "renders list of inactive product categories with pagination" do
+        get inactive_product_categories_path
+
+        expect(controller_assigns(:product_categories)).to include(inactive_product_category)
+        expect(controller_assigns(:product_categories)).to exclude(active_product_category)
         expect(controller_assigns(:pagination_metadata)).to be_present
         expect(response).to have_http_status(:ok)
       end
@@ -91,9 +112,9 @@ RSpec.describe "ProductCategories", type: :request do
 
     describe "GET /product-categories/:id/edit" do
       it "renders product category edit page" do
-        get edit_product_category_path(product_category)
+        get edit_product_category_path(active_product_category)
 
-        expect(controller_assigns(:product_category)).to eq(product_category)
+        expect(controller_assigns(:product_category)).to eq(active_product_category)
         expect(response).to have_http_status(:ok)
       end
     end
@@ -101,9 +122,9 @@ RSpec.describe "ProductCategories", type: :request do
     describe "PUT|PATCH /product-categories/:id" do
       context "when provided attributes are valid" do
         it "updates the product category and redirects" do
-          put product_category_path(product_category), params: {product_category: valid_attributes}, as: :turbo_stream
+          put product_category_path(active_product_category), params: {product_category: valid_attributes}, as: :turbo_stream
 
-          expect(product_category.reload.name).to eq("New product category")
+          expect(active_product_category.reload.name).to eq("New product category")
           expect(response).to redirect_to(product_categories_path)
           expect(flash[:notice]).to eq("Product category was successfully updated.")
           expect(response).to have_http_status(:see_other)
@@ -112,7 +133,7 @@ RSpec.describe "ProductCategories", type: :request do
 
       context "when provided attributes are invalid" do
         it "does not update the product category and renders errors" do
-          put product_category_path(product_category), params: {product_category: invalid_attributes}, as: :turbo_stream
+          put product_category_path(active_product_category), params: {product_category: invalid_attributes}, as: :turbo_stream
 
           expect(flash[:alert]).to eq("Product category could not be updated.")
           expect(response.media_type).to eq(Mime[:turbo_stream])
@@ -125,7 +146,7 @@ RSpec.describe "ProductCategories", type: :request do
     describe "DELETE /product-categories/:id" do
       context "when valid id" do
         it "deletes the product category and redirects" do
-          delete product_category_path(product_category)
+          delete product_category_path(active_product_category)
 
           expect(response).to redirect_to(product_categories_path)
           expect(flash[:info]).to eq("Product category was successfully deleted.")
@@ -137,7 +158,7 @@ RSpec.describe "ProductCategories", type: :request do
         it "does not delete the product category and redirects with an error message" do
           allow(ProductCategories::DestroyService).to receive(:call) { ServiceResponse.error }
 
-          delete product_category_path(product_category)
+          delete product_category_path(active_product_category)
 
           expect(response).to redirect_to(product_categories_path)
           expect(flash[:alert]).to eq("Product category could not be deleted.")

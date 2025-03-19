@@ -44,7 +44,7 @@ Rails.application.routes.draw do
   resources :warehouses, concerns: :toggleable
   resources :legal_identifiers, path: "legal-identifiers", except: :show
   resources :tax_rates, path: "tax-rates", except: :show
-  resources :product_categories, path: "product-categories", except: :show
+  resources :product_categories, path: "product-categories", except: :show, concerns: :toggleable
   resources :products, concerns: [:reviewable, :toggleable]
   resources :feedbacks, only: [:index, :show] do
     collection do

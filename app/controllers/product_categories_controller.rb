@@ -9,6 +9,11 @@ class ProductCategoriesController < ApplicationController
   # GET /product-categories
   def index
     @product_categories = ProductCategory.includes(:parent_category)
+    @product_categories = case params[:status]
+                          when "active"   then @product_categories.active
+                          when "inactive" then @product_categories.inactive
+                          else                 @product_categories
+                          end
     @product_categories, @pagination_metadata = @product_categories.paginate(page: params[:page])
   end
 
