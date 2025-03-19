@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus";
 import moment from "moment-timezone";
 
-export default class LiveColckController extends Controller {
+export default class LiveClockController extends Controller {
   static targets = ["date", "time"];
   static values = {userTimeZone: String};
 

@@ -27,6 +27,7 @@ module Taxable
 
       # European Union (EU)
       vatin: "vatin",                       # VAT Identification Number
+      nie: "nie",                           # Foreigner Identification Number
       nif: "nif",                           # Tax Identification Number
 
       # United Kingdom
@@ -61,6 +62,7 @@ module Taxable
 
       # Russia
       inn: "inn",                           # Taxpayer Identification Number
+      kpp: "kpp",                           # Tax Registration Reason Code
 
       # South Korea
       brn_kr: "brn_kr",                     # Business Registration Number
@@ -68,17 +70,14 @@ module Taxable
       # Vietnam
       mst: "mst",                           # Tax Identification Number
 
-      # Philippines
-      tin_ph: "tin_ph",                     # Taxpayer Identification Number
-
-      # Thailand
-      tin_th: "tin_th",                     # Taxpayer Identification Number
-
       # Singapore
       uen: "uen",                           # Unique Entity Number
 
       # Colombia
-      rut: "rut"                            # Single Tax Registry
+      rut: "rut",                           # Single Tax Registry
+
+      # Honduras
+      rtn: "rtn"                            # Registro Tributario Nacional
     }
 
     validates :tax_identifier_type,
@@ -101,9 +100,9 @@ module Taxable
     ].freeze
 
     TAX_IDENTIFIER_TYPE_COUNTRY_COMBINATIONS = {
-      vat:     EU_COUNTRIES + %w[GB CH NO TR BR ZA AE SA EG NG],
+      vat:     EU_COUNTRIES + %w[GB CH NO RS ZA SA EG NG],
       gst:     %w[AU NZ CA IN SG MY],
-      tin:     %w[US IN PH VN CN KE],
+      tin:     %w[US IN PH TH VN CN KE],
       ein:     %w[US],
       ssn:     %w[US],
       itin:    %w[US],
@@ -111,6 +110,7 @@ module Taxable
       tan:     %w[IN],
       gstin:   %w[IN],
       vatin:   EU_COUNTRIES,
+      nie:     %w[ES],
       nif:     %w[ES],
       utr:     %w[GB],
       bn:      %w[CA],
@@ -129,12 +129,12 @@ module Taxable
       trn:     %w[AE],
       kra_pin: %w[KE],
       inn:     %w[RU],
+      kpp:     %w[RU],
       brn_kr:  %w[KR],
       mst:     %w[VN],
-      tin_ph:  %w[PH],
-      tin_th:  %w[TH],
       uen:     %w[SG],
-      rut:     %w[CO]
+      rut:     %w[CO],
+      rtn:     %w[HN]
     }
   end
 

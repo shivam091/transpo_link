@@ -10,8 +10,8 @@ RSpec.describe "LegalIdentifiers", type: :request do
   let!(:buyer) { create(:buyer) }
   let!(:legal_identifier) { create(:legal_identifier, user: buyer) }
 
-  let!(:valid_attributes) { attributes_for(:legal_identifier, tax_identifier: "27PQRST1234D1Z9").merge(user_id: buyer.id) }
-  let!(:invalid_attributes) { attributes_for(:legal_identifier, tax_identifier: "") }
+  let(:valid_attributes) { attributes_for(:legal_identifier, tax_identifier: "29AACCB3455A1Z9").merge(user_id: buyer.id) }
+  let(:invalid_attributes) { attributes_for(:legal_identifier, tax_identifier: "") }
 
   context "when user is not signed in" do
     describe "GET /legal-identifiers" do
@@ -107,7 +107,7 @@ RSpec.describe "LegalIdentifiers", type: :request do
         it "updates the legal identifier and redirects" do
           put legal_identifier_path(legal_identifier), params: {legal_identifier: valid_attributes}, as: :turbo_stream
 
-          expect(legal_identifier.reload.tax_identifier).to eq("27PQRST1234D1Z9")
+          expect(legal_identifier.reload.tax_identifier).to eq("29AACCB3455A1Z9")
           expect(response).to redirect_to(legal_identifiers_path)
           expect(flash[:notice]).to eq("Legal identifier was successfully updated.")
           expect(response).to have_http_status(:see_other)
