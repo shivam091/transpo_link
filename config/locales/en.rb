@@ -212,6 +212,14 @@
           valid_from: "Valid from",
           valid_to: "Valid to",
         },
+        feedback: {
+          rating: "Rating",
+          comment: "Comment",
+          is_unread: "Is unread",
+          reviewable: "Given for",
+          user_id: "Given by",
+          created_at: "Submitted at",
+        },
         product_category: {
           name: "Name",
           products_count: "Products count",
@@ -306,6 +314,13 @@
               },
             },
           },
+          feedback: {
+            attributes: {
+              rating: {
+                invalid: "must be in steps of 0.5"
+              },
+            },
+          },
         },
         messages: {
           label_already_exists_at_group_level: "already exists at group level for %{group}. Please choose another one.",
@@ -364,10 +379,15 @@
       remove: "Remove",
       save: "Save",
       cancel: "Cancel",
+      leave_feedback: "Leave feedback",
+      submit: "Submit",
+      mark_as_read: "Mark as read",
     },
     common: {
       actions: "Actions",
       selected: "%{count} selected",
+      show_more: "Show more",
+      show_less: "Show less",
     },
     devise: {
       confirmations: {
@@ -659,6 +679,8 @@
         active: "Active",
         inactive: "Inactive",
         suspended: "Suspended",
+        read: "Read",
+        unread: "Unread",
       },
       address_form_fields: {
         select_country: "Select country or region",
@@ -671,6 +693,7 @@
         no_warehouses_to_display: "No warehouses to display",
         no_tax_rates_to_display: "No tax rates to display",
         no_legal_identifiers_to_display: "No legal identifiers to display",
+        no_feedbacks_to_display: "No feedbacks to display",
         no_product_categories_to_display: "No product categories to display",
         no_products_to_display: "No products to display",
         no_unit_conversions_to_display: "No unit conversions to display",
@@ -770,6 +793,16 @@
         destroy: {
           success: "Product was successfully deleted.",
           error: "Product could not be deleted."
+        },
+      },
+      feedbacks: {
+        create: {
+          success: "Your feedback helps us improve. Thanks for being a part of our community!",
+          error: "We encountered a problem submitting your feedback. Please try again."
+        },
+        mark_as_read: {
+          success: "Feedback was successfully marked as read.",
+          error: "We encountered a problem marking the feedback as read. Please try again."
         },
       },
     },
@@ -1078,5 +1111,17 @@
         },
       },
     },
+    feedbacks: {
+      index: {
+        title: "Feedbacks",
+      },
+      feedback: {
+      },
+      new: {
+        title: "Leave feedback",
+      },
+      form: {
+      },
+    }
   },
 }

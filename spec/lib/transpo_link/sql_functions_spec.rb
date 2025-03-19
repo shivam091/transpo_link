@@ -35,4 +35,33 @@ RSpec.describe TranspoLink::SqlFunctions do
       end
     end
   end
+
+  describe ".avg" do
+    let!(:value) { :rating }
+    let!(:arel_value) { Arel::Nodes::SqlLiteral.new(value.to_s) }
+
+    context "when column_alias is not provided" do
+      let(:result) { described_class.avg(value.to_s) }
+
+      it "returns an AVG SQL function without alias" do
+        expect(result).to be_a(Arel::Nodes::NamedFunction)
+        expect(result.name).to eq("AVG")
+        expect(result.expressions).to eq([arel_value])
+      end
+    end
+
+    context "when column_alias is provided" do
+      let(:column_alias) { "average_rating" }
+      let(:result) { described_class.avg(value.to_s, column_alias) }
+
+      it "returns an AVG SQL function with an alias" do
+        expect(result).to be_a(Arel::Nodes::As)
+        expect(result.left).to be_a(Arel::Nodes::NamedFunction)
+        expect(result.left.name).to eq("AVG")
+        expect(result.left.expressions).to eq([arel_value])
+        expect(result.right).to be_a(Arel::Nodes::SqlLiteral)
+        expect(result.right).to eq(Arel::Nodes::SqlLiteral.new(column_alias))
+      end
+    end
+  end
 end
