@@ -149,3 +149,18 @@ p {
     font-weight: 500; // applied separately because creates conflicts with :active.
   }
 }
+.list-item-unread-indicator {
+  border-left: 1px solid var(--bs-primary-text-emphasis) !important;
+}
+.range-container {
+  position: relative;
+  width: 100%;
+  .range-thumb {
+    position: absolute;
+    padding: 0px 6px;
+    background: rgba(var(--bs-primary-rgb), 1);
+    border-radius: 0.25rem;
+    top: 0%;
+    transition: left 0.1s linear;
+  }
+}
