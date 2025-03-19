@@ -384,6 +384,7 @@
       leave_feedback: "Leave feedback",
       submit: "Submit",
       mark_as_read: "Mark as read",
+      view_details: "View details",
     },
     common: {
       actions: "Actions",
