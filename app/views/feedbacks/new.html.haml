@@ -1,0 +1,4 @@
+= title(t(".title"))
+= render_modal(title: t(".title"), modal_id: "new-feedback") do
+  = turbo_frame_tag :new_feedback_form_frame, target: :_top do
+    = render_if_exists("feedbacks/form")
