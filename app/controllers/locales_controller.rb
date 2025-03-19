@@ -11,6 +11,7 @@ class LocalesController < ApplicationController
   # PUT|PATCH /locale
   def update
     response = Locales::UpdateService.(current_user, locale_params)
+
     if response.success?
       set_flash_message(:notice, :success)
       redirect_to request.referrer

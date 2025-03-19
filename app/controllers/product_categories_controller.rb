@@ -21,6 +21,7 @@ class ProductCategoriesController < ApplicationController
   def create
     response = ProductCategories::CreateService.(product_category_params)
     @product_category = response.payload[:product_category]
+
     if response.success?
       set_flash_message(:notice, :success)
       redirect_to product_categories_path, status: :see_other
@@ -45,6 +46,7 @@ class ProductCategoriesController < ApplicationController
   def update
     response = ProductCategories::UpdateService.(@product_category, product_category_params)
     @product_category = response.payload[:product_category]
+
     if response.success?
       set_flash_message(:notice, :success)
       redirect_to product_categories_path, status: :see_other
@@ -65,6 +67,7 @@ class ProductCategoriesController < ApplicationController
   def destroy
     response = ProductCategories::DestroyService.(@product_category)
     @product_category = response.payload[:product_category]
+
     if response.success?
       set_flash_message(:info, :success)
     else

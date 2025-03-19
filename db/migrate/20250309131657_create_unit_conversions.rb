@@ -17,7 +17,6 @@ class CreateUnitConversions < ActiveRecord::Migration[8.0]
       t.string :from_unit # e.g., item
       t.string :to_unit # e.g., pack
       t.decimal :conversion_rate, precision: 10, scale: 4 # e.g., 12 items per pack
-
       t.timestamps_with_timezone null: false
 
       t.index [:product_id, :from_unit, :to_unit], unique: true

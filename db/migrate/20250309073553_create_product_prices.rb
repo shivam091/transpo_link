@@ -27,7 +27,6 @@ class CreateProductPrices < ActiveRecord::Migration[8.0]
       t.integer :min_quantity, default: 1  # Minimum quantity for this price tier
       t.decimal :unit_price, precision: 12, scale: 2, default: 0.0  # Price per unit for this tier
       t.string :currency
-
       t.timestamps_with_timezone null: false
 
       t.check_constraint "currency IS NOT NULL AND currency  <> ''", name: :check_product_prices_currency_presence

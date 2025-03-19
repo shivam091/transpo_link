@@ -22,7 +22,6 @@ class CreateFeedbacks < ActiveRecord::Migration[8.0]
       t.decimal :rating, precision: 3, scale: 1
       t.text :comment
       t.boolean :is_unread, default: true, index: {using: :btree}
-
       t.timestamps_with_timezone null: false
 
       t.check_constraint "rating IS NOT NULL", name: :check_feedbacks_rating_presence

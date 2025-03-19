@@ -23,7 +23,6 @@ class CreateWarehouseManagers < ActiveRecord::Migration[8.0]
                    },
                    null: false,
                    index: {using: :btree}
-
       t.timestamps_with_timezone null: false
     end
   end

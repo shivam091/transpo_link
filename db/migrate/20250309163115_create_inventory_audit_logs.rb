@@ -37,7 +37,6 @@ class CreateInventoryAuditLogs < ActiveRecord::Migration[8.0]
       t.integer :previous_quantity
       t.integer :new_quantity
       t.jsonb :metadata, default: "{}", index: {using: :gin}
-
       t.timestamps_with_timezone null: false
 
       t.index [:inventory_id, :movement_type], using: :btree

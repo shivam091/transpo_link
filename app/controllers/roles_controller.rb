@@ -19,6 +19,7 @@ class RolesController < ApplicationController
   def update
     response = Roles::UpdateService.(@role, role_params)
     @role = response.payload[:role]
+
     if response.success?
       set_flash_message(:notice, :success)
       redirect_to roles_path, status: :see_other

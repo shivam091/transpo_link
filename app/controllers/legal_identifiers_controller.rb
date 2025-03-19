@@ -21,6 +21,7 @@ class LegalIdentifiersController < ApplicationController
   def create
     response = LegalIdentifiers::CreateService.(current_user, legal_identifier_params)
     @legal_identifier = response.payload[:legal_identifier]
+
     if response.success?
       set_flash_message(:notice, :success)
       redirect_to legal_identifiers_path, status: :see_other
@@ -45,6 +46,7 @@ class LegalIdentifiersController < ApplicationController
   def update
     response = LegalIdentifiers::UpdateService.(@legal_identifier, legal_identifier_params)
     @legal_identifier = response.payload[:legal_identifier]
+
     if response.success?
       set_flash_message(:notice, :success)
       redirect_to legal_identifiers_path, status: :see_other
@@ -65,6 +67,7 @@ class LegalIdentifiersController < ApplicationController
   def destroy
     response = LegalIdentifiers::DestroyService.(@legal_identifier)
     @legal_identifier = response.payload[:legal_identifier]
+
     if response.success?
       set_flash_message(:info, :success)
     else

@@ -32,7 +32,7 @@ module EnumsHelper
   #   enum_i18n(UserPreference, :color_scheme, :dark)
   # ```
   def enum_i18n(model, enum, key)
-    I18n.t("#{key}", scope: "enumerations.#{model.model_name.i18n_key}.#{enum.to_s.pluralize}")
+    t("#{key}", scope: "enumerations.#{model.model_name.i18n_key}.#{enum.to_s.pluralize}")
   end
 
   # Get the key for an enum value (reverse lookup)

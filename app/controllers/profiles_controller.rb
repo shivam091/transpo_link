@@ -15,6 +15,7 @@ class ProfilesController < ApplicationController
   # PUT|PATCH /profile
   def update
     response = Profiles::UpdateService.(current_user, profile_params)
+
     if response.success?
       set_flash_message(:notice, :success)
       redirect_to profile_path, status: :see_other

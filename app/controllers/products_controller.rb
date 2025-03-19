@@ -25,6 +25,7 @@ class ProductsController < ApplicationController
   def create
     response = Products::CreateService.(product_params)
     @product = response.payload[:product]
+
     if response.success?
       set_flash_message(:notice, :success)
       redirect_to products_path, status: :see_other
@@ -49,6 +50,7 @@ class ProductsController < ApplicationController
   def update
     response = Products::UpdateService.(@product, product_params)
     @product = response.payload[:product]
+
     if response.success?
       set_flash_message(:notice, :success)
       redirect_to products_path, status: :see_other
@@ -73,6 +75,7 @@ class ProductsController < ApplicationController
   def destroy
     response = Products::DestroyService.(@product)
     @product = response.payload[:product]
+
     if response.success?
       set_flash_message(:info, :success)
     else

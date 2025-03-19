@@ -15,6 +15,7 @@ class PreferencesController < ApplicationController
   # PUT|PATCH /preference
   def update
     response = Preferences::UpdateService.(current_user, preference_params)
+
     if response.success?
       set_flash_message(:notice, :success)
       redirect_to preference_path, status: :see_other

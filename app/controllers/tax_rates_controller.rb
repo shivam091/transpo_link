@@ -21,6 +21,7 @@ class TaxRatesController < ApplicationController
   def create
     response = TaxRates::CreateService.(tax_rate_params)
     @tax_rate = response.payload[:tax_rate]
+
     if response.success?
       set_flash_message(:notice, :success)
       redirect_to tax_rates_path, status: :see_other
@@ -45,6 +46,7 @@ class TaxRatesController < ApplicationController
   def update
     response = TaxRates::UpdateService.(@tax_rate, tax_rate_params)
     @tax_rate = response.payload[:tax_rate]
+
     if response.success?
       set_flash_message(:notice, :success)
       redirect_to tax_rates_path, status: :see_other
@@ -65,6 +67,7 @@ class TaxRatesController < ApplicationController
   def destroy
     response = TaxRates::DestroyService.(@tax_rate)
     @tax_rate = response.payload[:tax_rate]
+
     if response.success?
       set_flash_message(:info, :success)
     else

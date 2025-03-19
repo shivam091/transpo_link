@@ -33,6 +33,7 @@ class WarehousesController < ApplicationController
   def create
     response = Warehouses::CreateService.(warehouse_params)
     @warehouse = response.payload[:warehouse]
+
     if response.success?
       set_flash_message(:notice, :success)
       redirect_to warehouses_path, status: :see_other
@@ -57,6 +58,7 @@ class WarehousesController < ApplicationController
   def update
     response = Warehouses::UpdateService.(@warehouse, warehouse_params)
     @warehouse = response.payload[:warehouse]
+
     if response.success?
       set_flash_message(:notice, :success)
       redirect_to warehouses_path, status: :see_other
@@ -81,6 +83,7 @@ class WarehousesController < ApplicationController
   def destroy
     response = Warehouses::DestroyService.(@warehouse)
     @warehouse = response.payload[:warehouse]
+
     if response.success?
       set_flash_message(:info, :success)
     else

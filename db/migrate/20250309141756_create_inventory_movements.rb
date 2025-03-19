@@ -29,7 +29,6 @@ class CreateInventoryMovements < ActiveRecord::Migration[8.0]
                    null: false,
                    index: {using: :btree}
       t.jsonb :metadata, default: "{}", index: {using: :gin} # Store additional data if needed
-
       t.timestamps_with_timezone null: false
 
       t.index [:inventory_id, :source_id, :source_type, :movement_type], unique: true

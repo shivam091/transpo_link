@@ -77,6 +77,7 @@ module ApplicationHelper
   # <% title @post.title %>
   def title(*text)
     title_text = [text, t("title")]
+
     content_for :title, title_text.join(" &middot; ").html_safe
   end
 
@@ -86,9 +87,9 @@ module ApplicationHelper
 
   def humanize_boolean(boolean)
     case boolean
-    when true then t("boolean.yes")
+    when true  then t("boolean.yes")
     when false then t("boolean.no")
-    else t("boolean.nil")
+    else            t("boolean.nil")
     end
   end
 end
