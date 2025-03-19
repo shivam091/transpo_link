@@ -8,7 +8,7 @@
             %th{width: "25px", scope: "col"}#
             - RequestLog::LISTING_ATTRIBUTES.each do |attribute|
               %th{scope: "col"}= RequestLog.human_attribute_name(attribute)
-            %th{width: "25px", scope: "col"}= t("common.actions")
+            %th{width: "25px", scope: "col"}= t("shared.actions")
         %tbody.border
           - if @request_logs&.each.with_index(1) do |request_log, index|
             = render_if_exists("request_logs/request_log", locals: {request_log:, index:})

@@ -386,12 +386,6 @@
       mark_as_read: "Mark as read",
       view_details: "View details",
     },
-    common: {
-      actions: "Actions",
-      selected: "%{count} selected",
-      show_more: "Show more",
-      show_less: "Show less",
-    },
     devise: {
       confirmations: {
         confirmed: "Your email address has been successfully confirmed.",
@@ -683,6 +677,10 @@
       record_info: "Displaying %{start} to %{end} of %{total} in total",
     },
     shared: {
+      actions: "Actions",
+      selected: "%{count} selected",
+      show_more: "Show more",
+      show_less: "Show less",
       inline_navigations: {
         all: "All",
         active: "Active",

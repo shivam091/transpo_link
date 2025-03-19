@@ -8,11 +8,11 @@
     = link_to reviewable_name_with_type(reviewable), reviewable_link(reviewable), target: :_blank
   %td
     = h(feedback.rating)
-  %td{data: {controller: "collapsible-content", collapsible_content_show_more_text_value: t("common.show_more"), collapsible_content_show_less_text_value: t("common.show_less")}}
+  %td{data: {controller: "collapsible-content", collapsible_content_show_more_text_value: t("shared.show_more"), collapsible_content_show_less_text_value: t("shared.show_less")}}
     %span{data: {collapsible_content_target: "collapsedContent"}}
       = h(truncate(feedback.comment, truncate_at: 80).html_safe)
     - if feedback.comment.length > 80
-      = link_to t("common.show_more"), "javascript:void(0)", data: {action: "click->collapsible-content#toggle"}
+      = link_to t("shared.show_more"), "javascript:void(0)", data: {action: "click->collapsible-content#toggle"}
     %template{data: {collapsible_content_target: "expandedContent"}}
       = h(word_wrap(feedback.comment, wrap_length: 120).html_safe)
   %td.actions

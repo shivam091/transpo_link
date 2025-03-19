@@ -2,7 +2,7 @@
   .card-header
     = render_if_exists("users/nav_tabs")
   .card-body{data: {controller: "checkbox-selection"}}
-    .mb-2{data: {checkbox_selection_target: "selectedCount", label_template: t("common.selected", count: "%{count}")}}
+    .mb-2{data: {checkbox_selection_target: "selectedCount", label_template: t("shared.selected", count: "%{count}")}}
     .table-responsive
       %table.table.table-striped.table-borderless
         %thead.border
@@ -17,7 +17,7 @@
             %th{scope: "col"}= UserDetail.human_attribute_name(:alternate_contact_number)
             %th{scope: "col"}= UserDetail.human_attribute_name(:alternate_email)
             %th{scope: "col"}= User.human_attribute_name(:role_id)
-            %th{width: "25px", scope: "col"}= t("common.actions")
+            %th{width: "25px", scope: "col"}= t("shared.actions")
         %tbody.border
           - if @users&.each.with_index(1) do |user, index|
             = render_if_exists("users/user", locals: {user:, index:})

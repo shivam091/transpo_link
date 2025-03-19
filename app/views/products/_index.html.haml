@@ -6,7 +6,7 @@
         = external_svg_tag("svgs/plus.svg")
         = button_text(:new)
   .card-body{data: {controller: "checkbox-selection"}}
-    %p.mb-2{data: {checkbox_selection_target: "selectedCount", label_template: t("common.selected", count: "%{count}")}}
+    %p.mb-2{data: {checkbox_selection_target: "selectedCount", label_template: t("shared.selected", count: "%{count}")}}
     .table-responsive
       %table.table.table-striped.table-borderless
         %thead.border
@@ -17,7 +17,7 @@
                 = check_box_tag "checkbox", nil, false, class: "form-check-input", data: {checkbox_selection_target: "selectAll"}
             - Product::LISTING_ATTRIBUTES.each do |attribute|
               %th{scope: "col"}= Product.human_attribute_name(attribute)
-            %th{scope: "col"}= t("common.actions")
+            %th{scope: "col"}= t("shared.actions")
         %tbody.border
           - if @products&.each.with_index(1) do |product, index|
             = render_if_exists("products/product", locals: {product:, index:})

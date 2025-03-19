@@ -9,7 +9,7 @@
             %th{width: "3%", scope: "col"}#
             - Feedback::LISTING_ATTRIBUTES.each do |attribute|
               %th{scope: "col"}= Feedback.human_attribute_name(attribute)
-            %th{width: "3%", scope: "col"}= t("common.actions")
+            %th{width: "3%", scope: "col"}= t("shared.actions")
         %tbody.border
           - if @feedbacks&.each.with_index(1) do |feedback, index|
             = render_if_exists("feedbacks/feedback", locals: {feedback:, index:})

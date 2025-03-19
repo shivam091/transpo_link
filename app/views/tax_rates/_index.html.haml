@@ -13,7 +13,7 @@
             %th{width: "25px", scope: "col"}#
             - TaxRate::LISTING_ATTRIBUTES.each do |attribute|
               %th{scope: "col"}= TaxRate.human_attribute_name(attribute)
-            %th{scope: "col"}= t("common.actions")
+            %th{scope: "col"}= t("shared.actions")
         %tbody.border
           - if @tax_rates&.each.with_index(1) do |tax_rate, index|
             = render_if_exists("tax_rates/tax_rate", locals: {tax_rate:, index:})

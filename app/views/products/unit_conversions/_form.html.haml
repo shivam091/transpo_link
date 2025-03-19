@@ -10,7 +10,7 @@
           %th{scope: "col"} #
           - UnitConversion::LISTING_ATTRIBUTES.each do |attribute|
             %th{scope: "col"}= UnitConversion.human_attribute_name(attribute)
-          %th{scope: "col"}= t("common.actions")
+          %th{scope: "col"}= t("shared.actions")
       %tbody.border
         %template{data: {nested_forms_target: "template"}}
           = form.fields_for :unit_conversions, form.object.unit_conversions.build, child_index: "NEW_RECORD" do |unit_conversion_form|
