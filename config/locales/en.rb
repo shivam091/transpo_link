@@ -212,11 +212,45 @@
           valid_from: "Valid from",
           valid_to: "Valid to",
         },
+        feedback: {
+          rating: "Rating",
+          comment: "Comment",
+          is_unread: "Is unread",
+          reviewable: "Given for",
+          user_id: "Given by",
+          created_at: "Submitted at",
+        },
         product_category: {
           name: "Name",
           products_count: "Products count",
           parent_category_id: "Parent category",
           is_active: "Is active",
+        },
+        product: {
+          reference_code: "Reference code",
+          name: "Name",
+          sku: "SKU",
+          description: "Description",
+          barcode: "Barcode",
+          min_stock_threshold: "Min. stock threshold",
+          capacity_unit: "Capacity unit",
+          currency: "Currency",
+          cost_price: "Cost price",
+          product_category_id: "Product category",
+          is_active: "Is active",
+          created_at: "Created at",
+          updated_at: "Updated at",
+        },
+        unit_conversion: {
+          from_unit: "Source unit",
+          to_unit: "Target unit",
+          conversion_rate: "Conversion rate",
+        },
+        product_price: {
+          warehouse_id: "Warehouse",
+          min_quantity: "Min. quantity",
+          cost_price: "Cost price",
+          currency: "Currency",
         },
       },
       errors: {
@@ -233,6 +267,7 @@
             attributes: {
               tax_identifier: {
                 uniqueness: "should be unique within the same tax identifier type, country, and entity type",
+                invalid: "is invalid for selected country and tax identifier type"
               },
               tax_identifier_type: {
                 inclusion: "'%{value}' is not a valid tax identifier type",
@@ -245,7 +280,8 @@
               },
               business_identifier: {
                 absence: "must not be present when entity type is business",
-                uniqueness: "should be unique within the same business identifier type and country"
+                uniqueness: "should be unique within the same business identifier type and country",
+                invalid: "is invalid for selected country and business identifier type"
               },
               entity_type: {
                 inclusion: "'%{value}' is not a valid entity type",
@@ -271,6 +307,20 @@
               valid_from: {
                 greater_than_or_equal_to: "must be today or a future date"
               }
+            },
+          },
+          product: {
+            attributes: {
+              capacity_unit: {
+                inclusion: "%{value} is not a valid unit",
+              },
+            },
+          },
+          feedback: {
+            attributes: {
+              rating: {
+                invalid: "must be in steps of 0.5"
+              },
             },
           },
         },
@@ -331,10 +381,15 @@
       remove: "Remove",
       save: "Save",
       cancel: "Cancel",
+      leave_feedback: "Leave feedback",
+      submit: "Submit",
+      mark_as_read: "Mark as read",
     },
     common: {
       actions: "Actions",
       selected: "%{count} selected",
+      show_more: "Show more",
+      show_less: "Show less",
     },
     devise: {
       confirmations: {
@@ -444,6 +499,7 @@
           tan: "TAN – Tax Deduction and Collection Account Number",
           gstin: "GSTIN – GST Identification Number",
           vatin: "VATIN – VAT Identification Number",
+          nie: "NIE – Foreigner Identification Number",
           nif: "NIF – Tax Identification Number",
           utr: "UTR – Unique Taxpayer Reference",
           bn: "BN – Business Number",
@@ -462,12 +518,12 @@
           trn: "TRN – Tax Registration Number",
           kra_pin: "KRA_PIN – Kenya Revenue Authority PIN",
           inn: "INN – Taxpayer Identification Number",
+          kpp: "KPP – Tax Registration Reason Code",
           brn_kr: "BRN_KR – Business Registration Number",
           mst: "MST – Tax Identification Number",
-          tin_ph: "TIN_PH – Taxpayer Identification Number",
-          tin_th: "TIN_TH – Taxpayer Identification Number",
           uen: "UEN – Unique Entity Number",
-          rut: "RUT – Single Tax Registry"
+          rut: "RUT – Single Tax Registry",
+          rtn: "RTN – Registro Tributario Nacional",
         },
         entity_types: {
           business: "Business",
@@ -477,12 +533,14 @@
           ein: "EIN – Employer Identification Number",
           duns: "DUNS – Data Universal Numbering System (Issued by Dun & Bradstreet (D&B))",
           cin: "CIN – Corporate Identification Number",
+          llpin: "LLPIN - Limited Liability Partnership Identification Number",
           roc: "ROC – Registrar of Companies",
           acn: "ACN – Australian Company Number",
           abn: "ABN – Australian Business Number",
           nzbn: "NZBN – New Zealand Business Number",
           cnpj: "CNPJ – National Register of Legal Entities",
           bn: "BN – Business Number",
+          cif: "CIF – Tax Identification Certificate",
           siret: "SIRET – Business Identification Number",
           siren: "SIREN – Business Identification Number",
           crn: "CRN – Company Registration Number",
@@ -500,9 +558,11 @@
           brn_kr: "BRN_KR – Business Registration Number",
           cbr: "CBR – Central Business Register",
           cr: "CR – Commercial Registration Number",
-          trn: "TRN – Tax Registration Number",
+          vkn: "VKN – Vergi Kimlik Numarası",
           cip: "CIP – Company Identification Number",
           brn_bd: "BRN_BD – Business Registration Number",
+          rtn: "RTN – Registro Tributario Nacional",
+          uscc: "USCC – Unified Social Credit Code",
         }
       },
       tax_rate: {
@@ -517,6 +577,7 @@
           tan: "TAN – Tax Deduction and Collection Account Number",
           gstin: "GSTIN – GST Identification Number",
           vatin: "VATIN – VAT Identification Number",
+          nie: "NIE – Foreigner Identification Number",
           nif: "NIF – Tax Identification Number",
           utr: "UTR – Unique Taxpayer Reference",
           bn: "BN – Business Number",
@@ -535,12 +596,12 @@
           trn: "TRN – Tax Registration Number",
           kra_pin: "KRA_PIN – Kenya Revenue Authority PIN",
           inn: "INN – Taxpayer Identification Number",
+          kpp: "KPP – Tax Registration Reason Code",
           brn_kr: "BRN_KR – Business Registration Number",
           mst: "MST – Tax Identification Number",
-          tin_ph: "TIN_PH – Taxpayer Identification Number",
-          tin_th: "TIN_TH – Taxpayer Identification Number",
           uen: "UEN – Unique Entity Number",
-          rut: "RUT – Single Tax Registry"
+          rut: "RUT – Single Tax Registry",
+          rtn: "RTN – Registro Tributario Nacional",
         },
         business_categories: {
           b2b: "Business to Business (B2B)",
@@ -626,6 +687,8 @@
         active: "Active",
         inactive: "Inactive",
         suspended: "Suspended",
+        read: "Read",
+        unread: "Unread",
       },
       address_form_fields: {
         select_country: "Select country or region",
@@ -638,7 +701,11 @@
         no_warehouses_to_display: "No warehouses to display",
         no_tax_rates_to_display: "No tax rates to display",
         no_legal_identifiers_to_display: "No legal identifiers to display",
+        no_feedbacks_to_display: "No feedbacks to display",
         no_product_categories_to_display: "No product categories to display",
+        no_products_to_display: "No products to display",
+        no_unit_conversions_to_display: "No unit conversions to display",
+        no_product_prices_to_display: "No product prices to display"
       },
     },
     flashes: {
@@ -720,6 +787,30 @@
         update: {
           success: "Role was successfully updated.",
           error: "Role could not be updated."
+        },
+      },
+      products: {
+        create: {
+          success: "Product was successfully created.",
+          error: "Product could not be created.",
+        },
+        update: {
+          success: "Product was successfully updated.",
+          error: "Product could not be updated."
+        },
+        destroy: {
+          success: "Product was successfully deleted.",
+          error: "Product could not be deleted."
+        },
+      },
+      feedbacks: {
+        create: {
+          success: "Your feedback helps us improve. Thanks for being a part of our community!",
+          error: "We encountered a problem submitting your feedback. Please try again."
+        },
+        mark_as_read: {
+          success: "Feedback was successfully marked as read.",
+          error: "We encountered a problem marking the feedback as read. Please try again."
         },
       },
     },
@@ -983,5 +1074,62 @@
         select_parent_category: "Select parent category",
       }
     },
+    products: {
+      index: {
+        title: "Products",
+      },
+      product: {
+        delete_product_confirmation_text: "Are you sure you want to delete the product ‘%{product_name}’? This cannot be undone.",
+      },
+      new: {
+        title: "New product",
+      },
+      edit: {
+        title: "Edit product",
+      },
+      form: {
+        basic_details: "Basic details",
+        unit_conversions: "Unit conversions",
+        product_prices: "Product prices",
+      },
+      basic_details_fields: {
+        select_product_category: "Select product category",
+        select_capacity_unit: "Select capacity unit",
+        select_currency: "Select currency",
+      },
+      show: {
+        basic_details: "Basic details",
+        unit_conversions: "Unit conversions",
+        product_prices: "Product prices",
+      },
+      unit_conversions: {
+        form: {
+        },
+        field: {
+          select_source_unit: "Select source unit",
+          select_target_unit: "Select target unit",
+        },
+      },
+      product_prices: {
+        form: {
+        },
+        field: {
+          select_warehouse: "Select warehouse",
+          select_currency: "Select currency",
+        },
+      },
+    },
+    feedbacks: {
+      index: {
+        title: "Feedbacks",
+      },
+      feedback: {
+      },
+      new: {
+        title: "Leave feedback",
+      },
+      form: {
+      },
+    }
   },
 }

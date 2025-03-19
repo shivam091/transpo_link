@@ -9,15 +9,14 @@
   %td= mail_to user.alternate_email
   %td= user.role_name.humanize
   %td.actions
-    .dropdown
-      = link_to "javascript:void(0)", class: "text-reset", data: {bs_toggle: "dropdown"}, aria: {expanded: false} do
-        = external_svg_tag("svgs/ellipsis-vertical.svg")
-      %ul.dropdown-menu
-        %li
-          = link_to "javascript:void(0)", class: "dropdown-item" do
-            = external_svg_tag("svgs/pencil.svg")
-            = button_text(:edit)
-        %li
-          = link_to "javascript:void(0)", class: "dropdown-item" do
-            = external_svg_tag("svgs/trash.svg")
-            = button_text(:delete)
+    = link_to "javascript:void(0)", class: "text-reset", data: {bs_toggle: "dropdown"}, aria: {expanded: false} do
+      = external_svg_tag("svgs/ellipsis-vertical.svg")
+    %ul.dropdown-menu
+      %li
+        = link_to "javascript:void(0)", class: "dropdown-item" do
+          = external_svg_tag("svgs/pencil.svg")
+          = button_text(:edit)
+      %li
+        = link_to "javascript:void(0)", class: "dropdown-item" do
+          = external_svg_tag("svgs/trash.svg")
+          = button_text(:delete)

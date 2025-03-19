@@ -24,6 +24,7 @@ class LegalIdentifier < ApplicationRecord
 
     # India
     cin: "cin",                             # Corporate Identification Number
+    llpin: "llpin",                         # Limited Liability Partnership Identification Number
 
     # India & Pakistan
     roc: "roc",                             # Registrar of Companies Number
@@ -40,6 +41,9 @@ class LegalIdentifier < ApplicationRecord
 
     # Canada
     bn: "bn",                               # Business Number
+
+    # Spain
+    cif: "cif",                             # Tax Identification Certificate
 
     # France
     siret: "siret",                         # Business Establishment Identification Number
@@ -89,13 +93,19 @@ class LegalIdentifier < ApplicationRecord
     cr: "cr",                               # Commercial Registration Number
 
     # Turkey
-    trn: "trn",                             # Tax Registration Number
+    vkn: "vkn",                             # Tax Registration Number
 
     # South Africa
     cip: "cip",                             # Company Identification Number
 
     # Bangladesh
     brn_bd: "brn_bd",                       # Business Registration Number
+
+    # Honduras
+    rtn: "rtn",                             # Registro Tributario Nacional
+
+    # China
+    uscc: "uscc"                            # Unified Social Credit Code
   }, prefix: true
 
   normalizes :business_identifier, with: -> business_identifier { business_identifier.strip.upcase }
@@ -106,12 +116,14 @@ class LegalIdentifier < ApplicationRecord
     ein:      %w[US],
     duns:     %w[US CA GB AU DE FR IT ES NL BR MX ZA IN JP CN KR SG HK AE SA AR CL RU NZ BE DK IE CH],
     cin:      %w[IN],
+    llpin:    %w[IN],
     roc:      %w[IN PK],
     acn:      %w[AU],
     abn:      %w[AU],
     nzbn:     %w[NZ],
     cnpj:     %w[BR],
     bn:       %w[CA],
+    cif:      %w[ES],
     siret:    %w[FR],
     siren:    %w[FR],
     crn:      %w[GB IE],
@@ -119,7 +131,7 @@ class LegalIdentifier < ApplicationRecord
     rfc:      %w[MX],
     cuit:     %w[AR],
     ruc:      %w[PE PY EC PA],
-    nit:      %w[CO BO GT SV HN],
+    nit:      %w[CO BO GT SV],
     hrb:      %w[DE],
     ico:      %w[CZ SK],
     npwp:     %w[ID],
@@ -129,9 +141,11 @@ class LegalIdentifier < ApplicationRecord
     brn_kr:   %w[KR],
     cbr:      %w[KE],
     cr:       %w[SA AE BH QA OM],
-    trn:      %w[TR],
+    vkn:      %w[TR],
     cip:      %w[ZA],
     brn_bd:   %w[BD],
+    rtn:      %w[HN],
+    uscc:     %w[CN]
   }
 
   validates :user_id,
@@ -151,6 +165,11 @@ class LegalIdentifier < ApplicationRecord
               message: :uniqueness,
               case_sensitive: true
             },
+            tax_identifier: true,
+            reduce: true
+  validates :business_identifier_type, :business_identifier,
+            absence: {message: :absence},
+            if: :individual?,
             reduce: true
   validates :business_identifier_type,
             presence: true,
@@ -167,11 +186,8 @@ class LegalIdentifier < ApplicationRecord
               message: :uniqueness,
               case_sensitive: true
             },
+            business_identifier: true,
             if: :business?,
-            reduce: true
-  validates :business_identifier_type, :business_identifier,
-            absence: {message: :absence},
-            if: :individual?,
             reduce: true
   validate :business_identifier_type_country_combination
 

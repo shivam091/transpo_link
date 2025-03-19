@@ -1,11 +1,10 @@
 import { Controller } from "@hotwired/stimulus";
 
-export default class extends Controller {
+export default class NestedFormsController extends Controller {
   static targets = ["target", "template"];
   static values = { wrapperSelector: String };
 
   addAssociation(event) {
-    event.preventDefault();
     const timestamp = Date.now().toString();
     this.targetTarget.insertAdjacentHTML(
       "beforebegin",
@@ -14,7 +13,6 @@ export default class extends Controller {
   }
 
   removeAssociation(event) {
-    event.preventDefault();
     const wrapper = event.target.closest(this.wrapperSelectorValue || ".nested-form-wrapper");
 
     if (!wrapper) return;

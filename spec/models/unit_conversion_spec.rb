@@ -33,7 +33,34 @@ RSpec.describe UnitConversion, type: :model do
     it { is_expected.to have_check_constraint(:check_unit_conversions_to_unit_presence).with_expression("to_unit IS NOT NULL AND to_unit::text <> ''::text") }
   end
 
+  describe "constants" do
+    it { is_expected.to have_constant(:LISTING_ATTRIBUTES) }
+  end
+
+  describe "included modules" do
+    it { is_expected.to include_module(Sortable) }
+  end
+
   describe "associations" do
     it { is_expected.to belong_to(:product).inverse_of(:unit_conversions).touch }
   end
+
+  describe "validations" do
+    describe "#from_unit" do
+      it { is_expected.to validate_presence_of(:from_unit) }
+      it { is_expected.to validate_inclusion_of(:from_unit).in_array(TranspoLink::MeasurementUnits.all_units.map(&:to_s)) }
+    end
+
+    describe "#to_unit" do
+      it { is_expected.to validate_presence_of(:to_unit) }
+      it { is_expected.to validate_inclusion_of(:to_unit).in_array(TranspoLink::MeasurementUnits.all_units.map(&:to_s)) }
+    end
+
+    describe "#conversion_rate" do
+      it { is_expected.to validate_presence_of(:conversion_rate) }
+      it { is_expected.to validate_numericality_of(:conversion_rate).is_greater_than(0.0) }
+    end
+  end
+
+  include_examples "apply default scope on created_at:desc"
 end

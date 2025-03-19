@@ -1,0 +1,36 @@
+= title(@product.reference_code)
+.card.card-primary.border.border-primary
+  .card-body
+    .widget
+      .widget-header.d-flex.align-items-center.justify-content-between
+        .d-block
+          .widget-title
+            = h(@product.reference_code)
+          .widget-help
+            %span.middle-dot-divider
+              = Product.human_attribute_name(:created_at)
+              = h(time_ago_with_tooltip(@product.created_at))
+            %span.middle-dot-divider
+              = Product.human_attribute_name(:updated_at)
+              = h(time_ago_with_tooltip(@product.updated_at))
+        = link_to edit_product_path(@product), class: "btn btn-secondary" do
+          = external_svg_tag("svgs/pencil.svg")
+          = button_text(:edit)
+    .widget
+      .widget-header
+        .widget-title
+          = t(".basic_details")
+      .widget-body
+        = render_if_exists("products/basic_details", locals: {product: @product})
+    .widget
+      .widget-header
+        .widget-title
+          = t(".unit_conversions")
+      .widget-body
+        = render_if_exists("products/unit_conversions/index", locals: {product: @product})
+    .widget
+      .widget-header
+        .widget-title
+          = t(".product_prices")
+      .widget-body
+        = render_if_exists("products/product_prices/index", locals: {product: @product})

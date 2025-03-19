@@ -1,0 +1,16 @@
+%tr.unit-conversion-form-wrapper{data: {new_record: form.object.new_record?}}
+  %td
+    = (form.index + 1) if form.object.persisted?
+    = form.hidden_field :id, value: form.object.id
+    = form.hidden_field :_destroy
+  %td
+    = form.select :from_unit, grouped_options_for_select(TranspoLink::MeasurementUnits.options_for_units, form.object.from_unit),
+      {include_blank: t(".select_source_unit")}
+  %td
+    = form.select :to_unit, grouped_options_for_select(TranspoLink::MeasurementUnits.options_for_units, form.object.to_unit),
+      {include_blank: t(".select_target_unit")}
+  %td
+    = form.number_field :conversion_rate, step: 0.0001
+  %td
+    = button_tag type: :button, class: "btn btn-sm btn-danger", data: {action: "click->nested-forms#removeAssociation"} do
+      = external_svg_tag("svgs/trash.svg")

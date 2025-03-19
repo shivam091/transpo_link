@@ -15,6 +15,14 @@ module TranspoLink
       end
     end
 
+    def avg(value, column_alias = nil)
+      if column_alias
+        aliased_sql_function("AVG", [value], column_alias)
+      else
+        sql_function("AVG", [value])
+      end
+    end
+
     private
 
     def aliased_sql_function(name, args, column_alias)
