@@ -1,10 +1,10 @@
-= pretty_form_with model: [@reviewable, @feedback] do |form|
-  .col-12.mb-2
+= pretty_form_with model: [@reviewable, @feedback], class: "row g-2" do |form|
+  .col-12
     .range-container{data: {controller: "range-slider"}}
       = form.label :rating, class: "form-label required"
       = form.range_field :rating, min: 0, max: 10, step: 0.5, autofocus: true, data: {range_slider_target: "rangeInput"}
       %output.range-thumb{data: {range_slider_target: "rangeThumb"}}
-  .col-12.mb-2
+  .col-12
     = form.label :comment, class: "form-label required"
     = form.text_area :comment, rows: 5
   .modal-actions

@@ -1,4 +1,4 @@
-= pretty_form_with model: current_user, url: profile_path do |form|
+= pretty_form_with model: current_user, url: profile_path, class: "row g-3" do |form|
   = form_errors(current_user)
   .subheader
     = t(".profile_details")

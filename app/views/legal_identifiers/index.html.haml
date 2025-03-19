@@ -10,7 +10,7 @@
             .widget-help= t(".your_legal_identifiers_help_text")
         = link_to new_legal_identifier_path, class: "btn btn-primary", data: {turbo_frame: :remote_modal} do
           = external_svg_tag("svgs/plus.svg")
-          = button_text("new")
+          = button_text(:new)
       .widget-body
         = render_if_exists("legal_identifiers/help_texts")
         .table-responsive

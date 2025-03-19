@@ -1,24 +1,24 @@
-= pretty_form_with model: @legal_identifier do |form|
-  .col-12.mb-2
+= pretty_form_with model: @legal_identifier, class: "row g-2" do |form|
+  .col-12
     = form.label :country, class: "form-label required"
     = form.select :country, options_for_select(TranspoLink::CountryInfo.options_for_countries, form.object.country),
       {include_blank: t(".select_country")}, {autofocus: true}
-  .col-12.mb-2
+  .col-12
     = form.label :entity_type, class: "form-label required"
     = form.select :entity_type, options_for_select(enum_options_for_select(LegalIdentifier, :entity_types), form.object.entity_type),
     {include_blank: t(".select_entity_type")}, {}
-  .col-12.mb-2
+  .col-12
     = form.label :tax_identifier_type, class: "form-label required"
     = form.select :tax_identifier_type, options_for_select(enum_options_for_select(LegalIdentifier, :tax_identifier_types), form.object.tax_identifier_type),
       {include_blank: t(".select_tax_identifier_type")}, {}
-  .col-12.mb-2
+  .col-12
     = form.label :tax_identifier, class: "form-label required"
     = form.text_field :tax_identifier
-  .col-12.mb-2
+  .col-12
     = form.label :business_identifier_type, class: "form-label"
     = form.select :business_identifier_type, options_for_select(enum_options_for_select(LegalIdentifier, :business_identifier_types), form.object.business_identifier_type),
       {include_blank: t(".select_business_identifier_type")}, {}
-  .col-12.mb-2
+  .col-12
     = form.label :business_identifier, class: "form-label"
     = form.text_field :business_identifier
   .modal-actions

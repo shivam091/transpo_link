@@ -1,4 +1,4 @@
-.mb-3{data: {controller: "nested-forms", nested_forms_wrapper_selector_value: ".product-price-form-wrapper"}}
+%div{data: {controller: "nested-forms", nested_forms_wrapper_selector_value: ".product-price-form-wrapper"}}
   .col-12.text-end.mb-lg-10.mb-2
     = button_tag type: :button, class: "btn btn-secondary", data: {action: "click->nested-forms#addAssociation"} do
       = external_svg_tag("svgs/plus.svg")
