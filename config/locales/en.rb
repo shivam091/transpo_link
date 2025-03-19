@@ -267,6 +267,7 @@
             attributes: {
               tax_identifier: {
                 uniqueness: "should be unique within the same tax identifier type, country, and entity type",
+                invalid: "is invalid for selected country and tax identifier type"
               },
               tax_identifier_type: {
                 inclusion: "'%{value}' is not a valid tax identifier type",
@@ -279,7 +280,8 @@
               },
               business_identifier: {
                 absence: "must not be present when entity type is business",
-                uniqueness: "should be unique within the same business identifier type and country"
+                uniqueness: "should be unique within the same business identifier type and country",
+                invalid: "is invalid for selected country and business identifier type"
               },
               entity_type: {
                 inclusion: "'%{value}' is not a valid entity type",
@@ -497,6 +499,7 @@
           tan: "TAN – Tax Deduction and Collection Account Number",
           gstin: "GSTIN – GST Identification Number",
           vatin: "VATIN – VAT Identification Number",
+          nie: "NIE – Foreigner Identification Number",
           nif: "NIF – Tax Identification Number",
           utr: "UTR – Unique Taxpayer Reference",
           bn: "BN – Business Number",
@@ -515,12 +518,12 @@
           trn: "TRN – Tax Registration Number",
           kra_pin: "KRA_PIN – Kenya Revenue Authority PIN",
           inn: "INN – Taxpayer Identification Number",
+          kpp: "KPP – Tax Registration Reason Code",
           brn_kr: "BRN_KR – Business Registration Number",
           mst: "MST – Tax Identification Number",
-          tin_ph: "TIN_PH – Taxpayer Identification Number",
-          tin_th: "TIN_TH – Taxpayer Identification Number",
           uen: "UEN – Unique Entity Number",
-          rut: "RUT – Single Tax Registry"
+          rut: "RUT – Single Tax Registry",
+          rtn: "RTN – Registro Tributario Nacional",
         },
         entity_types: {
           business: "Business",
@@ -530,12 +533,14 @@
           ein: "EIN – Employer Identification Number",
           duns: "DUNS – Data Universal Numbering System (Issued by Dun & Bradstreet (D&B))",
           cin: "CIN – Corporate Identification Number",
+          llpin: "LLPIN - Limited Liability Partnership Identification Number",
           roc: "ROC – Registrar of Companies",
           acn: "ACN – Australian Company Number",
           abn: "ABN – Australian Business Number",
           nzbn: "NZBN – New Zealand Business Number",
           cnpj: "CNPJ – National Register of Legal Entities",
           bn: "BN – Business Number",
+          cif: "CIF – Tax Identification Certificate",
           siret: "SIRET – Business Identification Number",
           siren: "SIREN – Business Identification Number",
           crn: "CRN – Company Registration Number",
@@ -553,9 +558,11 @@
           brn_kr: "BRN_KR – Business Registration Number",
           cbr: "CBR – Central Business Register",
           cr: "CR – Commercial Registration Number",
-          trn: "TRN – Tax Registration Number",
+          vkn: "VKN – Vergi Kimlik Numarası",
           cip: "CIP – Company Identification Number",
           brn_bd: "BRN_BD – Business Registration Number",
+          rtn: "RTN – Registro Tributario Nacional",
+          uscc: "USCC – Unified Social Credit Code",
         }
       },
       tax_rate: {
@@ -570,6 +577,7 @@
           tan: "TAN – Tax Deduction and Collection Account Number",
           gstin: "GSTIN – GST Identification Number",
           vatin: "VATIN – VAT Identification Number",
+          nie: "NIE – Foreigner Identification Number",
           nif: "NIF – Tax Identification Number",
           utr: "UTR – Unique Taxpayer Reference",
           bn: "BN – Business Number",
@@ -588,12 +596,12 @@
           trn: "TRN – Tax Registration Number",
           kra_pin: "KRA_PIN – Kenya Revenue Authority PIN",
           inn: "INN – Taxpayer Identification Number",
+          kpp: "KPP – Tax Registration Reason Code",
           brn_kr: "BRN_KR – Business Registration Number",
           mst: "MST – Tax Identification Number",
-          tin_ph: "TIN_PH – Taxpayer Identification Number",
-          tin_th: "TIN_TH – Taxpayer Identification Number",
           uen: "UEN – Unique Entity Number",
-          rut: "RUT – Single Tax Registry"
+          rut: "RUT – Single Tax Registry",
+          rtn: "RTN – Registro Tributario Nacional",
         },
         business_categories: {
           b2b: "Business to Business (B2B)",
