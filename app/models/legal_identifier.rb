@@ -94,10 +94,7 @@ class LegalIdentifier < ApplicationRecord
             reduce: true
   validates :entity_type,
             presence: true,
-            inclusion: {
-              in: entity_types.values,
-              message: :inclusion
-            },
+            inclusion: {in: entity_types.values, message: :inclusion},
             reduce: true
   validates :tax_identifier,
             presence: true,
@@ -114,10 +111,7 @@ class LegalIdentifier < ApplicationRecord
             reduce: true
   validates :business_identifier_type,
             presence: true,
-            inclusion: {
-              in: business_identifier_types.values,
-              message: :inclusion
-            },
+            inclusion: {in: business_identifier_types.values, message: :inclusion},
             if: :business?,
             reduce: true
   validates :business_identifier,
@@ -130,6 +124,7 @@ class LegalIdentifier < ApplicationRecord
             business_identifier: true,
             if: :business?,
             reduce: true
+
   validate :business_identifier_type_country_combination
 
   belongs_to :user, inverse_of: :legal_identifiers, touch: true

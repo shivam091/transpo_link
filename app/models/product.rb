@@ -34,10 +34,7 @@ class Product < ApplicationRecord
             reduce: true
   validates :min_stock_threshold,
             presence: true,
-            numericality: {
-              only_integer: true,
-              greater_than: 0
-            },
+            numericality: {only_integer: true, greater_than: 0},
             reduce: true
   validates :capacity_unit,
             presence: true,

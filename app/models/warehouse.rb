@@ -31,10 +31,7 @@ class Warehouse < ApplicationRecord
             reduce: true
   validates :total_capacity,
             presence: true,
-            numericality: {
-              greater_than: 0,
-              less_than: 10**10
-            },
+            numericality: {greater_than: 0, less_than: 10**10},
             reduce: true
   validates :capacity_unit,
             presence: true,

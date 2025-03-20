@@ -24,10 +24,7 @@ class TaxRate < ApplicationRecord
             reduce: true
   validates :business_category,
             presence: true,
-            inclusion: {
-              in: business_categories.values,
-              message: :inclusion
-            },
+            inclusion: {in: business_categories.values, message: :inclusion},
             reduce: true
   validates :rate,
             presence: true,
@@ -47,9 +44,7 @@ class TaxRate < ApplicationRecord
             on: :create,
             reduce: true
   validates :valid_to,
-            comparison: {
-              greater_than: :valid_from
-            },
+            comparison: {greater_than: :valid_from},
             allow_nil: true,
             reduce: true
   validate :no_overlapping_tax_rates

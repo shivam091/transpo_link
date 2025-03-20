@@ -16,11 +16,12 @@ class Feedback < ApplicationRecord
               less_than_or_equal_to: 10
             },
             reduce: true
-  validate :rating_in_valid_steps
   validates :comment,
             presence: true,
             length: {maximum: 1000},
             reduce: true
+
+  validate :rating_in_valid_steps
 
   belongs_to :user, inverse_of: :feedbacks
   belongs_to :reviewable, inverse_of: :feedbacks, polymorphic: true

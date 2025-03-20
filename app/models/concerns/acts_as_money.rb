@@ -2,6 +2,8 @@
 # -*- frozen_string_literal: true -*-
 # -*- warn_indent: true -*-
 
+# Mixin module to provide shared functionalities for managing currency related
+# logic.
 module ActsAsMoney
   extend ActiveSupport::Concern
 

@@ -7,8 +7,8 @@ class Role < ApplicationRecord
 
   validates :name,
             presence: true,
-            uniqueness: true,
             length: {in: 2..55},
+            uniqueness: true,
             reduce: true
 
   has_many :users, inverse_of: :role, dependent: :restrict_with_exception
