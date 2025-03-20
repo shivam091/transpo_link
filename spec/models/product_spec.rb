@@ -61,10 +61,6 @@ RSpec.describe Product, type: :model do
       expect(product.cost_price).to eq(0.0)
     end
 
-    it "should set Money's default currency as default value for #currency" do
-      expect(product.currency).to eq(Money.default_currency.iso_code)
-    end
-
     it "should set false as default value for #is_active" do
       expect(product.is_active).to be_falsy
     end

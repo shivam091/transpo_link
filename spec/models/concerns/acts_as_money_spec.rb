@@ -27,6 +27,15 @@ RSpec.describe ActsAsMoney do
 
   subject { ActsAsMoneyModel.new(currency: "USD") }
 
+  describe "default values" do
+    let(:acts_as_money_instance) { ActsAsMoneyModel.new }
+
+    it "should set Money's default currency as default value for #currency" do
+      expect(acts_as_money_instance.currency).to eq(Money.default_currency.iso_code)
+    end
+  end
+
+
   describe "#currency" do
     it "returns a Money::Currency object" do
       expect(subject.currency).to be_a(Money::Currency)

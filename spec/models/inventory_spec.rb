@@ -61,10 +61,6 @@ RSpec.describe Inventory, type: :model do
     it "should set 0.0 as default value for #cost_price" do
       expect(inventory.cost_price).to eq(0.0)
     end
-
-    it "should set Money's default currency as default value for #currency" do
-      expect(inventory.currency).to eq(Money.default_currency.iso_code)
-    end
   end
 
   describe "included modules" do
