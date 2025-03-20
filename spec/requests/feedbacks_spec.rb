@@ -8,6 +8,7 @@ require "spec_helper"
 
 RSpec.describe "Feedbacks", type: :request do
   let!(:product) { create(:product) }
+
   let!(:unread_feedback) { create(:feedback) }
   let!(:read_feedback) { create(:feedback, :read) }
 

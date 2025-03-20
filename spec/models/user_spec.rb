@@ -178,7 +178,7 @@ RSpec.describe User, type: :model do
     let(:admin) { create(:admin, :confirmed, :active) }
     let(:buyer) { create(:buyer, :confirmed, :active) }
     let(:supplier) { create(:supplier, :confirmed, :active) }
-    let(:manager) { create(:manager, :confirmed, :active) }
+    let(:manager) { create(:manager, :confirmed, :active, :suspended) }
 
     describe ".admins" do
       it "returns array of admins" do
@@ -201,6 +201,12 @@ RSpec.describe User, type: :model do
     describe ".managers" do
       it "returns array of managers" do
         expect(manager).to be_one_of(described_class.managers)
+      end
+    end
+
+    describe ".suspended" do
+      it "returns array of suspended users" do
+        expect(manager).to be_one_of(described_class.suspended)
       end
     end
   end

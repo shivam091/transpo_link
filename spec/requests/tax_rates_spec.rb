@@ -55,32 +55,32 @@ RSpec.describe "TaxRates", type: :request do
     include_context "sign in as admin"
 
     describe "GET /tax-rates" do
-      # it "renders list of all tax rates with pagination" do
-      #   get tax_rates_path
-      #
-      #   expect(controller_assigns(:tax_rates)).to include(active_tax_rate)
-      #   expect(controller_assigns(:tax_rates)).to include(future_tax_rate)
-      #   expect(controller_assigns(:pagination_metadata)).to be_present
-      #   expect(response).to have_http_status(:ok)
-      # end
-      #
-      # it "renders list of active tax rates with pagination" do
-      #   get active_tax_rates_path
-      #
-      #   expect(controller_assigns(:tax_rates)).to include(active_tax_rate)
-      #   expect(controller_assigns(:tax_rates)).to exclude(future_tax_rate)
-      #   expect(controller_assigns(:pagination_metadata)).to be_present
-      #   expect(response).to have_http_status(:ok)
-      # end
-      #
-      # it "renders list of future tax rates with pagination" do
-      #   get future_tax_rates_path
-      #
-      #   expect(controller_assigns(:tax_rates)).to include(future_tax_rate)
-      #   expect(controller_assigns(:tax_rates)).to exclude(active_tax_rate)
-      #   expect(controller_assigns(:pagination_metadata)).to be_present
-      #   expect(response).to have_http_status(:ok)
-      # end
+      it "renders list of all tax rates with pagination" do
+        get tax_rates_path
+
+        expect(controller_assigns(:tax_rates)).to include(active_tax_rate)
+        expect(controller_assigns(:tax_rates)).to include(future_tax_rate)
+        expect(controller_assigns(:pagination_metadata)).to be_present
+        expect(response).to have_http_status(:ok)
+      end
+
+      it "renders list of active tax rates with pagination" do
+        get active_tax_rates_path
+
+        expect(controller_assigns(:tax_rates)).to include(active_tax_rate)
+        expect(controller_assigns(:tax_rates)).to exclude(future_tax_rate)
+        expect(controller_assigns(:pagination_metadata)).to be_present
+        expect(response).to have_http_status(:ok)
+      end
+
+      it "renders list of future tax rates with pagination" do
+        get future_tax_rates_path
+
+        expect(controller_assigns(:tax_rates)).to include(future_tax_rate)
+        expect(controller_assigns(:tax_rates)).to exclude(active_tax_rate)
+        expect(controller_assigns(:pagination_metadata)).to be_present
+        expect(response).to have_http_status(:ok)
+      end
 
       it "renders list of expired tax rates with pagination" do
         travel_to(1.year.from_now) do
