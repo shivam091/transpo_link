@@ -38,7 +38,7 @@ FactoryBot.define do
       confirmation_sent_at { nil }
     end
 
-    trait :banned do
+    trait :suspended do
       is_banned { true }
     end
   end

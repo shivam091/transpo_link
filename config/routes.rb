@@ -49,7 +49,11 @@ Rails.application.routes.draw do
   resource :locale, only: [:edit, :update]
 
   resources :roles, except: [:new, :create, :destroy]
-  resources :users, only: [:index, :show]
+  resources :users, only: [:index, :show], concerns: :toggleable do
+    collection do
+      get :suspended, action: :index, defaults: {status: "suspended"}
+    end
+  end
   resources :request_logs, path: "request-logs", only: [:index, :show]
   resources :warehouses, concerns: :toggleable
   resources :legal_identifiers, path: "legal-identifiers", except: :show

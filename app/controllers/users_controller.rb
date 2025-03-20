@@ -8,7 +8,13 @@ class UsersController < ApplicationController
 
   # GET /users
   def index
-    @users = User.includes(:user_detail)
+    @users = User.includes(:role, :user_detail)
+    @users = case params[:status]
+             when "active"    then @users.active
+             when "inactive"  then @users.inactive
+             when "suspended" then @users.suspended
+             else                  @users
+             end
     @users, @pagination_metadata = @users.paginate(page: params[:page])
   end
 

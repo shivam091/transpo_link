@@ -50,6 +50,7 @@ class User < ApplicationRecord
 
   after_update :update_password_updated_at, if: :saved_change_to_encrypted_password?
 
+  scope :suspended, -> { where(arel_table[:is_banned].eq(true)) }
   scope :admins, -> { with_role("admin") }
   scope :suppliers, -> { with_role("supplier") }
   scope :buyers, -> { with_role("buyer") }
