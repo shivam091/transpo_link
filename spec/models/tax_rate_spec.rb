@@ -108,6 +108,22 @@ RSpec.describe TaxRate, type: :model do
       end
     end
 
+    describe ".future" do
+      it "returns only future tax rates" do
+        expect(described_class.future).to include(future_tax_rate)
+        expect(described_class.future).to exclude(active_tax_rate)
+      end
+    end
+
+    describe ".expired" do
+      it "returns only expired tax rates" do
+        travel_to(10.year.from_now) do
+          expect(described_class.expired).to include(active_tax_rate)
+          expect(described_class.expired).to include(future_tax_rate)
+        end
+      end
+    end
+
     describe ".for_country" do
       it "returns tax rates for the given country" do
         expect(described_class.for_country("IN")).to include(future_tax_rate)

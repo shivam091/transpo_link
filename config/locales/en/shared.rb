@@ -16,6 +16,8 @@
         suspended: "Suspended",
         read: "Read",
         unread: "Unread",
+        future: "Future",
+        expired: "Expired",
       },
       address_form_fields: {
         select_country: "Select country or region",

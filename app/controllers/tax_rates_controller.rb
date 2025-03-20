@@ -8,7 +8,12 @@ class TaxRatesController < ApplicationController
 
   # GET /tax-rates
   def index
-    @tax_rates = TaxRate.all
+    @tax_rates = case params[:status]
+                 when "active"  then TaxRate.active
+                 when "future"  then TaxRate.future
+                 when "expired" then TaxRate.expired
+                 else                TaxRate.all
+                 end
     @tax_rates, @pagination_metadata = @tax_rates.paginate(page: params[:page])
   end
 

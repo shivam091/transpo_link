@@ -59,6 +59,12 @@ class TaxRate < ApplicationRecord
     )
   }
 
+  # Scope to get future tax rates
+  scope :future, -> { where(arel_table[:valid_from].gt(Date.current)) }
+
+  # Scope to get tax rates whose valid_to has passed
+  scope :expired, -> { where(arel_table[:valid_to].lt(Date.current)) }
+
   # Scope to get tax rates for a specific country
   scope :for_country, ->(country) { where(arel_table[:country].eq(country)) }
 

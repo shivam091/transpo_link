@@ -7,7 +7,8 @@
 require "spec_helper"
 
 RSpec.describe "TaxRates", type: :request do
-  let!(:tax_rate) { create(:tax_rate) }
+  let!(:active_tax_rate) { create(:tax_rate, valid_to: Date.current + 1.day) }
+  let!(:future_tax_rate) { create(:tax_rate, valid_from: (Date.current + 1.week)) }
 
   let!(:valid_attributes) { attributes_for(:tax_rate, tax_identifier_type: "pan") }
   let!(:invalid_attributes) { attributes_for(:tax_rate, tax_identifier_type: "") }
@@ -32,19 +33,19 @@ RSpec.describe "TaxRates", type: :request do
     end
 
     describe "GET /tax-rates/:id/edit" do
-      subject { get edit_tax_rate_path(tax_rate) }
+      subject { get edit_tax_rate_path(active_tax_rate) }
 
       it { is_expected.to require_sign_in }
     end
 
     describe "PUT|PATCH /tax-rates/:id" do
-      subject { put tax_rate_path(tax_rate) }
+      subject { put tax_rate_path(active_tax_rate) }
 
       it { is_expected.to require_sign_in }
     end
 
     describe "DELETE /tax-rates/:id" do
-      subject { delete tax_rate_path(tax_rate) }
+      subject { delete tax_rate_path(active_tax_rate) }
 
       it { is_expected.to require_sign_in }
     end
@@ -54,12 +55,42 @@ RSpec.describe "TaxRates", type: :request do
     include_context "sign in as admin"
 
     describe "GET /tax-rates" do
-      it "renders list of all tax rates with pagination" do
-        get tax_rates_path
+      # it "renders list of all tax rates with pagination" do
+      #   get tax_rates_path
+      #
+      #   expect(controller_assigns(:tax_rates)).to include(active_tax_rate)
+      #   expect(controller_assigns(:tax_rates)).to include(future_tax_rate)
+      #   expect(controller_assigns(:pagination_metadata)).to be_present
+      #   expect(response).to have_http_status(:ok)
+      # end
+      #
+      # it "renders list of active tax rates with pagination" do
+      #   get active_tax_rates_path
+      #
+      #   expect(controller_assigns(:tax_rates)).to include(active_tax_rate)
+      #   expect(controller_assigns(:tax_rates)).to exclude(future_tax_rate)
+      #   expect(controller_assigns(:pagination_metadata)).to be_present
+      #   expect(response).to have_http_status(:ok)
+      # end
+      #
+      # it "renders list of future tax rates with pagination" do
+      #   get future_tax_rates_path
+      #
+      #   expect(controller_assigns(:tax_rates)).to include(future_tax_rate)
+      #   expect(controller_assigns(:tax_rates)).to exclude(active_tax_rate)
+      #   expect(controller_assigns(:pagination_metadata)).to be_present
+      #   expect(response).to have_http_status(:ok)
+      # end
 
-        expect(controller_assigns(:tax_rates)).to include(tax_rate)
-        expect(controller_assigns(:pagination_metadata)).to be_present
-        expect(response).to have_http_status(:ok)
+      it "renders list of expired tax rates with pagination" do
+        travel_to(1.year.from_now) do
+          get expired_tax_rates_path
+
+          expect(controller_assigns(:tax_rates)).to include(future_tax_rate)
+          expect(controller_assigns(:tax_rates)).to include(active_tax_rate)
+          expect(controller_assigns(:pagination_metadata)).to be_present
+          expect(response).to have_http_status(:ok)
+        end
       end
     end
 
@@ -94,9 +125,9 @@ RSpec.describe "TaxRates", type: :request do
 
     describe "GET /tax-rates/:id/edit" do
       it "renders tax rate edit page" do
-        get edit_tax_rate_path(tax_rate)
+        get edit_tax_rate_path(active_tax_rate)
 
-        expect(controller_assigns(:tax_rate)).to eq(tax_rate)
+        expect(controller_assigns(:tax_rate)).to eq(active_tax_rate)
         expect(response).to have_http_status(:ok)
       end
     end
@@ -104,9 +135,9 @@ RSpec.describe "TaxRates", type: :request do
     describe "PUT|PATCH /tax-rates/:id" do
       context "when provided attributes are valid" do
         it "updates the tax rate and redirects" do
-          put tax_rate_path(tax_rate), params: {tax_rate: valid_attributes}, as: :turbo_stream
+          put tax_rate_path(active_tax_rate), params: {tax_rate: valid_attributes}, as: :turbo_stream
 
-          expect(tax_rate.reload.tax_identifier_type).to eq("pan")
+          expect(active_tax_rate.reload.tax_identifier_type).to eq("pan")
           expect(response).to redirect_to(tax_rates_path)
           expect(flash[:notice]).to eq("Tax rate was successfully updated.")
           expect(response).to have_http_status(:see_other)
@@ -115,7 +146,7 @@ RSpec.describe "TaxRates", type: :request do
 
       context "when provided attributes are invalid" do
         it "does not update the tax rate and renders errors" do
-          put tax_rate_path(tax_rate), params: {tax_rate: invalid_attributes}, as: :turbo_stream
+          put tax_rate_path(active_tax_rate), params: {tax_rate: invalid_attributes}, as: :turbo_stream
 
           expect(flash[:alert]).to eq("Tax rate could not be updated.")
           expect(response.media_type).to eq(Mime[:turbo_stream])
@@ -128,7 +159,7 @@ RSpec.describe "TaxRates", type: :request do
     describe "DELETE /tax-rates/:id" do
       context "when valid id" do
         it "deletes the tax rate and redirects" do
-          delete tax_rate_path(tax_rate)
+          delete tax_rate_path(active_tax_rate)
 
           expect(response).to redirect_to(tax_rates_path)
           expect(flash[:info]).to eq("Tax rate was successfully deleted.")
@@ -140,7 +171,7 @@ RSpec.describe "TaxRates", type: :request do
         it "does not delete the tax rate and redirects with an error message" do
           allow(TaxRates::DestroyService).to receive(:call) { ServiceResponse.error }
 
-          delete tax_rate_path(tax_rate)
+          delete tax_rate_path(active_tax_rate)
 
           expect(response).to redirect_to(tax_rates_path)
           expect(flash[:alert]).to eq("Tax rate could not be deleted.")

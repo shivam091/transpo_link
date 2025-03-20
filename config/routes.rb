@@ -57,7 +57,13 @@ Rails.application.routes.draw do
   resources :request_logs, path: "request-logs", only: [:index, :show]
   resources :warehouses, concerns: :toggleable
   resources :legal_identifiers, path: "legal-identifiers", except: :show
-  resources :tax_rates, path: "tax-rates", except: :show
+  resources :tax_rates, path: "tax-rates", except: :show do
+    collection do
+      get :active, action: :index, defaults: {status: "active"}
+      get :future, action: :index, defaults: {status: "future"}
+      get :expired, action: :index, defaults: {status: "expired"}
+    end
+  end
   resources :product_categories, path: "product-categories", except: :show, concerns: :toggleable
   resources :products, concerns: [:reviewable, :toggleable]
   resources :feedbacks, only: [:index, :show], concerns: :notifiable
