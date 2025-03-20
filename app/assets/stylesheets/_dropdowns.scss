@@ -1,8 +1,9 @@
 .dropdown-menu {
   font-size: inherit;
-}
-.navbar-nav .dropdown-menu {
-  position: absolute !important;
+  --bs-dropdown-padding-x: 0.5rem;
+  --bs-dropdown-border-radius: 0.25rem;
+  --bs-dropdown-item-padding-x: 0.5rem;
+  --bs-dropdown-item-border-radius: 0.25rem;
 }
 .dropdown-toggle::after {
   transform: rotate(0deg);
