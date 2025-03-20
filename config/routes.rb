@@ -34,6 +34,16 @@ Rails.application.routes.draw do
     resources :feedbacks, only: [:new, :create]
   end
 
+  concern :notifiable do
+    collection do
+      get :read, action: :index, defaults: {status: "read"}
+      get :unread, action: :index, defaults: {status: "unread"}
+    end
+    member do
+      match :mark_as_read, path: "mark-as-read", via: [:put, :patch]
+    end
+  end
+
   resource :profile, only: [:show, :edit, :update]
   resource :preference, only: [:show, :edit, :update]
   resource :locale, only: [:edit, :update]
@@ -46,15 +56,7 @@ Rails.application.routes.draw do
   resources :tax_rates, path: "tax-rates", except: :show
   resources :product_categories, path: "product-categories", except: :show, concerns: :toggleable
   resources :products, concerns: [:reviewable, :toggleable]
-  resources :feedbacks, only: [:index, :show] do
-    collection do
-      get :read, action: :index, defaults: {status: "read"}
-      get :unread, action: :index, defaults: {status: "unread"}
-    end
-    member do
-      match :mark_as_read, path: "mark-as-read", via: [:put, :patch]
-    end
-  end
+  resources :feedbacks, only: [:index, :show], concerns: :notifiable
 
   root to: "dashboards#show"
 end
