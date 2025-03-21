@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_03_10_041232) do
+ActiveRecord::Schema[8.0].define(version: 2025_03_21_105849) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -21,6 +21,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_10_041232) do
   create_enum "color_schemes", ["auto", "dark", "light"]
   create_enum "entity_types", ["business", "individual"]
   create_enum "movement_types", ["restock", "purchase", "sale", "return", "transfer_in", "transfer_out", "adjustment", "reservation"]
+  create_enum "tracking_methods", ["fifo", "lifo", "average_cost"]
 
   create_table "addresses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "addressable_type"
@@ -73,6 +74,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_10_041232) do
     t.string "currency"
     t.timestamptz "created_at", null: false
     t.timestamptz "updated_at", null: false
+    t.enum "tracking_method", enum_type: "tracking_methods"
     t.index ["product_id", "warehouse_id"], name: "index_inventories_on_product_id_and_warehouse_id", unique: true
     t.index ["product_id"], name: "index_inventories_on_product_id"
     t.index ["reference_code"], name: "index_inventories_on_reference_code", unique: true
@@ -86,6 +88,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_10_041232) do
     t.check_constraint "reserved_stock IS NOT NULL", name: "check_inventories_reserved_stock_presence"
     t.check_constraint "stock_quantity >= 0", name: "check_inventories_stock_quantity_numericality"
     t.check_constraint "stock_quantity IS NOT NULL", name: "check_inventories_stock_quantity_presence"
+    t.check_constraint "tracking_method = ANY (ARRAY['fifo'::tracking_methods, 'lifo'::tracking_methods, 'average_cost'::tracking_methods])", name: "check_inventories_tracking_method_inclusion"
+    t.check_constraint "tracking_method IS NOT NULL", name: "check_inventories_tracking_method_presence"
   end
 
   create_table "inventory_audit_logs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

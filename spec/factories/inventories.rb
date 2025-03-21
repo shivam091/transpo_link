@@ -13,5 +13,6 @@ FactoryBot.define do
     inventory_unit { "kg" }
     cost_price { 48.0 }
     currency { Money.default_currency.iso_code }
+    tracking_method { Inventory.tracking_methods[:average_cost] }
   end
 end

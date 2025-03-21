@@ -25,6 +25,7 @@ RSpec.describe Inventory, type: :model do
     it { is_expected.to have_db_column(:inventory_unit).of_type(:string) }
     it { is_expected.to have_db_column(:cost_price).of_type(:decimal).with_options(precision: 12, scale: 2, default: 0.0) }
     it { is_expected.to have_db_column(:currency).of_type(:string) }
+    it { is_expected.to have_db_column(:tracking_method).of_type(:enum) }
     it { is_expected.to have_db_column(:created_at).of_type(:timestamptz).with_options(null: false) }
     it { is_expected.to have_db_column(:updated_at).of_type(:timestamptz).with_options(null: false) }
 
@@ -45,6 +46,8 @@ RSpec.describe Inventory, type: :model do
     it { is_expected.to have_check_constraint(:check_inventories_reserved_stock_presence).with_expression("reserved_stock IS NOT NULL") }
     it { is_expected.to have_check_constraint(:check_inventories_stock_quantity_numericality).with_expression("stock_quantity >= 0") }
     it { is_expected.to have_check_constraint(:check_inventories_stock_quantity_presence).with_expression("stock_quantity IS NOT NULL") }
+    it { is_expected.to have_check_constraint(:check_inventories_tracking_method_presence).with_expression("tracking_method IS NOT NULL") }
+    it { is_expected.to have_check_constraint(:check_inventories_tracking_method_inclusion).with_expression("tracking_method = ANY (ARRAY['fifo'::tracking_methods, 'lifo'::tracking_methods, 'average_cost'::tracking_methods])") }
   end
 
   describe "default values" do
@@ -61,6 +64,10 @@ RSpec.describe Inventory, type: :model do
     it "should set 0.0 as default value for #cost_price" do
       expect(inventory.cost_price).to eq(0.0)
     end
+  end
+
+  describe "enum" do
+    it { is_expected.to define_enum_for(:tracking_method).backed_by_column_of_type(:enum) }
   end
 
   describe "included modules" do

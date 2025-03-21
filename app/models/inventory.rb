@@ -5,9 +5,16 @@
 class Inventory < ApplicationRecord
   include HasReferenceCode
 
+  enum :tracking_method, {
+    fifo: "fifo",
+    lifo: "lifo",
+    average_cost: "average_cost",
+  }
+
   attribute :stock_quantity, default: 0
   attribute :reserved_stock, default: 0
   attribute :cost_price, default: 0.0
+  attribute :tracking_method, :enum, default: tracking_methods[:average_cost]
 
   has_many :inventory_movements, inverse_of: :inventory, dependent: :destroy
   has_many :inventory_audit_logs, inverse_of: :inventory, dependent: :destroy
