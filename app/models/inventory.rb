@@ -3,7 +3,12 @@
 # -*- warn_indent: true -*-
 
 class Inventory < ApplicationRecord
-  include HasReferenceCode
+  include HasReferenceCode, Pageable, Sortable, ActsAsMoney
+
+  LISTING_ATTRIBUTES = %i[
+    reference_code product_id warehouse_id batch_number stock_quantity
+    reserved_stock cost_price
+  ].freeze
 
   enum :tracking_method, {
     fifo: "fifo",
@@ -21,4 +26,6 @@ class Inventory < ApplicationRecord
 
   belongs_to :warehouse, inverse_of: :inventories
   belongs_to :product, inverse_of: :inventories, touch: true
+
+  default_scope -> { order_created_desc }
 end
