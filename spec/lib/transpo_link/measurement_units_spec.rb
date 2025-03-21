@@ -20,13 +20,24 @@ RSpec.describe TranspoLink::MeasurementUnits do
   let!(:count_units) { %i[item pack box carton pallet bundle dz case roll] }
 
   describe "::UNITS" do
-    it "is a frozen hash" do
+    it "is a frozen array" do
       expect(described_class::UNITS).to be_frozen
     end
 
     it "allows access using symbols and strings" do
       expect(described_class::UNITS[:area]).to eq(area_units)
       expect(described_class::UNITS["area"]).to eq(area_units)
+    end
+  end
+
+  describe "::UNIT_TO_CATEGORY" do
+    it "is a frozen hash" do
+      expect(described_class::UNIT_TO_CATEGORY).to be_frozen
+    end
+
+    it "allows access using symbols and strings" do
+      expect(described_class::UNIT_TO_CATEGORY[:km]).to eq("length")
+      expect(described_class::UNIT_TO_CATEGORY["km"]).to eq("length")
     end
   end
 
@@ -82,6 +93,19 @@ RSpec.describe TranspoLink::MeasurementUnits do
 
     it "returns an empty array if the specified category is invalid" do
       expect(described_class.units_for(:angle)).to be_empty
+    end
+  end
+
+  describe ".category_for_unit" do
+    it "returns the correct category for a unit" do
+      expect(described_class.category_for_unit(:kg)).to eq("weight")
+      expect(described_class.category_for_unit(:m²)).to eq("area")
+      expect(described_class.category_for_unit(:bbl)).to eq("volume")
+      expect(described_class.category_for_unit(:item)).to eq("count")
+    end
+
+    it "returns nil for a unit not found in any category" do
+      expect(described_class.category_for_unit(:xyz)).to be_nil
     end
   end
 end
