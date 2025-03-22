@@ -13,6 +13,9 @@
       new: {
         title: "New inventory",
       },
+      edit: {
+        title: "Edit inventory",
+      },
       form: {
         select_product: "Select product",
         select_warehouse: "Select warehouse",

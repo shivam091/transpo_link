@@ -4,6 +4,8 @@
 
 class InventoriesController < ApplicationController
 
+  before_action :find_inventory, except: [:index, :new, :create]
+
   # GET /inventories
   def index
     @inventories = Inventory.all
@@ -36,6 +38,31 @@ class InventoriesController < ApplicationController
     end
   end
 
+  # GET /inventories/:id/edit
+  def edit
+  end
+
+  # PUT|PATCH /inventories/:id
+  def update
+    response = Inventories::UpdateService.(@inventory, inventory_params)
+    @inventory = response.payload[:inventory]
+
+    if response.success?
+      set_flash_message(:notice, :success)
+      redirect_to inventories_path, status: :see_other
+    else
+      set_flash_message(:alert, :error, immediate: true)
+      respond_to do |format|
+        format.turbo_stream do
+          render turbo_stream: [
+            turbo_stream.update(:edit_inventory_form_frame, partial: "inventories/form"),
+            render_flash
+          ], status: :unprocessable_entity
+        end
+      end
+    end
+  end
+
   private
 
   def inventory_params
@@ -51,4 +78,7 @@ class InventoriesController < ApplicationController
     )
   end
 
+  def find_inventory
+    @inventory ||= Inventory.find(params[:id])
+  end
 end
