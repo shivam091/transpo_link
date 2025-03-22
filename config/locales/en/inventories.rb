@@ -23,6 +23,8 @@
         select_inventory_unit: "Select inventory unit",
         select_tracking_method: "Select tracking method",
       },
+      show: {
+      },
     }
   }
 }

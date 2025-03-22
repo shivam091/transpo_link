@@ -4,7 +4,7 @@
   %th{scope: "row"}
     = h(@pagination_metadata.offset + index)
   %td
-    = link_to inventory.reference_code, "javascript:void(0)"
+    = link_to inventory.reference_code, inventory_path(inventory)
   %td
     = link_to product.name, product_path(product), target: :_blank
   %td
@@ -21,6 +21,10 @@
     = link_to "javascript:void(0)", class: "text-reset", data: {bs_toggle: "dropdown"}, aria: {expanded: false} do
       = external_svg_tag("svgs/ellipsis-vertical.svg")
     %ul.dropdown-menu
+      %li
+        = link_to inventory_path(inventory), class: "dropdown-item" do
+          = external_svg_tag("svgs/arrow-right.svg")
+          = button_text(:view_details)
       %li
         = link_to edit_inventory_path(inventory), class: "dropdown-item" do
           = external_svg_tag("svgs/pencil.svg")

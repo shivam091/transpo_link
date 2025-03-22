@@ -1,0 +1,69 @@
+= title(@inventory.reference_code)
+- product = @inventory.product
+- warehouse = @inventory.warehouse
+.card.card-primary.border.border-primary
+  .card-body
+    .widget
+      .widget-header.d-flex.align-items-center.justify-content-between
+        .d-block
+          .widget-title
+            = h(@inventory.reference_code)
+          .widget-help
+            %span.middle-dot-divider
+              = Inventory.human_attribute_name(:created_at)
+              = h(time_ago_with_tooltip(@inventory.created_at))
+            %span.middle-dot-divider
+              = Inventory.human_attribute_name(:updated_at)
+              = h(time_ago_with_tooltip(@inventory.updated_at))
+        = link_to edit_inventory_path(@inventory), class: "btn btn-secondary" do
+          = external_svg_tag("svgs/pencil.svg")
+          = button_text(:edit)
+      .widget-body
+        .widget-row
+          .widget-row-content
+            .widget-row-title
+              = Inventory.human_attribute_name(:product_id)
+            .widget-row-body
+              = link_to product.name, product_path(product), target: :_blank
+        .widget-row
+          .widget-row-content
+            .widget-row-title
+              = Inventory.human_attribute_name(:warehouse_id)
+            .widget-row-body
+              = link_to warehouse.name, warehouse_path(warehouse), target: :_blank
+        .widget-row
+          .widget-row-content
+            .widget-row-title
+              = Inventory.human_attribute_name(:batch_number)
+            .widget-row-body
+              = h(@inventory.batch_number.presence || "-")
+        .widget-row
+          .widget-row-content
+            .widget-row-title
+              = Inventory.human_attribute_name(:expiration_date)
+            .widget-row-body
+              = h(@inventory.expiration_date.presence&.to_fs(:long) || "-")
+        .widget-row
+          .widget-row-content
+            .widget-row-title
+              = Inventory.human_attribute_name(:stock_quantity)
+            .widget-row-body
+              = TranspoLink::MeasurementUnits.display_label(@inventory.stock_quantity, @inventory.inventory_unit)
+        .widget-row
+          .widget-row-content
+            .widget-row-title
+              = Inventory.human_attribute_name(:reserved_stock)
+            .widget-row-body
+              = TranspoLink::MeasurementUnits.display_label(@inventory.reserved_stock, @inventory.inventory_unit)
+        .widget-row
+          .widget-row-content
+            .widget-row-title
+              = Inventory.human_attribute_name(:cost_price)
+            .widget-row-body
+              = number_to_currency(@inventory.cost_price, unit: @inventory.currency.symbol)
+        .widget-row
+          .widget-row-content
+            .widget-row-title
+              = Inventory.human_attribute_name(:tracking_method)
+            .widget-row-body
+              = h(enum_i18n(Inventory, :tracking_methods, @inventory.tracking_method))

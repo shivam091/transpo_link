@@ -63,6 +63,10 @@ class InventoriesController < ApplicationController
     end
   end
 
+  # GET /inventories/:id
+  def show
+  end
+
   private
 
   def inventory_params
