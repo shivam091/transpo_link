@@ -17,7 +17,7 @@ RSpec.describe FeedbacksHelper, type: :helper do
 
   describe "#reviewable_link" do
     it "returns product path for a product" do
-      allow(helper).to receive(:product_path).with(product).and_return("/products/1")
+      allow(helper).to receive(:product_path).with(product) { "/products/1" }
 
       expect(helper.reviewable_link(product)).to eq("/products/1")
     end
