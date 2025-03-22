@@ -1,4 +1,9 @@
 .card.card-primary.border.border-primary
+  .card-header
+    .d-flex.justify-content-end.align-items-center
+      = link_to new_inventory_path, class: "btn btn-primary" do
+        = external_svg_tag("svgs/plus.svg")
+        = button_text(:new)
   .card-body
     .table-responsive
       %table.table.table-striped.table-borderless

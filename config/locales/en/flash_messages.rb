@@ -109,6 +109,12 @@
           error: "We encountered a problem marking the feedback as read. Please try again."
         },
       },
+      inventories: {
+        create: {
+          success: "Inventory has been successfully created.",
+          error: "We encountered a problem creating inventory. Please try again.",
+        },
+      },
     }
   }
 }

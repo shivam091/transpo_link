@@ -1,0 +1,41 @@
+= pretty_form_with model: @inventory, class: "row g-3" do |form|
+  - if form.object.persisted?
+    .col-sm-12.col-md-6.col-lg-4
+      = form.label :reference_code, class: "form-label"
+      = form.text_field :reference_code, static: true
+  .col-sm-12.col-md-6.col-lg-4
+    = form.label :product_id, class: "form-label required"
+    = form.select :product_id, options_for_select(Product.select_options, form.object.product_id),
+      {include_blank: t(".select_product")}, {autofocus: true}
+  .col-sm-12.col-md-6.col-lg-4
+    = form.label :warehouse_id, class: "form-label required"
+    = form.select :warehouse_id, options_for_select(Warehouse.select_options, form.object.warehouse_id),
+      {include_blank: t(".select_warehouse")}, {}
+  .col-sm-12.col-md-6.col-lg-4
+    = form.label :batch_number, class: "form-label"
+    = form.text_field :batch_number
+  .col-sm-12.col-md-6.col-lg-4
+    = form.label :cost_price, class: "form-label"
+    = form.number_field :cost_price, step: 0.01
+  .col-sm-12.col-md-6.col-lg-4
+    = form.label :expiration_date, class: "form-label"
+    = form.date_field :expiration_date
+  .col-sm-12.col-md-6.col-lg-4
+    = form.label :currency, class: "form-label required"
+    = form.select :currency, options_for_select(TranspoLink::Currency.options_for_currencies, form.object.currency),
+      {include_blank: t(".select_currency")}
+  .col-sm-12.col-md-6.col-lg-4
+    = form.label :inventory_unit, class: "form-label required"
+    = form.select :inventory_unit, grouped_options_for_select(TranspoLink::MeasurementUnits.options_for_units, form.object.inventory_unit),
+      {include_blank: t(".select_inventory_unit")}
+  .col-sm-12.col-md-6.col-lg-4
+    = form.label :tracking_method, class: "form-label required"
+    = form.select :tracking_method, options_for_select(enum_options_for_select(Inventory, :tracking_methods), form.object.tracking_method),
+      {include_blank: t(".select_tracking_method")}, {}
+  .actions
+    = button_tag type: :submit, class: "btn btn-primary" do
+      = external_svg_tag("svgs/floppy.svg")
+      = form.object.new_record? ? button_text(:create) : button_text(:update)
+    = link_to inventories_path, class: "btn btn-secondary" do
+      = external_svg_tag("svgs/cancel.svg")
+      = button_text(:cancel)

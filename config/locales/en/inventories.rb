@@ -10,6 +10,16 @@
       },
       inventory: {
       },
+      new: {
+        title: "New inventory",
+      },
+      form: {
+        select_product: "Select product",
+        select_warehouse: "Select warehouse",
+        select_currency: "Select currency",
+        select_inventory_unit: "Select inventory unit",
+        select_tracking_method: "Select tracking method",
+      },
     }
   }
 }
