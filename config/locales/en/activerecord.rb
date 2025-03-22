@@ -276,6 +276,19 @@
               },
             },
           },
+          inventory: {
+            attributes: {
+              product_id: {
+                uniqueness: "already has inventory for the selected warehouse",
+              },
+              expiration_date: {
+                greater_than_or_equal_to: "must be today or a future date"
+              },
+              inventory_unit: {
+                invalid: "is not valid for the selected product"
+              }
+            }
+          },
         },
         messages: {
           label_already_exists_at_group_level: "already exists at group level for %{group}. Please choose another one.",
