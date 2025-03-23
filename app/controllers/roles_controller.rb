@@ -14,7 +14,7 @@ class RolesController < ApplicationController
 
   # GET /roles/:id/edit
   def edit
-    add_breadcrumb :edit, edit_role_path(@role)
+    add_breadcrumb :edit_role, edit_role_path(@role), name: @role.name
   end
 
   # PUT|PATCH /roles/:id

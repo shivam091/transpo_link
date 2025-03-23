@@ -3,6 +3,7 @@
 # -*- warn_indent: true -*-
 
 class InventoriesController < ApplicationController
+  add_breadcrumb :inventories, :inventories_path
 
   before_action :find_inventory, except: [:index, :new, :create]
 
@@ -14,6 +15,7 @@ class InventoriesController < ApplicationController
 
   # GET /inventories/new
   def new
+    add_breadcrumb :new_inventory, new_inventory_path
     @inventory = Inventory.new
   end
 
@@ -40,6 +42,7 @@ class InventoriesController < ApplicationController
 
   # GET /inventories/:id/edit
   def edit
+    add_breadcrumb :edit_inventory, edit_inventory_path(@inventory), reference_code: @inventory.reference_code
   end
 
   # PUT|PATCH /inventories/:id
@@ -65,6 +68,7 @@ class InventoriesController < ApplicationController
 
   # GET /inventories/:id
   def show
+    add_breadcrumb @inventory.reference_code, inventory_path(@inventory)
   end
 
   private

@@ -19,7 +19,7 @@ class WarehousesController < ApplicationController
 
   # GET /warehouses/new
   def new
-    add_breadcrumb :new, new_warehouse_path
+    add_breadcrumb :new_warehouse, new_warehouse_path
     @warehouse = Warehouse.new
   end
 
@@ -46,7 +46,7 @@ class WarehousesController < ApplicationController
 
   # GET /warehouses/:id/edit
   def edit
-    add_breadcrumb :edit, edit_warehouse_path(@warehouse)
+    add_breadcrumb :edit_warehouse, edit_warehouse_path(@warehouse), reference_code: @warehouse.reference_code
   end
 
   # PUT|PATCH /warehouses/:id

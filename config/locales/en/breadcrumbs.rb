@@ -10,6 +10,7 @@
       request_logs: "Request logs",
       warehouses: "Warehouses",
       products: "Products",
+      inventories: "Inventories",
       feedbacks: "Feedbacks",
       tax_rates: "Tax rates",
       roles: "Roles",
@@ -18,7 +19,15 @@
       legal_identifiers: "Your legal identifiers",
       product_categories: "Product categories",
       new: "New",
-      edit: "Edit",
+      edit_profile: "Edit profile",
+      edit_preference: "Edit preferences",
+      new_warehouse: "New warehouse",
+      edit_warehouse: "Edit %{reference_code}",
+      new_product: "New product",
+      edit_product: "Edit %{reference_code}",
+      new_inventory: "New inventory",
+      edit_inventory: "Edit %{reference_code}",
+      edit_role: "Edit %{name}",
     }
   }
 }

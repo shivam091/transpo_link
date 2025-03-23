@@ -11,7 +11,7 @@ class PreferencesController < ApplicationController
 
   # GET /preference/edit
   def edit
-    add_breadcrumb :edit, edit_preference_path(current_user)
+    add_breadcrumb :edit_preference, edit_preference_path(current_user)
   end
 
   # PUT|PATCH /preference

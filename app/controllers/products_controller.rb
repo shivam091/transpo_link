@@ -19,7 +19,7 @@ class ProductsController < ApplicationController
 
   # GET /products/new
   def new
-    add_breadcrumb :new, new_product_path
+    add_breadcrumb :new_product, new_product_path
     @product = Product.new
   end
 
@@ -46,7 +46,7 @@ class ProductsController < ApplicationController
 
   # GET /products/:id/edit
   def edit
-    add_breadcrumb :edit, edit_product_path(@product)
+    add_breadcrumb :edit_product, edit_product_path(@product), reference_code: @product.reference_code
   end
 
   # PUT|PATCH /products/:id

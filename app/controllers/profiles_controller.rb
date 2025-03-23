@@ -11,7 +11,7 @@ class ProfilesController < ApplicationController
 
   # GET /profile/edit
   def edit
-    add_breadcrumb :edit, edit_profile_path(current_user)
+    add_breadcrumb :edit_profile, edit_profile_path(current_user)
   end
 
   # PUT|PATCH /profile

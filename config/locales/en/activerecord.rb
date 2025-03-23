@@ -127,6 +127,7 @@
           valid_to: "Valid to",
         },
         feedback: {
+          reference_code: "Reference code",
           rating: "Rating",
           comment: "Comment",
           is_unread: "Is unread",
