@@ -14,7 +14,7 @@
         title: "New inventory",
       },
       edit: {
-        title: "Edit inventory",
+        title: "Edit %{reference_code}",
       },
       form: {
         select_product: "Select product",

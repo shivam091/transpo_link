@@ -11,7 +11,7 @@
       role: {
       },
       edit: {
-        title: "Edit role"
+        title: "Edit %{name}"
       },
       form: {
       },

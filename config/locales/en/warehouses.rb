@@ -15,7 +15,7 @@
         title: "New warehouse",
       },
       edit: {
-        title: "Edit warehouse",
+        title: "Edit %{reference_code}",
       },
       form: {
         basic_details: "Basic details",

@@ -15,7 +15,7 @@
         title: "New product",
       },
       edit: {
-        title: "Edit product",
+        title: "Edit %{reference_code}",
       },
       form: {
         basic_details: "Basic details",
