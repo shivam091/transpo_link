@@ -3,7 +3,11 @@
   --bs-dropdown-padding-x: 0.5rem;
   --bs-dropdown-border-radius: 0.25rem;
   --bs-dropdown-item-padding-x: 0.5rem;
+  --bs-dropdown-item-padding-y: 0.25rem;
   --bs-dropdown-item-border-radius: 0.25rem;
+  --bs-dropdown-divider-margin-y: 0.25rem;
+  --bs-dropdown-header-padding-x: 0.25rem;
+  --bs-dropdown-header-padding-y: 0.25rem;
 }
 .dropdown-toggle::after {
   transform: rotate(0deg);
@@ -17,14 +21,15 @@
   display: inline-flex;
   align-items: center;
   gap: .5rem;
+  margin: 2px auto;
 }
 .dropdown-menu::before, .dropdown-menu::after {
   position: absolute;
   display: inline-block;
   content: "";
 }
-.dropdown-menu[data-bs-popper="static"] {
-  animation: slideUpAndFade 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+.dropdown-menu.show[data-bs-popper="static"] {
+  animation: slideDownAndFade 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .dropdown-item-checked {
   position: relative;
