@@ -3,6 +3,8 @@
 # -*- warn_indent: true -*-
 
 class ApplicationController < ActionController::Base
+  include Breadcrumbs
+
   protect_from_forgery with: :exception, prepend: true
 
   layout proc { false if request.xhr? }
