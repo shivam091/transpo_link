@@ -3,7 +3,7 @@
 # -*- warn_indent: true -*-
 
 class ApplicationController < ActionController::Base
-  include Breadcrumbs
+  include Breadcrumbs, FlashMessages
 
   protect_from_forgery with: :exception, prepend: true
 
@@ -24,19 +24,8 @@ class ApplicationController < ActionController::Base
 
   around_action :with_locale, :with_time_zone
 
-  def render_flash
-    turbo_stream.update(:flash_messages_frame, partial: "shared/flash_messages")
-  end
 
   private
-
-  # Sets flash messages with dynamic scope based on controller and action
-  def set_flash_message(type, message_key, immediate: false, scope: nil, **options)
-    flash_type = immediate ? flash.now : flash
-    scope ||= "flashes.#{controller_name}.#{action_name}" # Default scope if not provided
-
-    flash_type[type] = t(message_key, scope:, **options)
-  end
 
   def with_locale(&block)
     if user_signed_in?
