@@ -4,11 +4,11 @@
 
 require "spec_helper"
 
-RSpec.describe "Application", type: :request do
+RSpec.describe "FlashMessages", type: :request do
   let!(:controller_name) { "AnonymousController" }
   let!(:controller_class) do
-    Class.new(ApplicationController) do
-      skip_before_action :authenticate_user!
+    Class.new(ActionController::Base) do
+      include FlashMessages
 
       def test_flash
         set_flash_message(

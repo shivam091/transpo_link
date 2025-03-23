@@ -3,6 +3,7 @@
 # -*- warn_indent: true -*-
 
 class ProductCategoriesController < ApplicationController
+  add_breadcrumb :product_categories, :product_categories_path
 
   before_action :find_product_category, except: [:index, :new, :create]
 
