@@ -24,6 +24,7 @@ class ApplicationController < ActionController::Base
 
   around_action :with_locale, :with_time_zone
 
+  add_breadcrumb :dashboard, :root_path
 
   private
 

@@ -3,6 +3,7 @@
 # -*- warn_indent: true -*-
 
 class FeedbacksController < ApplicationController
+  add_breadcrumb :feedbacks, :feedbacks_path
 
   before_action :find_feedback, only: [:show, :mark_as_read]
 
@@ -60,6 +61,7 @@ class FeedbacksController < ApplicationController
 
   # GET /feedbacks/:id
   def show
+    add_breadcrumb @feedback.reference_code, :feedbacks_path
   end
 
   private
