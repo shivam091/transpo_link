@@ -166,6 +166,45 @@
           cost_price: "Cost price",
           currency: "Currency",
         },
+        inventory: {
+          reference_code: "Reference code",
+          product_id: "Product",
+          warehouse_id: "Warehouse",
+          batch_number: "Batch number",
+          expiration_date: "Expiration date",
+          stock_quantity: "Stock quantity",
+          reserved_stock: "Reserved stock",
+          inventory_unit: "Inventory unit",
+          cost_price: "Cost price",
+          currency: "Currency",
+          tracking_method: "Tracking method",
+          created_at: "Created at",
+          updated_at: "Updated at",
+        },
+        inventory_movement: {
+          inventory_id: "Inventory",
+          quantity: "Quantity",
+          movement_type: "Movement type",
+          inventory_unit: "Inventory unit",
+          unit_cost: "Unit cost",
+          total_cost: "Total cost",
+          currency: "Currency",
+          movement_date: "Movement date",
+          metadata: "Metadata",
+          created_at: "Created at",
+          updated_at: "Updated at",
+        },
+        inventory_audit_log: {
+          inventory_id: "Inventory",
+          inventory_movement_id: "Inventory movement",
+          user_id: "User",
+          movement_type: "Movement type",
+          previous_quantity: "Previous quantity",
+          new_quantity: "New quantity",
+          metadata: "Metadata",
+          created_at: "Created at",
+          updated_at: "Updated at",
+        },
       },
       errors: {
         format: "%{attribute} %{message}",
@@ -199,7 +238,7 @@
               },
               entity_type: {
                 inclusion: "'%{value}' is not a valid entity type",
-              }
+              },
             },
           },
           tax_rate: {
@@ -236,6 +275,19 @@
                 invalid: "must be in steps of 0.5"
               },
             },
+          },
+          inventory: {
+            attributes: {
+              product_id: {
+                uniqueness: "already has inventory for the selected warehouse",
+              },
+              expiration_date: {
+                greater_than_or_equal_to: "must be today or a future date"
+              },
+              inventory_unit: {
+                invalid: "is not valid for the selected product"
+              }
+            }
           },
         },
         messages: {

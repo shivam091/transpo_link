@@ -222,4 +222,14 @@ RSpec.describe Product, type: :model do
       end
     end
   end
+
+  describe "class methods" do
+    describe ".select_options" do
+      let!(:product) { create(:product, :active) }
+
+      it "should return array of products for select list" do
+        expect(described_class.select_options).to eq([[product.name, product.id]])
+      end
+    end
+  end
 end

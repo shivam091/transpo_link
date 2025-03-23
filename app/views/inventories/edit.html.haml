@@ -1,0 +1,5 @@
+= title(t(".title"))
+.card.card-primary.border.border-primary
+  .card-body
+    = turbo_frame_tag :edit_inventory_form_frame, target: :_top do
+      = render_if_exists("inventories/form")

@@ -67,6 +67,7 @@ Rails.application.routes.draw do
   resources :product_categories, path: "product-categories", except: :show, concerns: :toggleable
   resources :products, concerns: [:reviewable, :toggleable]
   resources :feedbacks, only: [:index, :show], concerns: :notifiable
+  resources :inventories, except: :destroy
 
   root to: "dashboards#show"
 end

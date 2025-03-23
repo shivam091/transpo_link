@@ -63,6 +63,12 @@ class Product < ApplicationRecord
     n.accepts_nested_attributes_for :product_prices, reject_if: :reject_product_price?
   end
 
+  class << self
+    def select_options
+      active.pluck(:name, :id)
+    end
+  end
+
   private
 
   def reject_unit_conversion?(attributes)

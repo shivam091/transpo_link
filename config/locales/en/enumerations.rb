@@ -132,6 +132,13 @@
           b2c: "Business to Consumer (B2C)"
         },
       },
+      inventory: {
+        tracking_methods: {
+          fifo: "First-in, first-out",
+          lifo: "Last-in, first-out",
+          average_cost: "Weighted average costing"
+        },
+      },
     }
   }
 }

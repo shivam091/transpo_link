@@ -122,6 +122,10 @@
       submit: "Submit",
       mark_as_read: "Mark as read",
       view_details: "View details",
+      upload: "Upload",
+      download: "Download",
+      import: "Import",
+      export: "Export",
     },
   },
 }
