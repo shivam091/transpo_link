@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_03_10_041232) do
+ActiveRecord::Schema[8.0].define(version: 2025_03_23_132952) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -50,7 +50,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_10_041232) do
     t.boolean "is_unread", default: true
     t.timestamptz "created_at", null: false
     t.timestamptz "updated_at", null: false
+    t.string "reference_code"
     t.index ["is_unread"], name: "index_feedbacks_on_is_unread"
+    t.index ["reference_code"], name: "index_feedbacks_on_reference_code", unique: true
     t.index ["reviewable_type", "reviewable_id"], name: "index_feedbacks_on_reviewable"
     t.index ["user_id"], name: "index_feedbacks_on_user_id"
     t.check_constraint "(rating * 2::numeric) = floor(rating * 2::numeric)", name: "check_feedbacks_rating_step"

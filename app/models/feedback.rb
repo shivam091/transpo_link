@@ -3,7 +3,7 @@
 # -*- warn_indent: true -*-
 
 class Feedback < ApplicationRecord
-  include Sortable, Pageable
+  include Sortable, Pageable, HasReferenceCode
 
   LISTING_ATTRIBUTES = %i[user_id reviewable rating comment].freeze
 
