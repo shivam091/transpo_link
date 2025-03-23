@@ -1,12 +1,15 @@
-= title()
+= title(@feedback.reference_code)
 - user, reviewable = @feedback.user, @feedback.reviewable
 .card.card-primary.border.border-primary
   .card-body
     .widget
       .widget-header.d-flex.align-items-center.justify-content-between
-        .widget-help
-          = Feedback.human_attribute_name(:created_at)
-          = h(time_ago_with_tooltip(@feedback.created_at))
+        .d-block
+          .widget-title
+            = h(@feedback.reference_code)
+          .widget-help
+            = Feedback.human_attribute_name(:created_at)
+            = h(time_ago_with_tooltip(@feedback.created_at))
         - if @feedback.is_unread?
           = link_to mark_as_read_feedback_path(@feedback), class: "btn btn-secondary", data: {turbo_method: :patch}, disabled: @feedback.is_unread? do
             = external_svg_tag("svgs/check-circle.svg")

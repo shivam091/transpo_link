@@ -5,7 +5,7 @@
 class Feedback < ApplicationRecord
   include Sortable, Pageable, HasReferenceCode
 
-  LISTING_ATTRIBUTES = %i[user_id reviewable rating comment].freeze
+  LISTING_ATTRIBUTES = %i[reference_code user_id reviewable rating comment].freeze
 
   attribute :is_unread, default: true
 
