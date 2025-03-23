@@ -3,7 +3,7 @@
 # -*- warn_indent: true -*-
 
 class ApplicationController < ActionController::Base
-  include FlashMessages
+  include Breadcrumbs, FlashMessages
 
   protect_from_forgery with: :exception, prepend: true
 
@@ -24,6 +24,7 @@ class ApplicationController < ActionController::Base
 
   around_action :with_locale, :with_time_zone
 
+  add_breadcrumb :dashboard, :root_path
 
   private
 
