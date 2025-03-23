@@ -3,6 +3,7 @@
 # -*- warn_indent: true -*-
 
 class TaxRatesController < ApplicationController
+  add_breadcrumb :tax_rates, :tax_rates_path
 
   before_action :find_tax_rate, only: [:edit, :update, :destroy]
 

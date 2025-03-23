@@ -162,3 +162,12 @@ p {
     transition: left 0.1s linear;
   }
 }
+.breadcrumb {
+  --bs-breadcrumb-bg: var(--bs-body-bg);
+  --bs-breadcrumb-divider: "\00BB";
+  --bs-breadcrumb-padding-x: 0.5rem;
+  --bs-breadcrumb-padding-y: 0.5rem;
+  --bs-breadcrumb-border-radius: 0.25rem;
+  --bs-breadcrumb-margin-bottom: 0.5rem;
+  border: 1px solid rgba(var(--bs-primary-rgb), 1) !important;
+}

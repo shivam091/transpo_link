@@ -23,6 +23,7 @@
     %main.container-fluid.my-2
       = turbo_frame_tag :flash_messages_frame do
         = render_if_exists("shared/flash_messages")
+      = render_breadcrumbs
       = yield
     .clearfix
     = render_if_exists("layouts/application/footer")

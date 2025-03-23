@@ -3,6 +3,7 @@
 # -*- warn_indent: true -*-
 
 class RolesController < ApplicationController
+  add_breadcrumb :roles, :roles_path
 
   before_action :find_role, except: :index
 
@@ -13,6 +14,7 @@ class RolesController < ApplicationController
 
   # GET /roles/:id/edit
   def edit
+    add_breadcrumb :edit, edit_role_path(@role)
   end
 
   # PUT|PATCH /roles/:id
@@ -38,6 +40,7 @@ class RolesController < ApplicationController
 
   # GET /roles/:id
   def show
+    add_breadcrumb @role.name, role_path(@role)
   end
 
   private
