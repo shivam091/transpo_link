@@ -17,6 +17,7 @@ RSpec.describe "Breadcrumbs", type: :request do
       def test_breadcrumbs
         add_breadcrumb "Home", "/"
         add_breadcrumb -> { "Dynamic Page" }, -> { "/dynamic-url" }
+        add_breadcrumb :show, "/anonymous/123", id: 123
 
         render plain: "OK"
       end
@@ -36,7 +37,8 @@ RSpec.describe "Breadcrumbs", type: :request do
       breadcrumbs: {
         home: "Home",
         anonymous: "Anonymous",
-        dynamic_page: "Dynamic Page"
+        dynamic_page: "Dynamic Page",
+        show: "Anonymous %{id}"
       }
     })
   end
@@ -47,7 +49,7 @@ RSpec.describe "Breadcrumbs", type: :request do
   end
 
   context "when adding breadcrumbs" do
-    before { get "/anonymous" }
+    before { get "/anonymous", params: {id: 123} }
 
     it "adds a breadcrumb with a static label and URL" do
       expect(controller_assigns(:breadcrumbs)).to include({label: "Home", url: "/"})
@@ -59,6 +61,10 @@ RSpec.describe "Breadcrumbs", type: :request do
 
     it "adds a breadcrumb with a dynamic label and URL using a Proc" do
       expect(controller_assigns(:breadcrumbs)).to include({label: "Dynamic Page", url: "/dynamic-url"})
+    end
+
+    it "adds a breadcrumb with a localized label and interpolated ID" do
+      expect(controller_assigns(:breadcrumbs)).to include({label: "Anonymous 123", url: "/anonymous/123"})
     end
   end
 

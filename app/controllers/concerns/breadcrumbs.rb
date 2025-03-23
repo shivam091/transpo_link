@@ -13,8 +13,8 @@ module Breadcrumbs
   end
 
   # Pushes a new breadcrumb element into the collection.
-  def add_breadcrumb(label, url = nil)
-    breadcrumbs << {label: compute_label(label), url: compute_url(url)}
+  def add_breadcrumb(label, url = nil, options = {})
+    breadcrumbs << {label: compute_label(label, options), url: compute_url(url)}
   end
 
   # Gets the list of all breadcrumb element in the collection.
@@ -24,21 +24,18 @@ module Breadcrumbs
 
   private
 
-  def compute_label(label)
+  def compute_label(label, options = {})
     case label
-    when Proc
-      label.call
-    when Symbol
-      t(label, scope: "breadcrumbs")
-    else
-      label.to_s
+    when Symbol then t(label, **options.reverse_merge(scope: "breadcrumbs", default: label.to_s.humanize))
+    when Proc   then label.call
+    else             label.to_s
     end
   end
 
   def compute_url(url)
     case url
-    when Proc   then url.call
     when Symbol then send(url)
+    when Proc   then url.call
     else             url
     end
   end
@@ -46,7 +43,7 @@ module Breadcrumbs
   module ClassMethods
     def add_breadcrumb(label, url = nil, options = {})
       before_action(options) do |controller|
-        controller.send(:add_breadcrumb, label, url)
+        controller.send(:add_breadcrumb, label, url, options)
       end
     end
   end
