@@ -3,6 +3,7 @@
 # -*- warn_indent: true -*-
 
 class ProfilesController < ApplicationController
+  add_breadcrumb :profiles, :profile_path
 
   # GET /profile
   def show
@@ -10,6 +11,7 @@ class ProfilesController < ApplicationController
 
   # GET /profile/edit
   def edit
+    add_breadcrumb :edit, edit_profile_path(current_user)
   end
 
   # PUT|PATCH /profile

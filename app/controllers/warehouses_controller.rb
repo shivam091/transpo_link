@@ -3,6 +3,7 @@
 # -*- warn_indent: true -*-
 
 class WarehousesController < ApplicationController
+  add_breadcrumb :warehouses, :warehouses_path
 
   before_action :find_warehouse, only: [:edit, :update, :show, :destroy]
 
@@ -18,6 +19,7 @@ class WarehousesController < ApplicationController
 
   # GET /warehouses/new
   def new
+    add_breadcrumb :new, new_warehouse_path
     @warehouse = Warehouse.new
   end
 
@@ -44,6 +46,7 @@ class WarehousesController < ApplicationController
 
   # GET /warehouses/:id/edit
   def edit
+    add_breadcrumb :edit, edit_warehouse_path(@warehouse)
   end
 
   # PUT|PATCH /warehouses/:id
@@ -69,6 +72,7 @@ class WarehousesController < ApplicationController
 
   # GET /warehouses/:id
   def show
+    add_breadcrumb @warehouse.reference_code, warehouse_path(@warehouse)
   end
 
   # DELETE /warehouses/:id

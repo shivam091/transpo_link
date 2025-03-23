@@ -3,6 +3,7 @@
 # -*- warn_indent: true -*-
 
 class PreferencesController < ApplicationController
+  add_breadcrumb :preferences, :preference_path
 
   # GET /preference
   def show
@@ -10,6 +11,7 @@ class PreferencesController < ApplicationController
 
   # GET /preference/edit
   def edit
+    add_breadcrumb :edit, edit_preference_path(current_user)
   end
 
   # PUT|PATCH /preference

@@ -15,6 +15,7 @@ RSpec.describe Feedback, type: :model do
 
   describe "attributes, indexes, foreign keys, and check constraints" do
     it { is_expected.to have_db_column(:id).of_type(:uuid) }
+    it { is_expected.to have_db_column(:reference_code).of_type(:string) }
     it { is_expected.to have_db_column(:user_id).of_type(:uuid).with_options(null: false) }
     it { is_expected.to have_db_column(:reviewable_type).of_type(:string).with_options(null: false) }
     it { is_expected.to have_db_column(:reviewable_id).of_type(:uuid).with_options(null: false) }
@@ -26,6 +27,7 @@ RSpec.describe Feedback, type: :model do
 
     it { is_expected.to have_db_index(:is_unread) }
     it { is_expected.to have_db_index(:user_id) }
+    it { is_expected.to have_db_index(:reference_code).unique }
     it { is_expected.to have_db_index([:reviewable_type, :reviewable_id]) }
 
     it { is_expected.to have_foreign_key(:user_id).with_name(:fk_feedbacks_user_id_on_users).on_delete(:nullify) }
@@ -52,6 +54,7 @@ RSpec.describe Feedback, type: :model do
   describe "included modules" do
     it { is_expected.to include_module(Pageable) }
     it { is_expected.to include_module(Sortable) }
+    it { is_expected.to include_module(HasReferenceCode) }
   end
 
   describe "associations" do

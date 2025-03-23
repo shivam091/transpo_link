@@ -3,6 +3,7 @@
 # -*- warn_indent: true -*-
 
 class LegalIdentifiersController < ApplicationController
+  add_breadcrumb :legal_identifiers, :legal_identifiers_path
 
   before_action :legal_identifiers
   before_action :find_legal_identifier, except: [:index, :new, :create]
