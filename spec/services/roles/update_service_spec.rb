@@ -8,14 +8,14 @@ require "spec_helper"
 
 RSpec.describe Roles::UpdateService, type: :service do
   let!(:role) { create(:admin_role) }
-  let!(:role_attributes) { {is_active: "true"} }
+  let(:role_attributes) { {is_active: "true"} }
 
   subject(:service_response) { described_class.(role, role_attributes) }
 
   describe ".call" do
     context "when update is successful" do
-      it "updates the tax rate" do
-        expect(service_response.payload[:role].is_active).to be_truthy
+      it "updates the role" do
+        expect { service_response }.to change { role.reload.is_active }.to be_truthy
       end
 
       include_examples "returns a success response"
@@ -24,8 +24,8 @@ RSpec.describe Roles::UpdateService, type: :service do
     context "when update fails" do
       before { allow(role).to receive(:update) { false } }
 
-      it "does not update the tax rate" do
-        expect(service_response.payload[:role].is_active).to be_falsy
+      it "does not update the role" do
+        expect { service_response }.to not_change { role.reload.is_active }
       end
 
       include_examples "returns an error response"

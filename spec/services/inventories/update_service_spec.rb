@@ -7,15 +7,15 @@
 require "spec_helper"
 
 RSpec.describe Inventories::UpdateService, type: :service do
-  let!(:inventory) { create(:inventory, batch_number: "B123456789") }
-  let!(:inventory_attributes) { {batch_number: "B987654321"} }
+  let!(:inventory) { create(:inventory) }
+  let(:inventory_attributes) { {batch_number: "B987654321"} }
 
   subject(:service_response) { described_class.(inventory, inventory_attributes) }
 
   describe ".call" do
     context "when update is successful" do
       it "updates the inventory" do
-        expect(service_response.payload[:inventory].batch_number).to eq("B987654321")
+        expect { service_response }.to change { inventory.reload.batch_number }.to("B987654321")
       end
 
       include_examples "returns a success response"
@@ -25,7 +25,7 @@ RSpec.describe Inventories::UpdateService, type: :service do
       before { allow(inventory).to receive(:update) { false } }
 
       it "does not update the inventory" do
-        expect(service_response.payload[:inventory].batch_number).to eq("B123456789")
+        expect { service_response }.to not_change { inventory.reload.batch_number }
       end
 
       include_examples "returns an error response"
