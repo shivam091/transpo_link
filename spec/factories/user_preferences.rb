@@ -6,9 +6,9 @@ FactoryBot.define do
   factory :user_preference do
     preferred_color_scheme { UserPreference.preferred_color_schemes[:auto] }
     preferred_locale { "en" }
-    preferred_time_zone { "Asia/Kolkata" }
+    preferred_time_zone { Faker::Address.time_zone }
     preferred_currency { "INR" }
-    are_notifications_enabled { true }
+    are_notifications_enabled { Faker::Boolean.boolean }
     association :user
   end
 end

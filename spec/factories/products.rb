@@ -9,9 +9,9 @@ FactoryBot.define do
     sku { Faker::Alphanumeric.alphanumeric(number: 12).upcase }
     barcode { Faker::Barcode.ean }
     min_stock_threshold { Faker::Number.between(from: 1, to: 100) }
-    capacity_unit { "kg" }
-    currency { Money.default_currency.iso_code }
-    cost_price { Faker::Commerce.price(range: 5.0..1000.0, as_string: true) }
+    capacity_unit { TranspoLink::MeasurementUnits.units_for(:weight).sample }
+    currency { Faker::Currency.code }
+    cost_price { Faker::Commerce.price(range: 5.0..1000.0) }
     association :product_category
   end
 end
