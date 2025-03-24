@@ -65,7 +65,7 @@ RSpec.describe "Users::Sessions", type: :request do
 
     context "when password is missing" do
       it "redirects with an error message" do
-        post user_session_path, params: {user: { email: user.email, password: ""}}
+        post user_session_path, params: {user: {email: user.email, password: ""}}
 
         expect(response).to redirect_to(new_user_session_path)
         follow_redirect!
@@ -76,7 +76,7 @@ RSpec.describe "Users::Sessions", type: :request do
 
     context "when inexistant email" do
       it "redirects with an error message" do
-        post user_session_path, params: {user: { email: "test@example.com", password: "Dummy_password"}}
+        post user_session_path, params: {user: {email: "test@example.com", password: "Dummy_password"}}
 
         expect(flash[:alert]).to eq("We could not find an account with that email address.")
         expect(response).to have_http_status(:unprocessable_entity)
@@ -87,7 +87,7 @@ RSpec.describe "Users::Sessions", type: :request do
       it "redirects with an error message" do
         user.toggle!(:is_banned)
 
-        post user_session_path, params: {user: { email: user.email, password: dummy_password}}
+        post user_session_path, params: {user: {email: user.email, password: dummy_password}}
 
         expect(response).to redirect_to(new_user_session_path)
         follow_redirect!
@@ -152,27 +152,28 @@ RSpec.describe "Users::Sessions", type: :request do
   end
 
   describe "Session timeout" do
-    before { sign_in(user) }
+    before do
+      sign_in(user)
+      get root_path
+    end
 
     context "when session has not timed out" do
       it "keeps the user signed in" do
-        get root_path
-
         expect(response).to have_http_status(:ok)
       end
     end
 
-    # context "when session has timed out" do
-    #   it "logs out the user after timeout" do
-    #     travel_to((Devise.timeout_in + 30.minute).from_now) do
-    #       get root_path
-    #
-    #       expect(response).to redirect_to(new_user_session_path)
-    #       follow_redirect!
-    #       expect(flash[:alert]).to include("Unfortunately your session is expired due to inactivity for a long time. Please sign in again to pickup from where you left off.")
-    #       expect(response).to have_http_status(:found)
-    #     end
-    #   end
-    # end
+    context "when session has timed out" do
+      it "logs out the user after timeout" do
+        travel_to((Devise.timeout_in + 30.minute).from_now) do
+          get root_path
+        end
+
+        follow_redirect!
+        expect(response).to redirect_to(new_user_session_path)
+        expect(flash[:alert]).to include("Unfortunately your session is expired due to inactivity for a long time. Please sign in again to pickup from where you left off.")
+        expect(response).to have_http_status(:found)
+      end
+    end
   end
 end

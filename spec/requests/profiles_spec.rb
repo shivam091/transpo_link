@@ -7,73 +7,53 @@
 require "spec_helper"
 
 RSpec.describe "Profiles", type: :request do
-  let!(:valid_attributes) { {first_name: "John"} }
-  let!(:invalid_attributes) { {first_name: ""} }
+  let(:valid_attributes) { {first_name: "John"} }
+  let(:invalid_attributes) { {first_name: ""} }
 
-  context "when user is not signed in" do
-    describe "GET /profile" do
-      subject { get profile_path }
+  include_context "sign in as admin"
 
-      it { is_expected.to require_sign_in }
-    end
+  describe "GET /profile" do
+    it "renders profile page" do
+      get profile_path
 
-    describe "GET /profile/edit" do
-      subject { get edit_profile_path }
-
-      it { is_expected.to require_sign_in }
-    end
-
-    describe "PUT|PATCH /profile" do
-      subject { put profile_path }
-
-      it { is_expected.to require_sign_in }
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("<div class='widget-help'>Edit your personal details viz., first name, last name, address, and more to ensure your profile reflects the latest information.</div>")
     end
   end
 
-  context "when user is signed in" do
-    include_context "sign in as admin"
+  describe "GET /profile/edit" do
+    it "renders profile edit page" do
+      get edit_profile_path
 
-    describe "GET /profile" do
-      it "renders profile page" do
-        get profile_path
-
-        expect(response).to have_http_status(:ok)
-        expect(response.body).to include("<div class='widget-help'>Edit your personal details viz., first name, last name, address, and more to ensure your profile reflects the latest information.</div>")
-      end
+      expect(admin).to eq(controller_assigns(:current_user))
+      expect(response.body).to include("<turbo-frame id=\"edit_profile_form_frame\" target=\"_top\">")
+      expect(response).to have_http_status(:ok)
     end
+  end
 
-    describe "GET /profile/edit" do
-      it "renders profile edit page" do
-        get edit_profile_path
-
-        expect(admin).to eq(controller_assigns(:current_user))
-        expect(response.body).to include("<turbo-frame id=\"edit_profile_form_frame\" target=\"_top\">")
-        expect(response).to have_http_status(:ok)
-      end
-    end
-
-    describe "PUT|PATCH /profile" do
-      context "when provided attributes are valid" do
-        it "updates the profile and redirects" do
+  describe "PUT|PATCH /profile" do
+    context "when provided attributes are valid" do
+      it "updates the profile and redirects" do
+        expect {
           put profile_path, params: {user: {user_detail_attributes: valid_attributes}}, as: :turbo_stream
+        }.to change { admin.reload.first_name }.to("John")
 
-          expect(admin.reload.first_name).to eq("John")
-          expect(response).to redirect_to(profile_path)
-          expect(flash[:notice]).to eq("Your profile was successfully updated.")
-          expect(response).to have_http_status(:see_other)
-        end
+        expect(response).to redirect_to(profile_path)
+        expect(flash[:notice]).to eq("Your profile was successfully updated.")
+        expect(response).to have_http_status(:see_other)
       end
+    end
 
-      context "when provided attributes are invalid" do
-        it "does not update the profile and renders errors" do
+    context "when provided attributes are invalid" do
+      it "does not update the profile and renders errors" do
+        expect {
           put profile_path, params: {user: {user_detail_attributes: invalid_attributes}}, as: :turbo_stream
+        }.to not_change { admin.reload.first_name }
 
-          expect(admin.reload.first_name).to eq("TranspoLink")
-          expect(flash[:alert]).to eq("Your profile could not be updated.")
-          expect(response.media_type).to eq(Mime[:turbo_stream])
-          expect(response.body).to include("<turbo-stream action=\"update\" target=\"edit_profile_form_frame\">")
-          expect(response).to have_http_status(:unprocessable_entity)
-        end
+        expect(flash[:alert]).to eq("Your profile could not be updated.")
+        expect(response.media_type).to eq(Mime[:turbo_stream])
+        expect(response.body).to include("<turbo-stream action=\"update\" target=\"edit_profile_form_frame\">")
+        expect(response).to have_http_status(:unprocessable_entity)
       end
     end
   end

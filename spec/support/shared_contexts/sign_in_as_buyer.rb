@@ -5,7 +5,7 @@
 RSpec.shared_context "sign in as buyer" do
   let(:buyer) { create(:buyer, :active, :confirmed, :with_address) }
 
-  before { sign_in(buyer) }
+  before { sign_in(buyer, scope: :user) }
 
   after { sign_out(buyer) }
 end
