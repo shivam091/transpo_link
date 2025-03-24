@@ -5,12 +5,14 @@
 {
   en: {
     preferences: {
+      breadcrumb: "Your preferences",
       show: {
         title: "Your preferences",
         your_preferences: "Your preferences",
         edit_preferences: "Customize your preferences, including color scheme, time zone, language, and other settings to suit your personal experience.",
       },
       edit: {
+        breadcrumb: "Edit",
         title: "Edit preferences",
       },
       form: {

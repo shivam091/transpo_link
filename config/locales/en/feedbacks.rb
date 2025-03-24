@@ -5,6 +5,7 @@
 {
   en: {
     feedbacks: {
+      breadcrumb: "Feedbacks",
       index: {
         title: "Feedbacks",
       },

@@ -5,12 +5,14 @@
 {
   en: {
     roles: {
+      breadcrumb: "Roles",
       index: {
         title: "Roles",
       },
       role: {
       },
       edit: {
+        breadcrumb: "Edit %{name}",
         title: "Edit %{name}"
       },
       form: {

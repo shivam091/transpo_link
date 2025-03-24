@@ -5,15 +5,18 @@
 {
   en: {
     inventories: {
+      breadcrumb: "Inventories",
       index: {
         title: "Inventories",
       },
       inventory: {
       },
       new: {
+        breadcrumb: "New",
         title: "New inventory",
       },
       edit: {
+        breadcrumb: "Edit %{reference_code}",
         title: "Edit %{reference_code}",
       },
       form: {

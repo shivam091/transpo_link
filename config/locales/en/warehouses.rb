@@ -5,6 +5,7 @@
 {
   en: {
     warehouses: {
+      breadcrumb: "Warehouses",
       index: {
         title: "Warehouses",
       },
@@ -12,9 +13,11 @@
         delete_warehouse_confirmation_text: "Are you sure you want to delete the warehouse ‘%{warehouse_name}’? All related data may be lost.",
       },
       new: {
+        breadcrumb: "New",
         title: "New warehouse",
       },
       edit: {
+        breadcrumb: "Edit %{reference_code}",
         title: "Edit %{reference_code}",
       },
       form: {

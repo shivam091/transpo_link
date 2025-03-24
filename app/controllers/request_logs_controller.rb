@@ -3,8 +3,7 @@
 # -*- warn_indent: true -*-
 
 class RequestLogsController < ApplicationController
-  add_breadcrumb :request_logs, :request_logs_path
-
+  before_action :set_breadcrumbs
   before_action :find_request_log, only: :show
 
   # GET /request-logs
@@ -22,5 +21,9 @@ class RequestLogsController < ApplicationController
 
   def find_request_log
     @request_log ||= RequestLog.find(params[:id])
+  end
+
+  def set_breadcrumbs
+    add_breadcrumb t("request_logs.breadcrumb"), request_logs_path
   end
 end

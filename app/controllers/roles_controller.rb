@@ -3,8 +3,7 @@
 # -*- warn_indent: true -*-
 
 class RolesController < ApplicationController
-  add_breadcrumb :roles, :roles_path
-
+  before_action :set_breadcrumbs
   before_action :find_role, except: :index
 
   # GET /roles
@@ -14,7 +13,7 @@ class RolesController < ApplicationController
 
   # GET /roles/:id/edit
   def edit
-    add_breadcrumb :edit_role, edit_role_path(@role), name: @role.name
+    add_breadcrumb t(".breadcrumb", name: @role.name), edit_role_path(@role)
   end
 
   # PUT|PATCH /roles/:id
@@ -51,5 +50,9 @@ class RolesController < ApplicationController
 
   def find_role
     @role ||= Role.find(params[:id])
+  end
+
+  def set_breadcrumbs
+    add_breadcrumb t("roles.breadcrumb"), roles_path
   end
 end

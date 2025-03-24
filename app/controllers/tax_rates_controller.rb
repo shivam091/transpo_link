@@ -3,8 +3,7 @@
 # -*- warn_indent: true -*-
 
 class TaxRatesController < ApplicationController
-  add_breadcrumb :tax_rates, :tax_rates_path
-
+  before_action :set_breadcrumbs
   before_action :find_tax_rate, only: [:edit, :update, :destroy]
 
   # GET /tax-rates
@@ -97,5 +96,9 @@ class TaxRatesController < ApplicationController
 
   def find_tax_rate
     @tax_rate ||= TaxRate.find(params[:id])
+  end
+
+  def set_breadcrumbs
+    add_breadcrumb t("tax_rates.breadcrumb"), tax_rates_path
   end
 end

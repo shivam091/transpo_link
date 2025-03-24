@@ -5,6 +5,7 @@
 {
   en: {
     products: {
+      breadcrumb: "Products",
       index: {
         title: "Products",
       },
@@ -12,9 +13,11 @@
         delete_product_confirmation_text: "Are you sure you want to delete the product ‘%{product_name}’? This cannot be undone.",
       },
       new: {
+        breadcrumb: "New",
         title: "New product",
       },
       edit: {
+        breadcrumb: "Edit %{reference_code}",
         title: "Edit %{reference_code}",
       },
       form: {

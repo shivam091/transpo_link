@@ -5,6 +5,7 @@
 {
   en: {
     dashboards: {
+      breadcrumb: "Dashboard",
       show: {
         title: "Dashboard",
       },

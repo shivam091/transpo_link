@@ -5,6 +5,7 @@
 {
   en: {
     request_logs: {
+      breadcrumb: "Request logs",
       index: {
         title: "Request logs",
       },

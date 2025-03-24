@@ -5,6 +5,7 @@
 {
   en: {
     product_categories: {
+      breadcrumb: "Product categories",
       index: {
         title: "Product categories",
       },

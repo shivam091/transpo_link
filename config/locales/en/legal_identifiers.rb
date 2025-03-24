@@ -5,6 +5,7 @@
 {
   en: {
     legal_identifiers: {
+      breadcrumb: "Your legal identifiers",
       index: {
         title: "Your legal identifiers",
         your_legal_identifiers: "Your legal identifiers",

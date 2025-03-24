@@ -5,6 +5,7 @@
 {
   en: {
     users: {
+      breadcrumb: "Users",
       sessions: {
         new: {
           title: "Sign in",

@@ -5,6 +5,7 @@
 {
   en: {
     profiles: {
+      breadcrumb: "Your profile",
       show: {
         title: "Your profile",
         your_profile: "Your profile",
@@ -13,6 +14,7 @@
         mobile_number_help_text: "Quickly receive security notifications with this mobile number.",
       },
       edit: {
+        breadcrumb: "Edit",
         title: "Edit profile",
       },
       form: {

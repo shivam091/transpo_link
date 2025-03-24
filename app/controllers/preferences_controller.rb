@@ -3,7 +3,7 @@
 # -*- warn_indent: true -*-
 
 class PreferencesController < ApplicationController
-  add_breadcrumb :preferences, :preference_path
+  before_action :set_breadcrumbs
 
   # GET /preference
   def show
@@ -11,7 +11,7 @@ class PreferencesController < ApplicationController
 
   # GET /preference/edit
   def edit
-    add_breadcrumb :edit_preference, edit_preference_path(current_user)
+    add_breadcrumb t(".breadcrumb"), edit_preference_path(current_user)
   end
 
   # PUT|PATCH /preference
@@ -46,5 +46,9 @@ class PreferencesController < ApplicationController
         :are_notifications_enabled
       ]
     )
+  end
+
+  def set_breadcrumbs
+    add_breadcrumb t("preferences.breadcrumb"), preference_path
   end
 end

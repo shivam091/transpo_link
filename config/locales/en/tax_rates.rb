@@ -5,6 +5,7 @@
 {
   en: {
     tax_rates: {
+      breadcrumb: "Tax rates",
       index: {
         title: "Tax rates",
       },

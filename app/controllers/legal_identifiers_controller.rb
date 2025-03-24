@@ -3,9 +3,7 @@
 # -*- warn_indent: true -*-
 
 class LegalIdentifiersController < ApplicationController
-  add_breadcrumb :legal_identifiers, :legal_identifiers_path
-
-  before_action :legal_identifiers
+  before_action :set_breadcrumbs, :legal_identifiers
   before_action :find_legal_identifier, except: [:index, :new, :create]
 
   # GET /legal-identifiers
@@ -96,5 +94,9 @@ class LegalIdentifiersController < ApplicationController
 
   def find_legal_identifier
     @legal_identifier ||= @legal_identifiers.find(params[:id])
+  end
+
+  def set_breadcrumbs
+    add_breadcrumb t("legal_identifiers.breadcrumb"), legal_identifiers_path
   end
 end

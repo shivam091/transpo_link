@@ -3,8 +3,7 @@
 # -*- warn_indent: true -*-
 
 class ProductsController < ApplicationController
-  add_breadcrumb :products, :products_path
-
+  before_action :set_breadcrumbs
   before_action :find_product, only: [:edit, :update, :show, :destroy]
 
   # GET /products
@@ -19,7 +18,7 @@ class ProductsController < ApplicationController
 
   # GET /products/new
   def new
-    add_breadcrumb :new_product, new_product_path
+    add_breadcrumb t(".breadcrumb"), new_product_path
     @product = Product.new
   end
 
@@ -46,7 +45,7 @@ class ProductsController < ApplicationController
 
   # GET /products/:id/edit
   def edit
-    add_breadcrumb :edit_product, edit_product_path(@product), reference_code: @product.reference_code
+    add_breadcrumb t(".breadcrumb", reference_code: @product.reference_code), edit_product_path(@product)
   end
 
   # PUT|PATCH /products/:id
@@ -122,5 +121,9 @@ class ProductsController < ApplicationController
 
   def find_product
     @product ||= Product.find(params[:id])
+  end
+
+  def set_breadcrumbs
+    add_breadcrumb t("products.breadcrumb"), products_path
   end
 end

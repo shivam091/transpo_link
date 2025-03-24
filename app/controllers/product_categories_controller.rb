@@ -3,8 +3,7 @@
 # -*- warn_indent: true -*-
 
 class ProductCategoriesController < ApplicationController
-  add_breadcrumb :product_categories, :product_categories_path
-
+  before_action :set_breadcrumbs
   before_action :find_product_category, except: [:index, :new, :create]
 
   # GET /product-categories
@@ -90,5 +89,9 @@ class ProductCategoriesController < ApplicationController
 
   def find_product_category
     @product_category ||= ProductCategory.find(params[:id])
+  end
+
+  def set_breadcrumbs
+    add_breadcrumb t("product_categories.breadcrumb"), product_categories_path
   end
 end

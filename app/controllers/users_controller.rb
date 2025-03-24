@@ -3,8 +3,7 @@
 # -*- warn_indent: true -*-
 
 class UsersController < ApplicationController
-  add_breadcrumb :users, :users_path
-
+  before_action :set_breadcrumbs
   before_action :find_user, only: :show
 
   # GET /users
@@ -28,5 +27,9 @@ class UsersController < ApplicationController
 
   def find_user
     @user ||= User.find(params[:id])
+  end
+
+  def set_breadcrumbs
+    add_breadcrumb t("users.breadcrumb"), users_path
   end
 end
