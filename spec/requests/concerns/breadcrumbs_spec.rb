@@ -15,11 +15,16 @@ RSpec.describe "Breadcrumbs", type: :request do
       add_breadcrumb :anonymous, :anonymous_path
 
       def test_breadcrumbs
-        add_breadcrumb "Home", "/"
+        add_breadcrumb t("breadcrumbs.home"), "/"
         add_breadcrumb -> { "Dynamic Page" }, -> { "/dynamic-url" }
-        add_breadcrumb :show, "/anonymous/123", id: 123
 
         render plain: "OK"
+      end
+
+      private
+
+      def anonymous
+        "Anonymous method"
       end
     end
   end
@@ -36,9 +41,6 @@ RSpec.describe "Breadcrumbs", type: :request do
     I18n.backend.store_translations(:en, {
       breadcrumbs: {
         home: "Home",
-        anonymous: "Anonymous",
-        dynamic_page: "Dynamic Page",
-        show: "Anonymous %{id}"
       }
     })
   end
@@ -56,15 +58,11 @@ RSpec.describe "Breadcrumbs", type: :request do
     end
 
     it "adds a breadcrumb with a localized label and path helper URL" do
-      expect(controller_assigns(:breadcrumbs)).to include({label: "Anonymous", url: "/anonymous"})
+      expect(controller_assigns(:breadcrumbs)).to include({label: "Anonymous method", url: "/anonymous"})
     end
 
     it "adds a breadcrumb with a dynamic label and URL using a Proc" do
       expect(controller_assigns(:breadcrumbs)).to include({label: "Dynamic Page", url: "/dynamic-url"})
-    end
-
-    it "adds a breadcrumb with a localized label and interpolated ID" do
-      expect(controller_assigns(:breadcrumbs)).to include({label: "Anonymous 123", url: "/anonymous/123"})
     end
   end
 
@@ -72,8 +70,8 @@ RSpec.describe "Breadcrumbs", type: :request do
     let(:dummy_breadcrumbs) do
       [
         {label: "Home", url: "/"},
-        {label: "Products", url: "/products"},
-        {label: "Product Details", url: nil}
+        {label: "Anonymous", url: "/anonymous"},
+        {label: "Dynamic Page", url: nil}
       ]
     end
 
@@ -82,15 +80,13 @@ RSpec.describe "Breadcrumbs", type: :request do
     end
 
     it "renders the correct breadcrumb structure" do
-      get "/anonymous"
-
-      rendered_html = @controller.view_context.render_breadcrumbs
+      rendered_html = controller_class.new.view_context.render_breadcrumbs
 
       expect(rendered_html).to include("<nav aria-label=\"breadcrumb\">")
       expect(rendered_html).to include("<ol class=\"breadcrumb\">")
       expect(rendered_html).to include("<li class=\"breadcrumb-item\"><a href=\"/\">Home</a></li>")
-      expect(rendered_html).to include("<li class=\"breadcrumb-item\"><a href=\"/products\">Products</a></li>")
-      expect(rendered_html).to include("<li class=\"breadcrumb-item active\" aria-current=\"page\">Product Details</li>")
+      expect(rendered_html).to include("<li class=\"breadcrumb-item\"><a href=\"/anonymous\">Anonymous</a></li>")
+      expect(rendered_html).to include("<li class=\"breadcrumb-item active\" aria-current=\"page\">Dynamic Page</li>")
     end
   end
 end
