@@ -10,6 +10,6 @@ FactoryBot.define do
     movement_type { InventoryMovement.movement_types.keys.sample }
     previous_quantity { Faker::Number.between(from: 1, to: 100) }
     new_quantity { Faker::Number.between(from: 1, to: 100) }
-    metadata { {} }
+    metadata { {movement_type:, previous_quantity:, new_quantity:} }
   end
 end

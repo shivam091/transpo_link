@@ -6,8 +6,8 @@ FactoryBot.define do
   factory :inventory do
     association :product
     association :warehouse
-    batch_number { Faker::Alphanumeric.alphanumeric(number: 8).upcase }
-    expiration_date { Faker::Date.between(from: Date.current, to: 3.year.from_now) }
+    batch_number { Faker::Alphanumeric.alphanumeric(number: 10).upcase }
+    expiration_date { Faker::Date.between(from: 1.year.from_now, to: 3.years.from_now) }
     stock_quantity { Faker::Number.between(from: 10, to: 500) }
     reserved_stock { 0 }
     inventory_unit { TranspoLink::MeasurementUnits.units_for(:weight).sample }

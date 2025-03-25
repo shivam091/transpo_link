@@ -9,7 +9,7 @@ FactoryBot.define do
     business_category { TaxRate.business_categories[:b2b] }
     rate { 12.0 }
     valid_from { Date.current }
-    valid_to { Date.current + Faker::Number.between(from: 1, to: 12).months }
+    valid_to { Date.current + 1.month }
   end
 
   trait :for_b2c do

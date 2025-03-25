@@ -13,5 +13,6 @@ FactoryBot.define do
     currency { Faker::Currency.code }
     cost_price { Faker::Commerce.price(range: 5.0..1000.0) }
     association :product_category
+    is_active { false }
   end
 end

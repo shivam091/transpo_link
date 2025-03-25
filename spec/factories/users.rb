@@ -4,11 +4,13 @@
 
 FactoryBot.define do
   factory :user do
-    email { Faker::Internet.email }
+    email { Faker::Internet.email(domain: "transpo-link.com") }
     password { Rails.application.credentials.config[:TEST_PASSWORD] }
     password_confirmation { Rails.application.credentials.config[:TEST_PASSWORD] }
     last_activity_at { nil }
     password_updated_at { DateTime.now }
+    is_active { false }
+    is_banned { false }
 
     factory :admin, parent: :user do
       role { Role.find_by(name: "admin") || create(:admin_role, :active) }
