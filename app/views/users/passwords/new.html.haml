@@ -1,15 +1,18 @@
 = title(t(".title"))
 .text-center
-  %h4.fw-bold.mb-3.fw-normal= t(".password_assistance")
-  %p=t (".password_reset_note")
-= pretty_form_with model: resource, as: resource_name, url: password_path(resource_name), data: {turbo: false} do |form|
+  %h4.fw-bold.mb-3.fw-normal
+    = t(".password_assistance")
+  %p
+    =t (".password_reset_note")
+= pretty_form_with model: resource, as: resource_name, url: password_path(resource_name),
+  data: {turbo: false} do |form|
   = form_errors(resource)
   .col-12
-    .form-floating.mb-3
+    .form-floating
       = form.text_field :email, autofocus: true, autocomplete: "new-email",
         placeholder: User.human_attribute_name(:email), value: (params[:email] || resource.email)
       = form.label :email, class: "form-label required"
-  .col-12
+  .col-12.mt-3
     = form.button type: :submit, class: "w-100 btn btn-primary justify-content-center" do
       = button_text(:continue)
       = external_svg_tag("svgs/arrow-right.svg")

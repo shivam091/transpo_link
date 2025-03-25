@@ -16,11 +16,11 @@
 .col-sm-12.col-md-6.col-lg-4
   = form.label :preferred_color_scheme, class: "form-label required"
   .col
-    - enum_options_for_select(UserPreference, :preferred_color_schemes).each do |label, value|
+    - enum_options_for_select(UserPreference, :preferred_color_schemes).each do |label, color_scheme|
       .form-check.form-check-inline.mt-1
-        = form.radio_button :preferred_color_scheme, value, id: "preferred_color_scheme_#{value}",
-          checked: (form.object.preferred_color_scheme == value)
-        = form.label :preferred_color_scheme, label, class: "form-check-label", for: "preferred_color_scheme_#{value}"
+        = form.radio_button :preferred_color_scheme, color_scheme, id: "preferred_color_scheme_#{color_scheme}",
+          checked: (form.object.preferred_color_scheme == color_scheme)
+        = form.label :preferred_color_scheme, label, class: "form-check-label", for: "preferred_color_scheme_#{color_scheme}"
   = help_text(t(".preferred_color_scheme_help_text"))
 .col-sm-12.col-md-6.col-lg-4
   = form.label :are_notifications_enabled, class: "form-check-label required mb-2"

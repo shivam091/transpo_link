@@ -6,7 +6,7 @@
   .col-12
     = form.label :entity_type, class: "form-label required"
     = form.select :entity_type, options_for_select(enum_options_for_select(LegalIdentifier, :entity_types), form.object.entity_type),
-    {include_blank: t(".select_entity_type")}, {}
+      {include_blank: t(".select_entity_type")}, {}
   .col-12
     = form.label :tax_identifier_type, class: "form-label required"
     = form.select :tax_identifier_type, options_for_select(enum_options_for_select(LegalIdentifier, :tax_identifier_types), form.object.tax_identifier_type),

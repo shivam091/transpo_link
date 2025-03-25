@@ -7,12 +7,17 @@
     %table.table.table-striped
       %thead.border
         %tr.table-active
-          %th{width: "3%", scope: "col"} #
-          %th{scope: "col"}= ProductPrice.human_attribute_name(:warehouse_id)
-          %th{scope: "col"}= ProductPrice.human_attribute_name(:min_quantity)
-          %th{scope: "col"}= ProductPrice.human_attribute_name(:unit_price)
-          %th{scope: "col"}= ProductPrice.human_attribute_name(:currency)
-          %th{width: "3%", scope: "col"}= t("shared.actions")
+          %th{width: "3%", scope: "col"}#
+          %th{scope: "col"}
+            = ProductPrice.human_attribute_name(:warehouse_id)
+          %th{scope: "col"}
+            = ProductPrice.human_attribute_name(:min_quantity)
+          %th{scope: "col"}
+            = ProductPrice.human_attribute_name(:unit_price)
+          %th{scope: "col"}
+            = ProductPrice.human_attribute_name(:currency)
+          %th{width: "3%", scope: "col"}
+            = t("shared.actions")
       %tbody.border
         %template{data: {nested_forms_target: "template"}}
           = form.fields_for :product_prices, form.object.product_prices.build, child_index: "NEW_RECORD" do |product_price_form|

@@ -17,17 +17,25 @@
       .widget-body
         .widget-row
           .widget-row-content
-            .widget-row-title= Feedback.human_attribute_name(:reviewable)
-            .widget-row-body= link_to reviewable_name_with_type(reviewable), reviewable_link(reviewable), target: :_blank
+            .widget-row-title
+              = Feedback.human_attribute_name(:reviewable)
+            .widget-row-body
+              = link_to reviewable_name_with_type(reviewable), reviewable_link(reviewable), target: :_blank
         .widget-row
           .widget-row-content
-            .widget-row-title= Feedback.human_attribute_name(:user_id)
-            .widget-row-body= link_to user.full_name, user_path(user), target: :_blank
+            .widget-row-title
+              = Feedback.human_attribute_name(:user_id)
+            .widget-row-body
+              = link_to user.full_name, user_path(user), target: :_blank
         .widget-row
           .widget-row-content
-            .widget-row-title= Feedback.human_attribute_name(:rating)
-            .widget-row-body= h(@feedback.rating)
+            .widget-row-title
+              = Feedback.human_attribute_name(:rating)
+            .widget-row-body
+              = h(@feedback.rating)
         .widget-row
           .widget-row-content
-            .widget-row-title= Feedback.human_attribute_name(:comment)
-            .widget-row-body= h(@feedback.comment)
+            .widget-row-title
+              = Feedback.human_attribute_name(:comment)
+            .widget-row-body
+              = h(@feedback.comment)

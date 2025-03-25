@@ -19,10 +19,13 @@
       .widget-body
         .widget-row
           .widget-row-content
-            .widget-row-title= Role.human_attribute_name(:name)
-            .widget-row-body= h(@role.name)
+            .widget-row-title
+              = Role.human_attribute_name(:name)
+            .widget-row-body
+              = h(@role.name)
         .widget-row
           .widget-row-content
-            .widget-row-title= Role.human_attribute_name(:is_active)
-            .widget-row-body= h(humanize_boolean(@role.is_active))
-        
+            .widget-row-title
+              = Role.human_attribute_name(:is_active)
+            .widget-row-body
+              = h(humanize_boolean(@role.is_active))

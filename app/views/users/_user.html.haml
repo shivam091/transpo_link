@@ -1,14 +1,21 @@
 %tr
-  %th{scope: "row"}= h(index)
+  %th{scope: "row"}
+    = index
   %td
     = check_box_tag "user_ids[]", user.id, false, class: "form-check-input", data: {checkbox_selection_target: "itemCheckbox"}
-  %td= link_to user.full_name, user_path(user)
-  %td= mail_to user.email
-  %td= user.mobile_number
-  %td= user.alternate_contact_number
-  %td= mail_to user.alternate_email
-  %td= user.role_name.humanize
-  %td.actions
+  %td
+    = link_to user.full_name, user_path(user)
+  %td
+    = mail_to user.email
+  %td
+    = h(user.mobile_number)
+  %td
+    = h(user.alternate_contact_number)
+  %td
+    = mail_to user.alternate_email
+  %td
+    = h(user.role_name.humanize)
+  %td
     = link_to "javascript:void(0)", class: "text-reset", data: {bs_toggle: "dropdown"}, aria: {expanded: false} do
       = external_svg_tag("svgs/ellipsis-vertical.svg")
     %ul.dropdown-menu

@@ -1,12 +1,19 @@
 %tr
-  %th{scope: "row"}= h(@pagination_metadata.offset + index)
-  %td= h(TranspoLink::CountryInfo.new(tax_rate.country).country_name)
-  %td= h(enum_i18n(TaxRate, :tax_identifier_types, tax_rate.tax_identifier_type))
-  %td= h(enum_i18n(TaxRate, :business_categories, tax_rate.business_category))
-  %td= h(number_to_percentage(tax_rate.rate, precision: 2))
-  %td= h(tax_rate.valid_from.to_fs(:long))
-  %td= h(tax_rate.valid_to&.to_fs(:long))
-  %td.actions
+  %th{scope: "row"}
+    = @pagination_metadata.offset + index
+  %td
+    = h(TranspoLink::CountryInfo.new(tax_rate.country).country_name)
+  %td
+    = h(enum_i18n(TaxRate, :tax_identifier_types, tax_rate.tax_identifier_type))
+  %td
+    = h(enum_i18n(TaxRate, :business_categories, tax_rate.business_category))
+  %td
+    = h(number_to_percentage(tax_rate.rate, precision: 2))
+  %td
+    = h(tax_rate.valid_from.to_fs(:long))
+  %td
+    = h(tax_rate.valid_to&.to_fs(:long))
+  %td
     = link_to "javascript:void(0)", class: "text-reset", data: {bs_toggle: "dropdown"}, aria: {expanded: false} do
       = external_svg_tag("svgs/ellipsis-vertical.svg")
     %ul.dropdown-menu

@@ -12,8 +12,10 @@
           %tr.table-active
             %th{width: "3%", scope: "col"}#
             - ProductCategory::LISTING_ATTRIBUTES.each do |attribute|
-              %th{scope: "col"}= ProductCategory.human_attribute_name(attribute)
-            %th{width: "3%", scope: "col"}= t("shared.actions")
+              %th{scope: "col"}
+                = ProductCategory.human_attribute_name(attribute)
+            %th{width: "3%", scope: "col"}
+              = t("shared.actions")
         %tbody.border
           - if @product_categories&.each.with_index(1) do |product_category, index|
             = render_if_exists("product_categories/product_category", locals: {product_category:, index:})

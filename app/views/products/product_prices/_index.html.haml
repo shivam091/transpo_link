@@ -2,9 +2,10 @@
   %table.table.table-striped
     %thead.border
       %tr.table-active
-        %th{scope: "col", width: "25px"} #
+        %th{scope: "col", width: "25px"}#
         - ProductPrice::LISTING_ATTRIBUTES.each do |attribute|
-          %th{scope: "col"}= ProductPrice.human_attribute_name(attribute)
+          %th{scope: "col"}
+            = ProductPrice.human_attribute_name(attribute)
     %tbody.border
       - if product.product_prices&.each.with_index(1) do |product_price, index|
         = render_if_exists("products/product_prices/product_price", locals: {product:, product_price:, index:})

@@ -1,6 +1,7 @@
 = pretty_form_with model: current_user, url: locale_path, class: "row g-2" do |form|
   = form.fields_for :user_preference, include_id: false do |user_preference_form|
-    %p= t(".preferred_locale_form_info")
+    %p
+      = t(".preferred_locale_form_info")
     .col-12
       = user_preference_form.select :preferred_locale, options_for_select(TranspoLink::I18n.options_for_languages, form.object.preferred_locale),
         {include_blank: t(".select_preferred_language")}

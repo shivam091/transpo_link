@@ -6,9 +6,12 @@
         %thead.border
           %tr.table-active
             %th{width: "3%", scope: "col"}#
-            %th{scope: "col"}= Role.human_attribute_name(:name)
-            %th{scope: "col"}= Role.human_attribute_name(:is_active)
-            %th{width: "3%", scope: "col"}= t("shared.actions")
+            %th{scope: "col"}
+              = Role.human_attribute_name(:name)
+            %th{scope: "col"}
+              = Role.human_attribute_name(:is_active)
+            %th{width: "3%", scope: "col"}
+              = t("shared.actions")
         %tbody.border
           - if @roles&.each.with_index(1) do |role, index|
             = render_if_exists("roles/role", locals: {role:, index:})

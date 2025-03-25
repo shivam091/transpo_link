@@ -1,6 +1,5 @@
 %li.nav-item.dropdown
-  = link_to "javascript:void(0)", class: "nav-link dropdown-toggle",
-    aria: {expanded: false}, data: {bs_toggle: "dropdown"} do
+  = link_to "javascript:void(0)", class: "nav-link dropdown-toggle", aria: {expanded: false}, data: {bs_toggle: "dropdown"} do
     = h(t(".hello_username", username: current_user.full_name))
   %ul.dropdown-menu.dropdown-menu-lg-end
     %li

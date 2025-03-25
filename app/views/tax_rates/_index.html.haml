@@ -12,8 +12,10 @@
           %tr.table-active
             %th{width: "3%", scope: "col"}#
             - TaxRate::LISTING_ATTRIBUTES.each do |attribute|
-              %th{scope: "col"}= TaxRate.human_attribute_name(attribute)
-            %th{width: "3%", scope: "col"}= t("shared.actions")
+              %th{scope: "col"}
+                = TaxRate.human_attribute_name(attribute)
+            %th{width: "3%", scope: "col"}
+              = t("shared.actions")
         %tbody.border
           - if @tax_rates&.each.with_index(1) do |tax_rate, index|
             = render_if_exists("tax_rates/tax_rate", locals: {tax_rate:, index:})

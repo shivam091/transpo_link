@@ -11,8 +11,10 @@
           %tr.table-active
             %th{width: "3%", scope: "col"}#
             - Inventory::LISTING_ATTRIBUTES.each do |attribute|
-              %th{scope: "col"}= Inventory.human_attribute_name(attribute)
-            %th{width: "3%", scope: "col"}= t("shared.actions")
+              %th{scope: "col"}
+                = Inventory.human_attribute_name(attribute)
+            %th{width: "3%", scope: "col"}
+              = t("shared.actions")
         %tbody.border
           - if @inventories&.each.with_index(1) do |inventory, index|
             = render_if_exists("inventories/inventory", locals: {inventory:, index:})

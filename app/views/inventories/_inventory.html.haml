@@ -2,7 +2,7 @@
 - warehouse = inventory.warehouse
 %tr
   %th{scope: "row"}
-    = h(@pagination_metadata.offset + index)
+    = @pagination_metadata.offset + index
   %td
     = link_to inventory.reference_code, inventory_path(inventory)
   %td

@@ -1,9 +1,13 @@
 %tr
-  %th{scope: "row"}= h(@pagination_metadata.offset + index)
-  %td= h(product_category.name)
-  %td= h(product_category.parent_category_name)
-  %td= h(product_category.products_count)
-  %td.actions
+  %th{scope: "row"}
+    = @pagination_metadata.offset + index
+  %td
+    = h(product_category.name)
+  %td
+    = h(product_category.parent_category_name)
+  %td
+    = h(product_category.products_count)
+  %td
     = link_to "javascript:void(0)", class: "text-reset", data: {bs_toggle: "dropdown"}, aria: {expanded: false} do
       = external_svg_tag("svgs/ellipsis-vertical.svg")
     %ul.dropdown-menu

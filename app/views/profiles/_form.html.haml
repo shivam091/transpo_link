@@ -1,5 +1,5 @@
-= pretty_form_with model: current_user, url: profile_path, class: "row g-3" do |form|
-  = form_errors(current_user)
+= pretty_form_with model: @user, url: profile_path, class: "row g-3" do |form|
+  = form_errors(@user)
   .subheader
     = t(".profile_details")
   = form.fields_for :user_detail, include_id: false do |user_detail_form_fields|

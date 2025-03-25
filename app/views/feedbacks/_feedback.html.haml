@@ -17,7 +17,7 @@
       = link_to t("shared.show_more"), "javascript:void(0)", data: {action: "click->collapsible-content#toggle"}
     %template{data: {collapsible_content_target: "expandedContent"}}
       = h(word_wrap(feedback.comment, wrap_length: 120).html_safe)
-  %td.actions
+  %td
     = link_to "javascript:void(0)", class: "text-reset", data: {bs_toggle: "dropdown"}, aria: {expanded: false} do
       = external_svg_tag("svgs/ellipsis-vertical.svg")
     %ul.dropdown-menu
@@ -27,6 +27,7 @@
           = button_text(:view_details)
       - if feedback.is_unread?
         %li
-          = link_to mark_as_read_feedback_path(feedback), class: "dropdown-item", data: {turbo_method: :patch} do
+          = link_to mark_as_read_feedback_path(feedback), class: "dropdown-item",
+            data: {turbo_method: :patch, turbo_confirm: t(".mark_as_read_confirmation_text", reference_code: feedback.reference_code)} do
             = external_svg_tag("svgs/check-circle.svg")
             = button_text(:mark_as_read)

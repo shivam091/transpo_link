@@ -2,9 +2,10 @@
   %table.table.table-striped
     %thead.border
       %tr.table-active
-        %th{scope: "col", width: "25px"} #
+        %th{scope: "col", width: "25px"}#
         - UnitConversion::LISTING_ATTRIBUTES.each do |attribute|
-          %th{scope: "col"}= UnitConversion.human_attribute_name(attribute)
+          %th{scope: "col"}
+            = UnitConversion.human_attribute_name(attribute)
     %tbody.border
       - if product.unit_conversions&.each.with_index(1) do |unit_conversion, index|
         = render_if_exists("products/unit_conversions/unit_conversion", locals: {unit_conversion:, index:})
