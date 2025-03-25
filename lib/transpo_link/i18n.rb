@@ -73,7 +73,7 @@ module TranspoLink
       with_locale(::I18n.default_locale, &block)
     end
 
-    def trimmed_language_name(code)
+    def display_name(code)
       language_name = AVAILABLE_LANGUAGES[code]
       return if language_name.blank?
 

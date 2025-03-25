@@ -1,7 +1,7 @@
 .widget-row
   .widget-row-content
     .widget-row-title= UserPreference.human_attribute_name(:preferred_locale)
-    .widget-row-body= h(TranspoLink::I18n.trimmed_language_name(user.preferred_locale))
+    .widget-row-body= h(TranspoLink::I18n.display_name(user.preferred_locale))
 .widget-row
   .widget-row-content
     .widget-row-title= UserPreference.human_attribute_name(:preferred_time_zone)
