@@ -3,7 +3,7 @@
 # -*- warn_indent: true -*-
 
 class ProfilesController < ApplicationController
-  before_action :set_breadcrumbs
+  before_action :set_breadcrumbs, :set_user
 
   # GET /profile
   def show
@@ -58,5 +58,9 @@ class ProfilesController < ApplicationController
 
   def set_breadcrumbs
     add_breadcrumb t("profiles.breadcrumb"), profile_path
+  end
+
+  def set_user
+    @user = current_user
   end
 end

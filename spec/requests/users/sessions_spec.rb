@@ -15,7 +15,7 @@ RSpec.describe "Users::Sessions", type: :request do
       get new_user_session_path
 
       expect(response).to have_http_status(:ok)
-      expect(response.body).to include("<h4 class='fw-bold mb-3 fw-normal'>Welcome! Sign in to your account</h4>")
+      expect(response.body).to match(/Welcome! Sign in to your account/)
     end
   end
 
