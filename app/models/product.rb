@@ -11,7 +11,6 @@ class Product < ApplicationRecord
 
   attribute :min_stock_threshold, default: 0
   attribute :cost_price, default: 0.0
-  attribute :is_active, default: false
 
   validates :name,
             presence: true,

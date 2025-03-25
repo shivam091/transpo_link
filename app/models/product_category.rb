@@ -7,8 +7,6 @@ class ProductCategory < ApplicationRecord
 
   LISTING_ATTRIBUTES = %i[name parent_category_id products_count].freeze
 
-  attribute :is_active, default: false
-
   validates :name,
             presence: true,
             length: {in: 2..255},
