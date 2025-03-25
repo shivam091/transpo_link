@@ -7,9 +7,9 @@
 require "spec_helper"
 
 RSpec.describe TranspoLink::CountryInfo do
-  let!(:country_code) { "IN" }
-  let!(:subdivision_code) { "MH" }
-  let!(:country_info) { described_class.new(country_code, subdivision_code) }
+  let(:country_code) { "IN" }
+  let(:subdivision_code) { "MH" }
+  let(:country_info) { described_class.new(country_code, subdivision_code) }
 
   describe "#country" do
     it "returns the country object for the given code" do

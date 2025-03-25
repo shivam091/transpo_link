@@ -21,7 +21,7 @@ RSpec.describe ActsAsMoney do
   end
 
   after(:all) do
-    ActiveRecord::Base.connection.drop_table(:acts_as_money_models, if_exists: true)
+    connection.drop_table(:acts_as_money_models, if_exists: true)
     Object.send(:remove_const, :ActsAsMoneyModel)
   end
 
@@ -34,7 +34,6 @@ RSpec.describe ActsAsMoney do
       expect(acts_as_money_instance.currency).to eq(Money.default_currency.iso_code)
     end
   end
-
 
   describe "#currency" do
     it "returns a Money::Currency object" do

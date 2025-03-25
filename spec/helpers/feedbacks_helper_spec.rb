@@ -23,9 +23,7 @@ RSpec.describe FeedbacksHelper, type: :helper do
     end
 
     it "returns javascript:void(0) for unknown reviewable types" do
-      unknown_reviewable = double("UnknownReviewable")
-
-      expect(helper.reviewable_link(unknown_reviewable)).to eq("javascript:void(0)")
+      expect(helper.reviewable_link(double("UnknownReviewable"))).to eq("javascript:void(0)")
     end
   end
 end

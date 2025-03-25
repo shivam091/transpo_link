@@ -7,7 +7,7 @@
 require "spec_helper"
 
 RSpec.describe TranspoLink::MeasurementUnits do
-  let!(:all_units) do
+  let(:all_units) do
     [
       :cm², :m², :km², :in², :ft², :yd², :ac, :ha,
       :mg, :g, :kg, :q, :t, :lb, :oz,
@@ -16,8 +16,8 @@ RSpec.describe TranspoLink::MeasurementUnits do
       :item, :pack, :box, :carton, :pallet, :bundle, :dz, :case, :roll
     ]
   end
-  let!(:area_units) { %i[cm² m² km² in² ft² yd² ac ha] }
-  let!(:count_units) { %i[item pack box carton pallet bundle dz case roll] }
+  let(:area_units) { %i[cm² m² km² in² ft² yd² ac ha] }
+  let(:count_units) { %i[item pack box carton pallet bundle dz case roll] }
 
   describe "::UNITS" do
     it "is a frozen array" do
@@ -58,9 +58,9 @@ RSpec.describe TranspoLink::MeasurementUnits do
       allow(I18n).to receive(:t).with("item", scope: "measurement_units.sub_categories") { "Item" }
     end
 
-    it "returns a hash with translated categories and subcategories" do
-      result = described_class.options_for_units
+    let(:result) { described_class.options_for_units }
 
+    it "returns a hash with translated categories and subcategories" do
       expect(result).to be_a(Hash)
       expect(result.keys).to contain_exactly("Area", "Weight", "Volume", "Length", "Count")
 

@@ -9,19 +9,21 @@ require "spec_helper"
 RSpec.describe PasswordValidator do
   using RSpec::Parameterized::TableSyntax
 
-  subject do
-    Class.new do
-      include ActiveModel::Model
-      include ActiveModel::Validations
+  before(:all) do
+    class PasswordValidatorModel
+      include ActiveModel::Model, ActiveModel::Validations
+
       attr_accessor :password
 
       validates :password, password: true
-
-      def self.model_name
-        ActiveModel::Name.new(self, nil, "PasswordValidatorModel")
-      end
-    end.new(password: password)
+    end
   end
+
+  after(:all) do
+    Object.send(:remove_const, :PasswordValidatorModel)
+  end
+
+  subject { PasswordValidatorModel.new(password: password) }
 
   describe "#validate_each" do
     context "when password is valid" do

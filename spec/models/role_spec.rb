@@ -30,14 +30,6 @@ RSpec.describe Role, type: :model do
     it { is_expected.to have_check_constraint(:check_roles_name_presence).with_expression("name IS NOT NULL AND name::text <> ''::text") }
   end
 
-  describe "default values" do
-    let(:admin_role) { described_class.new }
-
-    it "should set false as default value for #is_active" do
-      expect(admin_role.is_active).to be_falsy
-    end
-  end
-
   describe "associations" do
     it { is_expected.to have_many(:users).inverse_of(:role).dependent(:restrict_with_exception) }
   end

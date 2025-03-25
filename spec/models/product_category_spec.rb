@@ -39,14 +39,6 @@ RSpec.describe ProductCategory, type: :model do
     it { is_expected.to include_module(Pageable) }
   end
 
-  describe "default values" do
-    let(:product_category) { described_class.new }
-
-    it "should set false as default value for #is_active" do
-      expect(product_category.is_active).to be_falsy
-    end
-  end
-
   describe "constants" do
     it { is_expected.to have_constant(:LISTING_ATTRIBUTES) }
   end

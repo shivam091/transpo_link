@@ -8,7 +8,7 @@ require "spec_helper"
 
 RSpec.describe ModalsHelper, type: :helper do
   describe "#render_modal" do
-    let!(:default_options) do
+    let(:default_options) do
       {
         title: "",
         modal_id: "modal-window",

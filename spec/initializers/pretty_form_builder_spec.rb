@@ -32,8 +32,8 @@ RSpec.describe PrettyFormBuilder, type: :helper do
     Object.send(:remove_const, :TestUser)
   end
 
-  let!(:object) { TestUser.new(name: "Test", email: "test@example.com", role: "admin") }
-  let!(:builder) { described_class.new(:test_user, object, self, {}) }
+  let(:object) { TestUser.new(name: "Test", email: "test@example.com", role: "admin") }
+  let(:builder) { described_class.new(:test_user, object, self, {}) }
 
   describe "#text_field" do
     context "when :static option is not passed" do

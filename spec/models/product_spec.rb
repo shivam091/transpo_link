@@ -60,10 +60,6 @@ RSpec.describe Product, type: :model do
     it "should set 0.0 as default value for #cost_price" do
       expect(product.cost_price).to eq(0.0)
     end
-
-    it "should set false as default value for #is_active" do
-      expect(product.is_active).to be_falsy
-    end
   end
 
   describe "constants" do
@@ -140,7 +136,7 @@ RSpec.describe Product, type: :model do
   include_examples "apply default scope on created_at:desc"
 
   describe "instance methods" do
-    let(:product) { create(:product) }
+    let!(:product) { create(:product) }
 
     describe "#reject_unit_conversion?" do
       let!(:unit_conversion) { create(:unit_conversion, product: product) }

@@ -9,19 +9,21 @@ require "spec_helper"
 RSpec.describe EmailValidator do
   using RSpec::Parameterized::TableSyntax
 
-  subject do
-    Class.new do
-      include ActiveModel::Model
-      include ActiveModel::Validations
+  before(:all) do
+    class EmailValidatorModel
+      include ActiveModel::Model, ActiveModel::Validations
+
       attr_accessor :email
 
       validates :email, email: true
-
-      def self.model_name
-        ActiveModel::Name.new(self, nil, "EmailValidatorModel")
-      end
-    end.new(email: email)
+    end
   end
+
+  after(:all) do
+    Object.send(:remove_const, :EmailValidatorModel)
+  end
+
+  subject { EmailValidatorModel.new(email: email) }
 
   describe "#validate_each" do
     context "when email is valid" do

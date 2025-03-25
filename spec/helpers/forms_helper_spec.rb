@@ -6,7 +6,7 @@ require "spec_helper"
 
 RSpec.describe FormsHelper, type: :helper do
   describe "#form_errors" do
-    let!(:record) { double("Record") }
+    let(:record) { double("Record") }
 
     context "when the record has errors" do
       before do

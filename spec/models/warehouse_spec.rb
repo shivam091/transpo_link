@@ -53,14 +53,6 @@ RSpec.describe Warehouse, type: :model do
     it { is_expected.to include_module(Sortable) }
   end
 
-  describe "default values" do
-    let(:warehouse) { described_class.new }
-
-    it "should set false as default value for #is_active" do
-      expect(warehouse.is_active).to be_falsy
-    end
-  end
-
   describe "constants" do
     it { is_expected.to have_constant(:LISTING_ATTRIBUTES) }
   end

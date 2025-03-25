@@ -10,46 +10,64 @@ describe TranspoLink::Regex do
   using RSpec::Parameterized::TableSyntax
 
   describe "::STRONG_PASSWORD_REGEX" do
-    subject { described_class::STRONG_PASSWORD_REGEX }
+    let(:strong_password_regex) { described_class::STRONG_PASSWORD_REGEX }
 
-    where(:password, :is_valid) do
-      "Test@123"           | true
-      "Test@1234"          | true
-      "test@123"           | false
-      "test"               | false
-      "test@"              | false
-      "Test@12"            | false
+    context "when password is valid" do
+      where(:password) do
+        [
+          "Test@123" ,
+          "Test@1234"
+        ]
+      end
+
+      with_them do
+        it { expect(password).to match(strong_password_regex) }
+      end
     end
 
-    with_them do
-      it do
-        if is_valid
-          expect(password).to match(subject)
-        else
-          expect(password).not_to match(subject)
-        end
+    context "when password is invalid" do
+      where(:password) do
+        [
+          "test@123",
+          "test",
+          "test@",
+          "Test@12",
+        ]
+      end
+
+      with_them do
+        it { expect(password).not_to match(strong_password_regex) }
       end
     end
   end
 
   describe "::EMAIL_REGEX" do
-    subject { described_class::EMAIL_REGEX }
+    let(:email_regex) { described_class::EMAIL_REGEX }
 
-    where(:email, :is_valid) do
-      "admin@transpo-link.com"       | true
-      "admin@transpo-link.co.uk"     | true
-      "Abc"                    | false
-      "ABC"                    | false
-      "abC"                    | false
+    context "when email is valid" do
+      where(:email) do
+        [
+          "admin@transpo-link.com",
+          "admin@transpo-link.co.uk"
+        ]
+      end
+
+      with_them do
+        it { expect(email).to match(email_regex) }
+      end
     end
 
-    with_them do
-      it do
-        if is_valid
-          expect(email).to match(subject)
-        else
-          expect(email).not_to match(subject)
-        end
+    context "when email is invalid" do
+      where(:email) do
+        [
+          "Abc",
+          "ABC",
+          "abC"
+        ]
+      end
+
+      with_them do
+        it { expect(email).not_to match(email_regex) }
       end
     end
   end

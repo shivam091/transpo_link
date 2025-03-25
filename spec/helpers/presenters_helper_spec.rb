@@ -8,24 +8,11 @@ require "spec_helper"
 
 RSpec.describe PresentersHelper, type: :helper do
   before(:all) do
-    ActiveRecord::Schema.define(version: 1) do
-      create_table :presentable_models, force: true do |t|
-        t.timestamps
-      end
-    end
-
-    class PresentableModel < ApplicationRecord
+    class PresentableModel
       include Presentable
     end
-  end
 
-  after(:all) do
-    connection.drop_table(:presentable_models, if_exists: true)
-    Object.send(:remove_const, :PresentableModel)
-  end
-
-  before do
-    stub_const("PresentableModelPresenter", Class.new do
+    class PresentableModelPresenter
       attr_reader :model, :view_context
 
       def initialize(model, view_context)
@@ -36,7 +23,12 @@ RSpec.describe PresentersHelper, type: :helper do
       def model_name
         @model.class.name
       end
-    end)
+    end
+  end
+
+  after(:all) do
+    Object.send(:remove_const, :PresentableModel)
+    Object.send(:remove_const, :PresentableModelPresenter)
   end
 
   let!(:presentable_model) { PresentableModel.new }

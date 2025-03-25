@@ -209,7 +209,7 @@ RSpec.describe TaxRate, type: :model do
 
     describe "#cannot_change_rate_for_active_tax_rate" do
       context "when updating the rate of an active tax rate" do
-        let!(:active_tax_rate) { create(:tax_rate) }
+        let(:active_tax_rate) { create(:tax_rate) }
 
         it "is not valid" do
           active_tax_rate.rate = 10.0
