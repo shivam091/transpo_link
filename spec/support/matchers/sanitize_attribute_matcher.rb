@@ -16,12 +16,8 @@
 # ```
 RSpec::Matchers.define :sanitize_attribute do |attribute|
   match do |record|
-    sanitizable_attrs = record.class.sanitizable_attributes
-    matched_attribute = sanitizable_attrs.find { |attr| attr[:attribute] == attribute }
-
-    return false unless matched_attribute
-    return matched_attribute[:allow_html] == @allow_html if instance_variable_defined?(:@allow_html)
-    true
+    matched_attribute = record.class.sanitizable_attributes.find { _1[:attribute] == attribute }
+    matched_attribute && (!instance_variable_defined?(:@allow_html) || matched_attribute[:allow_html] == @allow_html)
   end
 
   chain :allow_html do |value = true|
@@ -29,19 +25,34 @@ RSpec::Matchers.define :sanitize_attribute do |attribute|
   end
 
   description do
-    desc = "sanitize the :#{attribute}"
+    description = "sanitize the :#{attribute}"
+
     if instance_variable_defined?(:@allow_html)
-      desc += @allow_html ? " allowing HTML" : " stripping all HTML"
+      description += @allow_html ? " allowing HTML" : " stripping all HTML"
     end
 
-    desc
+    description
   end
 
   failure_message do |record|
-    "expected #{record.class} to sanitize :#{attribute} with allow_html=#{@allow_html}, but it was not configured correctly"
+    failure_message = "expected #{record.class} to sanitize :#{attribute}"
+
+    if instance_variable_defined?(:@allow_html)
+      failure_message += @allow_html ? " allowing HTML" : " stripping all HTML"
+      failure_message += ", but it was not configured correctly"
+    end
+
+    failure_message
   end
 
   failure_message_when_negated do |record|
-    "expected #{record.class} not to sanitize :#{attribute} with allow_html=#{@allow_html}, but it was configured to do so"
+    failure_message = "expected #{record.class} not to sanitize :#{attribute}"
+
+    if instance_variable_defined?(:@allow_html)
+      failure_message += @allow_html ? " allowing HTML" : " stripping all HTML"
+      failure_message += ", but it was configured to do so"
+    end
+
+    failure_message
   end
 end
