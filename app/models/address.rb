@@ -3,6 +3,11 @@
 # -*- warn_indent: true -*-
 
 class Address < ApplicationRecord
+  include Sanitizable, NullifyIfBlank
+
+  nullify_if_blank :address2, :state, :postal_code
+
+  sanitize_attributes :address1, :address2, :city, :postal_code
 
   validates :address1,
             presence: true,

@@ -5,6 +5,8 @@
 class Role < ApplicationRecord
   include Toggleable
 
+  LISTING_ATTRIBUTES = %i[name is_active].freeze
+
   validates :name,
             presence: true,
             length: {in: 2..55},

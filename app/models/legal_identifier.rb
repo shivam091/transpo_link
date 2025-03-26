@@ -3,7 +3,7 @@
 # -*- warn_indent: true -*-
 
 class LegalIdentifier < ApplicationRecord
-  include Sortable, Pageable, Taxable, NullifyIfBlank
+  include Sortable, Pageable, Taxable, NullifyIfBlank, Sanitizable
 
   LISTING_ATTRIBUTES = %i[
     country entity_type tax_identifier_type tax_identifier
@@ -50,9 +50,11 @@ class LegalIdentifier < ApplicationRecord
     uscc: "uscc"
   }, prefix: true
 
-  normalizes :business_identifier, with: -> business_identifier { business_identifier.strip.upcase }
+  normalizes :business_identifier, with: ->(business_identifier) { business_identifier.strip.upcase }
 
-  nullify_if_blank :business_identifier
+  nullify_if_blank :business_identifier, :business_identifier_type
+
+  sanitize_attributes :tax_identifier, :business_identifier
 
   BUSINESS_IDENTIFIER_TYPE_COUNTRY_COMBINATIONS = {
     ein:      %w[US],

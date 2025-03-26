@@ -65,6 +65,11 @@ RSpec.describe TaxRate, type: :model do
     it { is_expected.to include_module(Sortable) }
     it { is_expected.to include_module(Pageable) }
     it { is_expected.to include_module(Taxable) }
+    it { is_expected.to include_module(NullifyIfBlank) }
+  end
+
+  describe "nullified attributes" do
+    it { is_expected.to nullify_if_blank(:valid_to) }
   end
 
   describe "validations" do

@@ -83,6 +83,17 @@ RSpec.describe Inventory, type: :model do
     it { is_expected.to include_module(Pageable) }
     it { is_expected.to include_module(Sortable) }
     it { is_expected.to include_module(ActsAsMoney) }
+    it { is_expected.to include_module(Sanitizable) }
+    it { is_expected.to include_module(NullifyIfBlank) }
+  end
+
+  describe "nullified attributes" do
+    it { is_expected.to nullify_if_blank(:batch_number) }
+    it { is_expected.to nullify_if_blank(:expiration_date) }
+  end
+
+  describe "sanitized attributes" do
+    it { is_expected.to sanitize_attribute(:batch_number) }
   end
 
   describe "associations" do

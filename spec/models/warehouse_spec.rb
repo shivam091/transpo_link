@@ -51,10 +51,27 @@ RSpec.describe Warehouse, type: :model do
     it { is_expected.to include_module(HasReferenceCode) }
     it { is_expected.to include_module(Pageable) }
     it { is_expected.to include_module(Sortable) }
+    it { is_expected.to include_module(NullifyIfBlank) }
+    it { is_expected.to include_module(Sanitizable) }
   end
 
   describe "constants" do
     it { is_expected.to have_constant(:LISTING_ATTRIBUTES) }
+  end
+
+  describe "nullified attributes" do
+    it { is_expected.to nullify_if_blank(:email_address) }
+    it { is_expected.to nullify_if_blank(:contact_number) }
+    it { is_expected.to nullify_if_blank(:description) }
+    it { is_expected.to nullify_if_blank(:latitude) }
+    it { is_expected.to nullify_if_blank(:longitude) }
+  end
+
+  describe "sanitized attributes" do
+    it { is_expected.to sanitize_attribute(:name) }
+    it { is_expected.to sanitize_attribute(:email_address) }
+    it { is_expected.to sanitize_attribute(:contact_number) }
+    it { is_expected.to sanitize_attribute(:description) }
   end
 
   describe "associations" do

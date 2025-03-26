@@ -54,7 +54,7 @@ module Breadcrumbs
     def render_breadcrumbs
       return unless breadcrumbs.any?
 
-      tag.nav(aria: {label: "breadcrumb"}) do
+      tag.nav(aria: {label: t(".breadcrumb")}) do
         tag.ol(class: "breadcrumb") do
           safe_join(breadcrumbs.map.with_index do |crumb, index|
             if crumb[:url] && index != breadcrumbs.size - 1

@@ -3,11 +3,13 @@
 # -*- warn_indent: true -*-
 
 class Feedback < ApplicationRecord
-  include Sortable, Pageable, HasReferenceCode
+  include Sortable, Pageable, HasReferenceCode, Sanitizable
 
   LISTING_ATTRIBUTES = %i[reference_code user_id reviewable rating comment].freeze
 
   attribute :is_unread, default: true
+
+  sanitize_attributes :comment
 
   validates :rating,
             presence: true,

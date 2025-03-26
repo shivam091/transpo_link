@@ -3,7 +3,8 @@
 # -*- warn_indent: true -*-
 
 class Inventory < ApplicationRecord
-  include HasReferenceCode, Pageable, Sortable, ActsAsMoney
+  include HasReferenceCode, Pageable, Sortable, ActsAsMoney, NullifyIfBlank,
+          Sanitizable
 
   LISTING_ATTRIBUTES = %i[
     reference_code product_id warehouse_id batch_number stock_quantity
@@ -20,6 +21,10 @@ class Inventory < ApplicationRecord
   attribute :reserved_stock, default: 0
   attribute :cost_price, default: 0.0
   attribute :tracking_method, :enum, default: tracking_methods[:average_cost]
+
+  nullify_if_blank :batch_number, :expiration_date
+
+  sanitize_attributes :batch_number
 
   validates :warehouse_id, presence: true, reduce: true
   validates :product_id,
@@ -48,6 +53,7 @@ class Inventory < ApplicationRecord
             presence: true,
             inclusion: {in: tracking_methods.values},
             reduce: true
+
   validate :inventory_unit_is_in_valid_category
 
   has_many :inventory_movements, inverse_of: :inventory, dependent: :destroy

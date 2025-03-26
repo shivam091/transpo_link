@@ -35,6 +35,24 @@ RSpec.describe Address, type: :model do
     it { is_expected.to have_db_index([:addressable_type, :addressable_id]) }
   end
 
+  describe "included modules" do
+    it { is_expected.to include_module(Sanitizable) }
+    it { is_expected.to include_module(NullifyIfBlank) }
+  end
+
+  describe "nullified attributes" do
+    it { is_expected.to nullify_if_blank(:address2) }
+    it { is_expected.to nullify_if_blank(:state) }
+    it { is_expected.to nullify_if_blank(:postal_code) }
+  end
+
+  describe "sanitized attributes" do
+    it { is_expected.to sanitize_attribute(:address1) }
+    it { is_expected.to sanitize_attribute(:address2) }
+    it { is_expected.to sanitize_attribute(:city) }
+    it { is_expected.to sanitize_attribute(:postal_code) }
+  end
+
   describe "associations" do
     it { is_expected.to belong_to(:addressable).touch }
   end

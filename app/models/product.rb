@@ -3,7 +3,8 @@
 # -*- warn_indent: true -*-
 
 class Product < ApplicationRecord
-  include Toggleable, HasReferenceCode, Pageable, Sortable, ActsAsMoney
+  include Toggleable, HasReferenceCode, Pageable, Sortable, ActsAsMoney,
+          NullifyIfBlank, Sanitizable
 
   LISTING_ATTRIBUTES = %i[
     reference_code name sku barcode cost_price product_category_id
@@ -11,6 +12,10 @@ class Product < ApplicationRecord
 
   attribute :min_stock_threshold, default: 0
   attribute :cost_price, default: 0.0
+
+  nullify_if_blank :description, :barcode
+
+  sanitize_attributes :name, :description, :sku, :barcode
 
   validates :name,
             presence: true,
