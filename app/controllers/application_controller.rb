@@ -20,11 +20,9 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  before_action :authenticate_user!
+  before_action :authenticate_user!, :set_main_breadcrumb
 
   around_action :with_locale, :with_time_zone
-
-  add_breadcrumb :dashboard, :root_path
 
   private
 
@@ -42,5 +40,9 @@ class ApplicationController < ActionController::Base
     else
       TranspoLink::TimeZone.with_default_time_zone(&block)
     end
+  end
+
+  def set_main_breadcrumb
+    add_breadcrumb t("dashboards.breadcrumb"), root_path
   end
 end

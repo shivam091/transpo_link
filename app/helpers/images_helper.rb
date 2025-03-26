@@ -12,8 +12,8 @@ module ImagesHelper
     options = DEFAULT_SVG_OPTIONS.merge(options)
 
     file_content = File.read(Rails.root.join("app", "assets", "images", file_name))
-    doc = Nokogiri::HTML::DocumentFragment.parse(file_content)
-    svg = doc.at_css("svg")
+    sanitized_doc = Loofah.fragment(file_content)
+    svg = sanitized_doc.at_css("svg")
 
     options.each do |attr, value|
       if value.is_a?(Hash)
@@ -24,7 +24,7 @@ module ImagesHelper
       end
     end
 
-    doc.to_html.html_safe
+    sanitized_doc.to_html.html_safe
   end
 
   def inline_svg_tag(symbol_id, options = {})

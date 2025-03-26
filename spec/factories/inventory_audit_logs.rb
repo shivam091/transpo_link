@@ -7,9 +7,9 @@ FactoryBot.define do
     association :inventory
     association :inventory_movement
     association :user, factory: :manager
-    movement_type { "restock" }
-    previous_quantity { 80 }
-    new_quantity { 100 }
-    metadata { {} }
+    movement_type { InventoryMovement.movement_types.keys.sample }
+    previous_quantity { Faker::Number.between(from: 1, to: 100) }
+    new_quantity { Faker::Number.between(from: 1, to: 100) }
+    metadata { {movement_type:, previous_quantity:, new_quantity:} }
   end
 end

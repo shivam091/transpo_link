@@ -3,13 +3,17 @@
 # -*- warn_indent: true -*-
 
 class ProductCategoriesController < ApplicationController
-  add_breadcrumb :product_categories, :product_categories_path
-
+  before_action :set_breadcrumbs
   before_action :find_product_category, except: [:index, :new, :create]
 
   # GET /product-categories
   def index
     @product_categories = ProductCategory.includes(:parent_category)
+    @product_categories = case params[:status]
+                          when "active"   then @product_categories.active
+                          when "inactive" then @product_categories.inactive
+                          else                 @product_categories
+                          end
     @product_categories, @pagination_metadata = @product_categories.paginate(page: params[:page])
   end
 
@@ -22,6 +26,7 @@ class ProductCategoriesController < ApplicationController
   def create
     response = ProductCategories::CreateService.(product_category_params)
     @product_category = response.payload[:product_category]
+
     if response.success?
       set_flash_message(:notice, :success)
       redirect_to product_categories_path, status: :see_other
@@ -46,6 +51,7 @@ class ProductCategoriesController < ApplicationController
   def update
     response = ProductCategories::UpdateService.(@product_category, product_category_params)
     @product_category = response.payload[:product_category]
+
     if response.success?
       set_flash_message(:notice, :success)
       redirect_to product_categories_path, status: :see_other
@@ -66,6 +72,7 @@ class ProductCategoriesController < ApplicationController
   def destroy
     response = ProductCategories::DestroyService.(@product_category)
     @product_category = response.payload[:product_category]
+
     if response.success?
       set_flash_message(:info, :success)
     else
@@ -82,5 +89,9 @@ class ProductCategoriesController < ApplicationController
 
   def find_product_category
     @product_category ||= ProductCategory.find(params[:id])
+  end
+
+  def set_breadcrumbs
+    add_breadcrumb t("product_categories.breadcrumb"), product_categories_path
   end
 end

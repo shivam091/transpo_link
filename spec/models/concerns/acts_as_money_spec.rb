@@ -21,11 +21,19 @@ RSpec.describe ActsAsMoney do
   end
 
   after(:all) do
-    ActiveRecord::Base.connection.drop_table(:acts_as_money_models, if_exists: true)
+    connection.drop_table(:acts_as_money_models, if_exists: true)
     Object.send(:remove_const, :ActsAsMoneyModel)
   end
 
   subject { ActsAsMoneyModel.new(currency: "USD") }
+
+  describe "default values" do
+    let(:acts_as_money_instance) { ActsAsMoneyModel.new }
+
+    it "should set Money's default currency as default value for #currency" do
+      expect(acts_as_money_instance.currency).to eq(Money.default_currency.iso_code)
+    end
+  end
 
   describe "#currency" do
     it "returns a Money::Currency object" do

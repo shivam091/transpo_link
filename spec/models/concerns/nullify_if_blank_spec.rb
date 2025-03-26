@@ -30,24 +30,26 @@ RSpec.describe NullifyIfBlank do
 
   subject { NullifyIfBlankModel.new }
 
+  it { expect(NullifyIfBlankModel).to respond_to(:nullify_if_blank) }
+
   it { is_expected.to nullify_if_blank(:name) }
   it { is_expected.to nullify_if_blank(:email) }
 
   describe "#nullify_blank_attributes" do
     it "nullifies attributes that are blank before validation" do
-      record = NullifyIfBlankModel.new(name: "", email: "  ")
-      record.valid?
+      subject.name, subject.email = "", "  "
+      subject.valid?
 
-      expect(record.name).to be_nil
-      expect(record.email).to be_nil
+      expect(subject.name).to be_nil
+      expect(subject.email).to be_nil
     end
 
     it "does not nullify attributes that are not blank" do
-      record = NullifyIfBlankModel.new(name: "John Doe", email: "john@example.com")
-      record.valid?
+      subject.name, subject.email = "John Doe", "john@example.com"
+      subject.valid?
 
-      expect(record.name).to eq("John Doe")
-      expect(record.email).to eq("john@example.com")
+      expect(subject.name).to eq("John Doe")
+      expect(subject.email).to eq("john@example.com")
     end
   end
 end

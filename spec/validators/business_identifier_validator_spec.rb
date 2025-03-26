@@ -10,29 +10,23 @@ RSpec.describe BusinessIdentifierValidator do
   using RSpec::Parameterized::TableSyntax
 
   before(:all) do
-    ActiveRecord::Schema.define(version: 1) do
-      create_table :business_identifiers, force: true do |t|
-        t.string :business_identifier_type
-        t.string :business_identifier
-        t.string :country
-        t.timestamps
-      end
-    end
+    class BusinessIdentifierModel
+      include ActiveModel::Model, ActiveModel::Validations
 
-    class BusinessIdentifier < ApplicationRecord
+      attr_accessor :business_identifier_type, :business_identifier, :country
+
       validates :business_identifier, business_identifier: true
     end
   end
 
   after(:all) do
-    ActiveRecord::Base.connection.drop_table(:business_identifiers, if_exists: true)
-    Object.send(:remove_const, :BusinessIdentifier)
+    Object.send(:remove_const, :BusinessIdentifierModel)
   end
 
   describe "#validate_each" do
     describe "ein" do
       let(:legal_identifier) do
-        BusinessIdentifier.new(business_identifier: business_identifier, business_identifier_type: "ein", country: "US")
+        BusinessIdentifierModel.new(business_identifier: business_identifier, business_identifier_type: "ein", country: "US")
       end
 
       context "when business identifier is valid for country" do
@@ -67,7 +61,7 @@ RSpec.describe BusinessIdentifierValidator do
 
     describe "cin" do
       let(:legal_identifier) do
-        BusinessIdentifier.new(business_identifier: business_identifier, business_identifier_type: "cin", country: "IN")
+        BusinessIdentifierModel.new(business_identifier: business_identifier, business_identifier_type: "cin", country: "IN")
       end
 
       context "when business identifier is valid for country" do
@@ -99,7 +93,7 @@ RSpec.describe BusinessIdentifierValidator do
 
     describe "llpin" do
       let(:legal_identifier) do
-        BusinessIdentifier.new(business_identifier: business_identifier, business_identifier_type: "llpin", country: "IN")
+        BusinessIdentifierModel.new(business_identifier: business_identifier, business_identifier_type: "llpin", country: "IN")
       end
 
       context "when business identifier is valid for country" do
@@ -138,7 +132,7 @@ RSpec.describe BusinessIdentifierValidator do
 
     describe "abn" do
       let(:legal_identifier) do
-        BusinessIdentifier.new(business_identifier: business_identifier, business_identifier_type: "abn", country: "AU")
+        BusinessIdentifierModel.new(business_identifier: business_identifier, business_identifier_type: "abn", country: "AU")
       end
 
       context "when business identifier is valid for country" do
@@ -172,7 +166,7 @@ RSpec.describe BusinessIdentifierValidator do
 
     describe "acn" do
       let(:legal_identifier) do
-        BusinessIdentifier.new(business_identifier: business_identifier, business_identifier_type: "acn", country: "AU")
+        BusinessIdentifierModel.new(business_identifier: business_identifier, business_identifier_type: "acn", country: "AU")
       end
 
       context "when business identifier is valid for country" do
@@ -206,7 +200,7 @@ RSpec.describe BusinessIdentifierValidator do
 
     describe "siren" do
       let(:legal_identifier) do
-        BusinessIdentifier.new(business_identifier: business_identifier, business_identifier_type: "siren", country: "FR")
+        BusinessIdentifierModel.new(business_identifier: business_identifier, business_identifier_type: "siren", country: "FR")
       end
 
       context "when business identifier is valid for country" do
@@ -239,7 +233,7 @@ RSpec.describe BusinessIdentifierValidator do
 
     describe "siret" do
       let(:legal_identifier) do
-        BusinessIdentifier.new(business_identifier: business_identifier, business_identifier_type: "siret", country: "FR")
+        BusinessIdentifierModel.new(business_identifier: business_identifier, business_identifier_type: "siret", country: "FR")
       end
 
       context "when business identifier is valid for country" do
@@ -272,7 +266,7 @@ RSpec.describe BusinessIdentifierValidator do
 
     describe "bn" do
       let(:legal_identifier) do
-        BusinessIdentifier.new(business_identifier: business_identifier, business_identifier_type: "bn", country: "CA")
+        BusinessIdentifierModel.new(business_identifier: business_identifier, business_identifier_type: "bn", country: "CA")
       end
 
       context "when business identifier is valid for country" do
@@ -310,7 +304,7 @@ RSpec.describe BusinessIdentifierValidator do
 
     describe "uen" do
       let(:legal_identifier) do
-        BusinessIdentifier.new(business_identifier: business_identifier, business_identifier_type: "uen", country: "SG")
+        BusinessIdentifierModel.new(business_identifier: business_identifier, business_identifier_type: "uen", country: "SG")
       end
 
       context "when business identifier is valid for country" do
@@ -348,7 +342,7 @@ RSpec.describe BusinessIdentifierValidator do
 
     describe "cuit" do
       let(:legal_identifier) do
-        BusinessIdentifier.new(business_identifier: business_identifier, business_identifier_type: "cuit", country: "AR")
+        BusinessIdentifierModel.new(business_identifier: business_identifier, business_identifier_type: "cuit", country: "AR")
       end
 
       context "when business identifier is valid for country" do
@@ -383,7 +377,7 @@ RSpec.describe BusinessIdentifierValidator do
 
     describe "ruc" do
       let(:legal_identifier) do
-        BusinessIdentifier.new(business_identifier: business_identifier, business_identifier_type: "ruc", country: country)
+        BusinessIdentifierModel.new(business_identifier: business_identifier, business_identifier_type: "ruc", country: country)
       end
 
       context "when business identifier is valid for country" do
@@ -426,7 +420,7 @@ RSpec.describe BusinessIdentifierValidator do
 
     describe "hrb" do
       let(:legal_identifier) do
-        BusinessIdentifier.new(business_identifier: business_identifier, business_identifier_type: "hrb", country: "DE")
+        BusinessIdentifierModel.new(business_identifier: business_identifier, business_identifier_type: "hrb", country: "DE")
       end
 
       context "when business identifier is valid for country" do
@@ -459,7 +453,7 @@ RSpec.describe BusinessIdentifierValidator do
 
     describe "cnpj" do
       let(:legal_identifier) do
-        BusinessIdentifier.new(business_identifier: business_identifier, business_identifier_type: "cnpj", country: "BR")
+        BusinessIdentifierModel.new(business_identifier: business_identifier, business_identifier_type: "cnpj", country: "BR")
       end
 
       context "when business identifier is valid for country" do
@@ -493,7 +487,7 @@ RSpec.describe BusinessIdentifierValidator do
 
     describe "vkn" do
       let(:legal_identifier) do
-        BusinessIdentifier.new(business_identifier: business_identifier, business_identifier_type: "vkn", country: "TR")
+        BusinessIdentifierModel.new(business_identifier: business_identifier, business_identifier_type: "vkn", country: "TR")
       end
 
       context "when business identifier is valid for country" do
@@ -528,7 +522,7 @@ RSpec.describe BusinessIdentifierValidator do
 
     describe "rfc" do
       let(:legal_identifier) do
-        BusinessIdentifier.new(business_identifier: business_identifier, business_identifier_type: "rfc", country: "MX")
+        BusinessIdentifierModel.new(business_identifier: business_identifier, business_identifier_type: "rfc", country: "MX")
       end
 
       context "when business identifier is valid for country" do
@@ -563,7 +557,7 @@ RSpec.describe BusinessIdentifierValidator do
 
     describe "cif" do
       let(:legal_identifier) do
-        BusinessIdentifier.new(business_identifier: business_identifier, business_identifier_type: "cif", country: "ES")
+        BusinessIdentifierModel.new(business_identifier: business_identifier, business_identifier_type: "cif", country: "ES")
       end
 
       context "when business identifier is valid for country" do
@@ -595,7 +589,7 @@ RSpec.describe BusinessIdentifierValidator do
 
     describe "rtn" do
       let(:legal_identifier) do
-        BusinessIdentifier.new(business_identifier: business_identifier, business_identifier_type: "rtn", country: "HN")
+        BusinessIdentifierModel.new(business_identifier: business_identifier, business_identifier_type: "rtn", country: "HN")
       end
 
       context "when business identifier is valid for country" do
@@ -627,7 +621,7 @@ RSpec.describe BusinessIdentifierValidator do
 
     describe "nit" do
       let(:legal_identifier) do
-        BusinessIdentifier.new(business_identifier: business_identifier, business_identifier_type: "nit", country: country)
+        BusinessIdentifierModel.new(business_identifier: business_identifier, business_identifier_type: "nit", country: country)
       end
 
       context "when business identifier is valid for country" do
@@ -668,7 +662,7 @@ RSpec.describe BusinessIdentifierValidator do
 
     describe "uscc" do
       let(:legal_identifier) do
-        BusinessIdentifier.new(business_identifier: business_identifier, business_identifier_type: "uscc", country: "CN")
+        BusinessIdentifierModel.new(business_identifier: business_identifier, business_identifier_type: "uscc", country: "CN")
       end
 
       context "when business identifier is valid for country" do
@@ -702,7 +696,7 @@ RSpec.describe BusinessIdentifierValidator do
 
     describe "nzbn" do
       let(:legal_identifier) do
-        BusinessIdentifier.new(business_identifier: business_identifier, business_identifier_type: "nzbn", country: "NZ")
+        BusinessIdentifierModel.new(business_identifier: business_identifier, business_identifier_type: "nzbn", country: "NZ")
       end
 
       context "when business identifier is valid for country" do
@@ -735,7 +729,7 @@ RSpec.describe BusinessIdentifierValidator do
 
     describe "brn_kr" do
       let(:legal_identifier) do
-        BusinessIdentifier.new(business_identifier: business_identifier, business_identifier_type: "brn_kr", country: "KR")
+        BusinessIdentifierModel.new(business_identifier: business_identifier, business_identifier_type: "brn_kr", country: "KR")
       end
 
       context "when business identifier is valid for country" do

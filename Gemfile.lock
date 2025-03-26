@@ -493,6 +493,7 @@ DEPENDENCIES
   haml (~> 6.3)
   importmap-rails (~> 2.1)
   jbuilder
+  loofah (~> 2)
   money (= 6.19)
   pg (~> 1.5)
   postgresql_adapter_extensions (~> 1)

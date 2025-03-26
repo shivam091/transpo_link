@@ -8,8 +8,8 @@ require "spec_helper"
 
 RSpec.describe TranspoLink::SqlFunctions do
   describe ".lower" do
-    let!(:value) { "TEST_STRING" }
-    let!(:quoted_value) { Arel::Nodes.build_quoted(value) }
+    let(:value) { "TEST_STRING" }
+    let(:quoted_value) { Arel::Nodes.build_quoted(value) }
 
     context "when column_alias is not provided" do
       let(:result) { described_class.lower(value) }
@@ -37,8 +37,8 @@ RSpec.describe TranspoLink::SqlFunctions do
   end
 
   describe ".avg" do
-    let!(:value) { :rating }
-    let!(:arel_value) { Arel::Nodes::SqlLiteral.new(value.to_s) }
+    let(:value) { :rating }
+    let(:arel_value) { Arel::Nodes::SqlLiteral.new(value.to_s) }
 
     context "when column_alias is not provided" do
       let(:result) { described_class.avg(value.to_s) }

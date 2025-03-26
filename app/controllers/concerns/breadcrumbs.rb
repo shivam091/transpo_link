@@ -26,19 +26,16 @@ module Breadcrumbs
 
   def compute_label(label)
     case label
-    when Proc
-      label.call
-    when Symbol
-      t(label, scope: "breadcrumbs")
-    else
-      label.to_s
+    when Symbol then send(label)
+    when Proc   then label.call
+    else             label.to_s
     end
   end
 
   def compute_url(url)
     case url
-    when Proc   then url.call
     when Symbol then send(url)
+    when Proc   then url.call
     else             url
     end
   end
@@ -57,7 +54,7 @@ module Breadcrumbs
     def render_breadcrumbs
       return unless breadcrumbs.any?
 
-      tag.nav(aria: {label: "breadcrumb"}) do
+      tag.nav(aria: {label: t("shared_layout.breadcrumb")}) do
         tag.ol(class: "breadcrumb") do
           safe_join(breadcrumbs.map.with_index do |crumb, index|
             if crumb[:url] && index != breadcrumbs.size - 1

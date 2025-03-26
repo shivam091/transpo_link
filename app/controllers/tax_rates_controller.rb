@@ -3,13 +3,17 @@
 # -*- warn_indent: true -*-
 
 class TaxRatesController < ApplicationController
-  add_breadcrumb :tax_rates, :tax_rates_path
-
+  before_action :set_breadcrumbs
   before_action :find_tax_rate, only: [:edit, :update, :destroy]
 
   # GET /tax-rates
   def index
-    @tax_rates = TaxRate.all
+    @tax_rates = case params[:status]
+                 when "active"  then TaxRate.active
+                 when "future"  then TaxRate.future
+                 when "expired" then TaxRate.expired
+                 else                TaxRate.all
+                 end
     @tax_rates, @pagination_metadata = @tax_rates.paginate(page: params[:page])
   end
 
@@ -22,6 +26,7 @@ class TaxRatesController < ApplicationController
   def create
     response = TaxRates::CreateService.(tax_rate_params)
     @tax_rate = response.payload[:tax_rate]
+
     if response.success?
       set_flash_message(:notice, :success)
       redirect_to tax_rates_path, status: :see_other
@@ -46,6 +51,7 @@ class TaxRatesController < ApplicationController
   def update
     response = TaxRates::UpdateService.(@tax_rate, tax_rate_params)
     @tax_rate = response.payload[:tax_rate]
+
     if response.success?
       set_flash_message(:notice, :success)
       redirect_to tax_rates_path, status: :see_other
@@ -66,6 +72,7 @@ class TaxRatesController < ApplicationController
   def destroy
     response = TaxRates::DestroyService.(@tax_rate)
     @tax_rate = response.payload[:tax_rate]
+
     if response.success?
       set_flash_message(:info, :success)
     else
@@ -89,5 +96,9 @@ class TaxRatesController < ApplicationController
 
   def find_tax_rate
     @tax_rate ||= TaxRate.find(params[:id])
+  end
+
+  def set_breadcrumbs
+    add_breadcrumb t("tax_rates.breadcrumb"), tax_rates_path
   end
 end

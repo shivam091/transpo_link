@@ -12,6 +12,7 @@ FactoryBot.define do
     capacity_unit { TranspoLink::MeasurementUnits.units_for(:weight).sample }
     latitude { Faker::Address.latitude }
     longitude { Faker::Address.longitude }
+    is_active { false }
 
     trait :small_capacity do
       total_capacity { 10**3 } # 1,000

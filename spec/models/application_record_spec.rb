@@ -116,8 +116,8 @@ RSpec.describe ApplicationRecord, type: :model do
   end
 
   describe "#touch_self" do
-    let(:user) { DummyModel.create!(email: "test@example.com") }
-    let(:other_user) { DummyModel.create!(email: "other@example.com") }
+    let!(:user) { DummyModel.create!(email: "test@example.com") }
+    let!(:other_user) { DummyModel.create!(email: "other@example.com") }
 
     it "updates the updated_at timestamps of both objects" do
       user.update!(updated_at: 1.day.ago)

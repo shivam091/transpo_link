@@ -22,6 +22,7 @@ class Users::SessionsController < Devise::SessionsController
       if user.reset_password_token.present?
         user.update_columns(reset_password_token: nil, reset_password_sent_at: nil)
       end
+
       respond_with user, location: after_sign_in_path_for(user)
     end
   end

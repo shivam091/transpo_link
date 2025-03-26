@@ -37,9 +37,28 @@ RSpec.describe UserDetail, type: :model do
     it { is_expected.to have_check_constraint(:check_user_details_alternate_email_length).with_expression("char_length(alternate_email::text) <= 55 AND char_length(alternate_email::text) >= 2") }
   end
 
+  describe "included modules" do
+    it { is_expected.to include_module(NullifyIfBlank) }
+    it { is_expected.to include_module(Sanitizable) }
+  end
+
   describe "normalized attributes" do
     it { is_expected.to normalize(:first_name).from("  TranspoLink  ").to("TranspoLink") }
     it { is_expected.to normalize(:last_name).from("  User  ").to("User") }
+  end
+
+  describe "nullified attributes" do
+    it { is_expected.to nullify_if_blank(:mobile_number) }
+    it { is_expected.to nullify_if_blank(:alternate_contact_number) }
+    it { is_expected.to nullify_if_blank(:alternate_email) }
+  end
+
+  describe "sanitized attributes" do
+    it { is_expected.to sanitize_attribute(:first_name) }
+    it { is_expected.to sanitize_attribute(:last_name) }
+    it { is_expected.to sanitize_attribute(:mobile_number) }
+    it { is_expected.to sanitize_attribute(:alternate_contact_number) }
+    it { is_expected.to sanitize_attribute(:alternate_email) }
   end
 
   describe "associations" do

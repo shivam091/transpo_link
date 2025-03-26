@@ -7,7 +7,7 @@
 require "spec_helper"
 
 RSpec.describe "Devise configuration for TranspoLink" do
-  before { load_file("config/initializers/devise.rb") }
+  before(:all) { load_file("config/initializers/devise.rb") }
 
   describe "secret key configuration" do
     it "sets the secret key from credentials" do

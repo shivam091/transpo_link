@@ -26,8 +26,8 @@ module FlashMessagesHelper
   private
 
   def build_flash_message(msg_type, message)
-    tag.div(class: "alert alert-#{FLASH_TYPES[msg_type][:variant]} d-flex align-items-center alert-dismissible fade show") do
-      concat(external_svg_tag("svgs/#{FLASH_TYPES[msg_type][:icon]}.svg", width: "24px", height: "24px", fill: "currentColor", class: "flex-shrink-0 me-2"))
+    tag.div(class: "alert alert-#{FLASH_TYPES.dig(msg_type, :variant)} d-flex align-items-center alert-dismissible fade show") do
+      concat(external_svg_tag("svgs/#{FLASH_TYPES.dig(msg_type, :icon)}.svg", width: "24px", height: "24px", fill: "currentColor", class: "flex-shrink-0 me-2"))
       concat(tag.div(message))
       concat(tag.button("", class: "btn-close", "data-bs-dismiss" => "alert", "aria-label" => "Close"))
     end

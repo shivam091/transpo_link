@@ -3,7 +3,7 @@
 # -*- warn_indent: true -*-
 
 class TaxRate < ApplicationRecord
-  include Pageable, Taxable, Sortable
+  include Pageable, Taxable, Sortable, NullifyIfBlank
 
   LISTING_ATTRIBUTES = %i[
     country tax_identifier_type business_category rate valid_from valid_to
@@ -16,6 +16,8 @@ class TaxRate < ApplicationRecord
 
   attribute :business_category, :enum, default: business_categories[:b2b]
 
+  nullify_if_blank :valid_to
+
   validates :tax_identifier_type,
             uniqueness: {
               scope: [:country, :business_category, :valid_from],
@@ -24,10 +26,7 @@ class TaxRate < ApplicationRecord
             reduce: true
   validates :business_category,
             presence: true,
-            inclusion: {
-              in: business_categories.values,
-              message: :inclusion
-            },
+            inclusion: {in: business_categories.values, message: :inclusion},
             reduce: true
   validates :rate,
             presence: true,
@@ -47,9 +46,7 @@ class TaxRate < ApplicationRecord
             on: :create,
             reduce: true
   validates :valid_to,
-            comparison: {
-              greater_than: :valid_from
-            },
+            comparison: {greater_than: :valid_from},
             allow_nil: true,
             reduce: true
   validate :no_overlapping_tax_rates
@@ -63,6 +60,12 @@ class TaxRate < ApplicationRecord
           .or(arel_table[:valid_to].gteq(Date.current)))
     )
   }
+
+  # Scope to get future tax rates
+  scope :future, -> { where(arel_table[:valid_from].gt(Date.current)) }
+
+  # Scope to get tax rates whose valid_to has passed
+  scope :expired, -> { where(arel_table[:valid_to].lt(Date.current)) }
 
   # Scope to get tax rates for a specific country
   scope :for_country, ->(country) { where(arel_table[:country].eq(country)) }

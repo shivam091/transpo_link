@@ -4,12 +4,12 @@
 
 FactoryBot.define do
   factory :address do
-    address1 { "Sector 18" }
-    address2 { "New Panvel" }
-    city { "Navi Mumbai" }
-    state { "MH" }
-    country { "IN" }
-    postal_code { "410206" }
+    address1 { Faker::Address.street_name }
+    address2 { Faker::Address.secondary_address }
+    city { Faker::Address.city }
+    state { Faker::Address.state_abbr }
+    country { Faker::Address.country_code }
+    postal_code { Faker::Address.zip_code }
 
     trait :for_user do
       association :addressable, factory: :admin

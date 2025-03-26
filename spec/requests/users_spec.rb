@@ -7,42 +7,54 @@
 require "spec_helper"
 
 RSpec.describe "Users", type: :request do
-  let!(:admin) { create(:admin, :confirmed, :active) }
+  let!(:active_user) { create(:admin, :confirmed, :active) }
+  let!(:inactive_user) { create(:admin) }
+  let!(:suspended_user) { create(:admin, :active, :suspended) }
 
-  context "when user is not signed in" do
-    describe "GET /users" do
-      subject { get users_path }
+  include_context "sign in as admin"
 
-      it { is_expected.to require_sign_in }
+  describe "GET /users" do
+    it "renders list of all users with pagination" do
+      get users_path
+
+      expect(controller_assigns(:users)).to include(active_user)
+      expect(controller_assigns(:users)).to include(inactive_user)
+      expect(controller_assigns(:users)).to include(suspended_user)
+      expect(controller_assigns(:pagination_metadata)).to be_present
+      expect(response).to have_http_status(:ok)
     end
 
-    describe "GET /users/:id" do
-      subject { get user_path(admin) }
+    it "renders list of active users with pagination" do
+      get active_users_path
 
-      it { is_expected.to require_sign_in }
+      expect(controller_assigns(:users)).to include(active_user)
+      expect(controller_assigns(:pagination_metadata)).to be_present
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "renders list of inactive users with pagination" do
+      get inactive_users_path
+
+      expect(controller_assigns(:users)).to include(inactive_user)
+      expect(controller_assigns(:pagination_metadata)).to be_present
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "renders list of suspended users with pagination" do
+      get suspended_users_path
+
+      expect(controller_assigns(:users)).to include(suspended_user)
+      expect(controller_assigns(:pagination_metadata)).to be_present
+      expect(response).to have_http_status(:ok)
     end
   end
 
-  context "when user is signed in" do
-    include_context "sign in as admin"
+  describe "GET /users/:id" do
+    it "renders user details page" do
+      get user_path(active_user)
 
-    describe "GET /users" do
-      it "renders list of all users with pagination" do
-        get users_path
-
-        expect(controller_assigns(:users)).to include(admin)
-        expect(controller_assigns(:pagination_metadata)).to be_present
-        expect(response).to have_http_status(:ok)
-      end
-    end
-
-    describe "GET /users/:id" do
-      it "renders user details page" do
-        get user_path(admin)
-
-        expect(controller_assigns(:user)).to eq(admin)
-        expect(response).to have_http_status(:ok)
-      end
+      expect(controller_assigns(:user)).to eq(active_user)
+      expect(response).to have_http_status(:ok)
     end
   end
 end

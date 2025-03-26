@@ -7,7 +7,7 @@
 require "spec_helper"
 
 RSpec.describe TranspoLink::MeasurementUnits do
-  let!(:all_units) do
+  let(:all_units) do
     [
       :cm², :m², :km², :in², :ft², :yd², :ac, :ha,
       :mg, :g, :kg, :q, :t, :lb, :oz,
@@ -16,11 +16,11 @@ RSpec.describe TranspoLink::MeasurementUnits do
       :item, :pack, :box, :carton, :pallet, :bundle, :dz, :case, :roll
     ]
   end
-  let!(:area_units) { %i[cm² m² km² in² ft² yd² ac ha] }
-  let!(:count_units) { %i[item pack box carton pallet bundle dz case roll] }
+  let(:area_units) { %i[cm² m² km² in² ft² yd² ac ha] }
+  let(:count_units) { %i[item pack box carton pallet bundle dz case roll] }
 
   describe "::UNITS" do
-    it "is a frozen hash" do
+    it "is a frozen array" do
       expect(described_class::UNITS).to be_frozen
     end
 
@@ -30,7 +30,18 @@ RSpec.describe TranspoLink::MeasurementUnits do
     end
   end
 
-  describe ".options_for_units" do
+  describe "::UNIT_TO_CATEGORY" do
+    it "is a frozen hash" do
+      expect(described_class::UNIT_TO_CATEGORY).to be_frozen
+    end
+
+    it "allows access using symbols and strings" do
+      expect(described_class::UNIT_TO_CATEGORY[:km]).to eq("length")
+      expect(described_class::UNIT_TO_CATEGORY["km"]).to eq("length")
+    end
+  end
+
+  describe ".select_options" do
     before do
       allow(I18n).to receive(:t) { |key, **| key.to_s.humanize }
 
@@ -47,9 +58,9 @@ RSpec.describe TranspoLink::MeasurementUnits do
       allow(I18n).to receive(:t).with("item", scope: "measurement_units.sub_categories") { "Item" }
     end
 
-    it "returns a hash with translated categories and subcategories" do
-      result = described_class.options_for_units
+    let(:result) { described_class.select_options }
 
+    it "returns a hash with translated categories and subcategories" do
       expect(result).to be_a(Hash)
       expect(result.keys).to contain_exactly("Area", "Weight", "Volume", "Length", "Count")
 
@@ -82,6 +93,51 @@ RSpec.describe TranspoLink::MeasurementUnits do
 
     it "returns an empty array if the specified category is invalid" do
       expect(described_class.units_for(:angle)).to be_empty
+    end
+  end
+
+  describe ".category_for_unit" do
+    it "returns the correct category for a unit" do
+      expect(described_class.category_for_unit(:kg)).to eq("weight")
+      expect(described_class.category_for_unit(:m²)).to eq("area")
+      expect(described_class.category_for_unit(:bbl)).to eq("volume")
+      expect(described_class.category_for_unit(:item)).to eq("count")
+    end
+
+    it "returns nil for a unit not found in any category" do
+      expect(described_class.category_for_unit(:xyz)).to be_nil
+    end
+  end
+
+  describe ".display_label" do
+    before do
+      allow(I18n).to receive(:t) do |key, scope:, count:|
+        translations = {
+          "measurement_units.display_labels.item" => {one: "1 item", other: "%{count} items"},
+          "measurement_units.display_labels.pack" => {one: "1 pack", other: "%{count} packs"},
+          "measurement_units.display_labels.box" => {one: "1 box", other: "%{count} boxes"},
+          "measurement_units.display_labels.kg" => {one: "1 kilogramme", other: "%{count} kilogrammes"},
+          "measurement_units.display_labels.cm²" => {one: "1 sq. centimetre", other: "%{count} sq. centimetres"}
+        }
+        translation = translations["#{scope}.#{key}"]
+        count == 1 ? translation[:one] : translation[:other] % { count: count }
+      end
+    end
+
+    it "returns the singular label for count 1" do
+      expect(described_class.display_label(1, :item)).to eq("1 item")
+      expect(described_class.display_label(1, :pack)).to eq("1 pack")
+      expect(described_class.display_label(1, :box)).to eq("1 box")
+      expect(described_class.display_label(1, :kg)).to eq("1 kilogramme")
+      expect(described_class.display_label(1, :cm²)).to eq("1 sq. centimetre")
+    end
+
+    it "returns the plural label for count greater than 1" do
+      expect(described_class.display_label(5, :item)).to eq("5 items")
+      expect(described_class.display_label(5, :pack)).to eq("5 packs")
+      expect(described_class.display_label(5, :box)).to eq("5 boxes")
+      expect(described_class.display_label(5, :kg)).to eq("5 kilogrammes")
+      expect(described_class.display_label(5, :cm²)).to eq("5 sq. centimetres")
     end
   end
 end

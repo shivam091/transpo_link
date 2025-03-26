@@ -3,7 +3,7 @@
 # -*- warn_indent: true -*-
 
 class PreferencesController < ApplicationController
-  add_breadcrumb :preferences, :preference_path
+  before_action :set_breadcrumbs, :set_user
 
   # GET /preference
   def show
@@ -11,12 +11,13 @@ class PreferencesController < ApplicationController
 
   # GET /preference/edit
   def edit
-    add_breadcrumb :edit, edit_preference_path(current_user)
+    add_breadcrumb t(".breadcrumb"), edit_preference_path(current_user)
   end
 
   # PUT|PATCH /preference
   def update
     response = Preferences::UpdateService.(current_user, preference_params)
+
     if response.success?
       set_flash_message(:notice, :success)
       redirect_to preference_path, status: :see_other
@@ -45,5 +46,13 @@ class PreferencesController < ApplicationController
         :are_notifications_enabled
       ]
     )
+  end
+
+  def set_breadcrumbs
+    add_breadcrumb t("preferences.breadcrumb"), preference_path
+  end
+
+  def set_user
+    @user = current_user
   end
 end

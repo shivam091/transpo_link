@@ -17,7 +17,7 @@ module TranspoLink
       ActiveSupport::TimeZone.seconds_to_utc_offset(offset)
     end
 
-    def options_for_time_zones
+    def select_options
       ActiveSupport::TimeZone.all.map do |tz|
         [formatted_time_zone(tz.name), tz.tzinfo.name]
       end

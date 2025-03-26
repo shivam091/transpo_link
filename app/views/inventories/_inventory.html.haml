@@ -1,0 +1,31 @@
+- product = inventory.product
+- warehouse = inventory.warehouse
+%tr
+  %th{scope: "row"}
+    = @pagination_metadata.offset + index
+  %td
+    = link_to inventory.reference_code, inventory_path(inventory)
+  %td
+    = link_to product.name, product_path(product), target: :_blank
+  %td
+    = link_to warehouse.name, warehouse_path(warehouse), target: :_blank
+  %td
+    = inventory.batch_number || "-"
+  %td
+    = TranspoLink::MeasurementUnits.display_label(inventory.stock_quantity, inventory.inventory_unit)
+  %td
+    = TranspoLink::MeasurementUnits.display_label(inventory.reserved_stock, inventory.inventory_unit)
+  %td
+    = number_to_currency(inventory.cost_price, unit: inventory.currency.symbol)
+  %td
+    = link_to "javascript:void(0)", class: "text-reset", data: {bs_toggle: "dropdown"}, aria: {expanded: false} do
+      = external_svg_tag("svgs/ellipsis-vertical.svg")
+    %ul.dropdown-menu
+      %li
+        = link_to inventory_path(inventory), class: "dropdown-item" do
+          = external_svg_tag("svgs/arrow-right.svg")
+          = button_text(:view_details)
+      %li
+        = link_to edit_inventory_path(inventory), class: "dropdown-item" do
+          = external_svg_tag("svgs/pencil.svg")
+          = button_text(:edit)

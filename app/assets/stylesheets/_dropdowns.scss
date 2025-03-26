@@ -1,12 +1,23 @@
 .dropdown-menu {
   font-size: inherit;
-}
-.navbar-nav .dropdown-menu {
-  position: absolute !important;
+  --bs-dropdown-padding-x: 0.5rem;
+  --bs-dropdown-border-radius: 0.25rem;
+  --bs-dropdown-item-padding-x: 0.5rem;
+  --bs-dropdown-item-padding-y: 0.25rem;
+  --bs-dropdown-item-border-radius: 0.25rem;
+  --bs-dropdown-divider-margin-y: 0.25rem;
+  --bs-dropdown-header-padding-x: 0.25rem;
+  --bs-dropdown-header-padding-y: 0.25rem;
 }
 .dropdown-toggle::after {
   transform: rotate(0deg);
   transition: transform 0.2s ease-in-out;
+  border: none;
+  background-color: currentColor;
+  -webkit-mask-image: url("svgs/arrow-down.svg");
+  mask-image: url("svgs/arrow-down.svg");
+  width: 1rem;
+  height: 1rem;
 }
 .dropdown-toggle.show::after {
   transform: rotate(180deg);
@@ -16,14 +27,15 @@
   display: inline-flex;
   align-items: center;
   gap: .5rem;
+  margin: 2px auto;
 }
 .dropdown-menu::before, .dropdown-menu::after {
   position: absolute;
   display: inline-block;
   content: "";
 }
-.dropdown-menu[data-bs-popper="static"] {
-  animation: slideUpAndFade 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+.dropdown-menu.show[data-bs-popper="static"] {
+  animation: slideDownAndFade 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .dropdown-item-checked {
   position: relative;
@@ -37,8 +49,7 @@
   transform: translateY(-50%);
   width: 18px;
   height: 18px;
-  background-image: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' viewBox='0 0 24 24' fill='%23586069'%3E%3Cpath d='M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10s10-4.486 10-10S17.514 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8s8 3.589 8 8s-3.589 8-8 8z'/%3E%3Cpath d='M9.999 13.587L7.7 11.292l-1.412 1.416l3.713 3.705l6.706-6.706l-1.414-1.414z'/%3E%3C/svg%3E");
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
+  background-color: currentColor;
+  -webkit-mask-image: url("svgs/check-circle.svg");
+  mask-image: url("svgs/check-circle.svg");
 }

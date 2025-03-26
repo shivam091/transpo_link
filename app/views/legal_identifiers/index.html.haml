@@ -7,20 +7,22 @@
           .widget-title
             = t(".your_legal_identifiers")
           .widget-help
-            .widget-help= t(".your_legal_identifiers_help_text")
+            = t(".your_legal_identifiers_help_text")
         = link_to new_legal_identifier_path, class: "btn btn-primary", data: {turbo_frame: :remote_modal} do
           = external_svg_tag("svgs/plus.svg")
-          = button_text("new")
+          = button_text(:new)
       .widget-body
         = render_if_exists("legal_identifiers/help_texts")
         .table-responsive
           %table.table.table-striped.table-borderless
             %thead.border
               %tr.table-active
-                %th{width: "25px", scope: "col"}#
+                %th{width: "3%", scope: "col"}#
                 - LegalIdentifier::LISTING_ATTRIBUTES.each do |attribute|
-                  %th{scope: "col"}= LegalIdentifier.human_attribute_name(attribute)
-                %th{scope: "col"}= t("common.actions")
+                  %th{scope: "col"}
+                    = LegalIdentifier.human_attribute_name(attribute)
+                %th{width: "3%", scope: "col"}
+                  = t("shared.actions")
             %tbody.border
               - if @legal_identifiers&.each.with_index(1) do |legal_identifier, index|
                 = render_if_exists("legal_identifiers/legal_identifier", locals: {legal_identifier:, index:})

@@ -3,8 +3,7 @@
 # -*- warn_indent: true -*-
 
 class RolesController < ApplicationController
-  add_breadcrumb :roles, :roles_path
-
+  before_action :set_breadcrumbs
   before_action :find_role, except: :index
 
   # GET /roles
@@ -14,13 +13,14 @@ class RolesController < ApplicationController
 
   # GET /roles/:id/edit
   def edit
-    add_breadcrumb :edit, edit_role_path(@role)
+    add_breadcrumb t(".breadcrumb", name: @role.name), edit_role_path(@role)
   end
 
   # PUT|PATCH /roles/:id
   def update
     response = Roles::UpdateService.(@role, role_params)
     @role = response.payload[:role]
+
     if response.success?
       set_flash_message(:notice, :success)
       redirect_to roles_path, status: :see_other
@@ -50,5 +50,9 @@ class RolesController < ApplicationController
 
   def find_role
     @role ||= Role.find(params[:id])
+  end
+
+  def set_breadcrumbs
+    add_breadcrumb t("roles.breadcrumb"), roles_path
   end
 end

@@ -13,9 +13,15 @@ FactoryBot.define do
     end
   end
 
-  TaxRate.tax_identifier_types.keys.each do |tax_identifier_type|
-    trait tax_identifier_type do
-      tax_identifier_type { tax_identifier_type.to_s }
+  LegalIdentifier.tax_identifier_types.values.each do |tax_identifier_type|
+    trait "ti_#{tax_identifier_type}" do
+      tax_identifier_type { tax_identifier_type }
+    end
+  end
+
+  LegalIdentifier.business_identifier_types.values.each do |business_identifier_type|
+    trait "bi_#{business_identifier_type}" do
+      business_identifier_type { business_identifier_type }
     end
   end
 end

@@ -18,9 +18,9 @@ RSpec.describe TranspoLink::Currency do
     end
   end
 
-  describe ".options_for_currencies" do
+  describe ".select_options" do
     it "returns a collection of formatted currencies" do
-      expect(described_class.options_for_currencies).to include(["Indian Rupee (₹)", "INR"])
+      expect(described_class.select_options).to include(["Indian Rupee (₹)", "INR"])
     end
   end
 end

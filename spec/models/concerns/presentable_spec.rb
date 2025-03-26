@@ -8,24 +8,11 @@ require "spec_helper"
 
 RSpec.describe Presentable do
   before(:all) do
-    ActiveRecord::Schema.define(version: 1) do
-      create_table :presentable_models, force: true do |t|
-        t.timestamps
-      end
-    end
-
-    class PresentableModel < ApplicationRecord
+    class PresentableModel
       include Presentable
     end
-  end
 
-  after(:all) do
-    connection.drop_table(:presentable_models, if_exists: true)
-    Object.send(:remove_const, :PresentableModel)
-  end
-
-  before do
-    stub_const("PresentableModelPresenter", Class.new do
+    class PresentableModelPresenter
       def initialize(model, view_context = nil)
         @model = model
       end
@@ -33,10 +20,15 @@ RSpec.describe Presentable do
       def model_name
         @model.class.name
       end
-    end)
+    end
   end
 
-  let!(:presentable_model) { PresentableModel.new }
+  after(:all) do
+    Object.send(:remove_const, :PresentableModel)
+    Object.send(:remove_const, :PresentableModelPresenter)
+  end
+
+  let(:presentable_model) { PresentableModel.new }
 
   describe "#decorate" do
     it "returns an instance of the corresponding presenter" do

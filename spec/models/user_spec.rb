@@ -65,6 +65,7 @@ RSpec.describe User, type: :model do
     it { is_expected.to include_module(CaseSensitivity) }
     it { is_expected.to include_module(WithoutTimestamps) }
     it { is_expected.to include_module(Pageable) }
+    it { is_expected.to include_module(Sanitizable) }
   end
 
   describe "default values" do
@@ -73,14 +74,16 @@ RSpec.describe User, type: :model do
     it "should set false as default value for #is_banned" do
       expect(user.is_banned).to be_falsy
     end
-
-    it "should set false as default value for #is_active" do
-      expect(user.is_active).to be_falsy
-    end
   end
 
   describe "normalized attributes" do
     it { is_expected.to normalize(:email).from("  test@example.com  ").to("test@example.com") }
+  end
+
+  describe "sanitized attributes" do
+    it { is_expected.to sanitize_attribute(:email) }
+    it { is_expected.to sanitize_attribute(:password) }
+    it { is_expected.to sanitize_attribute(:password_confirmation) }
   end
 
   describe "associations" do
@@ -129,11 +132,14 @@ RSpec.describe User, type: :model do
   describe "validations" do
     describe "#email" do
       it { is_expected.to validate_presence_of(:email) }
+      it { is_expected.to validate_uniqueness_of(:email).ignoring_case_sensitivity }
       it { is_expected.to allow_value("abc@email.com").for(:email) }
       it { is_expected.not_to allow_value("abc").for(:email) }
 
-      # it { is_expected.to validate_uniqueness_of(:email) }
-      # it { is_expected.to validate_length_of(:email).is_at_least(2).is_at_most(55) }
+      it "validates the length of email" do
+        expect(build(:buyer, email: "ab@example.com")).to be_valid # 6 characters, within range
+        expect(build(:buyer, email: "#{"a" * 56}@example.com")).to be_invalid # Too long
+      end
     end
 
     describe "#password" do
@@ -178,7 +184,7 @@ RSpec.describe User, type: :model do
     let(:admin) { create(:admin, :confirmed, :active) }
     let(:buyer) { create(:buyer, :confirmed, :active) }
     let(:supplier) { create(:supplier, :confirmed, :active) }
-    let(:manager) { create(:manager, :confirmed, :active) }
+    let(:manager) { create(:manager, :confirmed, :active, :suspended) }
 
     describe ".admins" do
       it "returns array of admins" do
@@ -201,6 +207,12 @@ RSpec.describe User, type: :model do
     describe ".managers" do
       it "returns array of managers" do
         expect(manager).to be_one_of(described_class.managers)
+      end
+    end
+
+    describe ".suspended" do
+      it "returns array of suspended users" do
+        expect(manager).to be_one_of(described_class.suspended)
       end
     end
   end

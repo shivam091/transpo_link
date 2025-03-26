@@ -1,13 +1,13 @@
-= pretty_form_with model: current_user, url: profile_path do |form|
-  = form_errors(current_user)
+= pretty_form_with model: @user, url: profile_path, class: "row g-3" do |form|
+  = form_errors(@user)
   .subheader
     = t(".profile_details")
-  = form.fields_for :user_detail, include_id: false do |user_detail_form_fields|
-    = render_if_exists("profiles/user_detail_form_fields", locals: {form: user_detail_form_fields})
+  = form.fields_for :user_detail, include_id: false do |user_detail_form|
+    = render_if_exists("profiles/user_detail_form_fields", locals: {form: user_detail_form})
   .subheader
     = t(".address")
-  = form.fields_for :address, include_id: false do |address_form_fields|
-    = render_if_exists("shared/address_form_fields", locals: {form: address_form_fields})
+  = form.fields_for :address, include_id: false do |address_form|
+    = render_if_exists("shared/address_form_fields", locals: {form: address_form})
   .actions
     = button_tag type: :submit, class: "btn btn-primary" do
       = external_svg_tag("svgs/floppy.svg")

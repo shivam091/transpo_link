@@ -1,5 +1,5 @@
-= pretty_form_with model: current_user, url: preference_path, class: "row g-3" do |form|
-  = form_errors(current_user)
+= pretty_form_with model: @user, url: preference_path, class: "row g-3" do |form|
+  = form_errors(@user)
   = form.fields_for :user_preference, include_id: false do |preference_form|
     = render_if_exists("preferences/preference_form", locals: {form: preference_form})
   .actions

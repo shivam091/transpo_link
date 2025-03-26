@@ -126,9 +126,7 @@ RSpec.describe TranspoLink::I18n do
       I18n.locale = :es  # Simulate a different current locale
     end
 
-    after do
-      I18n.locale = :en
-    end
+    after { I18n.locale = :en }
 
     it "sets the locale to the default locale for the duration of the block" do
       TranspoLink::I18n.with_default_locale do
@@ -143,15 +141,15 @@ RSpec.describe TranspoLink::I18n do
     end
   end
 
-  describe ".trimmed_language_name" do
+  describe ".display_name" do
     it "returns the trimmed language name without additional info" do
-      expect(described_class.trimmed_language_name(:de)).to eq("German")
-      expect(described_class.trimmed_language_name(:es)).to eq("Spanish")
-      expect(described_class.trimmed_language_name(:en)).to eq("English")
+      expect(described_class.display_name(:de)).to eq("German")
+      expect(described_class.display_name(:es)).to eq("Spanish")
+      expect(described_class.display_name(:en)).to eq("English")
     end
 
     it "returns nil for unknown locales" do
-      expect(described_class.trimmed_language_name(:unknown)).to be_nil
+      expect(described_class.display_name(:unknown)).to be_nil
     end
   end
 
@@ -173,8 +171,8 @@ RSpec.describe TranspoLink::I18n do
     end
   end
 
-  describe "#options_for_languages" do
-    let(:result) { described_class.options_for_languages }
+  describe "#select_options" do
+    let(:result) { described_class.select_options }
 
     it "returns locales that meet the translation threshold with formatted strings" do
       allow(TranspoLink::I18n).to receive(:selectable_locales) {

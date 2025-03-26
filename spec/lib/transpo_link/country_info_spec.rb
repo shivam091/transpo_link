@@ -7,9 +7,9 @@
 require "spec_helper"
 
 RSpec.describe TranspoLink::CountryInfo do
-  let!(:country_code) { "IN" }
-  let!(:subdivision_code) { "MH" }
-  let!(:country_info) { described_class.new(country_code, subdivision_code) }
+  let(:country_code) { "IN" }
+  let(:subdivision_code) { "MH" }
+  let(:country_info) { described_class.new(country_code, subdivision_code) }
 
   describe "#country" do
     it "returns the country object for the given code" do
@@ -79,11 +79,11 @@ RSpec.describe TranspoLink::CountryInfo do
     end
   end
 
-  describe "#options_for_subdivisions" do
+  describe "#select_subdivision_options" do
     context "when country has subdivisions" do
       it "returns an array of subdivision options for select" do
         I18n.with_locale(:en) do
-          expect(country_info.options_for_subdivisions).to include(["Maharashtra", "MH"])
+          expect(country_info.select_subdivision_options).to include(["Maharashtra", "MH"])
         end
       end
     end
@@ -92,15 +92,15 @@ RSpec.describe TranspoLink::CountryInfo do
       let(:country_code) { "VA" } # Vatican City has no subdivisions
 
       it "returns an empty array" do
-        expect(country_info.options_for_subdivisions).to be_empty
+        expect(country_info.select_subdivision_options).to be_empty
       end
     end
   end
 
-  describe ".options_for_countries" do
+  describe ".select_options" do
     it "returns an array of country options for select" do
       I18n.with_locale(:en) do
-        expect(described_class.options_for_countries).to include(["India", "IN"])
+        expect(described_class.select_options).to include(["India", "IN"])
       end
     end
   end

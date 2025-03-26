@@ -7,9 +7,9 @@ FactoryBot.define do
     association :user, factory: :buyer
     # Polymorphic association: Can be Order, Product, Shipment, or Driver
     association :reviewable, factory: :product
-    is_unread { true } # Defaults to unread for tracking new feedbacks
     rating { (0..10).step(0.5).to_a.sample } # Ensures valid step values
     comment { Faker::Lorem.sentence(word_count: 50) }
+    is_unread { true } # Defaults to unread for tracking new feedbacks
 
     trait :read do
       is_unread { false }

@@ -1,4 +1,4 @@
-= title(t(".title"))
+= title(t(".title", reference_code: @warehouse.reference_code))
 .card.card-primary.border.border-primary
   .card-body
     = turbo_frame_tag :edit_warehouse_form_frame, target: :_top do

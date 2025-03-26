@@ -10,6 +10,7 @@ RSpec.describe EnumsHelper, type: :helper do
   before do
     class Preference
       include ActiveModel::Model
+
       attr_accessor :color_scheme
 
       def self.color_schemes
@@ -35,7 +36,7 @@ RSpec.describe EnumsHelper, type: :helper do
   end
 
   describe "#enum_l" do
-    let(:preference) { Preference.new(color_scheme: :dark) }
+    let!(:preference) { Preference.new(color_scheme: :dark) }
 
     it "returns the translated string for the current enum value of a model" do
       expect(helper.enum_l(preference, :color_scheme)).to eq("Dark")

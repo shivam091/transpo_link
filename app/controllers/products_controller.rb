@@ -3,8 +3,7 @@
 # -*- warn_indent: true -*-
 
 class ProductsController < ApplicationController
-  add_breadcrumb :products, :products_path
-
+  before_action :set_breadcrumbs
   before_action :find_product, only: [:edit, :update, :show, :destroy]
 
   # GET /products
@@ -19,7 +18,7 @@ class ProductsController < ApplicationController
 
   # GET /products/new
   def new
-    add_breadcrumb :new, new_product_path
+    add_breadcrumb t(".breadcrumb"), new_product_path
     @product = Product.new
   end
 
@@ -27,6 +26,7 @@ class ProductsController < ApplicationController
   def create
     response = Products::CreateService.(product_params)
     @product = response.payload[:product]
+
     if response.success?
       set_flash_message(:notice, :success)
       redirect_to products_path, status: :see_other
@@ -45,13 +45,14 @@ class ProductsController < ApplicationController
 
   # GET /products/:id/edit
   def edit
-    add_breadcrumb :edit, edit_product_path(@product)
+    add_breadcrumb t(".breadcrumb", reference_code: @product.reference_code), edit_product_path(@product)
   end
 
   # PUT|PATCH /products/:id
   def update
     response = Products::UpdateService.(@product, product_params)
     @product = response.payload[:product]
+
     if response.success?
       set_flash_message(:notice, :success)
       redirect_to products_path, status: :see_other
@@ -77,6 +78,7 @@ class ProductsController < ApplicationController
   def destroy
     response = Products::DestroyService.(@product)
     @product = response.payload[:product]
+
     if response.success?
       set_flash_message(:info, :success)
     else
@@ -119,5 +121,9 @@ class ProductsController < ApplicationController
 
   def find_product
     @product ||= Product.find(params[:id])
+  end
+
+  def set_breadcrumbs
+    add_breadcrumb t("products.breadcrumb"), products_path
   end
 end

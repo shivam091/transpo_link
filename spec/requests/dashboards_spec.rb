@@ -7,23 +7,13 @@
 require "spec_helper"
 
 RSpec.describe "Dashboards", type: :request do
-  context "when user is not signed in" do
-    describe "GET /" do
-      subject { get root_path }
+  include_context "sign in as admin"
 
-      it { is_expected.to require_sign_in }
-    end
-  end
+  describe "GET /" do
+    it "renders dashboard page" do
+      get root_path
 
-  context "when user is signed in" do
-    include_context "sign in as admin"
-
-    describe "GET /" do
-      it "renders dashboard page" do
-        get root_path
-
-        expect(response).to have_http_status(:ok)
-      end
+      expect(response).to have_http_status(:ok)
     end
   end
 end

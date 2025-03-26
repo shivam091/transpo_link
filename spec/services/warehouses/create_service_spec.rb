@@ -7,12 +7,12 @@
 require "spec_helper"
 
 RSpec.describe Warehouses::CreateService, type: :service do
+  let!(:manager) { create(:manager) }
+  let!(:supplier) { create(:supplier) }
+
   subject(:service_response) { described_class.(warehouse_attributes) }
 
   describe ".call" do
-    let(:manager) { create(:manager) }
-    let(:supplier) { create(:supplier) }
-
     context "when provided attributes are valid" do
       let(:warehouse_attributes) { attributes_for(:warehouse).merge(manager_ids: [manager.id], supplier_ids: [supplier.id]) }
 

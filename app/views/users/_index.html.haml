@@ -2,22 +2,29 @@
   .card-header
     = render_if_exists("users/nav_tabs")
   .card-body{data: {controller: "checkbox-selection"}}
-    .mb-2{data: {checkbox_selection_target: "selectedCount", label_template: t("common.selected", count: "%{count}")}}
+    .mb-2{data: {checkbox_selection_target: "selectedCount", label_template: t("shared.selected", count: "%{count}")}}
     .table-responsive
       %table.table.table-striped.table-borderless
         %thead.border
           %tr.table-active
-            %th{width: "25px", scope: "col"}#
+            %th{width: "3%", scope: "col"}#
             - if @users.size > 0
-              %th{width: "25px", scope: "col"}
+              %th{width: "1%", scope: "col"}
                 = check_box_tag "checkbox", nil, false, class: "form-check-input", data: {checkbox_selection_target: "selectAll"}
-            %th{scope: "col"}= UserDetail.human_attribute_name(:full_name)
-            %th{scope: "col"}= User.human_attribute_name(:email)
-            %th{scope: "col"}= UserDetail.human_attribute_name(:mobile_number)
-            %th{scope: "col"}= UserDetail.human_attribute_name(:alternate_contact_number)
-            %th{scope: "col"}= UserDetail.human_attribute_name(:alternate_email)
-            %th{scope: "col"}= User.human_attribute_name(:role_id)
-            %th{width: "25px", scope: "col"}= t("common.actions")
+            %th{scope: "col"}
+              = UserDetail.human_attribute_name(:full_name)
+            %th{scope: "col"}
+              = User.human_attribute_name(:email)
+            %th{scope: "col"}
+              = UserDetail.human_attribute_name(:mobile_number)
+            %th{scope: "col"}
+              = UserDetail.human_attribute_name(:alternate_contact_number)
+            %th{scope: "col"}
+              = UserDetail.human_attribute_name(:alternate_email)
+            %th{scope: "col"}
+              = User.human_attribute_name(:role_id)
+            %th{width: "3%", scope: "col"}
+              = t("shared.actions")
         %tbody.border
           - if @users&.each.with_index(1) do |user, index|
             = render_if_exists("users/user", locals: {user:, index:})

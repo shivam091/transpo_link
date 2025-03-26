@@ -3,7 +3,7 @@
 # -*- warn_indent: true -*-
 
 class ProfilesController < ApplicationController
-  add_breadcrumb :profiles, :profile_path
+  before_action :set_breadcrumbs, :set_user
 
   # GET /profile
   def show
@@ -11,12 +11,13 @@ class ProfilesController < ApplicationController
 
   # GET /profile/edit
   def edit
-    add_breadcrumb :edit, edit_profile_path(current_user)
+    add_breadcrumb t(".breadcrumb"), edit_profile_path(current_user)
   end
 
   # PUT|PATCH /profile
   def update
     response = Profiles::UpdateService.(current_user, profile_params)
+
     if response.success?
       set_flash_message(:notice, :success)
       redirect_to profile_path, status: :see_other
@@ -53,5 +54,13 @@ class ProfilesController < ApplicationController
         :postal_code
       ]
     )
+  end
+
+  def set_breadcrumbs
+    add_breadcrumb t("profiles.breadcrumb"), profile_path
+  end
+
+  def set_user
+    @user = current_user
   end
 end

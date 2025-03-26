@@ -12,7 +12,7 @@ RSpec.describe TranspoLink::MigrationHelpers do
 
   describe "#enum_values" do
     before do
-      allow(ActiveRecord::Base.connection).to receive(:execute) {
+      allow(connection).to receive(:execute) {
         [
           {"enumlabel" => "small"},
           {"enumlabel" => "medium"},
@@ -35,13 +35,13 @@ RSpec.describe TranspoLink::MigrationHelpers do
         WHERE typname = '#{enum_name}'
       SQL
 
-      expect(ActiveRecord::Base.connection).to receive(:execute).with(query)
+      expect(connection).to receive(:execute).with(query)
 
       dummy_class.enum_values(enum_name)
     end
 
     it "returns an empty string when no values are found" do
-      allow(ActiveRecord::Base.connection).to receive(:execute) { [] }
+      allow(connection).to receive(:execute) { [] }
       result = dummy_class.enum_values(enum_name)
 
       expect(result).to eq("")

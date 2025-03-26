@@ -7,22 +7,24 @@
 require "spec_helper"
 
 RSpec.describe ReduceValidator do
-  subject do
-    Class.new do
-      include ActiveModel::Model
-      include ActiveModel::Validations
+  before(:all) do
+    class ReduceValidatorModel
+      include ActiveModel::Model, ActiveModel::Validations
+
       attr_accessor :attribute
 
       validates :attribute,
                 length: {maximum: 5},
                 format: {with: /[\d]+/},
                 reduce: true
-
-      def self.model_name
-        ActiveModel::Name.new(self, nil, "ReduceValidatorModel")
-      end
-    end.new
+    end
   end
+
+  after(:all) do
+    Object.send(:remove_const, :ReduceValidatorModel)
+  end
+
+  subject { ReduceValidatorModel.new }
 
   describe "#validates_each" do
     context "when there are multiple errors on the attribute" do

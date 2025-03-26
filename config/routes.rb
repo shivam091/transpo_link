@@ -3,11 +3,11 @@
 # -*- warn_indent: true -*-
 
 Rails.application.routes.draw do
-  get "up" => "rails/health#show", as: :rails_health_check
-
   favicon_redirect = redirect do |_params, _request|
     ActionController::Base.helpers.asset_url(TranspoLink::Favicon.main)
   end
+
+  get "up" => "rails/health#show", as: :rails_health_check
   get "favicon.png", to: favicon_redirect, as: :favicon_png
   get "favicon.ico", to: favicon_redirect, as: :favicon_ico
 
@@ -25,8 +25,8 @@ Rails.application.routes.draw do
 
   concern :toggleable do
     collection do
-       get :active
-       get :inactive
+      get :active, action: :index, defaults: {status: "active"}
+      get :inactive, action: :index, defaults: {status: "inactive"}
     end
   end
 
@@ -34,32 +34,40 @@ Rails.application.routes.draw do
     resources :feedbacks, only: [:new, :create]
   end
 
-  resource :profile, only: [:show, :edit, :update]
-  resource :preference, only: [:show, :edit, :update]
-  resource :locale, only: [:edit, :update]
-
-  resources :roles, except: [:new, :create, :destroy]
-  resources :users, only: [:index, :show]
-  resources :request_logs, path: "request-logs", only: [:index, :show]
-  resources :warehouses, concerns: :toggleable
-  resources :legal_identifiers, path: "legal-identifiers", except: :show
-  resources :tax_rates, path: "tax-rates", except: :show
-  resources :product_categories, path: "product-categories", except: :show
-  resources :products, concerns: :reviewable do
+  concern :notifiable do
     collection do
-      get "active", action: :index, defaults: {status: "active"}
-      get "inactive", action: :index, defaults: {status: "inactive"}
-    end
-  end
-  resources :feedbacks, only: [:index, :show] do
-    collection do
-      get "read", action: :index, defaults: {status: "read"}
-      get "unread", action: :index, defaults: {status: "unread"}
+      get :read, action: :index, defaults: {status: "read"}
+      get :unread, action: :index, defaults: {status: "unread"}
     end
     member do
       match :mark_as_read, path: "mark-as-read", via: [:put, :patch]
     end
   end
+
+  resource :profile, only: [:show, :edit, :update]
+  resource :preference, only: [:show, :edit, :update]
+  resource :locale, only: [:edit, :update]
+
+  resources :roles, except: [:new, :create, :destroy]
+  resources :users, only: [:index, :show], concerns: :toggleable do
+    collection do
+      get :suspended, action: :index, defaults: {status: "suspended"}
+    end
+  end
+  resources :request_logs, path: "request-logs", only: [:index, :show]
+  resources :warehouses, concerns: :toggleable
+  resources :legal_identifiers, path: "legal-identifiers", except: :show
+  resources :tax_rates, path: "tax-rates", except: :show do
+    collection do
+      get :active, action: :index, defaults: {status: "active"}
+      get :future, action: :index, defaults: {status: "future"}
+      get :expired, action: :index, defaults: {status: "expired"}
+    end
+  end
+  resources :product_categories, path: "product-categories", except: :show, concerns: :toggleable
+  resources :products, concerns: [:reviewable, :toggleable]
+  resources :feedbacks, only: [:index, :show], concerns: :notifiable
+  resources :inventories, except: :destroy
 
   root to: "dashboards#show"
 end

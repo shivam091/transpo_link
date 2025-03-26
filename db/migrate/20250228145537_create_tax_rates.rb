@@ -13,7 +13,6 @@ class CreateTaxRates < ActiveRecord::Migration[8.0]
       t.decimal :rate, precision: 5, scale: 2
       t.date :valid_from
       t.date :valid_to
-
       t.timestamps_with_timezone null: false
 
       t.index :valid_from, using: :btree

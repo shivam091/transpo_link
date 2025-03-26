@@ -14,7 +14,9 @@ module TranspoLink
       count:  %i[item pack box carton pallet bundle dz case roll],
     }.with_indifferent_access.freeze
 
-    def options_for_units
+    UNIT_TO_CATEGORY = UNITS.flat_map { |category, units| units.product([category]) }.to_h.with_indifferent_access.freeze
+
+    def select_options
       UNITS.map do |category, units|
         [
           ::I18n.t(category, scope: "measurement_units.categories"),
@@ -30,7 +32,15 @@ module TranspoLink
     end
 
     def units_for(category)
-      UNITS[category.to_sym] || []
+      UNITS[category] || []
+    end
+
+    def category_for_unit(unit)
+      UNIT_TO_CATEGORY[unit]
+    end
+
+    def display_label(count, unit)
+      ::I18n.t(unit, scope: "measurement_units.display_labels", count: count)
     end
   end
 end

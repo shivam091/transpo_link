@@ -2,6 +2,8 @@
 # -*- frozen_string_literal: true -*-
 # -*- warn_indent: true -*-
 
+# spec/requests/concerns/flash_messages_spec.rb
+
 require "spec_helper"
 
 RSpec.describe "FlashMessages", type: :request do
@@ -59,7 +61,7 @@ RSpec.describe "FlashMessages", type: :request do
 
   context "when setting a flash message with default scope" do
     it "sets the correct flash message" do
-      get "/anonymous", params: { type: "notice", message_key: "success" }
+      get "/anonymous", params: {type: "notice", message_key: "success"}
 
       expect(flash[:notice]).to eq("Operation was successful!")
     end
@@ -67,7 +69,7 @@ RSpec.describe "FlashMessages", type: :request do
 
   context "when setting a flash message with a custom scope" do
     it "sets the correct flash message under a custom scope" do
-      get "/anonymous", params: { type: "alert", message_key: "error", scope: "custom.scope" }
+      get "/anonymous", params: {type: "alert", message_key: "error", scope: "custom.scope"}
 
       expect(flash[:alert]).to eq("Something went wrong!")
     end
@@ -75,7 +77,7 @@ RSpec.describe "FlashMessages", type: :request do
 
   context "when setting an immediate flash message (flash.now)" do
     it "sets the correct immediate flash message" do
-      get "/anonymous", params: { type: "error", message_key: "failure", immediate: "true" }
+      get "/anonymous", params: {type: "error", message_key: "failure", immediate: "true"}
 
       expect(flash.now[:error]).to eq("Operation failed!")
     end
@@ -83,7 +85,7 @@ RSpec.describe "FlashMessages", type: :request do
 
   context "when setting a flash message with interpolation options" do
     it "sets the correct message with interpolated values" do
-      get "/anonymous", params: { type: "notice", message_key: "greeting", name: "John" }
+      get "/anonymous", params: {type: "notice", message_key: "greeting", name: "John"}
 
       expect(flash[:notice]).to eq("Hello, John! Welcome back.")
     end

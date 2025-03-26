@@ -39,11 +39,13 @@ RSpec.describe IpInfo do
   describe "IPinfo API interaction" do
     it "initializes IPinfo with the API key" do
       expect(IPinfo).to receive(:create).with("fake_api_key", {}) { mock_ipinfo_instance }
+      
       middleware.call(env)
     end
 
     it "calls the details method on the IPinfo instance" do
       expect(mock_ipinfo_instance).to receive(:details) { mock_details }
+      
       middleware.call(env)
     end
   end

@@ -5,8 +5,8 @@
 FactoryBot.define do
   factory :unit_conversion do
     association :product
-    from_unit { "item" }
-    to_unit { "pack" }
-    conversion_rate { 12.0 }
+    from_unit { "kg" }
+    to_unit { "g" }
+    conversion_rate { 1000 }
   end
 end

@@ -2,10 +2,14 @@
 # -*- frozen_string_literal: true -*-
 # -*- warn_indent: true -*-
 
+# Mixin module to provide shared functionalities for managing currency related
+# logic.
 module ActsAsMoney
   extend ActiveSupport::Concern
 
   included do
+    attribute :currency, default: Money.default_currency.iso_code
+
     validates :currency,
               presence: true,
               reduce: true

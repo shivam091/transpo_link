@@ -42,10 +42,6 @@ RSpec.describe ProductPrice, type: :model do
     it "should set 0.0 as default value for #unit_price" do
       expect(product_price.unit_price).to eq(0.0)
     end
-
-    it "should set Money's default currency as default value for #currency" do
-      expect(product_price.currency).to eq(Money.default_currency.iso_code)
-    end
   end
 
   describe "included modules" do

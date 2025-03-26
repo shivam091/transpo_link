@@ -1,4 +1,4 @@
-= title(t(".title"))
+= title(t(".title", name: @role.name))
 .card.card-primary.border.border-primary
   .card-body
     = turbo_frame_tag :edit_role_form_frame, target: :_top do

@@ -1,20 +1,30 @@
 .widget-row
   .widget-row-content
-    .widget-row-title= UserPreference.human_attribute_name(:preferred_locale)
-    .widget-row-body= h(TranspoLink::I18n.trimmed_language_name(user.preferred_locale))
+    .widget-row-title
+      = UserPreference.human_attribute_name(:preferred_locale)
+    .widget-row-body
+      = TranspoLink::I18n.display_name(user.preferred_locale)
 .widget-row
   .widget-row-content
-    .widget-row-title= UserPreference.human_attribute_name(:preferred_time_zone)
-    .widget-row-body= h(TranspoLink::TimeZone.formatted_time_zone(user.preferred_time_zone))
+    .widget-row-title
+      = UserPreference.human_attribute_name(:preferred_time_zone)
+    .widget-row-body
+      = TranspoLink::TimeZone.formatted_time_zone(user.preferred_time_zone)
 .widget-row
   .widget-row-content
-    .widget-row-title= UserPreference.human_attribute_name(:preferred_currency)
-    .widget-row-body= h(TranspoLink::Currency.formatted_currency(user.preferred_currency))
+    .widget-row-title
+      = UserPreference.human_attribute_name(:preferred_currency)
+    .widget-row-body
+      = TranspoLink::Currency.formatted_currency(user.preferred_currency)
 .widget-row
   .widget-row-content
-    .widget-row-title= UserPreference.human_attribute_name(:preferred_color_scheme)
-    .widget-row-body= h(enum_i18n(UserPreference, :preferred_color_schemes, user.preferred_color_scheme))
+    .widget-row-title
+      = UserPreference.human_attribute_name(:preferred_color_scheme)
+    .widget-row-body
+      = enum_i18n(UserPreference, :preferred_color_schemes, user.preferred_color_scheme)
 .widget-row
   .widget-row-content
-    .widget-row-title= UserPreference.human_attribute_name(:are_notifications_enabled)
-    .widget-row-body= h(humanize_boolean(user.are_notifications_enabled))
+    .widget-row-title
+      = UserPreference.human_attribute_name(:are_notifications_enabled)
+    .widget-row-body
+      = humanize_boolean(user.are_notifications_enabled)

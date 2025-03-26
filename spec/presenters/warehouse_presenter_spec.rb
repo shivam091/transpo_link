@@ -5,9 +5,9 @@
 # spec/presenters/warehouse_presenter_spec.rb
 
 RSpec.describe WarehousePresenter, type: :presenter do
-  let!(:warehouse) { instance_double("Warehouse", total_capacity: 1000, capacity_unit: "kg", latitude: 45.6789, longitude: -123.4567) }
-  let!(:view_context) { double("view_context") }
-  let!(:presenter) { described_class.new(warehouse, view_context) }
+  let(:warehouse) { instance_double("Warehouse", total_capacity: 1000, capacity_unit: "kg", latitude: 45.6789, longitude: -123.4567) }
+  let(:view_context) { double("view_context") }
+  let(:presenter) { described_class.new(warehouse, view_context) }
 
   describe "#capacity" do
     it "returns formatted capacity with unit" do
