@@ -3,9 +3,11 @@
 # -*- warn_indent: true -*-
 
 class ProductCategory < ApplicationRecord
-  include Sortable, Toggleable, Pageable
+  include Sortable, Toggleable, Pageable, Sanitizable
 
   LISTING_ATTRIBUTES = %i[name parent_category_id products_count].freeze
+
+  sanitize_attributes :name
 
   validates :name,
             presence: true,

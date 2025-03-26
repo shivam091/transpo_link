@@ -3,7 +3,7 @@
 # -*- warn_indent: true -*-
 
 class User < ApplicationRecord
-  include Toggleable, CaseSensitivity, WithoutTimestamps, Pageable
+  include Toggleable, CaseSensitivity, WithoutTimestamps, Pageable, Sanitizable
 
   devise :database_authenticatable, :registerable, :confirmable, :lockable,
          :recoverable, :rememberable, :validatable, :timeoutable, :trackable
@@ -13,7 +13,9 @@ class User < ApplicationRecord
 
   attribute :is_banned, default: false
 
-  normalizes :email, with: -> email { email.strip }
+  normalizes :email, with: ->(email) { email.strip }
+
+  sanitize_attributes :email, :password, :password_confirmation
 
   validates :role_id,
             presence: true,

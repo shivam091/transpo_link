@@ -3,11 +3,16 @@
 # -*- warn_indent: true -*-
 
 class Warehouse < ApplicationRecord
-  include Toggleable, HasReferenceCode, Pageable, Sortable
+  include Toggleable, HasReferenceCode, Pageable, Sortable, Sanitizable,
+          NullifyIfBlank
 
   LISTING_ATTRIBUTES = %i[
     reference_code name email_address contact_number capacity latitude longitude
   ].freeze
+
+  nullify_if_blank :email_address, :contact_number, :description, :latitude, :longitude
+
+  sanitize_attributes :name, :email_address, :contact_number, :description
 
   validates :name,
             presence: true,

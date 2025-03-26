@@ -65,6 +65,7 @@ RSpec.describe User, type: :model do
     it { is_expected.to include_module(CaseSensitivity) }
     it { is_expected.to include_module(WithoutTimestamps) }
     it { is_expected.to include_module(Pageable) }
+    it { is_expected.to include_module(Sanitizable) }
   end
 
   describe "default values" do
@@ -77,6 +78,12 @@ RSpec.describe User, type: :model do
 
   describe "normalized attributes" do
     it { is_expected.to normalize(:email).from("  test@example.com  ").to("test@example.com") }
+  end
+
+  describe "sanitized attributes" do
+    it { is_expected.to sanitize_attribute(:email) }
+    it { is_expected.to sanitize_attribute(:password) }
+    it { is_expected.to sanitize_attribute(:password_confirmation) }
   end
 
   describe "associations" do

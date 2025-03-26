@@ -11,6 +11,9 @@
           copyright_notice: "&copy; %{copyright_year}, TranspoLink LLP or its affiliates, all rights reserved.",
         },
       },
+      shared_layout: {
+        breadcrumb: "Breadcrumb",
+      },
       application: {
         top_menu: {
           change_color_scheme: "Change color scheme",

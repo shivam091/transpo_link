@@ -10,7 +10,7 @@ class RequestLog < ApplicationRecord
     user_id
   ].freeze
 
-  normalizes :method, with: -> method { method.upcase }
+  normalizes :method, with: ->(method) { method.upcase }
 
   belongs_to :user, optional: true, inverse_of: :request_logs
 

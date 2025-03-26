@@ -46,6 +46,7 @@ RSpec.describe LegalIdentifier, type: :model do
     it { is_expected.to include_module(Pageable) }
     it { is_expected.to include_module(Taxable) }
     it { is_expected.to include_module(NullifyIfBlank) }
+    it { is_expected.to include_module(Sanitizable) }
   end
 
   describe "enums" do
@@ -53,12 +54,18 @@ RSpec.describe LegalIdentifier, type: :model do
     it { is_expected.to define_enum_for(:business_identifier_type).backed_by_column_of_type(:string) }
   end
 
-  describe "nullified attributes" do
-    it { is_expected.to nullify_if_blank(:business_identifier) }
-  end
-
   describe "normalized attributes" do
     it { is_expected.to normalize(:business_identifier).from("  l12345mh2023PLC000789  ").to("L12345MH2023PLC000789") }
+  end
+
+  describe "nullified attributes" do
+    it { is_expected.to nullify_if_blank(:business_identifier) }
+    it { is_expected.to nullify_if_blank(:business_identifier_type) }
+  end
+
+  describe "sanitized attributes" do
+    it { is_expected.to sanitize_attribute(:tax_identifier) }
+    it { is_expected.to sanitize_attribute(:business_identifier) }
   end
 
   describe "constants" do

@@ -6,15 +6,15 @@
   %td
     = link_to product.reference_code, product_path(product)
   %td
-    = h(product.name)
+    = product.name
   %td
-    = h(product.sku)
+    = product.sku
   %td
-    = h(product.barcode)
+    = product.barcode || "-"
   %td
     = number_to_currency(product.cost_price, unit: product.currency.symbol)
   %td
-    = h(product.product_category_name)
+    = product.product_category_name
   %td
     = link_to "javascript:void(0)", class: "text-reset", data: {bs_toggle: "dropdown"}, aria: {expanded: false} do
       = external_svg_tag("svgs/ellipsis-vertical.svg")

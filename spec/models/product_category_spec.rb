@@ -37,6 +37,11 @@ RSpec.describe ProductCategory, type: :model do
     it { is_expected.to include_module(Sortable) }
     it { is_expected.to include_module(Toggleable) }
     it { is_expected.to include_module(Pageable) }
+    it { is_expected.to include_module(Sanitizable) }
+  end
+
+  describe "sanitized attributes" do
+    it { is_expected.to sanitize_attribute(:name) }
   end
 
   describe "constants" do
@@ -60,7 +65,7 @@ RSpec.describe ProductCategory, type: :model do
     describe "#name" do
       it { is_expected.to validate_presence_of(:name) }
       it { is_expected.to validate_length_of(:name).is_at_least(2).is_at_most(255) }
-      it { is_expected.to validate_uniqueness_of(:name).scoped_to(:parent_category_id).case_insensitive }
+      it { is_expected.to validate_uniqueness_of(:name).scoped_to(:parent_category_id).ignoring_case_sensitivity }
     end
   end
 

@@ -3,7 +3,7 @@
 # -*- warn_indent: true -*-
 
 class TaxRate < ApplicationRecord
-  include Pageable, Taxable, Sortable
+  include Pageable, Taxable, Sortable, NullifyIfBlank
 
   LISTING_ATTRIBUTES = %i[
     country tax_identifier_type business_category rate valid_from valid_to
@@ -15,6 +15,8 @@ class TaxRate < ApplicationRecord
   }
 
   attribute :business_category, :enum, default: business_categories[:b2b]
+
+  nullify_if_blank :valid_to
 
   validates :tax_identifier_type,
             uniqueness: {

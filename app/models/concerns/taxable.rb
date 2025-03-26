@@ -7,7 +7,7 @@ module Taxable
   extend ActiveSupport::Concern
 
   included do
-    normalizes :tax_identifier, with: -> tax_identifier { tax_identifier.strip.upcase }
+    normalizes :tax_identifier, with: ->(tax_identifier) { tax_identifier.strip.upcase }
 
     enum :tax_identifier_type, {
       vat: "vat",
@@ -57,6 +57,7 @@ module Taxable
     validates :country,
               presence: true,
               reduce: true
+
     validate :tax_identifier_type_country_combination
   end
 

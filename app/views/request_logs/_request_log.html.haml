@@ -3,12 +3,12 @@
   %th{scope: "row"}= @pagination_metadata.offset + index
   %td= link_to request_log.uuid, request_log_path(request_log)
   %td= link_to request_log.uri, request_log.uri, target: :_blank
-  %td= h(request_log.method)
-  %td= h(IPAddr.new(request_log.remote_address, Socket::AF_INET)) rescue ""
-  %td= h(prettify_seconds(request_log.elapsed_time))
-  %td= h(request_log.status)
-  %td= h(number_to_human_size(request_log.response_size))
-  %td= h(time_ago_with_tooltip(request_log.created_at))
+  %td= request_log.method
+  %td= IPAddr.new(request_log.remote_address, Socket::AF_INET) rescue ""
+  %td= prettify_seconds(request_log.elapsed_time)
+  %td= request_log.status
+  %td= number_to_human_size(request_log.response_size)
+  %td= time_ago_with_tooltip(request_log.created_at)
   %td
     - if accessed_by.present?
       = link_to accessed_by&.full_name, user_path(accessed_by), target: :_blank

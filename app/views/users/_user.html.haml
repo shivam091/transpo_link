@@ -8,13 +8,13 @@
   %td
     = mail_to user.email
   %td
-    = h(user.mobile_number)
+    = user.mobile_number || "-"
   %td
-    = h(user.alternate_contact_number)
+    = user.alternate_contact_number || "-"
   %td
-    = mail_to user.alternate_email
+    = user.alternate_email.present? ? mail_to(user.alternate_email) : "-"
   %td
-    = h(user.role_name.humanize)
+    = user.role_name.humanize
   %td
     = link_to "javascript:void(0)", class: "text-reset", data: {bs_toggle: "dropdown"}, aria: {expanded: false} do
       = external_svg_tag("svgs/ellipsis-vertical.svg")

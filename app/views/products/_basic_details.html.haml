@@ -3,31 +3,31 @@
     .widget-row-title
       = Product.human_attribute_name(:name)
     .widget-row-body
-      = h(product.name)
+      = product.name
 .widget-row
   .widget-row-content
     .widget-row-title
       = Product.human_attribute_name(:product_category_id)
     .widget-row-body
-      = h(product.product_category_name)
+      = product.product_category_name
 .widget-row
   .widget-row-content
     .widget-row-title
       = Product.human_attribute_name(:sku)
     .widget-row-body
-      = h(product.sku)
+      = product.sku
 .widget-row
   .widget-row-content
     .widget-row-title
       = Product.human_attribute_name(:barcode)
     .widget-row-body
-      = h(product.barcode)
+      = product.barcode || "-"
 .widget-row
   .widget-row-content
     .widget-row-title
       = Product.human_attribute_name(:description)
     .widget-row-body
-      = h(product.description)
+      = product.description
 .widget-row
   .widget-row-content
     .widget-row-title
@@ -39,5 +39,5 @@
     .widget-row-title
       = Product.human_attribute_name(:min_stock_threshold)
     .widget-row-body
-      = h(product.min_stock_threshold)
-      = h(product.capacity_unit)
+      = product.min_stock_threshold
+      = product.capacity_unit

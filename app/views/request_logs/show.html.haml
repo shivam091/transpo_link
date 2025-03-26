@@ -5,11 +5,11 @@
     .widget
       .widget-header
         .widget-title
-          = h(@request_log.uuid)
+          = @request_log.uuid
         .widget-help
           %span.middle-dot-divider
             = RequestLog.human_attribute_name(:created_at)
-            = h(time_ago_with_tooltip(@request_log.created_at))
+            = time_ago_with_tooltip(@request_log.created_at)
           - if accessed_by.present?
             %span.middle-dot-divider
               = RequestLog.human_attribute_name(:user_id)
