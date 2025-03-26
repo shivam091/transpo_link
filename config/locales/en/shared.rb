@@ -37,6 +37,9 @@
         no_product_prices_to_display: "No product prices to display",
         no_inventories_to_display: "No inventories to display",
       },
+      remote_modal: {
+        close: "Close",
+      },
     }
   }
 }

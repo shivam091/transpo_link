@@ -39,8 +39,11 @@ RSpec.describe "Breadcrumbs", type: :request do
     end
 
     I18n.backend.store_translations(:en, {
+      shared_layout: {
+        breadcrumb: "breadcrumb"
+      },
       breadcrumbs: {
-        home: "Home",
+        home: "Home"
       }
     })
   end
