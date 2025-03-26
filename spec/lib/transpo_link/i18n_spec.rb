@@ -171,8 +171,8 @@ RSpec.describe TranspoLink::I18n do
     end
   end
 
-  describe "#options_for_languages" do
-    let(:result) { described_class.options_for_languages }
+  describe "#select_options" do
+    let(:result) { described_class.select_options }
 
     it "returns locales that meet the translation threshold with formatted strings" do
       allow(TranspoLink::I18n).to receive(:selectable_locales) {

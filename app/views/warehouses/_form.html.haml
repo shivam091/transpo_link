@@ -5,8 +5,8 @@
   = render_if_exists("warehouses/basic_details_fields", locals: {form: form})
   .subheader
     = t(".address")
-  = form.fields_for :address, include_id: false do |address_form_fields|
-    = render_if_exists("shared/address_form_fields", locals: {form: address_form_fields})
+  = form.fields_for :address, include_id: false do |address_form|
+    = render_if_exists("shared/address_form_fields", locals: {form: address_form})
   .actions
     = button_tag type: :submit, class: "btn btn-primary" do
       = external_svg_tag("svgs/floppy.svg")

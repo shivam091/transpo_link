@@ -41,7 +41,7 @@ RSpec.describe TranspoLink::MeasurementUnits do
     end
   end
 
-  describe ".options_for_units" do
+  describe ".select_options" do
     before do
       allow(I18n).to receive(:t) { |key, **| key.to_s.humanize }
 
@@ -58,7 +58,7 @@ RSpec.describe TranspoLink::MeasurementUnits do
       allow(I18n).to receive(:t).with("item", scope: "measurement_units.sub_categories") { "Item" }
     end
 
-    let(:result) { described_class.options_for_units }
+    let(:result) { described_class.select_options }
 
     it "returns a hash with translated categories and subcategories" do
       expect(result).to be_a(Hash)

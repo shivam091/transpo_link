@@ -2,7 +2,7 @@
   = form_errors(@tax_rate)
   .col-12
     = form.label :country, class: "form-label required"
-    = form.select :country, options_for_select(TranspoLink::CountryInfo.options_for_countries, form.object.country),
+    = form.select :country, options_for_select(TranspoLink::CountryInfo.select_options, form.object.country),
       {include_blank: t(".select_country")}, {autofocus: true}
   .col-12
     = form.label :tax_identifier_type, class: "form-label required"

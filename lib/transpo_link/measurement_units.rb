@@ -16,7 +16,7 @@ module TranspoLink
 
     UNIT_TO_CATEGORY = UNITS.flat_map { |category, units| units.product([category]) }.to_h.with_indifferent_access.freeze
 
-    def options_for_units
+    def select_options
       UNITS.map do |category, units|
         [
           ::I18n.t(category, scope: "measurement_units.categories"),

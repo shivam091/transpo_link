@@ -1,16 +1,16 @@
 .col-sm-12.col-md-6.col-lg-4
   = form.label :preferred_locale, class: "form-label required"
-  = form.select :preferred_locale, options_for_select(TranspoLink::I18n.options_for_languages, form.object.preferred_locale),
+  = form.select :preferred_locale, options_for_select(TranspoLink::I18n.select_options, form.object.preferred_locale),
     {include_blank: t(".select_preferred_language")}
   = help_text(t(".preferred_locale_help_text"))
 .col-sm-12.col-md-6.col-lg-4
   = form.label :preferred_time_zone, class: "form-label required"
-  = form.select :preferred_time_zone, options_for_select(TranspoLink::TimeZone.options_for_time_zones, form.object.preferred_time_zone),
+  = form.select :preferred_time_zone, options_for_select(TranspoLink::TimeZone.select_options, form.object.preferred_time_zone),
     {include_blank: t(".select_time_zone")}
   = help_text(t(".preferred_time_zone_help_text"))
 .col-sm-12.col-md-6.col-lg-4
   = form.label :preferred_currency, class: "form-label required"
-  = form.select :preferred_currency, options_for_select(TranspoLink::Currency.options_for_currencies, form.object.preferred_currency),
+  = form.select :preferred_currency, options_for_select(TranspoLink::Currency.select_options, form.object.preferred_currency),
     {include_blank: t(".select_currency")}
   = help_text(t(".preferred_currency_help_text"))
 .col-sm-12.col-md-6.col-lg-4

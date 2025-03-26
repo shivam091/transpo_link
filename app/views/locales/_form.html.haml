@@ -3,7 +3,7 @@
     %p
       = t(".preferred_locale_form_info")
     .col-12
-      = user_preference_form.select :preferred_locale, options_for_select(TranspoLink::I18n.options_for_languages, form.object.preferred_locale),
+      = user_preference_form.select :preferred_locale, options_for_select(TranspoLink::I18n.select_options, form.object.preferred_locale),
         {include_blank: t(".select_preferred_language")}
   .modal-actions
     = button_tag type: :submit, class: "btn btn-primary" do
