@@ -2,17 +2,17 @@
   %th{scope: "row"}
     = @pagination_metadata.offset + index
   %td
-    = h(TranspoLink::CountryInfo.new(legal_identifier.country).country_name)
+    = TranspoLink::CountryInfo.new(legal_identifier.country).country_name
   %td
-    = h(enum_i18n(LegalIdentifier, :entity_types, legal_identifier.entity_type))
+    = enum_i18n(LegalIdentifier, :entity_types, legal_identifier.entity_type)
   %td
-    = h(enum_i18n(LegalIdentifier, :tax_identifier_types, legal_identifier.tax_identifier_type))
+    = enum_i18n(LegalIdentifier, :tax_identifier_types, legal_identifier.tax_identifier_type)
   %td
-    = h(legal_identifier.tax_identifier)
+    = legal_identifier.tax_identifier
   %td
-    = h(enum_i18n(LegalIdentifier, :business_identifier_types, legal_identifier.business_identifier_type)) rescue "-"
+    = enum_i18n(LegalIdentifier, :business_identifier_types, legal_identifier.business_identifier_type) rescue "-"
   %td
-    = h(legal_identifier.business_identifier.presence || "-")
+    = legal_identifier.business_identifier || "-"
   %td
     = link_to "javascript:void(0)", class: "text-reset", data: {bs_toggle: "dropdown"}, aria: {expanded: false} do
       = external_svg_tag("svgs/ellipsis-vertical.svg")

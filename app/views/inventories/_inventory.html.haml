@@ -10,7 +10,7 @@
   %td
     = link_to warehouse.name, warehouse_path(warehouse), target: :_blank
   %td
-    = h(inventory.batch_number.presence || "-")
+    = inventory.batch_number || "-"
   %td
     = TranspoLink::MeasurementUnits.display_label(inventory.stock_quantity, inventory.inventory_unit)
   %td

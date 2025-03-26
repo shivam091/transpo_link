@@ -1,20 +1,19 @@
 = title(@inventory.reference_code)
-- product = @inventory.product
-- warehouse = @inventory.warehouse
+- product, warehouse  = @inventory.product, @inventory.warehouse
 .card.card-primary.border.border-primary
   .card-body
     .widget
       .widget-header.d-flex.align-items-center.justify-content-between
         .d-block
           .widget-title
-            = h(@inventory.reference_code)
+            = @inventory.reference_code
           .widget-help
             %span.middle-dot-divider
               = Inventory.human_attribute_name(:created_at)
-              = h(time_ago_with_tooltip(@inventory.created_at))
+              = time_ago_with_tooltip(@inventory.created_at)
             %span.middle-dot-divider
               = Inventory.human_attribute_name(:updated_at)
-              = h(time_ago_with_tooltip(@inventory.updated_at))
+              = time_ago_with_tooltip(@inventory.updated_at)
         = link_to edit_inventory_path(@inventory), class: "btn btn-secondary" do
           = external_svg_tag("svgs/pencil.svg")
           = button_text(:edit)
@@ -36,13 +35,13 @@
             .widget-row-title
               = Inventory.human_attribute_name(:batch_number)
             .widget-row-body
-              = h(@inventory.batch_number.presence || "-")
+              = @inventory.batch_number || "-"
         .widget-row
           .widget-row-content
             .widget-row-title
               = Inventory.human_attribute_name(:expiration_date)
             .widget-row-body
-              = h(@inventory.expiration_date.presence&.to_fs(:long) || "-")
+              = @inventory.expiration_date.presence&.to_fs(:long) || "-"
         .widget-row
           .widget-row-content
             .widget-row-title
@@ -66,4 +65,4 @@
             .widget-row-title
               = Inventory.human_attribute_name(:tracking_method)
             .widget-row-body
-              = h(enum_i18n(Inventory, :tracking_methods, @inventory.tracking_method))
+              = enum_i18n(Inventory, :tracking_methods, @inventory.tracking_method)

@@ -3,7 +3,7 @@
     .widget-row-title
       = User.human_attribute_name(:role_id)
     .widget-row-body
-      = h(user.role_name.humanize)
+      = user.role_name.humanize
 .widget-row
   .widget-row-content
     .widget-row-title
@@ -15,22 +15,22 @@
     .widget-row-title
       = UserDetail.human_attribute_name(:mobile_number)
     .widget-row-body
-      = h(user.mobile_number)
+      = user.mobile_number || "-"
 .widget-row
   .widget-row-content
     .widget-row-title
       = UserDetail.human_attribute_name(:alternate_contact_number)
     .widget-row-body
-      = h(user.alternate_contact_number)
+      = user.alternate_contact_number || "-"
 .widget-row
   .widget-row-content
     .widget-row-title
       = UserDetail.human_attribute_name(:alternate_email)
     .widget-row-body
-      = mail_to user.alternate_email
+      = user.alternate_email.present? ? mail_to(user.alternate_email) : "-"
 .widget-row
   .widget-row-content
     .widget-row-title
       = User.human_attribute_name(:address)
     .widget-row-body
-      = h(user.address.humanize)
+      = user.address.persisted? ? user.address.humanize : "-"

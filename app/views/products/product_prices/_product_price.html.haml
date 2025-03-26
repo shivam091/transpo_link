@@ -2,9 +2,9 @@
   %th{scope: "row"}
     = index
   %td
-    = h(product_price.warehouse_name)
+    = product_price.warehouse_name
   %td
-    = h(product_price.min_quantity)
-    = h(product.capacity_unit)
+    = product_price.min_quantity
+    = product.capacity_unit
   %td
     = number_to_currency(product_price.unit_price, unit: product_price.currency.symbol)

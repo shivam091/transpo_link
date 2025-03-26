@@ -1,15 +1,23 @@
 - present(warehouse) do |warehouse|
   %tr
-    %th{scope: "row"}= @pagination_metadata.offset + index
+    %th{scope: "row"}
+      = @pagination_metadata.offset + index
     %td
       = check_box_tag "warehouse_ids[]", warehouse.id, false, class: "form-check-input", data: {checkbox_selection_target: "itemCheckbox"}
-    %td= link_to warehouse.reference_code, warehouse_path(warehouse)
-    %td= h(warehouse.name)
-    %td= mail_to(warehouse.email_address)
-    %td= h(warehouse.contact_number)
-    %td= h(warehouse.capacity)
-    %td= h(warehouse.formatted_latitude)
-    %td= h(warehouse.formatted_longitude)
+    %td
+      = link_to warehouse.reference_code, warehouse_path(warehouse)
+    %td
+      = warehouse.name
+    %td
+      = warehouse.email_address.present? ? mail_to(warehouse.email_address) : "-"
+    %td
+      = warehouse.contact_number || "-"
+    %td
+      = warehouse.capacity
+    %td
+      = warehouse.formatted_latitude || "-"
+    %td
+      = warehouse.formatted_longitude || "-"
     %td
       = link_to "javascript:void(0)", class: "text-reset", data: {bs_toggle: "dropdown"}, aria: {expanded: false} do
         = external_svg_tag("svgs/ellipsis-vertical.svg")

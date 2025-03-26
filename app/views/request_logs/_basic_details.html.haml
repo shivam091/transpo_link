@@ -9,31 +9,31 @@
     .widget-row-title
       = RequestLog.human_attribute_name(:method)
     .widget-row-body
-      = h(request_log.method)
+      = request_log.method
 .widget-row
   .widget-row-content
     .widget-row-title
       = RequestLog.human_attribute_name(:query_params)
     .widget-row-body.pretty-json
-      = h(JSON.pretty_generate(JSON.parse(request_log.query_params.to_json)))
+      = JSON.pretty_generate(JSON.parse(request_log.query_params.to_json))
 .widget-row
   .widget-row-content
     .widget-row-title
       = RequestLog.human_attribute_name(:session_id)
     .widget-row-body
-      = h(request_log.session_id)
+      = request_log.session_id
 .widget-row
   .widget-row-content
     .widget-row-title
       = RequestLog.human_attribute_name(:remote_address)
     .widget-row-body
-      = h(IPAddr.new(request_log.remote_address, Socket::AF_INET)) rescue ""
+      = IPAddr.new(request_log.remote_address, Socket::AF_INET) rescue ""
 .widget-row
   .widget-row-content
     .widget-row-title
       = RequestLog.human_attribute_name(:user_agent)
     .widget-row-body
-      = h(request_log.user_agent)
+      = request_log.user_agent
 .widget-row
   .widget-row-content
     .widget-row-title
@@ -51,10 +51,10 @@
     .widget-row-title
       = RequestLog.human_attribute_name(:status)
     .widget-row-body
-      = h(request_log.status)
+      = request_log.status
 .widget-row
   .widget-row-content
     .widget-row-title
       = RequestLog.human_attribute_name(:elapsed_time)
     .widget-row-body
-      = h(prettify_seconds(request_log.elapsed_time))
+      = prettify_seconds(request_log.elapsed_time)

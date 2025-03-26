@@ -3,46 +3,46 @@
     .widget-row-title
       = RequestLog.human_attribute_name(:session_private_id)
     .widget-row-body
-      = h(request_log.session_private_id)
+      = request_log.session_private_id
 .widget-row
   .widget-row-content
     .widget-row-title
       = RequestLog.human_attribute_name(:memory_usage)
     .widget-row-body
-      = h(number_to_human_size(request_log.memory_usage))
+      = number_to_human_size(request_log.memory_usage)
 .widget-row
   .widget-row-content
     .widget-row-title
       = RequestLog.human_attribute_name(:cpu_usage)
     .widget-row-body
-      = h(number_to_percentage(request_log.cpu_usage, precision: 2))
+      = number_to_percentage(request_log.cpu_usage, precision: 2)
 .widget-row
   .widget-row-content
     .widget-row-title
       = RequestLog.human_attribute_name(:request_headers)
     .widget-row-body.pretty-json
-      = h(JSON.pretty_generate(JSON.parse(request_log.request_headers.to_json)))
+      = JSON.pretty_generate(JSON.parse(request_log.request_headers.to_json))
 .widget-row
   .widget-row-content
     .widget-row-title
       = RequestLog.human_attribute_name(:response_headers)
     .widget-row-body.pretty-json
-      = h(JSON.pretty_generate(JSON.parse(request_log.response_headers.to_json)))
+      = JSON.pretty_generate(JSON.parse(request_log.response_headers.to_json))
 .widget-row
   .widget-row-content
     .widget-row-title
       = RequestLog.human_attribute_name(:ip_info)
     .widget-row-body.pretty-json
-      = h(JSON.pretty_generate(JSON.parse(request_log.ip_info.to_json)))
+      = JSON.pretty_generate(JSON.parse(request_log.ip_info.to_json))
 .widget-row
   .widget-row-content
     .widget-row-title
       = RequestLog.human_attribute_name(:response_size)
     .widget-row-body
-      = h(number_to_human_size(request_log.response_size))
+      = number_to_human_size(request_log.response_size)
 .widget-row
   .widget-row-content
     .widget-row-title
       = RequestLog.human_attribute_name(:exception)
     .widget-row-body.pretty-json
-      = h(JSON.pretty_generate(JSON.parse(request_log.exception.to_json)))
+      = JSON.pretty_generate(JSON.parse(request_log.exception.to_json))

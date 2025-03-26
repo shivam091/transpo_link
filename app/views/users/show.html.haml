@@ -4,14 +4,14 @@
     .widget
       .widget-header
         .widget-title
-          = h(@user.full_name)
+          = @user.full_name
         .widget-help
           %span.middle-dot-divider
             = User.human_attribute_name(:created_at)
-            = h(time_ago_with_tooltip(@user.created_at))
+            = time_ago_with_tooltip(@user.created_at)
           %span.middle-dot-divider
             = User.human_attribute_name(:updated_at)
-            = h(time_ago_with_tooltip(@user.updated_at))
+            = time_ago_with_tooltip(@user.updated_at)
     .widget
       .widget-header
         .widget-title
