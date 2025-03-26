@@ -30,6 +30,8 @@ RSpec.describe NullifyIfBlank do
 
   subject { NullifyIfBlankModel.new }
 
+  it { expect(NullifyIfBlankModel).to respond_to(:nullify_if_blank) }
+
   it { is_expected.to nullify_if_blank(:name) }
   it { is_expected.to nullify_if_blank(:email) }
 
