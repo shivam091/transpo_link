@@ -16,7 +16,7 @@ class CreateInventoryMovements < ActiveRecord::Migration[8.0]
                    },
                    null: false,
                    index: {using: :btree}
-      t.integer :quantity # +ve for incoming, -ve for outgoing
+      t.decimal :quantity, precision: 12, scale: 2, default: 0.0 # +ve for incoming, -ve for outgoing
       t.enum :movement_type, enum_type: :movement_types
       t.string :inventory_unit # Ensures correct unit tracking
       t.decimal :unit_cost, precision: 12, scale: 2 # Cost per unit at the time of movement
@@ -31,10 +31,10 @@ class CreateInventoryMovements < ActiveRecord::Migration[8.0]
       t.jsonb :metadata, default: "{}", index: {using: :gin} # Store additional data if needed
       t.timestamps_with_timezone null: false
 
-      t.index [:inventory_id, :source_id, :source_type, :movement_type], unique: true
+      t.index [:inventory_id, :source_id, :source_type, :movement_type], using: :btree
 
       t.check_constraint "quantity IS NOT NULL", name: :check_inventory_movements_quantity_presence
-      t.check_constraint "quantity != 0", name: :check_inventory_movements_quantity_nonzero
+      t.check_constraint "quantity != 0.0", name: :check_inventory_movements_quantity_nonzero
 
       t.check_constraint "movement_type IS NOT NULL", name: :check_inventory_movements_movement_type_presence
       t.check_constraint "movement_type IN (#{enum_values('movement_types')})", name: :check_inventory_movements_movement_type_inclusion

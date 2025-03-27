@@ -19,8 +19,8 @@ RSpec.describe InventoryAuditLog, type: :model do
     it { is_expected.to have_db_column(:inventory_movement_id).of_type(:uuid).with_options(null: true) }
     it { is_expected.to have_db_column(:user_id).of_type(:uuid).with_options(null: false) }
     it { is_expected.to have_db_column(:movement_type).of_type(:string) }
-    it { is_expected.to have_db_column(:previous_quantity).of_type(:integer) }
-    it { is_expected.to have_db_column(:new_quantity).of_type(:integer) }
+    it { is_expected.to have_db_column(:previous_quantity).of_type(:decimal).with_options(precision: 12, scale: 2, default: 0.0) }
+    it { is_expected.to have_db_column(:new_quantity).of_type(:decimal).with_options(precision: 12, scale: 2, default: 0.0) }
     it { is_expected.to have_db_column(:metadata).of_type(:jsonb).with_options(default: "{}") }
     it { is_expected.to have_db_column(:created_at).of_type(:timestamptz).with_options(null: false) }
     it { is_expected.to have_db_column(:updated_at).of_type(:timestamptz).with_options(null: false) }

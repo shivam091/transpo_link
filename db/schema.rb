@@ -69,8 +69,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_23_132952) do
     t.uuid "warehouse_id", null: false
     t.string "batch_number"
     t.date "expiration_date"
-    t.integer "stock_quantity", default: 0
-    t.integer "reserved_stock", default: 0
+    t.decimal "stock_quantity", precision: 12, scale: 2, default: "0.0"
+    t.decimal "reserved_stock", precision: 12, scale: 2, default: "0.0"
     t.string "inventory_unit"
     t.decimal "cost_price", precision: 12, scale: 2, default: "0.0"
     t.string "currency"
@@ -86,9 +86,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_23_132952) do
     t.check_constraint "currency IS NOT NULL AND currency::text <> ''::text", name: "check_inventories_currency_presence"
     t.check_constraint "expiration_date >= CURRENT_DATE", name: "check_inventories_expiration_date_future"
     t.check_constraint "inventory_unit IS NOT NULL AND inventory_unit::text <> ''::text", name: "check_inventories_inventory_unit_presence"
-    t.check_constraint "reserved_stock >= 0", name: "check_inventories_reserved_stock_numericality"
+    t.check_constraint "reserved_stock >= 0.0", name: "check_inventories_reserved_stock_numericality"
     t.check_constraint "reserved_stock IS NOT NULL", name: "check_inventories_reserved_stock_presence"
-    t.check_constraint "stock_quantity >= 0", name: "check_inventories_stock_quantity_numericality"
+    t.check_constraint "stock_quantity >= 0.0", name: "check_inventories_stock_quantity_numericality"
     t.check_constraint "stock_quantity IS NOT NULL", name: "check_inventories_stock_quantity_presence"
     t.check_constraint "tracking_method = ANY (ARRAY['fifo'::tracking_methods, 'lifo'::tracking_methods, 'average_cost'::tracking_methods])", name: "check_inventories_tracking_method_inclusion"
     t.check_constraint "tracking_method IS NOT NULL", name: "check_inventories_tracking_method_presence"
@@ -99,8 +99,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_23_132952) do
     t.uuid "inventory_movement_id"
     t.uuid "user_id", null: false
     t.string "movement_type"
-    t.integer "previous_quantity"
-    t.integer "new_quantity"
+    t.decimal "previous_quantity", precision: 12, scale: 2, default: "0.0"
+    t.decimal "new_quantity", precision: 12, scale: 2, default: "0.0"
     t.jsonb "metadata", default: "{}"
     t.timestamptz "created_at", null: false
     t.timestamptz "updated_at", null: false
@@ -117,7 +117,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_23_132952) do
 
   create_table "inventory_movements", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "inventory_id", null: false
-    t.integer "quantity"
+    t.decimal "quantity", precision: 12, scale: 2, default: "0.0"
     t.enum "movement_type", enum_type: "movement_types"
     t.string "inventory_unit"
     t.decimal "unit_cost", precision: 12, scale: 2
@@ -129,7 +129,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_23_132952) do
     t.jsonb "metadata", default: "{}"
     t.timestamptz "created_at", null: false
     t.timestamptz "updated_at", null: false
-    t.index ["inventory_id", "source_id", "source_type", "movement_type"], name: "idx_on_inventory_id_source_id_source_type_movement__dc133791ed", unique: true
+    t.index ["inventory_id", "source_id", "source_type", "movement_type"], name: "idx_on_inventory_id_source_id_source_type_movement__dc133791ed"
     t.index ["inventory_id"], name: "index_inventory_movements_on_inventory_id"
     t.index ["metadata"], name: "index_inventory_movements_on_metadata", using: :gin
     t.index ["source_type", "source_id"], name: "index_inventory_movements_on_source"
@@ -137,7 +137,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_23_132952) do
     t.check_constraint "inventory_unit IS NOT NULL AND inventory_unit::text <> ''::text", name: "check_inventory_movements_inventory_unit_presence"
     t.check_constraint "movement_type = ANY (ARRAY['restock'::movement_types, 'purchase'::movement_types, 'sale'::movement_types, 'return'::movement_types, 'transfer_in'::movement_types, 'transfer_out'::movement_types, 'adjustment'::movement_types, 'reservation'::movement_types])", name: "check_inventory_movements_movement_type_inclusion"
     t.check_constraint "movement_type IS NOT NULL", name: "check_inventory_movements_movement_type_presence"
-    t.check_constraint "quantity <> 0", name: "check_inventory_movements_quantity_nonzero"
+    t.check_constraint "quantity <> 0.0", name: "check_inventory_movements_quantity_nonzero"
     t.check_constraint "quantity IS NOT NULL", name: "check_inventory_movements_quantity_presence"
     t.check_constraint "total_cost >= unit_cost", name: "check_inventory_movements_total_cost_numericality"
     t.check_constraint "total_cost IS NOT NULL", name: "check_inventory_movements_total_cost_presence"

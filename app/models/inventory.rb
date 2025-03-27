@@ -17,8 +17,8 @@ class Inventory < ApplicationRecord
     average_cost: "average_cost",
   }
 
-  attribute :stock_quantity, default: 0
-  attribute :reserved_stock, default: 0
+  attribute :stock_quantity, default: 0.0
+  attribute :reserved_stock, default: 0.0
   attribute :cost_price, default: 0.0
   attribute :tracking_method, :enum, default: tracking_methods[:average_cost]
 

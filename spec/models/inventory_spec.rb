@@ -20,8 +20,8 @@ RSpec.describe Inventory, type: :model do
     it { is_expected.to have_db_column(:warehouse_id).of_type(:uuid).with_options(null: false) }
     it { is_expected.to have_db_column(:batch_number).of_type(:string) }
     it { is_expected.to have_db_column(:expiration_date).of_type(:date) }
-    it { is_expected.to have_db_column(:stock_quantity).of_type(:integer).with_options(default: 0) }
-    it { is_expected.to have_db_column(:reserved_stock).of_type(:integer).with_options(default: 0) }
+    it { is_expected.to have_db_column(:stock_quantity).of_type(:decimal).with_options(precision: 12, scale: 2, default: 0.0) }
+    it { is_expected.to have_db_column(:reserved_stock).of_type(:decimal).with_options(precision: 12, scale: 2, default: 0.0) }
     it { is_expected.to have_db_column(:inventory_unit).of_type(:string) }
     it { is_expected.to have_db_column(:cost_price).of_type(:decimal).with_options(precision: 12, scale: 2, default: 0.0) }
     it { is_expected.to have_db_column(:currency).of_type(:string) }
@@ -42,9 +42,9 @@ RSpec.describe Inventory, type: :model do
     it { is_expected.to have_check_constraint(:check_inventories_currency_presence).with_expression("currency IS NOT NULL AND currency::text <> ''::text") }
     it { is_expected.to have_check_constraint(:check_inventories_expiration_date_future).with_expression("expiration_date >= CURRENT_DATE") }
     it { is_expected.to have_check_constraint(:check_inventories_inventory_unit_presence).with_expression("inventory_unit IS NOT NULL AND inventory_unit::text <> ''::text") }
-    it { is_expected.to have_check_constraint(:check_inventories_reserved_stock_numericality).with_expression("reserved_stock >= 0") }
+    it { is_expected.to have_check_constraint(:check_inventories_reserved_stock_numericality).with_expression("reserved_stock >= 0.0") }
     it { is_expected.to have_check_constraint(:check_inventories_reserved_stock_presence).with_expression("reserved_stock IS NOT NULL") }
-    it { is_expected.to have_check_constraint(:check_inventories_stock_quantity_numericality).with_expression("stock_quantity >= 0") }
+    it { is_expected.to have_check_constraint(:check_inventories_stock_quantity_numericality).with_expression("stock_quantity >= 0.0") }
     it { is_expected.to have_check_constraint(:check_inventories_stock_quantity_presence).with_expression("stock_quantity IS NOT NULL") }
     it { is_expected.to have_check_constraint(:check_inventories_tracking_method_presence).with_expression("tracking_method IS NOT NULL") }
     it { is_expected.to have_check_constraint(:check_inventories_tracking_method_inclusion).with_expression("tracking_method = ANY (ARRAY['fifo'::tracking_methods, 'lifo'::tracking_methods, 'average_cost'::tracking_methods])") }
@@ -53,12 +53,12 @@ RSpec.describe Inventory, type: :model do
   describe "default values" do
     let(:inventory) { described_class.new }
 
-    it "should set 0 as default value for #stock_quantity" do
-      expect(inventory.stock_quantity).to eq(0)
+    it "should set 0.0 as default value for #stock_quantity" do
+      expect(inventory.stock_quantity).to eq(0.0)
     end
 
-    it "should set 0 as default value for #reserved_stock" do
-      expect(inventory.reserved_stock).to eq(0)
+    it "should set 0.0 as default value for #reserved_stock" do
+      expect(inventory.reserved_stock).to eq(0.0)
     end
 
     it "should set 0.0 as default value for #cost_price" do
