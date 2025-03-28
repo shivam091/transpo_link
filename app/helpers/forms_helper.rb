@@ -14,7 +14,7 @@ module FormsHelper
           tag.dl do
             record.errors.full_messages.map do |message|
               tag.dd do
-                concat(external_svg_tag("svgs/cancel.svg", height: "12px", width: "12px", class: "mx-1"))
+                concat(external_svg_tag("svgs/times.svg", height: "12px", width: "12px", class: "mx-1"))
                 concat(message)
               end
           end.join.html_safe
