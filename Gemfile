@@ -77,6 +77,9 @@ gem "postgresql_adapter_extensions", "~> 1"
 # Loofah is a general library for manipulating and transforming HTML/XML documents and fragments.
 gem "loofah", "~> 2"
 
+# State machines for Ruby classes.
+gem "aasm", "~> 5"
+
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"

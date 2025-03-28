@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_03_23_132952) do
+ActiveRecord::Schema[8.0].define(version: 2025_03_28_091723) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -155,8 +155,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_23_132952) do
     t.string "business_identifier"
     t.timestamptz "created_at", null: false
     t.timestamptz "updated_at", null: false
+    t.string "status"
     t.index ["business_identifier", "business_identifier_type", "country"], name: "idx_on_business_identifier_business_identifier_type_ce079aa798", unique: true
     t.index ["entity_type"], name: "index_legal_identifiers_on_entity_type"
+    t.index ["status"], name: "index_legal_identifiers_on_status"
     t.index ["tax_identifier", "tax_identifier_type", "country", "entity_type"], name: "idx_on_tax_identifier_tax_identifier_type_country_e_6b3ba9dafd", unique: true
     t.index ["user_id"], name: "index_legal_identifiers_on_user_id"
     t.check_constraint "country IS NOT NULL AND country::text <> ''::text", name: "check_legal_identifiers_country_presence"
