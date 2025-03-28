@@ -36,7 +36,7 @@ describe TranspoLink::Regex do
       end
 
       with_them do
-        it { expect(password).not_to match(strong_password_regex) }
+        it { expect(password).to_not match(strong_password_regex) }
       end
     end
   end
@@ -67,7 +67,7 @@ describe TranspoLink::Regex do
       end
 
       with_them do
-        it { expect(email).not_to match(email_regex) }
+        it { expect(email).to_not match(email_regex) }
       end
     end
   end

@@ -40,14 +40,14 @@ RSpec.describe Toggleable do
     describe ".active" do
       it "returns active records" do
         expect(active_record).to be_one_of(ToggleableModel.active)
-        expect(inactive_record).not_to be_one_of(ToggleableModel.active)
+        expect(inactive_record).to_not be_one_of(ToggleableModel.active)
       end
     end
 
     describe ".inactive" do
       it "returns inactive records" do
         expect(inactive_record).to be_one_of(ToggleableModel.inactive)
-        expect(active_record).not_to be_one_of(ToggleableModel.inactive)
+        expect(active_record).to_not be_one_of(ToggleableModel.inactive)
       end
     end
   end

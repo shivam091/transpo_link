@@ -139,7 +139,7 @@ RSpec.describe TaxRate, type: :model do
     describe ".for_tax_identifier_type" do
       it "returns tax rates for the given tax identifier type" do
         expect(described_class.for_tax_identifier_type("pan")).to include(active_tax_rate)
-        expect(described_class.for_tax_identifier_type("gstin")).not_to include(active_tax_rate)
+        expect(described_class.for_tax_identifier_type("gstin")).to_not include(active_tax_rate)
       end
     end
 
@@ -153,7 +153,7 @@ RSpec.describe TaxRate, type: :model do
     describe ".applicable_rates" do
       it "returns applicable tax rates matching tax identifier type, country, and category" do
         expect(described_class.applicable_rates("pan", "IN", "b2b")).to include(active_tax_rate)
-        expect(described_class.applicable_rates("gstin", "IN", "b2c")).not_to include(active_tax_rate)
+        expect(described_class.applicable_rates("gstin", "IN", "b2c")).to_not include(active_tax_rate)
       end
     end
 
@@ -174,14 +174,14 @@ RSpec.describe TaxRate, type: :model do
     describe ".active_rate" do
       it "returns the tax rate for a current date" do
         expect(described_class.active_rate("IN", "gstin")).to eq(active_tax_rate)
-        expect(described_class.active_rate("IN", "gstin")).not_to eq(future_tax_rate)
+        expect(described_class.active_rate("IN", "gstin")).to_not eq(future_tax_rate)
       end
     end
 
     describe ".future_rate" do
       it "returns the tax rate for a future date" do
         expect(described_class.future_rate("IN", "gstin", Date.current + 1.year)).to eq(future_tax_rate)
-        expect(described_class.future_rate("IN", "gstin", Date.current + 1.year)).not_to eq(active_tax_rate)
+        expect(described_class.future_rate("IN", "gstin", Date.current + 1.year)).to_not eq(active_tax_rate)
       end
     end
   end
@@ -194,7 +194,7 @@ RSpec.describe TaxRate, type: :model do
         let(:new_tax_rate) { build(:tax_rate, valid_from: Date.current + 1.day, valid_to: Date.current + 2.years) }
 
         it "is not valid" do
-          expect(new_tax_rate).not_to be_valid
+          expect(new_tax_rate).to_not be_valid
           expect(new_tax_rate.errors[:base]).to include("There is already an active tax rate for this country, tax identifier type, and business category in the selected date range")
         end
       end
@@ -219,7 +219,7 @@ RSpec.describe TaxRate, type: :model do
         it "is not valid" do
           active_tax_rate.rate = 10.0
 
-          expect(active_tax_rate).not_to be_valid
+          expect(active_tax_rate).to_not be_valid
           expect(active_tax_rate.errors[:rate]).to include("cannot be changed for an active tax rate")
         end
       end

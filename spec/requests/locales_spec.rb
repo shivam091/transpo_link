@@ -33,7 +33,7 @@ RSpec.describe "Locales", type: :request do
         }.to change { admin.reload.preferred_locale }.to("es")
 
         expect(response).to redirect_to(root_path)
-        expect(response).not_to redirect_to(preference_path)
+        expect(response).to_not redirect_to(preference_path)
         expect(flash[:notice]).to be_present
         expect(response).to have_http_status(:found)
       end
