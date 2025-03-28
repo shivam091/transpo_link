@@ -217,7 +217,7 @@ RSpec.describe TaxRate, type: :model do
 
         it "is not valid" do
           expect(new_tax_rate).to_not be_valid
-          expect(new_tax_rate.errors[:base]).to include("There is already an active tax rate for this country, tax identifier type, and business category in the selected date range")
+          expect(new_tax_rate.errors[:base]).to include("There is already an active tax rate for this country, tax identifier type, tax type, and business category in the selected date range")
         end
       end
 
