@@ -23,6 +23,11 @@
             data: {turbo_method: :patch, turbo_confirm: t(".approve_confirmation_text")} do
             = external_svg_tag("svgs/check.svg")
             = button_text(:approve)
+        %li
+          = link_to reject_legal_identifier_path(legal_identifier), class: "dropdown-item",
+            data: {turbo_method: :patch, turbo_confirm: t(".reject_confirmation_text")} do
+            = external_svg_tag("svgs/times.svg")
+            = button_text(:reject)
         %li.dropdown-divider
       %li
         = link_to edit_legal_identifier_path(legal_identifier), class: "dropdown-item", data: {turbo_frame: :remote_modal} do

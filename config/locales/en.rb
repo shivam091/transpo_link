@@ -127,6 +127,7 @@
       import: "Import",
       export: "Export",
       approve: "Approve",
+      reject: "Reject",
     },
   },
 }

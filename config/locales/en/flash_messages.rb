@@ -54,6 +54,10 @@
           success: "Legal identifier was successfully approved.",
           error: "Legal identifier could not be approved."
         },
+        reject: {
+          success: "Legal identifier was successfully rejected.",
+          error: "Legal identifier could not be rejected."
+        },
       },
       tax_rates: {
         create: {
