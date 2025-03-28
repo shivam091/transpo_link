@@ -8,6 +8,12 @@ class LegalIdentifiersController < ApplicationController
 
   # GET /legal-identifiers
   def index
+    @legal_identifiers = case params[:status]
+                         when "unapproved" then @legal_identifiers.unapproved
+                         when "approved"   then @legal_identifiers.approved
+                         when "rejected"   then @legal_identifiers.rejected
+                         else                   @legal_identifiers
+                         end
     @legal_identifiers, @pagination_metadata = @legal_identifiers.paginate(page: params[:page])
   end
 
