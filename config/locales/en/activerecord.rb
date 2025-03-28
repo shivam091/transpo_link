@@ -121,6 +121,7 @@
         tax_rate: {
           country: "Country or region",
           tax_identifier_type: "Tax identifier type",
+          tax_type: "Tax type",
           business_category: "Business category",
           rate: "Rate",
           valid_from: "Valid from",
@@ -245,15 +246,18 @@
           tax_rate: {
             attributes: {
               base: {
-                no_overlapping_tax_rates: "There is already an active tax rate for this country, tax identifier type, and business category in the selected date range",
+                no_overlapping_tax_rates: "There is already an active tax rate for this country, tax identifier type, tax type, and business category in the selected date range",
               },
               tax_identifier_type: {
                 inclusion: "'%{value}' is not a valid tax identifier type",
-                uniqueness: "already exist for this country and business category for selected date range",
+                uniqueness: "already exist for this country, tax type, and business category for selected date range",
                 invalid: "is not valid for the selected country"
               },
+              tax_type: {
+                inclusion: "'%{value}' is not a valid tax type",
+              },
               business_category: {
-                inclusion: "'%{value}' is not a valid tax identifier type",
+                inclusion: "'%{value}' is not a valid business category",
               },
               rate: {
                 cannot_change_rate_for_active_tax_rate: "cannot be changed for an active tax rate",
