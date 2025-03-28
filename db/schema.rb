@@ -21,6 +21,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_23_132952) do
   create_enum "color_schemes", ["auto", "dark", "light"]
   create_enum "entity_types", ["business", "individual"]
   create_enum "movement_types", ["restock", "purchase", "sale", "return", "transfer_in", "transfer_out", "adjustment", "reservation"]
+  create_enum "tax_types", ["exclusive", "inclusive"]
   create_enum "tracking_methods", ["fifo", "lifo", "average_cost"]
 
   create_table "addresses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -284,6 +285,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_23_132952) do
   create_table "tax_rates", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "country"
     t.string "tax_identifier_type"
+    t.enum "tax_type", enum_type: "tax_types"
     t.enum "business_category", enum_type: "business_categories"
     t.decimal "rate", precision: 5, scale: 2
     t.date "valid_from"
@@ -291,7 +293,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_23_132952) do
     t.timestamptz "created_at", null: false
     t.timestamptz "updated_at", null: false
     t.index ["country", "tax_identifier_type"], name: "index_tax_rates_on_country_and_tax_identifier_type"
-    t.index ["tax_identifier_type", "country", "business_category", "valid_from"], name: "idx_on_tax_identifier_type_country_business_categor_1de789b661", unique: true
+    t.index ["tax_identifier_type", "country", "tax_type", "business_category", "valid_from"], name: "idx_on_tax_identifier_type_country_tax_type_busines_d6f6f9ae1e", unique: true
+    t.index ["tax_type"], name: "index_tax_rates_on_tax_type"
     t.index ["valid_from"], name: "index_tax_rates_on_valid_from"
     t.index ["valid_to"], name: "index_tax_rates_on_valid_to", where: "(valid_to IS NULL)"
     t.check_constraint "business_category = ANY (ARRAY['b2b'::business_categories, 'b2c'::business_categories])", name: "check_tax_rates_business_category_inclusion"
@@ -300,6 +303,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_23_132952) do
     t.check_constraint "rate >= 0::numeric AND rate <= 100::numeric", name: "check_tax_rates_rate_numericality"
     t.check_constraint "rate IS NOT NULL", name: "check_tax_rates_rate_presence"
     t.check_constraint "tax_identifier_type IS NOT NULL AND tax_identifier_type::text <> ''::text", name: "check_tax_rates_tax_identifier_type_presence"
+    t.check_constraint "tax_type = ANY (ARRAY['exclusive'::tax_types, 'inclusive'::tax_types])", name: "check_tax_rates_tax_type_inclusion"
+    t.check_constraint "tax_type IS NOT NULL", name: "check_tax_rates_tax_type_presence"
     t.check_constraint "valid_from >= CURRENT_DATE", name: "check_tax_rates_valid_from_future"
     t.check_constraint "valid_from IS NOT NULL", name: "check_tax_rates_valid_from_presence"
     t.check_constraint "valid_to IS NULL OR valid_to > valid_from", name: "check_tax_rates_valid_to_comparison"
