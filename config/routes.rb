@@ -57,6 +57,9 @@ Rails.application.routes.draw do
   resources :request_logs, path: "request-logs", only: [:index, :show]
   resources :warehouses, concerns: :toggleable
   resources :legal_identifiers, path: "legal-identifiers", except: :show do
+    member do
+      patch :approve
+    end
     collection do
       get :approved, action: :index, defaults: {status: "approved"}
       get :unapproved, action: :index, defaults: {status: "unapproved"}

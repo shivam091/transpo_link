@@ -50,6 +50,10 @@
           success: "Legal identifier was successfully deleted.",
           error: "Legal identifier could not be deleted."
         },
+        approve: {
+          success: "Legal identifier was successfully approved.",
+          error: "Legal identifier could not be approved."
+        },
       },
       tax_rates: {
         create: {

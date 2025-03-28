@@ -81,6 +81,19 @@ class LegalIdentifiersController < ApplicationController
     redirect_to legal_identifiers_path, status: :see_other
   end
 
+  # PATCH /legal-identifiers/:id/approve
+  def approve
+    response = LegalIdentifiers::ApproveService.(@legal_identifier)
+    @legal_identifier = response.payload[:legal_identifier]
+
+    if response.success?
+      set_flash_message(:info, :success)
+    else
+      set_flash_message(:alert, :error)
+    end
+    redirect_to legal_identifiers_path, status: :see_other
+  end
+
   private
 
   def legal_identifier_params

@@ -17,12 +17,19 @@
     = link_to "javascript:void(0)", class: "text-reset", data: {bs_toggle: "dropdown"}, aria: {expanded: false} do
       = external_svg_tag("svgs/ellipsis-vertical.svg")
     %ul.dropdown-menu
+      - if legal_identifier.unapproved?
+        %li
+          = link_to approve_legal_identifier_path(legal_identifier), class: "dropdown-item",
+            data: {turbo_method: :patch, turbo_confirm: t(".approve_confirmation_text")} do
+            = external_svg_tag("svgs/check.svg")
+            = button_text(:approve)
+        %li.dropdown-divider
       %li
         = link_to edit_legal_identifier_path(legal_identifier), class: "dropdown-item", data: {turbo_frame: :remote_modal} do
           = external_svg_tag("svgs/pencil.svg")
           = button_text(:edit)
       %li
         = link_to legal_identifier_path(legal_identifier), class: "dropdown-item",
-          data: {turbo_method: :delete, turbo_confirm: t(".delete_legal_identifier_confirmation_text")} do
+          data: {turbo_method: :delete, turbo_confirm: t(".delete_confirmation_text")} do
           = external_svg_tag("svgs/trash.svg")
           = button_text(:delete)

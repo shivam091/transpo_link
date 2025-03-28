@@ -126,6 +126,7 @@
       download: "Download",
       import: "Import",
       export: "Export",
+      approve: "Approve",
     },
   },
 }

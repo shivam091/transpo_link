@@ -12,7 +12,8 @@
         your_legal_identifiers_help_text: "Manage your legal identifiers across different countries with ease.",
       },
       legal_identifier: {
-        delete_legal_identifier_confirmation_text: "Are you sure you want to delete this? This action cannot be undone.",
+        approve_confirmation_text: "Are you sure you want to approve this? This action cannot be undone.",
+        delete_confirmation_text: "Are you sure you want to delete this? This action cannot be undone.",
       },
       help_texts: {
         main: "Legal identifiers are crucial for tax compliance and business operations. They ensure smooth transactions, proper tax filings, and regulatory adherence.",
