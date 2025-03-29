@@ -34,7 +34,7 @@ RSpec.describe WithoutTimestamps do
     let!(:original_updated_at) { record.updated_at }
 
     it "does not update timestamps inside the block" do
-      sleep(1)  # Ensure there"s a noticeable time gap
+      sleep(1)  # Ensure there's a noticeable time gap
 
       TestModel.without_timestamps do
         record.update(name: "Updated Name")

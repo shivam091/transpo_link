@@ -10,7 +10,7 @@
         title: "Tax rates",
       },
       tax_rate: {
-        delete_tax_rate_confirmation_text: "Are you sure you want to delete this? This action cannot be undone.",
+        delete_confirmation_text: "Are you sure you want to delete this? This action cannot be undone.",
       },
       new: {
         title: "New tax rate",

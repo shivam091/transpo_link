@@ -48,9 +48,8 @@ RSpec.describe LinksHelper, type: :helper do
       let(:result) { helper.conditional_link_to(true, url, html_options) { "<strong>Click here</strong>".html_safe } }
 
       it "returns proper HTML output" do
-        expect(result).to include("<a")
-        expect(result).to include("test-class")
-        expect(result).to include("<strong>Click here</strong>")
+        expect(result).to have_selector("a", class: "test-class")
+        expect(result).to have_selector("strong", text: "Click here")
       end
     end
   end

@@ -23,6 +23,6 @@
           = button_text(:edit)
       %li
         = link_to tax_rate_path(tax_rate), class: "dropdown-item",
-          data: {turbo_method: :delete, turbo_confirm: t(".delete_tax_rate_confirmation_text")} do
+          data: {turbo_method: :delete, turbo_confirm: t(".delete_confirmation_text")} do
           = external_svg_tag("svgs/trash.svg")
           = button_text(:delete)

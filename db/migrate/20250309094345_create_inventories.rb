@@ -26,8 +26,8 @@ class CreateInventories < ActiveRecord::Migration[8.0]
                    index: {using: :btree}
       t.string :batch_number
       t.date :expiration_date # Useful for perishable products
-      t.integer :stock_quantity, default: 0 # Current stock level
-      t.integer :reserved_stock, default: 0 # For orders that are in process
+      t.decimal :stock_quantity, precision: 12, scale: 2, default: 0.0 # Current stock level
+      t.decimal :reserved_stock, precision: 12, scale: 2, default: 0.0 # For orders that are in process
       t.string :inventory_unit
       t.decimal :cost_price, precision: 12, scale: 2, default: 0.0 # Procurement cost
       t.string :currency
@@ -38,10 +38,10 @@ class CreateInventories < ActiveRecord::Migration[8.0]
       t.check_constraint "currency IS NOT NULL AND currency  <> ''", name: :check_inventories_currency_presence
 
       t.check_constraint "stock_quantity IS NOT NULL", name: :check_inventories_stock_quantity_presence
-      t.check_constraint "stock_quantity >= 0", name: :check_inventories_stock_quantity_numericality
+      t.check_constraint "stock_quantity >= 0.0", name: :check_inventories_stock_quantity_numericality
 
       t.check_constraint "reserved_stock IS NOT NULL", name: :check_inventories_reserved_stock_presence
-      t.check_constraint "reserved_stock >= 0", name: :check_inventories_reserved_stock_numericality
+      t.check_constraint "reserved_stock >= 0.0", name: :check_inventories_reserved_stock_numericality
 
       t.check_constraint "cost_price IS NOT NULL", name: :check_inventories_cost_price_presence
       t.check_constraint "cost_price >= 0.0", name: :check_inventories_cost_price_numericality
