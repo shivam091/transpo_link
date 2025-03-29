@@ -8,9 +8,9 @@ require "spec_helper"
 
 RSpec.describe LinksHelper, type: :helper do
   describe "#conditional_link_to" do
-    let!(:url) { "/test_path" }
-    let!(:html_options) { { class: "test-class" } }
-    let!(:block_content) { "Click here" }
+    let(:url) { "/test_path" }
+    let(:html_options) { { class: "test-class" } }
+    let(:block_content) { "Click here" }
 
     context "when condition is true" do
       let(:result) { helper.conditional_link_to(true, url, html_options) { block_content } }

@@ -1,14 +1,21 @@
 %tr
-  %th{scope: "row"}= h(@pagination_metadata.offset + index)
+  %th{scope: "row"}
+    = @pagination_metadata.offset + index
   %td
     = check_box_tag "product_ids[]", product.id, false, class: "form-check-input", data: {checkbox_selection_target: "itemCheckbox"}
-  %td= link_to product.reference_code, product_path(product)
-  %td= h(product.name)
-  %td= h(product.sku)
-  %td= h(product.barcode)
-  %td= number_to_currency(product.cost_price, unit: product.currency.symbol)
-  %td= h(product.product_category_name)
-  %td.actions
+  %td
+    = link_to product.reference_code, product_path(product)
+  %td
+    = product.name
+  %td
+    = product.sku
+  %td
+    = product.barcode || "-"
+  %td
+    = number_to_currency(product.cost_price, unit: product.currency.symbol)
+  %td
+    = product.product_category_name
+  %td
     = link_to "javascript:void(0)", class: "text-reset", data: {bs_toggle: "dropdown"}, aria: {expanded: false} do
       = external_svg_tag("svgs/ellipsis-vertical.svg")
     %ul.dropdown-menu
@@ -16,6 +23,11 @@
         = link_to new_product_feedback_path(product), class: "dropdown-item", data: {turbo_frame: :remote_modal} do
           = external_svg_tag("svgs/speech-bubble.svg")
           = button_text(:leave_feedback)
+      %li.dropdown-divider
+      %li
+        = link_to product_path(product), class: "dropdown-item" do
+          = external_svg_tag("svgs/arrow-right.svg")
+          = button_text(:view_details)
       %li
         = link_to edit_product_path(product), class: "dropdown-item" do
           = external_svg_tag("svgs/pencil.svg")

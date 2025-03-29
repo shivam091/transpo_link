@@ -1,0 +1,25 @@
+.card.card-primary.border.border-primary
+  .card-header
+    .d-flex.justify-content-end.align-items-center
+      = link_to new_inventory_path, class: "btn btn-primary" do
+        = external_svg_tag("svgs/plus.svg")
+        = button_text(:new)
+  .card-body
+    .table-responsive
+      %table.table.table-striped.table-borderless
+        %thead.border
+          %tr.table-active
+            %th{width: "3%", scope: "col"}#
+            - Inventory::LISTING_ATTRIBUTES.each do |attribute|
+              %th{scope: "col"}
+                = Inventory.human_attribute_name(attribute)
+            %th{width: "3%", scope: "col"}
+              = t("shared.actions")
+        %tbody.border
+          - if @inventories&.each.with_index(1) do |inventory, index|
+            = render_if_exists("inventories/inventory", locals: {inventory:, index:})
+          - end.empty?
+            = render_if_exists("shared/no_records", locals: {resource: Inventory})
+  - if @pagination_metadata.needs_pagination?
+    .card-footer
+      = render_pagination(@pagination_metadata)

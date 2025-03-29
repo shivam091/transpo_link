@@ -3,10 +3,17 @@
 # -*- warn_indent: true -*-
 
 class UserDetail < ApplicationRecord
+  include NullifyIfBlank, Sanitizable
+
   self.primary_key = :user_id
 
-  normalizes :first_name, with: -> first_name { first_name.strip }
-  normalizes :last_name, with: -> last_name { last_name.strip }
+  normalizes :first_name, with: ->(first_name) { first_name.strip }
+  normalizes :last_name, with: ->(last_name) { last_name.strip }
+
+  nullify_if_blank :mobile_number, :alternate_contact_number, :alternate_email
+
+  sanitize_attributes :first_name, :last_name, :mobile_number, :alternate_contact_number,
+                      :alternate_email
 
   validates :user_id,
             presence: true,

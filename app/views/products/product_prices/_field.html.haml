@@ -11,7 +11,7 @@
   %td
     = form.number_field :unit_price, step: 0.01
   %td
-    = form.select :currency, options_for_select(TranspoLink::Currency.options_for_currencies, form.object.currency),
+    = form.select :currency, options_for_select(TranspoLink::Currency.select_options, form.object.currency),
       {include_blank: t(".select_currency")}
   %td
     = button_tag type: :button, class: "btn btn-sm btn-danger", data: {action: "click->nested-forms#removeAssociation"} do

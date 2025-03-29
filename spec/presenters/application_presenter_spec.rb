@@ -7,8 +7,9 @@
 require "spec_helper"
 
 RSpec.describe ApplicationPresenter do
-  let!(:model) { double("Model", name: "Test Model") }
-  let!(:view_context) { double("view_context") }
+  let(:model) { double("Model", name: "Test Model") }
+  let(:view_context) { double("view_context") }
+
   let!(:presenter_class) do
     Class.new(ApplicationPresenter) do
       presents :model

@@ -4,22 +4,29 @@
 
 FactoryBot.define do
   factory :request_log do
-    uuid { SecureRandom.uuid }
-    add_attribute(:method) { "get" }
+    uuid { Faker::Internet.uuid }
     uri { "http://www.example.com" }
-    remote_address { "127.0.0.1" }
-    elapsed_time { 0.0572.to_f }
-    user_agent { "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36" }
+    add_attribute(:method) { "get" }
+    query_params { {} }
+    session_id { Faker::Number.number(digits: 20) }
+    session_private_id { Faker::Number.number(digits: 20) }
+    remote_address { Faker::Internet.ip_v4_address }
+    user_agent { Faker::Internet.user_agent }
     referrer { "http://www.example.com" }
     origin { "http://www.example.com" }
     memory_usage { 194944 }
     cpu_usage { 1.1 }
-    exception { {}.to_json }
-    request_headers { {}.to_json }
-    response_headers { {}.to_json }
+    ip_info { {} }
+    request_headers { {} }
+    response_headers { {} }
     status { 200 }
     response_size { 9902 }
-    query_params { {}.to_json }
-    ip_info { {}.to_json }
+    exception { {} }
+    elapsed_time { 0.0572.to_f }
+    user { nil }
+
+    trait :with_user do
+      association :user, factory: :admin
+    end
   end
 end

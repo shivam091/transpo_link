@@ -3,7 +3,8 @@
 # -*- warn_indent: true -*-
 
 class Product < ApplicationRecord
-  include Toggleable, HasReferenceCode, Pageable, Sortable, ActsAsMoney
+  include Toggleable, HasReferenceCode, Pageable, Sortable, ActsAsMoney,
+          NullifyIfBlank, Sanitizable
 
   LISTING_ATTRIBUTES = %i[
     reference_code name sku barcode cost_price product_category_id
@@ -11,8 +12,10 @@ class Product < ApplicationRecord
 
   attribute :min_stock_threshold, default: 0
   attribute :cost_price, default: 0.0
-  attribute :currency, default: Money.default_currency.iso_code
-  attribute :is_active, default: false
+
+  nullify_if_blank :description, :barcode
+
+  sanitize_attributes :name, :description, :sku, :barcode
 
   validates :name,
             presence: true,
@@ -34,10 +37,7 @@ class Product < ApplicationRecord
             reduce: true
   validates :min_stock_threshold,
             presence: true,
-            numericality: {
-              only_integer: true,
-              greater_than: 0
-            },
+            numericality: {only_integer: true, greater_than: 0},
             reduce: true
   validates :capacity_unit,
             presence: true,
@@ -65,6 +65,12 @@ class Product < ApplicationRecord
   with_options allow_destroy: true do |n|
     n.accepts_nested_attributes_for :unit_conversions, reject_if: :reject_unit_conversion?
     n.accepts_nested_attributes_for :product_prices, reject_if: :reject_product_price?
+  end
+
+  class << self
+    def select_options
+      active.pluck(:name, :id)
+    end
   end
 
   private

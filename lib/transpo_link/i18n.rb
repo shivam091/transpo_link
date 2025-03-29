@@ -73,7 +73,7 @@ module TranspoLink
       with_locale(::I18n.default_locale, &block)
     end
 
-    def trimmed_language_name(code)
+    def display_name(code)
       language_name = AVAILABLE_LANGUAGES[code]
       return if language_name.blank?
 
@@ -92,7 +92,7 @@ module TranspoLink
       ::I18n.t("date.month_names")[month]
     end
 
-    def options_for_languages
+    def select_options
       selectable_locales(MINIMUM_TRANSLATION_LEVEL).map do |locale, language|
         [
           ::I18n.t("preferences.preference_form.language_translation_percentage", locale: locale) % {

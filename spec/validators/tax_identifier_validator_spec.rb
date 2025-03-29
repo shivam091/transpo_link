@@ -10,29 +10,23 @@ RSpec.describe TaxIdentifierValidator do
   using RSpec::Parameterized::TableSyntax
 
   before(:all) do
-    ActiveRecord::Schema.define(version: 1) do
-      create_table :tax_identifiers, force: true do |t|
-        t.string :tax_identifier_type
-        t.string :tax_identifier
-        t.string :country
-        t.timestamps
-      end
-    end
+    class TaxIdentifierModel
+      include ActiveModel::Model, ActiveModel::Validations
 
-    class TaxIdentifier < ApplicationRecord
+      attr_accessor :tax_identifier_type, :tax_identifier, :country
+
       validates :tax_identifier, tax_identifier: true
     end
   end
 
   after(:all) do
-    ActiveRecord::Base.connection.drop_table(:tax_identifiers, if_exists: true)
-    Object.send(:remove_const, :TaxIdentifier)
+    Object.send(:remove_const, :TaxIdentifierModel)
   end
 
   describe "#validate_each" do
     describe "vat" do
       let(:legal_identifier) do
-        TaxIdentifier.new(tax_identifier: tax_identifier, tax_identifier_type: "vat", country: country)
+        TaxIdentifierModel.new(tax_identifier: tax_identifier, tax_identifier_type: "vat", country: country)
       end
 
       context "when tax identifier is valid for country" do
@@ -293,7 +287,7 @@ RSpec.describe TaxIdentifierValidator do
 
     describe "tin" do
       let(:legal_identifier) do
-        TaxIdentifier.new(tax_identifier: tax_identifier, tax_identifier_type: "tin", country: country)
+        TaxIdentifierModel.new(tax_identifier: tax_identifier, tax_identifier_type: "tin", country: country)
       end
 
       context "when tax identifier is valid for country" do
@@ -326,7 +320,7 @@ RSpec.describe TaxIdentifierValidator do
 
     describe "ein" do
       let(:legal_identifier) do
-        TaxIdentifier.new(tax_identifier: tax_identifier, tax_identifier_type: "ein", country: "US")
+        TaxIdentifierModel.new(tax_identifier: tax_identifier, tax_identifier_type: "ein", country: "US")
       end
 
       context "when tax identifier is valid for country" do
@@ -361,7 +355,7 @@ RSpec.describe TaxIdentifierValidator do
 
     describe "ssn" do
       let(:legal_identifier) do
-        TaxIdentifier.new(tax_identifier: tax_identifier, tax_identifier_type: "ssn", country: "US")
+        TaxIdentifierModel.new(tax_identifier: tax_identifier, tax_identifier_type: "ssn", country: "US")
       end
 
       context "when tax identifier is valid for country" do
@@ -408,7 +402,7 @@ RSpec.describe TaxIdentifierValidator do
 
     describe "itin" do
       let(:legal_identifier) do
-        TaxIdentifier.new(tax_identifier: tax_identifier, tax_identifier_type: "itin", country: "US")
+        TaxIdentifierModel.new(tax_identifier: tax_identifier, tax_identifier_type: "itin", country: "US")
       end
 
       context "when tax identifier is valid for country" do
@@ -454,7 +448,7 @@ RSpec.describe TaxIdentifierValidator do
 
     describe "pan" do
       let(:legal_identifier) do
-        TaxIdentifier.new(tax_identifier: tax_identifier, tax_identifier_type: "pan", country: "IN")
+        TaxIdentifierModel.new(tax_identifier: tax_identifier, tax_identifier_type: "pan", country: "IN")
       end
 
       context "when tax identifier is valid for country" do
@@ -493,7 +487,7 @@ RSpec.describe TaxIdentifierValidator do
 
     describe "gstin" do
       let(:legal_identifier) do
-        TaxIdentifier.new(tax_identifier: tax_identifier, tax_identifier_type: "gstin", country: "IN")
+        TaxIdentifierModel.new(tax_identifier: tax_identifier, tax_identifier_type: "gstin", country: "IN")
       end
 
       context "when tax identifier is valid for country" do
@@ -532,7 +526,7 @@ RSpec.describe TaxIdentifierValidator do
 
     describe "tan" do
       let(:legal_identifier) do
-        TaxIdentifier.new(tax_identifier: tax_identifier, tax_identifier_type: "tan", country: "IN")
+        TaxIdentifierModel.new(tax_identifier: tax_identifier, tax_identifier_type: "tan", country: "IN")
       end
 
       context "when tax identifier is valid for country" do
@@ -566,7 +560,7 @@ RSpec.describe TaxIdentifierValidator do
 
     describe "bn" do
       let(:legal_identifier) do
-        TaxIdentifier.new(tax_identifier: tax_identifier, tax_identifier_type: "bn", country: "CA")
+        TaxIdentifierModel.new(tax_identifier: tax_identifier, tax_identifier_type: "bn", country: "CA")
       end
 
       context "when tax identifier is valid for country" do
@@ -604,7 +598,7 @@ RSpec.describe TaxIdentifierValidator do
 
     describe "uen" do
       let(:legal_identifier) do
-        TaxIdentifier.new(tax_identifier: tax_identifier, tax_identifier_type: "uen", country: "SG")
+        TaxIdentifierModel.new(tax_identifier: tax_identifier, tax_identifier_type: "uen", country: "SG")
       end
 
       context "when tax identifier is valid for country" do
@@ -642,7 +636,7 @@ RSpec.describe TaxIdentifierValidator do
 
     describe "cuit" do
       let(:legal_identifier) do
-        TaxIdentifier.new(tax_identifier: tax_identifier, tax_identifier_type: "cuit", country: "AR")
+        TaxIdentifierModel.new(tax_identifier: tax_identifier, tax_identifier_type: "cuit", country: "AR")
       end
 
       context "when tax identifier is valid for country" do
@@ -678,7 +672,7 @@ RSpec.describe TaxIdentifierValidator do
 
     describe "cuil" do
       let(:legal_identifier) do
-        TaxIdentifier.new(tax_identifier: tax_identifier, tax_identifier_type: "cuil", country: "AR")
+        TaxIdentifierModel.new(tax_identifier: tax_identifier, tax_identifier_type: "cuil", country: "AR")
       end
 
       context "when tax identifier is valid for country" do
@@ -714,7 +708,7 @@ RSpec.describe TaxIdentifierValidator do
 
     describe "ruc" do
       let(:legal_identifier) do
-        TaxIdentifier.new(tax_identifier: tax_identifier, tax_identifier_type: "ruc", country: country)
+        TaxIdentifierModel.new(tax_identifier: tax_identifier, tax_identifier_type: "ruc", country: country)
       end
 
       context "when tax identifier is valid for country" do
@@ -758,7 +752,7 @@ RSpec.describe TaxIdentifierValidator do
 
     describe "cnpj" do
       let(:legal_identifier) do
-        TaxIdentifier.new(tax_identifier: tax_identifier, tax_identifier_type: "cnpj", country: "BR")
+        TaxIdentifierModel.new(tax_identifier: tax_identifier, tax_identifier_type: "cnpj", country: "BR")
       end
 
       context "when tax identifier is valid for country" do
@@ -792,7 +786,7 @@ RSpec.describe TaxIdentifierValidator do
 
     describe "cpf" do
       let(:legal_identifier) do
-        TaxIdentifier.new(tax_identifier: tax_identifier, tax_identifier_type: "cpf", country: "BR")
+        TaxIdentifierModel.new(tax_identifier: tax_identifier, tax_identifier_type: "cpf", country: "BR")
       end
 
       context "when tax identifier is valid for country" do
@@ -829,7 +823,7 @@ RSpec.describe TaxIdentifierValidator do
 
     describe "abn" do
       let(:legal_identifier) do
-        TaxIdentifier.new(tax_identifier: tax_identifier, tax_identifier_type: "abn", country: "AU")
+        TaxIdentifierModel.new(tax_identifier: tax_identifier, tax_identifier_type: "abn", country: "AU")
       end
 
       context "when tax identifier is valid for country" do
@@ -863,7 +857,7 @@ RSpec.describe TaxIdentifierValidator do
 
     describe "qst" do
       let(:legal_identifier) do
-        TaxIdentifier.new(tax_identifier: tax_identifier, tax_identifier_type: "qst", country: "CA")
+        TaxIdentifierModel.new(tax_identifier: tax_identifier, tax_identifier_type: "qst", country: "CA")
       end
 
       context "when tax identifier is valid for country" do
@@ -901,7 +895,7 @@ RSpec.describe TaxIdentifierValidator do
 
     describe "tfn" do
       let(:legal_identifier) do
-        TaxIdentifier.new(tax_identifier: tax_identifier, tax_identifier_type: "tfn", country: "AU")
+        TaxIdentifierModel.new(tax_identifier: tax_identifier, tax_identifier_type: "tfn", country: "AU")
       end
 
       context "when tax identifier is valid for country" do
@@ -942,7 +936,7 @@ RSpec.describe TaxIdentifierValidator do
 
     describe "ird" do
       let(:legal_identifier) do
-        TaxIdentifier.new(tax_identifier: tax_identifier, tax_identifier_type: "ird", country: "NZ")
+        TaxIdentifierModel.new(tax_identifier: tax_identifier, tax_identifier_type: "ird", country: "NZ")
       end
 
       context "when tax identifier is valid for country" do
@@ -978,7 +972,7 @@ RSpec.describe TaxIdentifierValidator do
 
     describe "trn" do
       let(:legal_identifier) do
-        TaxIdentifier.new(tax_identifier: tax_identifier, tax_identifier_type: "trn", country: "AE")
+        TaxIdentifierModel.new(tax_identifier: tax_identifier, tax_identifier_type: "trn", country: "AE")
       end
 
       context "when tax identifier is valid for country" do
@@ -1012,7 +1006,7 @@ RSpec.describe TaxIdentifierValidator do
 
     describe "inn" do
       let(:legal_identifier) do
-        TaxIdentifier.new(tax_identifier: tax_identifier, tax_identifier_type: "inn", country: "RU")
+        TaxIdentifierModel.new(tax_identifier: tax_identifier, tax_identifier_type: "inn", country: "RU")
       end
 
       context "when tax identifier is valid for country" do
@@ -1052,7 +1046,7 @@ RSpec.describe TaxIdentifierValidator do
 
     describe "rfc" do
       let(:legal_identifier) do
-        TaxIdentifier.new(tax_identifier: tax_identifier, tax_identifier_type: "rfc", country: country)
+        TaxIdentifierModel.new(tax_identifier: tax_identifier, tax_identifier_type: "rfc", country: country)
       end
 
       context "when tax identifier is valid for country" do
@@ -1084,7 +1078,7 @@ RSpec.describe TaxIdentifierValidator do
 
     describe "nie" do
       let(:legal_identifier) do
-        TaxIdentifier.new(tax_identifier: tax_identifier, tax_identifier_type: "nie", country: "ES")
+        TaxIdentifierModel.new(tax_identifier: tax_identifier, tax_identifier_type: "nie", country: "ES")
       end
 
       context "when tax identifier is valid for country" do
@@ -1116,7 +1110,7 @@ RSpec.describe TaxIdentifierValidator do
 
     describe "nif" do
       let(:legal_identifier) do
-        TaxIdentifier.new(tax_identifier: tax_identifier, tax_identifier_type: "nif", country: "ES")
+        TaxIdentifierModel.new(tax_identifier: tax_identifier, tax_identifier_type: "nif", country: "ES")
       end
 
       context "when tax identifier is valid for country" do
@@ -1148,7 +1142,7 @@ RSpec.describe TaxIdentifierValidator do
 
     describe "kpp" do
       let(:legal_identifier) do
-        TaxIdentifier.new(tax_identifier: tax_identifier, tax_identifier_type: "kpp", country: "RU")
+        TaxIdentifierModel.new(tax_identifier: tax_identifier, tax_identifier_type: "kpp", country: "RU")
       end
 
       context "when tax identifier is valid for country" do
@@ -1180,7 +1174,7 @@ RSpec.describe TaxIdentifierValidator do
 
     describe "nit" do
       let(:legal_identifier) do
-        TaxIdentifier.new(tax_identifier: tax_identifier, tax_identifier_type: "nit", country: country)
+        TaxIdentifierModel.new(tax_identifier: tax_identifier, tax_identifier_type: "nit", country: country)
       end
 
       context "when tax identifier is valid for country" do
@@ -1221,7 +1215,7 @@ RSpec.describe TaxIdentifierValidator do
 
     describe "rtn" do
       let(:legal_identifier) do
-        TaxIdentifier.new(tax_identifier: tax_identifier, tax_identifier_type: "rtn", country: "HN")
+        TaxIdentifierModel.new(tax_identifier: tax_identifier, tax_identifier_type: "rtn", country: "HN")
       end
 
       context "when tax identifier is valid for country" do
@@ -1253,7 +1247,7 @@ RSpec.describe TaxIdentifierValidator do
 
     describe "mst" do
       let(:legal_identifier) do
-        TaxIdentifier.new(tax_identifier: tax_identifier, tax_identifier_type: "mst", country: "VN")
+        TaxIdentifierModel.new(tax_identifier: tax_identifier, tax_identifier_type: "mst", country: "VN")
       end
 
       context "when tax identifier is valid for country" do
@@ -1285,7 +1279,7 @@ RSpec.describe TaxIdentifierValidator do
 
     describe "utr" do
       let(:legal_identifier) do
-        TaxIdentifier.new(tax_identifier: tax_identifier, tax_identifier_type: "utr", country: "GB")
+        TaxIdentifierModel.new(tax_identifier: tax_identifier, tax_identifier_type: "utr", country: "GB")
       end
 
       context "when tax identifier is valid for country" do
@@ -1317,7 +1311,7 @@ RSpec.describe TaxIdentifierValidator do
 
     describe "brn_kr" do
       let(:legal_identifier) do
-        TaxIdentifier.new(tax_identifier: tax_identifier, tax_identifier_type: "brn_kr", country: "KR")
+        TaxIdentifierModel.new(tax_identifier: tax_identifier, tax_identifier_type: "brn_kr", country: "KR")
       end
 
       context "when tax identifier is valid for country" do

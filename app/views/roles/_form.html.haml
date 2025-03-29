@@ -1,13 +1,12 @@
-= pretty_form_with model: @role do |form|
+= pretty_form_with model: @role, class: "row g-3" do |form|
   = form_errors(@role)
-  .row
-    .col-sm-12.col-md-6.col-lg-4.mb-3
-      = form.label :name, class: "form-label"
-      = form.text_field :name, static: true
-    .col-sm-12.col-md-6.col-lg-4.mb-3
-      = form.label :is_active, class: "form-check-label mb-2"
-      .form-check
-        = form.check_box :is_active, autofocus: true
+  .col-sm-12.col-md-6.col-lg-4
+    = form.label :name, class: "form-label"
+    = form.text_field :name, static: true
+  .col-sm-12.col-md-6.col-lg-4
+    = form.label :is_active, class: "form-check-label mb-2"
+    .form-check
+      = form.check_box :is_active, autofocus: true
   .actions
     = button_tag type: :submit, class: "btn btn-primary" do
       = external_svg_tag("svgs/floppy.svg")

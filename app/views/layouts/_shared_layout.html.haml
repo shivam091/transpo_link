@@ -1,0 +1,19 @@
+!!!5
+%html{dir: t("direction"), lang: TranspoLink::I18n.locale}
+  %head
+    %title
+      = content_for?(:title) ? yield(:title) : t(".title")
+    %meta{"http-equiv": "Content-Type", content: "text/html; charset=UTF-8"}
+    %meta{name: "viewport", content: "width=device-width, initial-scale=1, shrink-to-fit=no"}
+    %meta{name: "version", content: "1.0"}
+    %meta{name: "author", content: "Harshal Ladhe"}
+    %meta{name: "turbo-cache-control", content: "no-cache"}
+    %meta{name: "turbo-prefetch", content: "false"}
+    = favicon_link_tag
+    = csrf_meta_tags
+    = csp_meta_tag
+    = stylesheet_link_tag :app, media: "all", data: {turbo_track: "reload"}
+    = yield(:stylesheet) if content_for?(:stylesheet)
+    = javascript_importmap_tags
+    = yield(:javascript) if content_for?(:javascript)
+  = yield

@@ -31,7 +31,6 @@ class CreateInventories < ActiveRecord::Migration[8.0]
       t.string :inventory_unit
       t.decimal :cost_price, precision: 12, scale: 2, default: 0.0 # Procurement cost
       t.string :currency
-
       t.timestamps_with_timezone null: false
 
       t.index [:product_id, :warehouse_id], unique: true

@@ -24,7 +24,6 @@ class CreateProducts < ActiveRecord::Migration[8.0]
                    null: false,
                    index: {using: :btree}
       t.boolean :is_active, default: false, index: {using: :btree}
-
       t.timestamps_with_timezone null: false
 
       t.check_constraint "name IS NOT NULL AND name <> ''", name: :check_products_name_presence

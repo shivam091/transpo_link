@@ -1,15 +1,15 @@
-@keyframes slideUpAndFade {
+@keyframes slideDownAndFade {
   0% {
     opacity: 0;
-    transform: translateY(16px)
+    transform: translateY(-16px)
   }
   to {
     opacity: 1;
     transform: translateY(0)
   }
 }
-.animate-slideUpAndFade {
-  animation: slideUpAndFade 0.2s cubic-bezier(0.16, 1, 0.3, 1)
+.animate-slideDownAndFade {
+  animation: slideDownAndFade 0.2s cubic-bezier(0.16, 1, 0.3, 1)
 }
 @keyframes fadeIn {
   from {

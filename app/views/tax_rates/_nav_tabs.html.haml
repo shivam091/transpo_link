@@ -1,8 +1,10 @@
 = render_if_exists("shared/inline_navigations") do
   %ul.nav.nav-pills.flex-row
     %li.nav-item
-      = link_to t(".all"), tax_rates_path, class: class_names("nav-link", "active": current_action?(:index))
+      = link_to t(".all"), tax_rates_path, class: class_names("nav-link", "active": params[:status].nil?)
     %li.nav-item
-      = link_to t(".active"), "javascript:void(0)", class: class_names("nav-link", "active": current_action?(:active))
+      = link_to t(".active"), active_tax_rates_path, class: class_names("nav-link", "active": params[:status].eql?("active"))
     %li.nav-item
-      = link_to t(".inactive"), "javascript:void(0)", class: class_names("nav-link", "active": current_action?(:inactive))
+      = link_to t(".expired"), expired_tax_rates_path, class: class_names("nav-link", "active": params[:status].eql?("expired"))
+    %li.nav-item
+      = link_to t(".future"), future_tax_rates_path, class: class_names("nav-link", "active": params[:status].eql?("future"))

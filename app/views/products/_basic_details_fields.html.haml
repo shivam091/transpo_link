@@ -1,39 +1,38 @@
-.row
-  - if form.object.persisted?
-    .col-sm-12.col-md-6.col-lg-3.mb-3
-      = form.label :reference_code, class: "form-label"
-      = form.text_field :reference_code, static: true
-  .col-sm-12.col-md-6.col-lg-3.mb-3
-    = form.label :name, class: "form-label"
-    = form.text_field :name, autofocus: true
-  .col-sm-12.col-md-6.col-lg-3.mb-3
-    = form.label :product_category_id, class: "form-label"
-    = form.select :product_category_id, options_for_select(ProductCategory.select_options, form.object.product_category_id),
-      {include_blank: t(".select_product_category")}, {}
-  .col-sm-12.col-md-6.col-lg-3.mb-3
-    = form.label :sku, class: "form-label"
-    = form.text_field :sku
-  .col-sm-12.col-md-6.col-lg-3.mb-3
-    = form.label :barcode, class: "form-label"
-    = form.text_field :barcode
-  .col-12.mb-3
-    = form.label :description, class: "form-label"
-    = form.text_area :description, rows: 5
-  .col-sm-12.col-md-6.col-lg-3.mb-3
-    = form.label :currency, class: "form-label"
-    = form.select :currency, options_for_select(TranspoLink::Currency.options_for_currencies, form.object.currency),
-      {include_blank: t(".select_currency")}
-  .col-sm-12.col-md-6.col-lg-3.mb-3
-    = form.label :cost_price, class: "form-label"
-    = form.number_field :cost_price, step: 0.01
-  .col-sm-12.col-md-6.col-lg-3.mb-3
-    = form.label :min_stock_threshold, class: "form-label"
-    = form.number_field :min_stock_threshold, step: 1
-  .col-sm-12.col-md-6.col-lg-3.mb-3
-    = form.label :capacity_unit, class: "form-label"
-    = form.select :capacity_unit, grouped_options_for_select(TranspoLink::MeasurementUnits.options_for_units, form.object.capacity_unit),
-      {include_blank: t(".select_capacity_unit")}
-  .col-12.mb-3
-    .form-check
-      = form.label :is_active, class: "form-check-label"
-      = form.check_box :is_active
+- if form.object.persisted?
+  .col-sm-12.col-md-6.col-lg-3
+    = form.label :reference_code, class: "form-label"
+    = form.text_field :reference_code, static: true
+.col-sm-12.col-md-6.col-lg-3
+  = form.label :name, class: "form-label required"
+  = form.text_field :name, autofocus: true
+.col-sm-12.col-md-6.col-lg-3
+  = form.label :product_category_id, class: "form-label required"
+  = form.select :product_category_id, options_for_select(ProductCategory.select_options, form.object.product_category_id),
+    {include_blank: t(".select_product_category")}, {}
+.col-sm-12.col-md-6.col-lg-3
+  = form.label :sku, class: "form-label required"
+  = form.text_field :sku
+.col-sm-12.col-md-6.col-lg-3
+  = form.label :barcode, class: "form-label"
+  = form.text_field :barcode
+.col-12
+  = form.label :description, class: "form-label"
+  = form.text_area :description, rows: 5
+.col-sm-12.col-md-6.col-lg-3
+  = form.label :currency, class: "form-label required"
+  = form.select :currency, options_for_select(TranspoLink::Currency.select_options, form.object.currency),
+    {include_blank: t(".select_currency")}
+.col-sm-12.col-md-6.col-lg-3
+  = form.label :cost_price, class: "form-label required"
+  = form.number_field :cost_price, step: 0.01
+.col-sm-12.col-md-6.col-lg-3
+  = form.label :min_stock_threshold, class: "form-label required"
+  = form.number_field :min_stock_threshold, step: 1
+.col-sm-12.col-md-6.col-lg-3
+  = form.label :capacity_unit, class: "form-label required"
+  = form.select :capacity_unit, grouped_options_for_select(TranspoLink::MeasurementUnits.select_options, form.object.capacity_unit),
+    {include_blank: t(".select_capacity_unit")}
+.col-12
+  = form.label :is_active, class: "form-check-label mb-2"
+  .form-check
+    = form.check_box :is_active

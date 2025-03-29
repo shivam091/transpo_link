@@ -7,10 +7,10 @@
 require "spec_helper"
 
 RSpec.describe ActiveRecord::ConnectionAdapters::TableDefinition do
-  let(:table_definition) { described_class.new(ActiveRecord::Base.connection, nil) }
+  let(:table_definition) { described_class.new(connection, :test_table) }
 
   describe "#timestamps_with_timezone" do
-    let!(:default_value) { -> { "NOW()" } }
+    let(:default_value) { Arel.sql("NOW()") }
 
     it "adds created_at and updated_at columns with timestamptz type" do
       expect(table_definition).to receive(:column).with(:created_at, :timestamptz, null: false)

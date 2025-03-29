@@ -55,6 +55,11 @@ RSpec.describe Feedback, type: :model do
     it { is_expected.to include_module(Pageable) }
     it { is_expected.to include_module(Sortable) }
     it { is_expected.to include_module(HasReferenceCode) }
+    it { is_expected.to include_module(Sanitizable) }
+  end
+
+  describe "sanitized attributes" do
+    it { is_expected.to sanitize_attribute(:comment) }
   end
 
   describe "associations" do

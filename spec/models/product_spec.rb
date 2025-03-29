@@ -60,14 +60,6 @@ RSpec.describe Product, type: :model do
     it "should set 0.0 as default value for #cost_price" do
       expect(product.cost_price).to eq(0.0)
     end
-
-    it "should set Money's default currency as default value for #currency" do
-      expect(product.currency).to eq(Money.default_currency.iso_code)
-    end
-
-    it "should set false as default value for #is_active" do
-      expect(product.is_active).to be_falsy
-    end
   end
 
   describe "constants" do
@@ -80,6 +72,20 @@ RSpec.describe Product, type: :model do
     it { is_expected.to include_module(Pageable) }
     it { is_expected.to include_module(Sortable) }
     it { is_expected.to include_module(ActsAsMoney) }
+    it { is_expected.to include_module(NullifyIfBlank) }
+    it { is_expected.to include_module(Sanitizable) }
+  end
+
+  describe "nullified attributes" do
+    it { is_expected.to nullify_if_blank(:description) }
+    it { is_expected.to nullify_if_blank(:barcode) }
+  end
+
+  describe "sanitized attributes" do
+    it { is_expected.to sanitize_attribute(:name) }
+    it { is_expected.to sanitize_attribute(:description) }
+    it { is_expected.to sanitize_attribute(:sku) }
+    it { is_expected.to sanitize_attribute(:barcode) }
   end
 
   describe "associations" do
@@ -144,7 +150,7 @@ RSpec.describe Product, type: :model do
   include_examples "apply default scope on created_at:desc"
 
   describe "instance methods" do
-    let(:product) { create(:product) }
+    let!(:product) { create(:product) }
 
     describe "#reject_unit_conversion?" do
       let!(:unit_conversion) { create(:unit_conversion, product: product) }
@@ -223,6 +229,16 @@ RSpec.describe Product, type: :model do
             product.update(product_prices_attributes: {id: product_price.id, _destroy: true})
           }.to change(ProductPrice, :count).by(-1)
         end
+      end
+    end
+  end
+
+  describe "class methods" do
+    describe ".select_options" do
+      let!(:product) { create(:product, :active) }
+
+      it "should return array of products for select list" do
+        expect(described_class.select_options).to eq([[product.name, product.id]])
       end
     end
   end

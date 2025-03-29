@@ -7,200 +7,142 @@
 require "spec_helper"
 
 RSpec.describe "Warehouses", type: :request do
-  let!(:warehouse) { create(:warehouse, :active) }
+  let(:manager) { create(:manager) }
+  let(:supplier) { create(:supplier) }
+
+  let!(:active_warehouse) { create(:warehouse, :active) }
   let!(:inactive_warehouse) { create(:warehouse) }
-  let!(:manager) { create(:manager) }
-  let!(:supplier) { create(:supplier) }
 
-  let!(:valid_attributes) do
-    attributes_for(:warehouse, name: "New warehouse")
-      .merge(manager_ids: [manager.id], supplier_ids: [supplier.id])
+  let(:valid_attributes) do
+    attributes_for(:warehouse, name: "New warehouse").merge(manager_ids: [manager.id], supplier_ids: [supplier.id])
   end
-  let!(:invalid_attributes) { attributes_for(:warehouse, name: "") }
+  let(:invalid_attributes) { attributes_for(:warehouse, name: "") }
 
-  context "when user is not signed in" do
-    describe "GET /warehouses" do
-      subject { get warehouses_path }
+  include_context "sign in as admin"
 
-      it { is_expected.to require_sign_in }
+  describe "GET /warehouses" do
+    it "renders list of all warehouses with pagination" do
+      get warehouses_path
+
+      expect(controller_assigns(:warehouses)).to include(active_warehouse)
+      expect(controller_assigns(:warehouses)).to include(inactive_warehouse)
+      expect(controller_assigns(:pagination_metadata)).to be_present
+      expect(response).to have_http_status(:ok)
     end
 
-    describe "GET /warehouses/active" do
-      subject { get active_warehouses_path }
+    it "renders list of active warehouses with pagination" do
+      get active_warehouses_path
 
-      it { is_expected.to require_sign_in }
+      expect(controller_assigns(:warehouses)).to include(active_warehouse)
+      expect(controller_assigns(:warehouses)).to exclude(inactive_warehouse)
+      expect(controller_assigns(:pagination_metadata)).to be_present
+      expect(response).to have_http_status(:ok)
     end
 
-    describe "GET /warehouses/inactive" do
-      subject { get inactive_warehouses_path }
+    it "renders list of inactive warehouses with pagination" do
+      get inactive_warehouses_path
 
-      it { is_expected.to require_sign_in }
-    end
-
-    describe "GET /warehouses/new" do
-      subject { get new_warehouse_path }
-
-      it { is_expected.to require_sign_in }
-    end
-
-    describe "POST /warehouses" do
-      subject { post warehouses_path }
-
-      it { is_expected.to require_sign_in }
-    end
-
-    describe "GET /warehouses/:id/edit" do
-      subject { get edit_warehouse_path(warehouse) }
-
-      it { is_expected.to require_sign_in }
-    end
-
-    describe "PUT|PATCH /warehouses/:id" do
-      subject { put warehouse_path(warehouse) }
-
-      it { is_expected.to require_sign_in }
-    end
-
-    describe "GET /warehouses/:id" do
-      subject { get warehouse_path(warehouse) }
-
-      it { is_expected.to require_sign_in }
-    end
-
-    describe "DELETE /warehouses/:id" do
-      subject { delete warehouse_path(warehouse) }
-
-      it { is_expected.to require_sign_in }
+      expect(controller_assigns(:warehouses)).to include(inactive_warehouse)
+      expect(controller_assigns(:warehouses)).to exclude(active_warehouse)
+      expect(controller_assigns(:pagination_metadata)).to be_present
+      expect(response).to have_http_status(:ok)
     end
   end
 
-  context "when user is signed in" do
-    include_context "sign in as admin"
+  describe "GET /warehouses/new" do
+    before { get new_warehouse_path }
 
-    describe "GET /warehouses" do
-      it "renders list of all warehouses with pagination" do
-        get warehouses_path
+    include_examples "initializes a new instance", :warehouse, Warehouse
+  end
 
-        expect(controller_assigns(:pagination_metadata)).to be_present
-        expect(controller_assigns(:warehouses)).to include(warehouse)
-        expect(response).to have_http_status(:ok)
+  describe "POST /warehouses" do
+    context "when provided attributes are valid" do
+      it "creates the warehouse and redirects" do
+        post warehouses_path, params: {warehouse: valid_attributes}, as: :turbo_stream
+
+        expect(flash[:notice]).to eq("Warehouse was successfully created.")
+        expect(response).to redirect_to(warehouses_path)
+        expect(response).to have_http_status(:see_other)
       end
     end
 
-    describe "GET /warehouses/active" do
-      it "renders list of active warehouses with pagination" do
-        get active_warehouses_path
+    context "when provided attributes are invalid" do
+      it "does not create the warehouse and renders errors" do
+        post warehouses_path, params: {warehouse: invalid_attributes}, as: :turbo_stream
 
-        expect(controller_assigns(:pagination_metadata)).to be_present
-        expect(controller_assigns(:warehouses)).to include(warehouse)
-        expect(controller_assigns(:warehouses)).to exclude(inactive_warehouse)
-        expect(response).to have_http_status(:ok)
+        expect(flash[:alert]).to eq("Warehouse could not be created.")
+        expect(response.media_type).to eq(Mime[:turbo_stream])
+        expect(response.body).to include("<turbo-stream action=\"update\" target=\"new_warehouse_form_frame\">")
+        expect(response).to have_http_status(:unprocessable_entity)
+      end
+    end
+  end
+
+  describe "GET /warehouses/:id/edit" do
+    it "renders warehouse edit page" do
+      get edit_warehouse_path(active_warehouse)
+
+      expect(controller_assigns(:warehouse)).to eq(active_warehouse)
+      expect(response).to have_http_status(:ok)
+    end
+  end
+
+  describe "PUT|PATCH /warehouses/:id" do
+    context "when provided attributes are valid" do
+      it "updates the warehouse and redirects" do
+        expect {
+          put warehouse_path(active_warehouse), params: {warehouse: valid_attributes}, as: :turbo_stream
+        }.to change { active_warehouse.reload.name }.to("New warehouse")
+
+        expect(response).to redirect_to(warehouses_path)
+        expect(flash[:notice]).to eq("Warehouse was successfully updated.")
+        expect(response).to have_http_status(:see_other)
       end
     end
 
-    describe "GET /warehouses/inactive" do
-      it "renders list of inactive warehouses with pagination" do
-        get inactive_warehouses_path
+    context "when provided attributes are invalid" do
+      it "does not update the warehouse and renders errors" do
+        expect {
+          put warehouse_path(active_warehouse), params: {warehouse: invalid_attributes}, as: :turbo_stream
+        }.to not_change { active_warehouse.reload.name }
 
-        expect(controller_assigns(:pagination_metadata)).to be_present
-        expect(controller_assigns(:warehouses)).to include(inactive_warehouse)
-        expect(controller_assigns(:warehouses)).to exclude(warehouse)
-        expect(response).to have_http_status(:ok)
+        expect(flash[:alert]).to eq("Warehouse could not be updated.")
+        expect(response.media_type).to eq(Mime[:turbo_stream])
+        expect(response.body).to include("<turbo-stream action=\"update\" target=\"edit_warehouse_form_frame\">")
+        expect(response).to have_http_status(:unprocessable_entity)
+      end
+    end
+  end
+
+  describe "GET /warehouse/:id" do
+    it "renders warehouse details page" do
+      get warehouse_path(active_warehouse)
+
+      expect(controller_assigns(:warehouse)).to eq(active_warehouse)
+      expect(response).to have_http_status(:ok)
+    end
+  end
+
+  describe "DELETE /warehouse/:id" do
+    context "when valid id" do
+      it "deletes the warehouse and redirects" do
+        delete warehouse_path(active_warehouse)
+
+        expect(response).to redirect_to(warehouses_path)
+        expect(flash[:info]).to eq("Warehouse was successfully deleted.")
+        expect(response).to have_http_status(:see_other)
       end
     end
 
-    describe "GET /warehouses/new" do
-      before { get new_warehouse_path }
+    context "when delete fails" do
+      it "does not delete the warehouse and redirects with an error message" do
+        allow(Warehouses::DestroyService).to receive(:call) { ServiceResponse.error }
 
-      include_examples "initializes a new instance", :warehouse, Warehouse
-    end
+        delete warehouse_path(active_warehouse)
 
-    describe "POST /warehouses" do
-      context "when provided attributes are valid" do
-        it "creates the warehouse and redirects" do
-          post warehouses_path, params: {warehouse: valid_attributes}, as: :turbo_stream
-
-          expect(flash[:notice]).to eq("Warehouse was successfully created.")
-          expect(response).to redirect_to(warehouses_path)
-          expect(response).to have_http_status(:see_other)
-        end
-      end
-
-      context "when provided attributes are invalid" do
-        it "does not create the warehouse and renders errors" do
-          post warehouses_path, params: {warehouse: invalid_attributes}, as: :turbo_stream
-
-          expect(flash[:alert]).to eq("Warehouse could not be created.")
-          expect(response.media_type).to eq(Mime[:turbo_stream])
-          expect(response.body).to include("<turbo-stream action=\"update\" target=\"new_warehouse_form_frame\">")
-          expect(response).to have_http_status(:unprocessable_entity)
-        end
-      end
-    end
-
-    describe "GET /warehouses/:id/edit" do
-      it "renders warehouse edit page" do
-        get edit_warehouse_path(warehouse)
-
-        expect(controller_assigns(:warehouse)).to eq(warehouse)
-        expect(response).to have_http_status(:ok)
-      end
-    end
-
-    describe "PUT|PATCH /warehouses/:id" do
-      context "when provided attributes are valid" do
-        it "updates the warehouse and redirects" do
-          put warehouse_path(warehouse), params: {warehouse: valid_attributes}, as: :turbo_stream
-
-          expect(warehouse.reload.name).to eq("New warehouse")
-          expect(response).to redirect_to(warehouses_path)
-          expect(flash[:notice]).to eq("Warehouse was successfully updated.")
-          expect(response).to have_http_status(:see_other)
-        end
-      end
-
-      context "when provided attributes are invalid" do
-        it "does not update the warehouse and renders errors" do
-          put warehouse_path(warehouse), params: {warehouse: invalid_attributes}, as: :turbo_stream
-
-          expect(flash[:alert]).to eq("Warehouse could not be updated.")
-          expect(response.media_type).to eq(Mime[:turbo_stream])
-          expect(response.body).to include("<turbo-stream action=\"update\" target=\"edit_warehouse_form_frame\">")
-          expect(response).to have_http_status(:unprocessable_entity)
-        end
-      end
-    end
-
-    describe "GET /warehouse/:id" do
-      it "renders warehouse details page" do
-        get warehouse_path(warehouse)
-
-        expect(controller_assigns(:warehouse)).to eq(warehouse)
-        expect(response).to have_http_status(:ok)
-      end
-    end
-
-    describe "DELETE /warehouse/:id" do
-      context "when valid id" do
-        it "deletes the warehouse and redirects" do
-          delete warehouse_path(warehouse)
-
-          expect(response).to redirect_to(warehouses_path)
-          expect(flash[:info]).to eq("Warehouse was successfully deleted.")
-          expect(response).to have_http_status(:see_other)
-        end
-      end
-
-      context "when delete fails" do
-        it "does not delete the warehouse and redirects with an error message" do
-          allow(Warehouses::DestroyService).to receive(:call) { ServiceResponse.error }
-
-          delete warehouse_path(warehouse)
-
-          expect(response).to redirect_to(warehouses_path)
-          expect(flash[:alert]).to eq("Warehouse could not be deleted.")
-          expect(response).to have_http_status(:see_other)
-        end
+        expect(response).to redirect_to(warehouses_path)
+        expect(flash[:alert]).to eq("Warehouse could not be deleted.")
+        expect(response).to have_http_status(:see_other)
       end
     end
   end

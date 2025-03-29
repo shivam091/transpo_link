@@ -8,9 +8,9 @@ require "spec_helper"
 
 RSpec.describe TextHelper, type: :helper do
   describe "#word_wrap" do
-    let!(:short_text) { "Short text." }
-    let!(:long_text) { "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam." }
-    let!(:mixed_text) { "Lorem ipsum dolor sit amet, consectetur adipiscing elit." }
+    let(:short_text) { "Short text." }
+    let(:long_text) { "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam." }
+    let(:mixed_text) { "Lorem ipsum dolor sit amet, consectetur adipiscing elit." }
 
     it "wraps text to the specified line width" do
       wrapped_text = helper.word_wrap(long_text, wrap_length: 20, seperator: "<br/>")
@@ -67,7 +67,7 @@ RSpec.describe TextHelper, type: :helper do
   end
 
   describe "#truncate" do
-    let!(:long_text) { "This is a test string that is longer than thirty characters." }
+    let(:long_text) { "This is a test string that is longer than thirty characters." }
 
     it "returns the same string if it's within the limit" do
       expect(helper.truncate("Short text", truncate_at: 20)).to eq("Short text")

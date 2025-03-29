@@ -4,11 +4,11 @@
 
 FactoryBot.define do
   factory :user_detail do
-    first_name { "TranspoLink" }
-    sequence(:last_name) { |n| "User #{n}" }
-    mobile_number { generate(:mobile_number) }
-    alternate_contact_number { generate(:phone_number) }
-    alternate_email { generate(:email) }
+    first_name { Faker::Name.first_name }
+    last_name { Faker::Name.last_name }
+    mobile_number { Faker::PhoneNumber.cell_phone_in_e164 }
+    alternate_contact_number { Faker::PhoneNumber.phone_number_with_country_code }
+    alternate_email { Faker::Internet.email }
     association :user
   end
 end

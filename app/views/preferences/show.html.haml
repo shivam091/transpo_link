@@ -6,9 +6,10 @@
         .d-block
           .widget-title
             = t(".your_preferences")
-          .widget-help= t(".edit_preferences")
+          .widget-help
+            = t(".edit_preferences")
         = link_to edit_preference_path, class: "btn btn-secondary" do
           = external_svg_tag("svgs/pencil.svg")
           = button_text(:edit)
       .widget-body
-        = render_if_exists("preferences/show", locals: {user: current_user})
+        = render_if_exists("preferences/show", locals: {user: @user})

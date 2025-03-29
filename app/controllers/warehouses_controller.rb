@@ -3,31 +3,22 @@
 # -*- warn_indent: true -*-
 
 class WarehousesController < ApplicationController
-  add_breadcrumb :warehouses, :warehouses_path
-
+  before_action :set_breadcrumbs
   before_action :find_warehouse, only: [:edit, :update, :show, :destroy]
 
   # GET /warehouses
   def index
-    @warehouses = Warehouse.all
-    @warehouses, @pagination_metadata = @warehouses.paginate(page: params[:page])
-  end
-
-  # GET /warehouses/active
-  def active
-    @warehouses = Warehouse.active
-    @warehouses, @pagination_metadata = @warehouses.paginate(page: params[:page])
-  end
-
-  # GET /warehouses/inactive
-  def inactive
-    @warehouses = Warehouse.inactive
+    @warehouses = case params[:status]
+                  when "active"   then Warehouse.active
+                  when "inactive" then Warehouse.inactive
+                  else                 Warehouse.all
+                  end
     @warehouses, @pagination_metadata = @warehouses.paginate(page: params[:page])
   end
 
   # GET /warehouses/new
   def new
-    add_breadcrumb :new, new_warehouse_path
+    add_breadcrumb t(".breadcrumb"), new_warehouse_path
     @warehouse = Warehouse.new
   end
 
@@ -35,6 +26,7 @@ class WarehousesController < ApplicationController
   def create
     response = Warehouses::CreateService.(warehouse_params)
     @warehouse = response.payload[:warehouse]
+
     if response.success?
       set_flash_message(:notice, :success)
       redirect_to warehouses_path, status: :see_other
@@ -53,13 +45,14 @@ class WarehousesController < ApplicationController
 
   # GET /warehouses/:id/edit
   def edit
-    add_breadcrumb :edit, edit_warehouse_path(@warehouse)
+    add_breadcrumb t(".breadcrumb", reference_code: @warehouse.reference_code), edit_warehouse_path(@warehouse)
   end
 
   # PUT|PATCH /warehouses/:id
   def update
     response = Warehouses::UpdateService.(@warehouse, warehouse_params)
     @warehouse = response.payload[:warehouse]
+
     if response.success?
       set_flash_message(:notice, :success)
       redirect_to warehouses_path, status: :see_other
@@ -85,6 +78,7 @@ class WarehousesController < ApplicationController
   def destroy
     response = Warehouses::DestroyService.(@warehouse)
     @warehouse = response.payload[:warehouse]
+
     if response.success?
       set_flash_message(:info, :success)
     else
@@ -121,5 +115,9 @@ class WarehousesController < ApplicationController
 
   def find_warehouse
     @warehouse ||= Warehouse.find(params[:id])
+  end
+
+  def set_breadcrumbs
+    add_breadcrumb t("warehouses.breadcrumb"), warehouses_path
   end
 end

@@ -1,16 +1,16 @@
-= pretty_form_with model: @warehouse do |form|
+= pretty_form_with model: @warehouse, class: "row g-3" do |form|
   = form_errors(@warehouse)
   .subheader
     = t(".basic_details")
   = render_if_exists("warehouses/basic_details_fields", locals: {form: form})
   .subheader
     = t(".address")
-  = form.fields_for :address, include_id: false do |address_form_fields|
-    = render_if_exists("shared/address_form_fields", locals: {form: address_form_fields})
+  = form.fields_for :address, include_id: false do |address_form|
+    = render_if_exists("shared/address_form_fields", locals: {form: address_form})
   .actions
     = button_tag type: :submit, class: "btn btn-primary" do
       = external_svg_tag("svgs/floppy.svg")
-      = @warehouse.new_record? ? button_text(:create) : button_text(:update)
+      = form.object.new_record? ? button_text(:create) : button_text(:update)
     = link_to warehouses_path, class: "btn btn-secondary" do
       = external_svg_tag("svgs/cancel.svg")
       = button_text(:cancel)

@@ -65,6 +65,11 @@ RSpec.describe TaxRate, type: :model do
     it { is_expected.to include_module(Sortable) }
     it { is_expected.to include_module(Pageable) }
     it { is_expected.to include_module(Taxable) }
+    it { is_expected.to include_module(NullifyIfBlank) }
+  end
+
+  describe "nullified attributes" do
+    it { is_expected.to nullify_if_blank(:valid_to) }
   end
 
   describe "validations" do
@@ -105,6 +110,22 @@ RSpec.describe TaxRate, type: :model do
       it "returns only active tax rates" do
         expect(described_class.active).to include(active_tax_rate)
         expect(described_class.active).to exclude(future_tax_rate)
+      end
+    end
+
+    describe ".future" do
+      it "returns only future tax rates" do
+        expect(described_class.future).to include(future_tax_rate)
+        expect(described_class.future).to exclude(active_tax_rate)
+      end
+    end
+
+    describe ".expired" do
+      it "returns only expired tax rates" do
+        travel_to(10.year.from_now) do
+          expect(described_class.expired).to include(active_tax_rate)
+          expect(described_class.expired).to include(future_tax_rate)
+        end
       end
     end
 
@@ -193,7 +214,7 @@ RSpec.describe TaxRate, type: :model do
 
     describe "#cannot_change_rate_for_active_tax_rate" do
       context "when updating the rate of an active tax rate" do
-        let!(:active_tax_rate) { create(:tax_rate) }
+        let(:active_tax_rate) { create(:tax_rate) }
 
         it "is not valid" do
           active_tax_rate.rate = 10.0

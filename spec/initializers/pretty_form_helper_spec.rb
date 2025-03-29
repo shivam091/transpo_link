@@ -24,7 +24,7 @@ RSpec.describe PrettyFormHelper, type: :helper do
     Object.send(:remove_const, :TestUser)
   end
 
-  let!(:object) { TestUser.new(name: "Test") }
+  let(:object) { TestUser.new(name: "Test") }
 
   describe "#pretty_form_for" do
     it "renders form tag" do

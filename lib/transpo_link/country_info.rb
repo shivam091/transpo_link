@@ -26,7 +26,7 @@ module TranspoLink
       subdivision&.translations&.dig(TranspoLink::I18n.locale.to_s) || subdivision&.name
     end
 
-    def options_for_subdivisions
+    def select_subdivision_options
       return [] unless country&.subdivisions.present?
 
       country.subdivisions.map do |code, subdivision|
@@ -35,7 +35,7 @@ module TranspoLink
     end
 
     class << self
-      def options_for_countries
+      def select_options
         ISO3166::Country.translations(TranspoLink::I18n.locale).map do |iso_code, name|
           [name, iso_code]
         end

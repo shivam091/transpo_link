@@ -4,9 +4,12 @@
 
 FactoryBot.define do
   factory :product_category do
-    sequence(:name) { |n| "Product category #{n}" }
+    sequence(:name) { |n| "#{Faker::Commerce.department} Category #{n}" }
+    is_active { false }
 
     factory :product_sub_category, parent: :product_category do
+      sequence(:name) { |n| "#{Faker::Commerce.department} Sub-category #{n}" }
+
       association :parent_category, factory: :product_category
     end
   end

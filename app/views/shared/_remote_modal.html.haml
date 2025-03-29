@@ -1,12 +1,10 @@
 = turbo_frame_tag :remote_modal do
-  = tag.div class: "modal fade", id: modal_id, tabindex: "-1",
-            role: "dialog", aria: {labelledby: "#{modal_id}-label", hidden: false},
-            data: {controller: "remote-modal", action: "turbo:before-render@document->remote-modal#hideBeforeRender"} do
-    = tag.div class: "modal-dialog #{size_class} modal-dialog-centered modal-dialog-scrollable" do
-      = tag.div class: "modal-content" do
-        = tag.div class: "modal-header" do
-          = tag.h5 class: "modal-title", id: "#{modal_id}-label" do
+  .modal.fade{id: modal_id, tabindex: "-1", role: "dialog", aria: {labelledby: "#{modal_id}-label", hidden: false}, data: {controller: "remote-modal", action: "turbo:before-render@document->remote-modal#hideBeforeRender"}}
+    .modal-dialog{class: "#{size_class} modal-dialog-centered modal-dialog-scrollable"}
+      .modal-content
+        .modal-header
+          %h5.modal-title{id: "#{modal_id}-label"}
             = title
-          = tag.button "", type: "button", class: "btn-close", data: {bs_dismiss: "modal"}, aria: { label: "Close" }
-        = tag.div class: "modal-body" do
+          %button.btn-close{type: "button", data: {bs_dismiss: "modal"}, aria: {label: t(".close")}}
+        .modal-body
           = yield

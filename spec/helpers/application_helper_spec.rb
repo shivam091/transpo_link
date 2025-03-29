@@ -75,9 +75,9 @@ RSpec.describe ApplicationHelper, type: :helper do
   end
 
   describe "#current_controller?" do
-    before do
-      allow(helper).to receive(:controller) { double(controller_name: "orders", controller_path: "orders") }
-    end
+    let!(:controller_mock) { double(controller_name: "orders", controller_path: "orders") }
+
+    before { allow(helper).to receive(:controller) { controller_mock } }
 
     it "returns true if current controller matches" do
       expect(helper.current_controller?(:orders)).to be_truthy

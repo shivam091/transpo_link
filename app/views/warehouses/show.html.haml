@@ -6,57 +6,75 @@
         .widget-header.d-flex.align-items-center.justify-content-between
           .d-block
             .widget-title
-              = h(warehouse.reference_code)
+              = warehouse.reference_code
             .widget-help
               %span.middle-dot-divider
                 = Warehouse.human_attribute_name(:created_at)
-                = h(time_ago_with_tooltip(warehouse.created_at))
+                = time_ago_with_tooltip(warehouse.created_at)
               %span.middle-dot-divider
                 = Warehouse.human_attribute_name(:updated_at)
-                = h(time_ago_with_tooltip(warehouse.updated_at))
+                = time_ago_with_tooltip(warehouse.updated_at)
           = link_to edit_warehouse_path(warehouse), class: "btn btn-secondary" do
             = external_svg_tag("svgs/pencil.svg")
             = button_text(:edit)
         .widget-body
           .widget-row
             .widget-row-content
-              .widget-row-title= Warehouse.human_attribute_name(:name)
-              .widget-row-body= h(warehouse.name)
+              .widget-row-title
+                = Warehouse.human_attribute_name(:name)
+              .widget-row-body
+                = warehouse.name
           .widget-row
             .widget-row-content
-              .widget-row-title= Warehouse.human_attribute_name(:email_address)
-              .widget-row-body= mail_to warehouse.email_address
+              .widget-row-title
+                = Warehouse.human_attribute_name(:email_address)
+              .widget-row-body
+                = warehouse.email_address.present? ? mail_to(warehouse.email_address) : "-"
           .widget-row
             .widget-row-content
-              .widget-row-title= Warehouse.human_attribute_name(:contact_number)
-              .widget-row-body= h(warehouse.contact_number)
+              .widget-row-title
+                = Warehouse.human_attribute_name(:contact_number)
+              .widget-row-body
+                = warehouse.contact_number || "-"
           .widget-row
             .widget-row-content
-              .widget-row-title= Warehouse.human_attribute_name(:description)
-              .widget-row-body= h(warehouse.description)
+              .widget-row-title
+                = Warehouse.human_attribute_name(:description)
+              .widget-row-body
+                = warehouse.description || "-"
           .widget-row
             .widget-row-content
-              .widget-row-title= Warehouse.human_attribute_name(:manager_ids)
+              .widget-row-title
+                = Warehouse.human_attribute_name(:manager_ids)
               .widget-row-body
                 = warehouse.managers.includes(:user_detail).map { |manager| link_to(manager.full_name, user_path(manager)) }.join(", ").html_safe
           .widget-row
             .widget-row-content
-              .widget-row-title= Warehouse.human_attribute_name(:supplier_ids)
+              .widget-row-title
+                = Warehouse.human_attribute_name(:supplier_ids)
               .widget-row-body
                 = warehouse.suppliers.includes(:user_detail).map { |supplier| link_to(supplier.full_name, user_path(supplier)) }.join(", ").html_safe
           .widget-row
             .widget-row-content
-              .widget-row-title= Warehouse.human_attribute_name(:capacity)
-              .widget-row-body= h(warehouse.capacity)
+              .widget-row-title
+                = Warehouse.human_attribute_name(:capacity)
+              .widget-row-body
+                = warehouse.capacity
           .widget-row
             .widget-row-content
-              .widget-row-title= Warehouse.human_attribute_name(:latitude)
-              .widget-row-body= h(warehouse.formatted_latitude)
+              .widget-row-title
+                = Warehouse.human_attribute_name(:latitude)
+              .widget-row-body
+                = warehouse.formatted_latitude || "-"
           .widget-row
             .widget-row-content
-              .widget-row-title= Warehouse.human_attribute_name(:longitude)
-              .widget-row-body= h(warehouse.formatted_longitude)
+              .widget-row-title
+                = Warehouse.human_attribute_name(:longitude)
+              .widget-row-body
+                = warehouse.formatted_longitude || "-"
           .widget-row
             .widget-row-content
-              .widget-row-title= Warehouse.human_attribute_name(:address)
-              .widget-row-body= h(warehouse.address.humanize)
+              .widget-row-title
+                = Warehouse.human_attribute_name(:address)
+              .widget-row-body
+                = warehouse.address.persisted? ? warehouse.address.humanize : "-"

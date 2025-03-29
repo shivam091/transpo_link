@@ -14,7 +14,7 @@ module TranspoLink
       nil
     end
 
-    def options_for_currencies
+    def select_options
       Money::Currency.all.collect do |currency|
         [formatted_currency(currency), currency.id.upcase.to_s]
       end

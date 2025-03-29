@@ -1,26 +1,26 @@
 .col-sm-12.col-md-6.col-lg-4
   = form.label :preferred_locale, class: "form-label required"
-  = form.select :preferred_locale, options_for_select(TranspoLink::I18n.options_for_languages, form.object.preferred_locale),
+  = form.select :preferred_locale, options_for_select(TranspoLink::I18n.select_options, form.object.preferred_locale),
     {include_blank: t(".select_preferred_language")}
   = help_text(t(".preferred_locale_help_text"))
 .col-sm-12.col-md-6.col-lg-4
   = form.label :preferred_time_zone, class: "form-label required"
-  = form.select :preferred_time_zone, options_for_select(TranspoLink::TimeZone.options_for_time_zones, form.object.preferred_time_zone),
+  = form.select :preferred_time_zone, options_for_select(TranspoLink::TimeZone.select_options, form.object.preferred_time_zone),
     {include_blank: t(".select_time_zone")}
   = help_text(t(".preferred_time_zone_help_text"))
 .col-sm-12.col-md-6.col-lg-4
   = form.label :preferred_currency, class: "form-label required"
-  = form.select :preferred_currency, options_for_select(TranspoLink::Currency.options_for_currencies, form.object.preferred_currency),
+  = form.select :preferred_currency, options_for_select(TranspoLink::Currency.select_options, form.object.preferred_currency),
     {include_blank: t(".select_currency")}
   = help_text(t(".preferred_currency_help_text"))
 .col-sm-12.col-md-6.col-lg-4
   = form.label :preferred_color_scheme, class: "form-label required"
   .col
-    - enum_options_for_select(UserPreference, :preferred_color_schemes).each do |label, value|
+    - enum_options_for_select(UserPreference, :preferred_color_schemes).each do |label, color_scheme|
       .form-check.form-check-inline.mt-1
-        = form.radio_button :preferred_color_scheme, value, id: "preferred_color_scheme_#{value}",
-          checked: (form.object.preferred_color_scheme == value)
-        = form.label :preferred_color_scheme, label, class: "form-check-label", for: "preferred_color_scheme_#{value}"
+        = form.radio_button :preferred_color_scheme, color_scheme, id: "preferred_color_scheme_#{color_scheme}",
+          checked: (form.object.preferred_color_scheme == color_scheme)
+        = form.label :preferred_color_scheme, label, class: "form-check-label", for: "preferred_color_scheme_#{color_scheme}"
   = help_text(t(".preferred_color_scheme_help_text"))
 .col-sm-12.col-md-6.col-lg-4
   = form.label :are_notifications_enabled, class: "form-check-label required mb-2"

@@ -17,15 +17,13 @@ RSpec.describe FeedbacksHelper, type: :helper do
 
   describe "#reviewable_link" do
     it "returns product path for a product" do
-      allow(helper).to receive(:product_path).with(product).and_return("/products/1")
+      allow(helper).to receive(:product_path).with(product) { "/products/1" }
 
       expect(helper.reviewable_link(product)).to eq("/products/1")
     end
 
     it "returns javascript:void(0) for unknown reviewable types" do
-      unknown_reviewable = double("UnknownReviewable")
-
-      expect(helper.reviewable_link(unknown_reviewable)).to eq("javascript:void(0)")
+      expect(helper.reviewable_link(double("UnknownReviewable"))).to eq("javascript:void(0)")
     end
   end
 end

@@ -25,7 +25,7 @@ RSpec.describe HasReferenceCode do
     Object.send(:remove_const, :ReferenceCodeModel)
   end
 
-  let!(:ref_code_model) { ReferenceCodeModel.new }
+  let(:ref_code_model) { ReferenceCodeModel.new }
 
   describe "before_create callback" do
     it "calls set_reference_code before creation" do
@@ -39,7 +39,7 @@ RSpec.describe HasReferenceCode do
     context "when reference_code column exists" do
       it "generates a new reference code with correct prefix and sequence" do
         allow(ReferenceCodeModel::REFERENCE_CODE_CONFIG).to receive(:fetch).with("ReferenceCodeModel") { {prefix: "WH", seq_name: "warehouse_reference_code_seq"} }
-        allow(ActiveRecord::Base.connection).to receive(:select_value).with("SELECT nextval('warehouse_reference_code_seq')") { 1 }
+        allow(connection).to receive(:select_value).with("SELECT nextval('warehouse_reference_code_seq')") { 1 }
 
         ref_code_model.send(:set_reference_code)
 
@@ -50,7 +50,7 @@ RSpec.describe HasReferenceCode do
     context "when no existing reference codes are present" do
       it "generates reference code starting from 1" do
         allow(ReferenceCodeModel::REFERENCE_CODE_CONFIG).to receive(:fetch).with("ReferenceCodeModel") { {prefix: "PRD", seq_name: "product_reference_code_seq"} }
-        allow(ActiveRecord::Base.connection).to receive(:select_value).with("SELECT nextval('product_reference_code_seq')") { 1 }
+        allow(connection).to receive(:select_value).with("SELECT nextval('product_reference_code_seq')") { 1 }
 
         ref_code_model.send(:set_reference_code)
 

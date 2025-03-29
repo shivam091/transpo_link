@@ -5,13 +5,13 @@
 # Be sure to restart your server when you modify this file.
 
 ActionView::Base.field_error_proc = Proc.new do |html_tag, instance|
-  html_doc = Nokogiri::HTML::DocumentFragment.parse(html_tag)
-  element = html_doc.children[0]
+  fragment = Loofah.fragment(html_tag)
+  element = fragment.children.first
 
-  next html_tag if element["type"] == "hidden"
+  next html_tag if element.blank? || element["type"] == "hidden"
 
   element.add_class("is-invalid")
-  html_tag = element.to_s
+  html_tag = element.to_html
 
   if %w[input select textarea].include?(element.name)
     attribute = instance.instance_variable_get(:@method_name)

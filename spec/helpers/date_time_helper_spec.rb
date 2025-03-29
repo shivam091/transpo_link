@@ -109,9 +109,9 @@ RSpec.describe DateTimeHelper, type: :helper do
     end
 
     context "when providing a custom locale and scope" do
-      let(:custom_locale) { :es }
-      let(:custom_scope) { "custom.datetime.time_ago" }
-      let(:options) { {locale: custom_locale, scope: custom_scope} }
+      let!(:custom_locale) { :es }
+      let!(:custom_scope) { "custom.datetime.time_ago" }
+      let!(:options) { {locale: custom_locale, scope: custom_scope} }
 
       it "uses the provided locale and scope" do
         expect(I18n).to receive(:with_options).with(locale: custom_locale, scope: custom_scope).and_call_original

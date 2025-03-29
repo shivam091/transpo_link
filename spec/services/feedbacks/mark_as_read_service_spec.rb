@@ -14,7 +14,7 @@ RSpec.describe Feedbacks::MarkAsReadService, type: :service do
   describe ".call" do
     context "when mark as read is successful" do
       it "marks feedback as read" do
-        expect(service_response.payload[:feedback].is_unread?).to be_falsy
+        expect { service_response }.to change { feedback.reload.is_unread? }.to be_falsy
       end
 
       include_examples "returns a success response"
@@ -24,7 +24,7 @@ RSpec.describe Feedbacks::MarkAsReadService, type: :service do
       before { allow(feedback).to receive(:mark_as_read!) { false } }
 
       it "does not mark feedback as read" do
-        expect(service_response.payload[:feedback].is_unread?).to be_truthy
+        expect { service_response }.to not_change { feedback.reload.is_unread? }
       end
 
       include_examples "returns an error response"

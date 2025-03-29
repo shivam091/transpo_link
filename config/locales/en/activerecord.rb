@@ -1,0 +1,339 @@
+# -*- encoding: utf-8 -*-
+# -*- frozen_string_literal: true -*-
+# -*- warn_indent: true -*-
+
+{
+  en: {
+    activerecord: {
+      attributes: {
+        role: {
+          name: "Name",
+          is_active: "Is active",
+          created_at: "Created at",
+          updated_at: "Updated at",
+        },
+        request_log: {
+          uuid: "UUID",
+          uri: "URI",
+          method: "HTTP method",
+          session_id: "Session ID",
+          session_private_id: "Session private ID",
+          remote_address: "Remote address",
+          elapsed_time: "Elapsed time",
+          user_agent: "User agent",
+          referrer: "Referrer",
+          origin: "Origin",
+          memory_usage: "Memory usage",
+          cpu_usage: "CPU usage",
+          exception: "Exception",
+          request_headers: "Request headers",
+          response_headers: "Response headers",
+          status: "HTTP status",
+          response_size: "Response size",
+          query_params: "Query parameters",
+          ip_info: "IP info",
+          user_id: "Accessed by",
+          created_at: "Accessed on",
+        },
+        user: {
+          email: "Email address",
+          current_password: "Current password",
+          password: "Password",
+          password_confirmation: "Password confirmation",
+          remember_me: "Keep me signed in",
+          is_banned: "Is banned",
+          is_active: "Is active",
+          role_id: "Role",
+          last_activity_at: "Last activity at",
+          sign_in_count: "Sign in count",
+          current_sign_in_at: "Current sign in at",
+          last_sign_in_at: "Last sign in at",
+          current_sign_in_ip: "Current sign in IP",
+          last_sign_in_ip: "Last sign in IP",
+          confirmed_at: "Confirmed at",
+          confirmation_sent_at: "Confirmation sent at",
+          unconfirmed_email: "Unconfirmed email address",
+          failed_attempts: "Failed attempts",
+          locked_at: "Locked at",
+          address: "Address",
+          created_at: "User since",
+          updated_at: "Last updated at",
+        },
+        user_detail: {
+          user_id: "User",
+          full_name: "Full name",
+          first_name: "First name",
+          last_name: "Last name",
+          mobile_number: "Mobile number",
+          alternate_contact_number: "Alternate contact number",
+          alternate_email: "Alternate email address",
+        },
+        user_preference: {
+          preferred_locale: "Preferred language",
+          preferred_time_zone: "Preferred time zone",
+          preferred_currency: "Preferred currency",
+          preferred_color_scheme: "Preferred color scheme",
+          are_notifications_enabled: "Are notifications enabled",
+        },
+        address: {
+          address1: "Flat, house no., building, company, apartment, P.O. box, c/o",
+          address2: "Area, street, sector, village, suite, or floor",
+          city: "Town, city, suburb, or area",
+          state: "State, province, county, or territory",
+          country: "Country or region",
+          postal_code: "Postal code, postcode, or PIN code",
+        },
+        warehouse: {
+          name: "Name",
+          reference_code: "Reference code",
+          email_address: "Email address",
+          contact_number: "Contact number",
+          description: "Description",
+          total_capacity: "Total capacity",
+          capacity_unit: "Capacity unit",
+          capacity: "Capacity",
+          latitude: "Latitude",
+          longitude: "Longitude",
+          is_active: "Is active",
+          created_at: "Created at",
+          updated_at: "Updated at",
+          address: "Address",
+          manager_ids: "Managers",
+          supplier_ids: "Suppliers",
+        },
+        warehouse_manager: {
+          warehouse_id: "Warehouse",
+          manager_id: "Manager",
+        },
+        warehouse_supplier: {
+          warehouse_id: "Warehouse",
+          supplier_id: "Supplier",
+        },
+        legal_identifier: {
+          user_id: "User",
+          tax_identifier_type: "Tax identifier type",
+          tax_identifier: "Tax identifier",
+          entity_type: "Entity type",
+          business_identifier_type: "Business identifier type",
+          business_identifier: "Business identifier",
+          country: "Country or region",
+        },
+        tax_rate: {
+          country: "Country or region",
+          tax_identifier_type: "Tax identifier type",
+          business_category: "Business category",
+          rate: "Rate",
+          valid_from: "Valid from",
+          valid_to: "Valid to",
+        },
+        feedback: {
+          reference_code: "Reference code",
+          rating: "Rating",
+          comment: "Comment",
+          is_unread: "Is unread",
+          reviewable: "Given for",
+          user_id: "Given by",
+          created_at: "Submitted at",
+        },
+        product_category: {
+          name: "Name",
+          products_count: "Products count",
+          parent_category_id: "Parent category",
+          is_active: "Is active",
+        },
+        product: {
+          reference_code: "Reference code",
+          name: "Name",
+          sku: "SKU",
+          description: "Description",
+          barcode: "Barcode",
+          min_stock_threshold: "Min. stock threshold",
+          capacity_unit: "Capacity unit",
+          currency: "Currency",
+          cost_price: "Cost price",
+          product_category_id: "Product category",
+          is_active: "Is active",
+          created_at: "Created at",
+          updated_at: "Updated at",
+        },
+        unit_conversion: {
+          from_unit: "Source unit",
+          to_unit: "Target unit",
+          conversion_rate: "Conversion rate",
+        },
+        product_price: {
+          warehouse_id: "Warehouse",
+          min_quantity: "Min. quantity",
+          cost_price: "Cost price",
+          currency: "Currency",
+        },
+        inventory: {
+          reference_code: "Reference code",
+          product_id: "Product",
+          warehouse_id: "Warehouse",
+          batch_number: "Batch number",
+          expiration_date: "Expiration date",
+          stock_quantity: "Stock quantity",
+          reserved_stock: "Reserved stock",
+          inventory_unit: "Inventory unit",
+          cost_price: "Cost price",
+          currency: "Currency",
+          tracking_method: "Tracking method",
+          created_at: "Created at",
+          updated_at: "Updated at",
+        },
+        inventory_movement: {
+          inventory_id: "Inventory",
+          quantity: "Quantity",
+          movement_type: "Movement type",
+          inventory_unit: "Inventory unit",
+          unit_cost: "Unit cost",
+          total_cost: "Total cost",
+          currency: "Currency",
+          movement_date: "Movement date",
+          metadata: "Metadata",
+          created_at: "Created at",
+          updated_at: "Updated at",
+        },
+        inventory_audit_log: {
+          inventory_id: "Inventory",
+          inventory_movement_id: "Inventory movement",
+          user_id: "User",
+          movement_type: "Movement type",
+          previous_quantity: "Previous quantity",
+          new_quantity: "New quantity",
+          metadata: "Metadata",
+          created_at: "Created at",
+          updated_at: "Updated at",
+        },
+      },
+      errors: {
+        format: "%{attribute} %{message}",
+        template: {
+          body: "There were problems with the following fields:",
+          header: {
+            one: "Whoops! There was some problem with your input. Please fix it before continuing:",
+            other: "Whoops! There were some problems with your inputs. Please fix them before continuing:"
+          }
+        },
+        models: {
+          legal_identifier: {
+            attributes: {
+              tax_identifier: {
+                uniqueness: "should be unique within the same tax identifier type, country, and entity type",
+                invalid: "is invalid for selected country and tax identifier type"
+              },
+              tax_identifier_type: {
+                inclusion: "'%{value}' is not a valid tax identifier type",
+                invalid: "is not valid for the selected country"
+              },
+              business_identifier_type: {
+                absence: "must not be present when entity type is business",
+                inclusion: "'%{value}' is not a valid business identifier type",
+                invalid: "is not valid for the selected country"
+              },
+              business_identifier: {
+                absence: "must not be present when entity type is business",
+                uniqueness: "should be unique within the same business identifier type and country",
+                invalid: "is invalid for selected country and business identifier type"
+              },
+              entity_type: {
+                inclusion: "'%{value}' is not a valid entity type",
+              },
+            },
+          },
+          tax_rate: {
+            attributes: {
+              base: {
+                no_overlapping_tax_rates: "There is already an active tax rate for this country, tax identifier type, and business category in the selected date range",
+              },
+              tax_identifier_type: {
+                inclusion: "'%{value}' is not a valid tax identifier type",
+                uniqueness: "already exist for this country and business category for selected date range",
+                invalid: "is not valid for the selected country"
+              },
+              business_category: {
+                inclusion: "'%{value}' is not a valid tax identifier type",
+              },
+              rate: {
+                cannot_change_rate_for_active_tax_rate: "cannot be changed for an active tax rate",
+              },
+              valid_from: {
+                greater_than_or_equal_to: "must be today or a future date"
+              }
+            },
+          },
+          product: {
+            attributes: {
+              capacity_unit: {
+                inclusion: "%{value} is not a valid unit",
+              },
+            },
+          },
+          feedback: {
+            attributes: {
+              rating: {
+                invalid: "must be in steps of 0.5"
+              },
+            },
+          },
+          inventory: {
+            attributes: {
+              product_id: {
+                uniqueness: "already has inventory for the selected warehouse",
+              },
+              expiration_date: {
+                greater_than_or_equal_to: "must be today or a future date"
+              },
+              inventory_unit: {
+                invalid: "is not valid for the selected product"
+              }
+            }
+          },
+        },
+        messages: {
+          label_already_exists_at_group_level: "already exists at group level for %{group}. Please choose another one.",
+          accepted: "must be accepted",
+          any_field: "At least one field of %{one_of_required_fields} must be present",
+          blank: "is required",
+          present: "must be blank",
+          confirmation: "doesn't match %{attribute}",
+          empty: "can't be empty",
+          equal_to: "must be equal to %{count}",
+          even: "must be even",
+          exclusion: "is reserved",
+          greater_than: "must be greater than %{count}",
+          greater_than_or_equal_to: "must be greater than or equal to %{count}",
+          inclusion: "is not included in the list",
+          invalid: "is invalid",
+          less_than: "must be less than %{count}",
+          less_than_or_equal_to: "must be less than or equal to %{count}",
+          model_invalid: "Validation failed: %{errors}",
+          not_a_number: "must be a number",
+          not_an_integer: "must be an integer",
+          odd: "must be odd",
+          required: "must exist",
+          taken: "is already in use",
+          too_long: {
+            one: "is too long (maximum is 1 character)",
+            other: "is too long (maximum is %{count} characters)"
+          },
+          too_short: {
+            one: "is too short (minimum is 1 character)",
+            other: "is too short (minimum is %{count} characters)"
+          },
+          wrong_length: {
+            one: "must be exactly 1 character long",
+            other: "must be exactly %{count} characters long"
+          },
+          other_than: "must be other than %{count}",
+          record_invalid: "Validation failed: %{errors}",
+          restrict_dependent_destroy: {
+            has_one: "Cannot delete record because a dependent %{record} exists",
+            has_many: "Cannot delete record because dependent %{record} exist"
+          },
+        }
+      },
+    }
+  }
+}

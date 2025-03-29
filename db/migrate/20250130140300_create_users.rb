@@ -46,7 +46,6 @@ class CreateUsers < ActiveRecord::Migration[8.0]
                    },
                    null: false,
                    index: {using: :btree}
-
       t.timestamps_with_timezone null: false
 
       t.check_constraint "email IS NOT NULL AND email  <> ''", name: :check_users_email_presence

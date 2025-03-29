@@ -1,8 +1,11 @@
 = title(t(".title"))
 .text-center
-  %h4.fw-bold.mb-3.fw-normal= t(".create_new_password")
-  %p= t(".you_will_be_asked_for_new_password")
-  %p= t(".after_password_reset_redirect_note")
+  %h4.fw-bold.mb-3.fw-normal
+    = t(".create_new_password")
+  %p
+    = t(".you_will_be_asked_for_new_password")
+  %p
+    = t(".after_password_reset_redirect_note")
 = pretty_form_with model: resource, as: resource_name, url: password_path(resource_name), method: :put,
   data: {turbo: false}, class: "password-reset-form" do |form|
   = form_errors(resource)
@@ -16,12 +19,12 @@
       = secret_reveal_button
   .col-12{data: {controller: "secret-reveal", secret_reveal_hidden_class: "d-none"}}
     .input-group
-      .form-floating.mb-3
+      .form-floating
         = form.password_field :password_confirmation, autocomplete: "confirm-new-password",
           placeholder: User.human_attribute_name(:password_confirmation), data: {secret_reveal_target: "input"}
         = form.label :password_confirmation, class: "form-label required"
       = secret_reveal_button
-  .col-12
+  .col-12.mt-3
     = form.button type: :submit, class: "w-100 btn btn-primary justify-content-center" do
       = button_text(:save_changes)
       = external_svg_tag("svgs/floppy.svg")
