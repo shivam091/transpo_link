@@ -1,0 +1,3 @@
+= turbo_stream.update "state-select" do
+  - blank_label = @states.present? ? t(".select_state") : t(".no_states_available")
+  = options_for_select([[blank_label, ""]] + @states)
