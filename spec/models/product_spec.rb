@@ -74,6 +74,7 @@ RSpec.describe Product, type: :model do
     it { is_expected.to include_module(ActsAsMoney) }
     it { is_expected.to include_module(NullifyIfBlank) }
     it { is_expected.to include_module(Sanitizable) }
+    it { is_expected.to include_module(Navigable) }
   end
 
   describe "nullified attributes" do

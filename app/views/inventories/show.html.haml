@@ -66,3 +66,5 @@
               = Inventory.human_attribute_name(:tracking_method)
             .widget-row-body
               = enum_i18n(Inventory, :tracking_methods, @inventory.tracking_method)
+  .card-footer
+    = render_if_exists("shared/navigable_links", locals: {record: @inventory})

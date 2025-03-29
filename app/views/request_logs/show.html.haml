@@ -26,3 +26,5 @@
           = t(".advanced_details")
       .widget-body
         = render_if_exists("request_logs/advanced_details", locals: {request_log: @request_log})
+  .card-footer
+    = render_if_exists("shared/navigable_links", locals: {record: @request_log})

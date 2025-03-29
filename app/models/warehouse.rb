@@ -4,7 +4,7 @@
 
 class Warehouse < ApplicationRecord
   include Toggleable, HasReferenceCode, Pageable, Sortable, Sanitizable,
-          NullifyIfBlank
+          NullifyIfBlank, Navigable
 
   LISTING_ATTRIBUTES = %i[
     reference_code name email_address contact_number capacity latitude longitude
@@ -67,8 +67,6 @@ class Warehouse < ApplicationRecord
 
   has_many :product_prices, inverse_of: :warehouse, dependent: :restrict_with_exception
   has_many :inventories, inverse_of: :warehouse, dependent: :restrict_with_exception
-
-  default_scope -> { order_created_desc }
 
   accepts_nested_attributes_for :address, update_only: true
 
