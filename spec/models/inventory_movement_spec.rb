@@ -7,7 +7,7 @@
 require "spec_helper"
 
 RSpec.describe InventoryMovement, type: :model do
-  subject { create(:inventory_movement) }
+  subject { build(:inventory_movement) }
 
   describe "valid factory" do
     it { is_expected.to have_a_valid_factory(:inventory_movement) }
