@@ -10,7 +10,7 @@
         title: "Products",
       },
       product: {
-        delete_product_confirmation_text: "Are you sure you want to delete the product ‘%{product_name}’? This cannot be undone.",
+        delete_confirmation_text: "Are you sure you want to delete the product ‘%{product_name}’? This cannot be undone.",
       },
       new: {
         breadcrumb: "New",

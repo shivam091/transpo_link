@@ -168,7 +168,7 @@ RSpec.describe Product, type: :model do
           it "does not create a unit conversion if required attributes are blank" do
             expect {
               product.update(unit_conversions_attributes: {0 => {from_unit: "", to_unit: "", conversion_rate: ""}})
-            }.not_to change(UnitConversion, :count)
+            }.to_not change(UnitConversion, :count)
           end
         end
       end
@@ -177,7 +177,7 @@ RSpec.describe Product, type: :model do
         it "updates the existing unit conversion without changing the count" do
           expect {
             product.update(unit_conversions_attributes: {id: unit_conversion.id, from_unit: "cm", to_unit: "m", conversion_rate: 0.01})
-          }.not_to change(UnitConversion, :count)
+          }.to_not change(UnitConversion, :count)
 
           expect(unit_conversion.reload.conversion_rate).to eq(0.01)
         end
@@ -208,7 +208,7 @@ RSpec.describe Product, type: :model do
           it "does not create a product price if required attributes are blank" do
             expect {
               product.update(product_prices_attributes: {0 => {min_quantity: "", unit_price: "", currency: ""}})
-            }.not_to change(ProductPrice, :count)
+            }.to_not change(ProductPrice, :count)
           end
         end
       end
@@ -217,7 +217,7 @@ RSpec.describe Product, type: :model do
         it "updates the existing product price without changing the count" do
           expect {
             product.update(product_prices_attributes: {id: product_price.id, min_quantity: 10, unit_price: 202, currency: "USD"})
-          }.not_to change(ProductPrice, :count)
+          }.to_not change(ProductPrice, :count)
 
           expect(product_price.reload.currency).to eq("USD")
         end

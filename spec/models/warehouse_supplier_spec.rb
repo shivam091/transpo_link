@@ -7,7 +7,7 @@
 require "spec_helper"
 
 RSpec.describe WarehouseSupplier, type: :model do
-  subject { create(:warehouse_supplier) }
+  subject { build(:warehouse_supplier) }
 
   describe "valid factory" do
     it { is_expected.to have_a_valid_factory(:warehouse_supplier) }
