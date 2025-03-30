@@ -7,7 +7,7 @@
 require "spec_helper"
 
 RSpec.describe ProductPrice, type: :model do
-  subject { create(:product_price) }
+  subject { build(:product_price) }
 
   describe "valid factory" do
     it { is_expected.to have_a_valid_factory(:product_price) }
