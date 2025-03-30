@@ -8,19 +8,17 @@ require "spec_helper"
 
 RSpec.describe PrettyFormBuilder, type: :helper do
   before(:all) do
-    ActiveRecord::Schema.define(version: 1) do
-      create_table :test_users, force: true do |t|
-        t.string :reference_code
-        t.string :name
-        t.string :password
-        t.string :email
-        t.string :role
-        t.date :joining_date
-        t.integer :age
-        t.text :bio
-        t.boolean :is_active
-        t.timestamps
-      end
+    connection.create_table :test_users, force: true do |t|
+      t.string :reference_code
+      t.string :name
+      t.string :password
+      t.string :email
+      t.string :role
+      t.date :joining_date
+      t.integer :age
+      t.text :bio
+      t.boolean :is_active
+      t.timestamps
     end
 
     class TestUser < ApplicationRecord
@@ -28,7 +26,7 @@ RSpec.describe PrettyFormBuilder, type: :helper do
   end
 
   after(:all) do
-    connection.drop_table(:test_users, if_exists: true)
+    connection.drop_table :test_users, if_exists: true
     Object.send(:remove_const, :TestUser)
   end
 
