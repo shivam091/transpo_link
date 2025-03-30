@@ -8,12 +8,10 @@ require "spec_helper"
 
 RSpec.describe NullifyIfBlank do
   before(:all) do
-    ActiveRecord::Schema.define(version: 1) do
-      create_table :nullify_if_blank_models, force: true do |t|
-        t.string :name
-        t.string :email
-        t.timestamps
-      end
+    connection.create_table :nullify_if_blank_models, force: true do |t|
+      t.string :name
+      t.string :email
+      t.timestamps
     end
 
     class NullifyIfBlankModel < ApplicationRecord
@@ -24,7 +22,7 @@ RSpec.describe NullifyIfBlank do
   end
 
   after(:all) do
-    connection.drop_table(:nullify_if_blank_models, if_exists: true)
+    connection.drop_table :nullify_if_blank_models, if_exists: true
     Object.send(:remove_const, :NullifyIfBlankModel)
   end
 

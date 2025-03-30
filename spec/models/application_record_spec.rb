@@ -8,11 +8,9 @@ require "spec_helper"
 
 RSpec.describe ApplicationRecord, type: :model do
   before(:all) do
-    ActiveRecord::Schema.define(version: 1) do
-      create_table :dummy_models, force: true do |t|
-        t.string :email
-        t.timestamps
-      end
+    connection.create_table :dummy_models, force: true do |t|
+      t.string :email
+      t.timestamps
     end
 
     class DummyModel < ApplicationRecord
@@ -20,7 +18,7 @@ RSpec.describe ApplicationRecord, type: :model do
   end
 
   after(:all) do
-    connection.drop_table(:dummy_models, if_exists: true)
+    connection.drop_table :dummy_models, if_exists: true
     Object.send(:remove_const, :DummyModel)
   end
 
