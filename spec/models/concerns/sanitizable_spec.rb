@@ -6,13 +6,11 @@ require "spec_helper"
 
 RSpec.describe Sanitizable do
   before(:all) do
-    ActiveRecord::Schema.define(version: 1) do
-      create_table :sanitizable_models, force: true do |t|
-        t.string :name
-        t.string :email
-        t.text :bio
-        t.timestamps
-      end
+    connection.create_table :sanitizable_models, force: true do |t|
+      t.string :name
+      t.string :email
+      t.text :bio
+      t.timestamps
     end
 
     class SanitizableModel < ApplicationRecord
@@ -24,7 +22,7 @@ RSpec.describe Sanitizable do
   end
 
   after(:all) do
-    connection.drop_table(:sanitizable_models, if_exists: true)
+    connection.drop_table :sanitizable_models, if_exists: true
     Object.send(:remove_const, :SanitizableModel)
   end
 

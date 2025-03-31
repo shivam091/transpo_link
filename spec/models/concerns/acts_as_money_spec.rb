@@ -8,11 +8,9 @@ require "spec_helper"
 
 RSpec.describe ActsAsMoney do
   before(:all) do
-    ActiveRecord::Schema.define(version: 1) do
-      create_table :acts_as_money_models, force: true do |t|
-        t.string :currency
-        t.timestamps
-      end
+    connection.create_table :acts_as_money_models, force: true do |t|
+      t.string :currency
+      t.timestamps
     end
 
     class ActsAsMoneyModel < ApplicationRecord
@@ -21,7 +19,7 @@ RSpec.describe ActsAsMoney do
   end
 
   after(:all) do
-    connection.drop_table(:acts_as_money_models, if_exists: true)
+    connection.drop_table :acts_as_money_models, if_exists: true
     Object.send(:remove_const, :ActsAsMoneyModel)
   end
 

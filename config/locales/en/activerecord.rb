@@ -171,14 +171,22 @@
           reference_code: "Reference code",
           product_id: "Product",
           warehouse_id: "Warehouse",
+          tracking_method: "Tracking method",
+          inventory_unit: "Inventory unit",
+          average_cost_price: "Average cost price",
+          currency: "Currency",
+          low_stock_threshold: "Low stock threshold",
+          created_at: "Created at",
+          updated_at: "Updated at",
+        },
+        inventory_batch: {
+          inventory_id: "Inventory",
           batch_number: "Batch number",
           expiration_date: "Expiration date",
-          stock_quantity: "Stock quantity",
-          reserved_stock: "Reserved stock",
+          quantity: "Quantity",
           inventory_unit: "Inventory unit",
           cost_price: "Cost price",
           currency: "Currency",
-          tracking_method: "Tracking method",
           created_at: "Created at",
           updated_at: "Updated at",
         },
@@ -206,6 +214,15 @@
           created_at: "Created at",
           updated_at: "Updated at",
         },
+        stock: {
+          inventory_id: "Inventory",
+          quantity_in_hand: "Quantity in hand",
+          quantity_pending_to_buyer: "Quantity pending to buyer",
+        },
+        replenishment: {
+          inventory_id: "Inventory",
+          quantity_pending_from_supplier: "Quantity pending from supplier",
+        }
       },
       errors: {
         format: "%{attribute} %{message}",
@@ -239,6 +256,9 @@
               },
               entity_type: {
                 inclusion: "'%{value}' is not a valid entity type",
+              },
+              status: {
+                inclusion: "'%{value}' is not a valid status",
               },
             },
           },
@@ -282,12 +302,19 @@
               product_id: {
                 uniqueness: "already has inventory for the selected warehouse",
               },
+              inventory_unit: {
+                inclusion: "is not valid for the selected product"
+              }
+            }
+          },
+          inventory_batch: {
+            attributes: {
+              batch_number: {
+                uniqueness: "already exists for the selected inventory"
+              },
               expiration_date: {
                 greater_than_or_equal_to: "must be today or a future date"
               },
-              inventory_unit: {
-                invalid: "is not valid for the selected product"
-              }
             }
           },
         },

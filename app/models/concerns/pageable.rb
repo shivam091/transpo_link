@@ -15,7 +15,8 @@ module Pageable
           FROM pg_stat_user_tables
           WHERE relname = '#{table_name}'
         SQL
-        result = connection.execute(query).first&.fetch("n_live_tup", 0).to_i
+
+        result = connection.select_value(query).to_i || 0
         result.positive? ? result : count
       end
     end

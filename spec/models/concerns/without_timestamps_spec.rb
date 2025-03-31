@@ -9,11 +9,9 @@ require "spec_helper"
 RSpec.describe WithoutTimestamps do
   # Dynamically create a virtual table before running tests
   before(:all) do
-    ActiveRecord::Schema.define(version: 1) do
-      create_table :test_models, force: true do |t|
-        t.string :name
-        t.timestamps  # Include created_at and updated_at
-      end
+    connection.create_table :test_models, force: true do |t|
+      t.string :name
+      t.timestamps  # Include created_at and updated_at
     end
 
     # Define a virtual model that uses the virtual table
@@ -24,7 +22,7 @@ RSpec.describe WithoutTimestamps do
 
   # Clean up the virtual table after tests are done
   after(:all) do
-    connection.drop_table(:test_models, if_exists: true)
+    connection.drop_table :test_models, if_exists: true
     Object.send(:remove_const, :TestModel)  # Remove TestModel constant
   end
 

@@ -14,7 +14,7 @@ RSpec.describe UserDetail, type: :model do
   end
 
   describe "attributes, indexes, foreign keys, and check constraints" do
-    it { is_expected.to have_db_column(:user_id).of_type(:uuid) }
+    it { is_expected.to have_db_column(:user_id).of_type(:uuid).with_options(null: false) }
     it { is_expected.to have_db_column(:first_name).of_type(:string) }
     it { is_expected.to have_db_column(:last_name).of_type(:string) }
     it { is_expected.to have_db_column(:mobile_number).of_type(:string) }

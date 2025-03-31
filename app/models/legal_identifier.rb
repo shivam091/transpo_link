@@ -56,6 +56,8 @@ class LegalIdentifier < ApplicationRecord
     uscc: "uscc"
   }, prefix: true
 
+  attribute :status, :enum, default: statuses[:unapproved]
+
   normalizes :business_identifier, with: ->(business_identifier) { business_identifier.strip.upcase }
 
   nullify_if_blank :business_identifier, :business_identifier_type
@@ -144,6 +146,10 @@ class LegalIdentifier < ApplicationRecord
             },
             business_identifier: true,
             if: :business?,
+            reduce: true
+  validates :status,
+            presence: true,
+            inclusion: {in: statuses.values, message: :inclusion},
             reduce: true
 
   validate :business_identifier_type_country_combination

@@ -15,14 +15,14 @@ RSpec.describe LegalIdentifier, type: :model do
 
   describe "attributes, indexes, foreign keys, and check constraints" do
     it { is_expected.to have_db_column(:id).of_type(:uuid) }
-    it { is_expected.to have_db_column(:user_id).of_type(:uuid) }
+    it { is_expected.to have_db_column(:user_id).of_type(:uuid).with_options(null: false) }
     it { is_expected.to have_db_column(:tax_identifier).of_type(:string) }
     it { is_expected.to have_db_column(:tax_identifier_type).of_type(:string) }
     it { is_expected.to have_db_column(:entity_type).of_type(:enum) }
     it { is_expected.to have_db_column(:business_identifier_type).of_type(:string) }
     it { is_expected.to have_db_column(:business_identifier).of_type(:string) }
     it { is_expected.to have_db_column(:country).of_type(:string) }
-    it { is_expected.to have_db_column(:status).of_type(:string) }
+    it { is_expected.to have_db_column(:status).of_type(:enum) }
     it { is_expected.to have_db_column(:created_at).of_type(:timestamptz).with_options(null: false) }
     it { is_expected.to have_db_column(:updated_at).of_type(:timestamptz).with_options(null: false) }
 
@@ -41,6 +41,8 @@ RSpec.describe LegalIdentifier, type: :model do
     it { is_expected.to have_check_constraint(:check_legal_identifiers_entity_type_inclusion).with_expression("entity_type = ANY (ARRAY['business'::entity_types, 'individual'::entity_types])") }
     it { is_expected.to have_check_constraint(:check_legal_identifiers_business_identifier_based_on_entity) }
     it { is_expected.to have_check_constraint(:check_legal_identifiers_business_identifier_type_based_on_entit) }
+    it { is_expected.to have_check_constraint(:check_legal_identifiers_status_presence) }
+    it { is_expected.to have_check_constraint(:check_legal_identifiers_status_inclusion).with_expression("status = ANY (ARRAY['unapproved'::legal_identifier_statuses, 'approved'::legal_identifier_statuses, 'rejected'::legal_identifier_statuses])") }
   end
 
   describe "included modules" do
@@ -55,7 +57,7 @@ RSpec.describe LegalIdentifier, type: :model do
   describe "enums" do
     it { is_expected.to define_enum_for(:entity_type).backed_by_column_of_type(:enum) }
     it { is_expected.to define_enum_for(:business_identifier_type).backed_by_column_of_type(:string) }
-    it { is_expected.to define_enum_for(:status).backed_by_column_of_type(:string) }
+    it { is_expected.to define_enum_for(:status).backed_by_column_of_type(:enum) }
   end
 
   describe "default values" do
@@ -119,6 +121,11 @@ RSpec.describe LegalIdentifier, type: :model do
     describe "#entity_type" do
       it { is_expected.to validate_presence_of(:entity_type) }
       # it { is_expected.to validate_inclusion_of(:entity_type).in_array(described_class.entity_types.values) }
+    end
+
+    describe "#status" do
+      it { is_expected.to validate_presence_of(:status) }
+      # it { is_expected.to validate_inclusion_of(:status).in_array(described_class.statuses.values) }
     end
 
     describe "#business_identifier_type" do

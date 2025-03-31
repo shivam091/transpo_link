@@ -28,7 +28,7 @@ class CreateTaxRates < ActiveRecord::Migration[8.0]
       t.check_constraint "business_category IN (#{enum_values('business_categories')})", name: :check_tax_rates_business_category_inclusion
 
       t.check_constraint "rate IS NOT NULL", name: :check_tax_rates_rate_presence
-      t.check_constraint "rate >= 0 AND rate <= 100", name: :check_tax_rates_rate_numericality
+      t.check_constraint "rate >= 0.0 AND rate <= 100.0", name: :check_tax_rates_rate_numericality
 
       t.check_constraint "valid_from IS NOT NULL", name: :check_tax_rates_valid_from_presence
       t.check_constraint "valid_from >= CURRENT_DATE", name: :check_tax_rates_valid_from_future

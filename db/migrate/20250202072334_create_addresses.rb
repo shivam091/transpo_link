@@ -8,6 +8,7 @@ class CreateAddresses < ActiveRecord::Migration[8.0]
       t.references :addressable,
                    type: :uuid,
                    polymorphic: true,
+                   null: false,
                    index: {using: :btree}
       t.string :address1
       t.string :address2

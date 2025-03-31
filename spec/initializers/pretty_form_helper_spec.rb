@@ -8,11 +8,9 @@ require "spec_helper"
 
 RSpec.describe PrettyFormHelper, type: :helper do
   before(:all) do
-    ActiveRecord::Schema.define(version: 1) do
-      create_table :test_users, force: true do |t|
-        t.string :name
-        t.timestamps
-      end
+    connection.create_table :test_users, force: true do |t|
+      t.string :name
+      t.timestamps
     end
 
     class TestUser < ApplicationRecord
@@ -20,7 +18,7 @@ RSpec.describe PrettyFormHelper, type: :helper do
   end
 
   after(:all) do
-    connection.drop_table(:test_users, if_exists: true)
+    connection.drop_table :test_users, if_exists: true
     Object.send(:remove_const, :TestUser)
   end
 

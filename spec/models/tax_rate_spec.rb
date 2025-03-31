@@ -37,7 +37,7 @@ RSpec.describe TaxRate, type: :model do
     it { is_expected.to have_check_constraint(:check_tax_rates_business_category_inclusion).with_expression("business_category = ANY (ARRAY['b2b'::business_categories, 'b2c'::business_categories])") }
 
     it { is_expected.to have_check_constraint(:check_tax_rates_rate_presence).with_expression("rate IS NOT NULL") }
-    it { is_expected.to have_check_constraint(:check_tax_rates_rate_numericality).with_expression("rate >= 0::numeric AND rate <= 100::numeric") }
+    it { is_expected.to have_check_constraint(:check_tax_rates_rate_numericality).with_expression("rate >= 0.0 AND rate <= 100.0") }
 
     it { is_expected.to have_check_constraint(:check_tax_rates_valid_from_presence).with_expression("valid_from IS NOT NULL") }
     it { is_expected.to have_check_constraint(:check_tax_rates_valid_from_future).with_expression("valid_from >= CURRENT_DATE") }
