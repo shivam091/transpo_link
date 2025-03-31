@@ -253,6 +253,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_23_132952) do
     t.check_constraint "sku IS NOT NULL AND sku::text <> ''::text", name: "check_products_sku_presence"
   end
 
+  create_table "replenishments", primary_key: "inventory_id", id: :uuid, default: nil, force: :cascade do |t|
+    t.decimal "quantity_pending_from_supplier", precision: 12, scale: 2, default: "0.0"
+    t.timestamptz "created_at", null: false
+    t.timestamptz "updated_at", null: false
+    t.index ["inventory_id"], name: "index_replenishments_on_inventory_id", unique: true
+    t.check_constraint "quantity_pending_from_supplier >= 0.0", name: "check_replenishments_quantity_pending_from_supplier_non_negativ"
+    t.check_constraint "quantity_pending_from_supplier IS NOT NULL", name: "check_replenishments_quantity_pending_from_supplier_presence"
+  end
+
   create_table "request_logs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "uuid"
     t.string "uri"
@@ -485,7 +494,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_23_132952) do
   add_foreign_key "product_prices", "products", name: "fk_product_prices_product_id_on_products", on_delete: :cascade
   add_foreign_key "product_prices", "warehouses", name: "fk_product_prices_warehouse_id_on_warehouses", on_delete: :restrict
   add_foreign_key "products", "product_categories", name: "fk_products_product_category_id_on_product_categories", on_delete: :restrict
+  add_foreign_key "replenishments", "inventories", name: "fk_replenishments_inventory_id_on_inventories", on_delete: :cascade
   add_foreign_key "request_logs", "users", name: "fk_request_logs_user_id_on_users", on_delete: :nullify
+  add_foreign_key "stocks", "inventories", name: "fk_stocks_inventory_id_on_inventories", on_delete: :cascade
   add_foreign_key "unit_conversions", "products", name: "fk_unit_conversions_product_id_on_products", on_delete: :cascade
   add_foreign_key "user_details", "users", name: "fk_user_details_user_id_on_users", on_delete: :cascade
   add_foreign_key "user_preferences", "users", name: "fk_user_preferences_user_id_on_users", on_delete: :cascade
