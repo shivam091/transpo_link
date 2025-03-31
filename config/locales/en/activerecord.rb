@@ -240,6 +240,9 @@
               entity_type: {
                 inclusion: "'%{value}' is not a valid entity type",
               },
+              status: {
+                inclusion: "'%{value}' is not a valid status",
+              },
             },
           },
           tax_rate: {

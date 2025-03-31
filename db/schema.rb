@@ -20,6 +20,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_28_091723) do
   create_enum "business_categories", ["b2b", "b2c"]
   create_enum "color_schemes", ["auto", "dark", "light"]
   create_enum "entity_types", ["business", "individual"]
+  create_enum "legal_identifier_statuses", ["unapproved", "approved", "rejected"]
   create_enum "movement_types", ["restock", "purchase", "sale", "return", "transfer_in", "transfer_out", "adjustment", "reservation"]
   create_enum "tracking_methods", ["fifo", "lifo", "average_cost"]
 
@@ -155,7 +156,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_28_091723) do
     t.string "business_identifier"
     t.timestamptz "created_at", null: false
     t.timestamptz "updated_at", null: false
-    t.string "status"
+    t.enum "status", enum_type: "legal_identifier_statuses"
     t.index ["business_identifier", "business_identifier_type", "country"], name: "idx_on_business_identifier_business_identifier_type_ce079aa798", unique: true
     t.index ["entity_type"], name: "index_legal_identifiers_on_entity_type"
     t.index ["status"], name: "index_legal_identifiers_on_status"
@@ -166,6 +167,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_28_091723) do
     t.check_constraint "entity_type = 'business'::entity_types AND business_identifier_type IS NOT NULL AND business_identifier_type::text <> ''::text OR entity_type = 'individual'::entity_types AND business_identifier_type IS NULL", name: "check_legal_identifiers_business_identifier_type_based_on_entit"
     t.check_constraint "entity_type = ANY (ARRAY['business'::entity_types, 'individual'::entity_types])", name: "check_legal_identifiers_entity_type_inclusion"
     t.check_constraint "entity_type IS NOT NULL", name: "check_legal_identifiers_entity_type_presence"
+    t.check_constraint "status = ANY (ARRAY['unapproved'::legal_identifier_statuses, 'approved'::legal_identifier_statuses, 'rejected'::legal_identifier_statuses])", name: "check_legal_identifiers_status_inclusion"
+    t.check_constraint "status IS NOT NULL", name: "check_legal_identifiers_status_presence"
     t.check_constraint "tax_identifier IS NOT NULL AND tax_identifier::text <> ''::text", name: "check_legal_identifiers_tax_identifier_presence"
     t.check_constraint "tax_identifier_type IS NOT NULL AND tax_identifier_type::text <> ''::text", name: "check_legal_identifiers_tax_identifier_type_presence"
   end
