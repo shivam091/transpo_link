@@ -6,8 +6,8 @@ class Inventory < ApplicationRecord
   include HasReferenceCode, Pageable, Sortable, ActsAsMoney
 
   LISTING_ATTRIBUTES = %i[
-    reference_code product_id warehouse_id tracking_method average_cost_price
-    low_stock_threshold
+    reference_code product_id warehouse_id tracking_method low_stock_threshold
+    average_cost_price
   ].freeze
 
   enum :tracking_method, {
