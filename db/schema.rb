@@ -303,6 +303,18 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_23_132952) do
     t.check_constraint "name IS NOT NULL AND name::text <> ''::text", name: "check_roles_name_presence"
   end
 
+  create_table "stocks", primary_key: "inventory_id", id: :uuid, default: nil, force: :cascade do |t|
+    t.decimal "quantity_in_hand", precision: 12, scale: 2, default: "0.0"
+    t.decimal "quantity_pending_to_buyer", precision: 12, scale: 2, default: "0.0"
+    t.timestamptz "created_at", null: false
+    t.timestamptz "updated_at", null: false
+    t.index ["inventory_id"], name: "index_stocks_on_inventory_id", unique: true
+    t.check_constraint "quantity_in_hand >= 0.0", name: "check_stocks_quantity_in_hand_non_negative"
+    t.check_constraint "quantity_in_hand IS NOT NULL", name: "check_stocks_quantity_in_hand_presence"
+    t.check_constraint "quantity_pending_to_buyer >= 0.0", name: "check_stocks_quantity_pending_to_buyer_non_negative"
+    t.check_constraint "quantity_pending_to_buyer IS NOT NULL", name: "check_stocks_quantity_pending_to_buyer_presence"
+  end
+
   create_table "tax_rates", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "country"
     t.string "tax_identifier_type"
