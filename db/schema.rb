@@ -110,6 +110,29 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_23_132952) do
     t.check_constraint "previous_quantity IS NOT NULL", name: "check_inventory_audit_logs_previous_quantity_presence"
   end
 
+  create_table "inventory_batches", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "inventory_id", null: false
+    t.string "batch_number"
+    t.date "expiration_date"
+    t.decimal "quantity", precision: 12, scale: 2, default: "0.0"
+    t.string "inventory_unit"
+    t.decimal "cost_price", precision: 12, scale: 2, default: "0.0"
+    t.string "currency"
+    t.timestamptz "created_at", null: false
+    t.timestamptz "updated_at", null: false
+    t.index ["inventory_id", "batch_number"], name: "index_inventory_batches_on_inventory_id_and_batch_number", unique: true
+    t.index ["inventory_id"], name: "index_inventory_batches_on_inventory_id"
+    t.check_constraint "batch_number IS NOT NULL AND batch_number::text <> ''::text", name: "check_inventory_batches_batch_number_presence"
+    t.check_constraint "char_length(batch_number::text) <= 55", name: "check_inventory_batches_batch_number_length"
+    t.check_constraint "cost_price >= 0.0", name: "check_inventory_batches_cost_price_non_negative"
+    t.check_constraint "cost_price IS NOT NULL", name: "check_inventory_batches_cost_price_presence"
+    t.check_constraint "currency IS NOT NULL AND currency::text <> ''::text", name: "check_inventory_batches_currency_presence"
+    t.check_constraint "expiration_date >= CURRENT_DATE", name: "check_inventory_batches_expiration_date_future"
+    t.check_constraint "inventory_unit IS NOT NULL AND inventory_unit::text <> ''::text", name: "check_inventory_batches_inventory_unit_presence"
+    t.check_constraint "quantity >= 0.0", name: "check_inventory_batches_quantity_non_negative"
+    t.check_constraint "quantity IS NOT NULL", name: "check_inventory_batches_quantity_presence"
+  end
+
   create_table "inventory_movements", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "inventory_id", null: false
     t.decimal "quantity", precision: 12, scale: 2, default: "0.0"
@@ -443,6 +466,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_23_132952) do
   add_foreign_key "inventory_audit_logs", "inventories", name: "fk_inventory_audit_logs_inventory_id_on_inventories", on_delete: :cascade
   add_foreign_key "inventory_audit_logs", "inventory_movements", name: "fk_inventory_audit_logs_inventory_movement_id_on_inventory_move", on_delete: :cascade
   add_foreign_key "inventory_audit_logs", "users", name: "fk_inventory_audit_logs_user_id_on_users", on_delete: :nullify
+  add_foreign_key "inventory_batches", "inventories", name: "fk_inventory_batches_inventory_id_on_inventories", on_delete: :cascade
   add_foreign_key "inventory_movements", "inventories", name: "fk_inventory_movements_inventory_id_on_inventories", on_delete: :cascade
   add_foreign_key "legal_identifiers", "users", name: "fk_legal_identifiers_user_id_on_users", on_delete: :cascade
   add_foreign_key "product_categories", "product_categories", column: "parent_category_id", name: "fk_product_categories_parent_category_id_on_product_categories", on_delete: :cascade
