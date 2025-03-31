@@ -3,7 +3,7 @@
 # -*- warn_indent: true -*-
 
 class LegalIdentifier < ApplicationRecord
-  include Sortable, Pageable, Taxable, NullifyIfBlank, Sanitizable
+  include AASM, Sortable, Pageable, Taxable, NullifyIfBlank, Sanitizable
 
   LISTING_ATTRIBUTES = %i[
     country entity_type tax_identifier_type tax_identifier
@@ -13,6 +13,12 @@ class LegalIdentifier < ApplicationRecord
   enum :entity_type, {
     business: "business",
     individual: "individual"
+  }
+
+  enum :status, {
+    unapproved: "unapproved",
+    approved: "approved",
+    rejected: "rejected"
   }
 
   enum :business_identifier_type, {
@@ -90,6 +96,19 @@ class LegalIdentifier < ApplicationRecord
     rtn:      %w[HN],
     uscc:     %w[CN]
   }
+
+  aasm column: :status, enum: true, requires_lock: true do
+    state :unapproved, initial: true
+    state :approved, :rejected
+
+    event :approve do
+      transitions from: :unapproved, to: :approved
+    end
+
+    event :reject do
+      transitions from: :unapproved, to: :rejected
+    end
+  end
 
   validates :user_id,
             presence: true,

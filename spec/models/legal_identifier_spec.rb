@@ -22,6 +22,7 @@ RSpec.describe LegalIdentifier, type: :model do
     it { is_expected.to have_db_column(:business_identifier_type).of_type(:string) }
     it { is_expected.to have_db_column(:business_identifier).of_type(:string) }
     it { is_expected.to have_db_column(:country).of_type(:string) }
+    it { is_expected.to have_db_column(:status).of_type(:string) }
     it { is_expected.to have_db_column(:created_at).of_type(:timestamptz).with_options(null: false) }
     it { is_expected.to have_db_column(:updated_at).of_type(:timestamptz).with_options(null: false) }
 
@@ -29,6 +30,7 @@ RSpec.describe LegalIdentifier, type: :model do
     it { is_expected.to have_db_index([:tax_identifier, :tax_identifier_type, :country, :entity_type]).unique }
     it { is_expected.to have_db_index([:business_identifier, :business_identifier_type, :country]).unique }
     it { is_expected.to have_db_index(:entity_type) }
+    it { is_expected.to have_db_index(:status) }
 
     it { is_expected.to have_foreign_key(:user_id).with_name(:fk_legal_identifiers_user_id_on_users).on_delete(:cascade) }
 
@@ -42,6 +44,7 @@ RSpec.describe LegalIdentifier, type: :model do
   end
 
   describe "included modules" do
+    it { is_expected.to include_module(AASM) }
     it { is_expected.to include_module(Sortable) }
     it { is_expected.to include_module(Pageable) }
     it { is_expected.to include_module(Taxable) }
@@ -52,6 +55,15 @@ RSpec.describe LegalIdentifier, type: :model do
   describe "enums" do
     it { is_expected.to define_enum_for(:entity_type).backed_by_column_of_type(:enum) }
     it { is_expected.to define_enum_for(:business_identifier_type).backed_by_column_of_type(:string) }
+    it { is_expected.to define_enum_for(:status).backed_by_column_of_type(:string) }
+  end
+
+  describe "default values" do
+    let(:legal_identifier) { described_class.new }
+
+    it "should set unapproved as default value for #status" do
+      expect(legal_identifier.status).to eq("unapproved")
+    end
   end
 
   describe "normalized attributes" do
@@ -71,6 +83,16 @@ RSpec.describe LegalIdentifier, type: :model do
   describe "constants" do
     it { is_expected.to have_constant(:BUSINESS_IDENTIFIER_TYPE_COUNTRY_COMBINATIONS) }
     it { is_expected.to have_constant(:LISTING_ATTRIBUTES) }
+  end
+
+  describe "state machines" do
+    it { is_expected.to have_state(:unapproved) }
+    it { is_expected.to transition_from(:unapproved).to(:approved).on_event(:approve) }
+    it { is_expected.to transition_from(:unapproved).to(:rejected).on_event(:reject) }
+    it { is_expected.to_not transition_from(:rejected).to(:approved).on_event(:approve) }
+    it { is_expected.to_not transition_from(:approved).to(:rejected).on_event(:reject) }
+    it { is_expected.to_not transition_from(:approved).to(:unapproved).on_event(:approve) }
+    it { is_expected.to_not transition_from(:rejected).to(:unapproved).on_event(:reject) }
   end
 
   describe "associations" do
