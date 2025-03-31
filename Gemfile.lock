@@ -5,6 +5,8 @@ GEM
       faraday (~> 2.0)
       json (~> 2.1)
       lru_redux (~> 1.1)
+    aasm (5.5.0)
+      concurrent-ruby (~> 1.0)
     actioncable (8.0.2)
       actionpack (= 8.0.2)
       activesupport (= 8.0.2)
@@ -392,7 +394,7 @@ GEM
     sass-embedded (1.83.4-x86_64-linux-musl)
       google-protobuf (~> 4.29)
     securerandom (0.4.1)
-    selenium-webdriver (4.29.1)
+    selenium-webdriver (4.30.1)
       base64 (~> 0.2)
       logger (~> 1.4)
       rexml (~> 3.2, >= 3.2.5)
@@ -477,6 +479,7 @@ PLATFORMS
 
 DEPENDENCIES
   IPinfo (~> 2)
+  aasm (~> 5)
   bootsnap
   bootstrap (~> 5.3.3)
   brakeman

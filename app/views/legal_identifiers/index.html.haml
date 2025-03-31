@@ -13,6 +13,8 @@
           = button_text(:new)
       .widget-body
         = render_if_exists("legal_identifiers/help_texts")
+        %hr
+        = render_if_exists("legal_identifiers/nav_tabs")
         .table-responsive
           %table.table.table-striped.table-borderless
             %thead.border

@@ -7,7 +7,7 @@
 require "spec_helper"
 
 RSpec.describe UnitConversion, type: :model do
-  subject { create(:unit_conversion) }
+  subject { build(:unit_conversion) }
 
   describe "valid factory" do
     it { is_expected.to have_a_valid_factory(:unit_conversion) }

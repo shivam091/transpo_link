@@ -17,6 +17,9 @@
       },
       form: {
       },
+      show: {
+        mark_as_read_confirmation_text: "Are you sure you want to mark feedback ‘%{reference_code}’ as read?"
+      },
     }
   }
 }

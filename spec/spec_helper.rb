@@ -11,6 +11,7 @@ SimpleCovEnv.start!
 
 require_relative "../config/environment"
 require "active_support/testing/time_helpers"
+require "aasm/rspec"
 
 # Prevent database truncation if the environment is production
 abort("The Rails environment is running in production mode!") if Rails.env.production?

@@ -3,6 +3,8 @@
 # -*- warn_indent: true -*-
 
 class CreateInventories < ActiveRecord::Migration[8.0]
+  include TranspoLink::MigrationHelpers
+
   def change
     create_table :inventories, id: :uuid do |t|
       t.string :reference_code, index: {using: :btree, unique: true}
@@ -24,31 +26,27 @@ class CreateInventories < ActiveRecord::Migration[8.0]
                    },
                    null: false,
                    index: {using: :btree}
-      t.string :batch_number
-      t.date :expiration_date # Useful for perishable products
-      t.decimal :stock_quantity, precision: 12, scale: 2, default: 0.0 # Current stock level
-      t.decimal :reserved_stock, precision: 12, scale: 2, default: 0.0 # For orders that are in process
+      t.enum :tracking_method, enum_type: :tracking_methods
       t.string :inventory_unit
-      t.decimal :cost_price, precision: 12, scale: 2, default: 0.0 # Procurement cost
+      t.decimal :average_cost_price, precision: 12, scale: 2, default: 0.0 # Average Cost Price = Σ (Batch Cost Price × Batch Quantity) / Σ Batch Quantity
       t.string :currency
+      t.decimal :low_stock_threshold, precision: 12, scale: 2, default: 0.0
       t.timestamps_with_timezone null: false
 
       t.index [:product_id, :warehouse_id], unique: true
 
       t.check_constraint "currency IS NOT NULL AND currency  <> ''", name: :check_inventories_currency_presence
 
-      t.check_constraint "stock_quantity IS NOT NULL", name: :check_inventories_stock_quantity_presence
-      t.check_constraint "stock_quantity >= 0.0", name: :check_inventories_stock_quantity_numericality
+      t.check_constraint "average_cost_price IS NOT NULL", name: :check_inventories_average_cost_price_presence
+      t.check_constraint "average_cost_price >= 0.0", name: :check_inventories_average_cost_price_non_negative
 
-      t.check_constraint "reserved_stock IS NOT NULL", name: :check_inventories_reserved_stock_presence
-      t.check_constraint "reserved_stock >= 0.0", name: :check_inventories_reserved_stock_numericality
-
-      t.check_constraint "cost_price IS NOT NULL", name: :check_inventories_cost_price_presence
-      t.check_constraint "cost_price >= 0.0", name: :check_inventories_cost_price_numericality
+      t.check_constraint "low_stock_threshold IS NOT NULL", name: :check_inventories_low_stock_threshold_presence
+      t.check_constraint "low_stock_threshold >= 0.0", name: :check_inventories_low_stock_threshold_non_negative
 
       t.check_constraint "inventory_unit IS NOT NULL AND inventory_unit  <> ''", name: :check_inventories_inventory_unit_presence
 
-      t.check_constraint "expiration_date >= CURRENT_DATE", name: :check_inventories_expiration_date_future
+      t.check_constraint "tracking_method IS NOT NULL", name: :check_inventories_tracking_method_presence
+      t.check_constraint "tracking_method IN (#{enum_values('tracking_methods')})", name: :check_inventories_tracking_method_inclusion
     end
   end
 end

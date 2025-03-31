@@ -26,7 +26,7 @@ module TranspoLink
     # @return [String] A comma-separated string of enum values, formatted for SQL.
     #
     # @example
-    #   enum_values("business_categories") # => "'small', 'medium', 'large'"
+    #   enum_values("business_categories") # => "'b2b', 'b2c'"
     #
     def enum_values(enum_name)
       query = <<-SQL
@@ -36,9 +36,7 @@ module TranspoLink
         WHERE typname = '#{enum_name}'
       SQL
 
-      ActiveRecord::Base.connection.execute(query).map do |row|
-        "'#{row['enumlabel']}'"
-      end.join(", ")
+      ActiveRecord::Base.connection.select_values(query).map { "'#{_1}'" }.join(", ")
     end
   end
 end
