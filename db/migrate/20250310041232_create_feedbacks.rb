@@ -5,6 +5,7 @@
 class CreateFeedbacks < ActiveRecord::Migration[8.0]
   def change
     create_table :feedbacks, id: :uuid do |t|
+      t.string :reference_code, index: {using: :btree, unique: true}
       t.references :user,
                    type: :uuid,
                    foreign_key: {

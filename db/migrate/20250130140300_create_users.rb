@@ -35,6 +35,8 @@ class CreateUsers < ActiveRecord::Migration[8.0]
       t.timestamptz :locked_at
 
       ## Additional attributes
+      t.timestamptz :last_activity_at
+      t.timestamptz :password_updated_at
       t.boolean :is_active, default: false, index: {using: :btree}
       t.boolean :is_banned, default: false, index: {using: :btree}
       t.references :role,

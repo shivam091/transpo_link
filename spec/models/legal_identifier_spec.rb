@@ -15,7 +15,7 @@ RSpec.describe LegalIdentifier, type: :model do
 
   describe "attributes, indexes, foreign keys, and check constraints" do
     it { is_expected.to have_db_column(:id).of_type(:uuid) }
-    it { is_expected.to have_db_column(:user_id).of_type(:uuid) }
+    it { is_expected.to have_db_column(:user_id).of_type(:uuid).with_options(null: false) }
     it { is_expected.to have_db_column(:tax_identifier).of_type(:string) }
     it { is_expected.to have_db_column(:tax_identifier_type).of_type(:string) }
     it { is_expected.to have_db_column(:entity_type).of_type(:enum) }

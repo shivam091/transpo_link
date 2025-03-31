@@ -42,7 +42,7 @@ class CreateInventoryMovements < ActiveRecord::Migration[8.0]
       t.check_constraint "inventory_unit IS NOT NULL AND inventory_unit  <> ''", name: :check_inventory_movements_inventory_unit_presence
 
       t.check_constraint "unit_cost IS NOT NULL", name: :check_inventory_movements_unit_cost_presence
-      t.check_constraint "unit_cost >= 0.0", name: :check_inventory_movements_unit_cost_numericality
+      t.check_constraint "unit_cost >= 0.0", name: :check_inventory_movements_unit_cost_non_negative
 
       t.check_constraint "total_cost IS NOT NULL", name: :check_inventory_movements_total_cost_presence
       t.check_constraint "total_cost >= unit_cost", name: :check_inventory_movements_total_cost_numericality

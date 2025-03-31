@@ -44,7 +44,7 @@ RSpec.describe InventoryMovement, type: :model do
     it { is_expected.to have_check_constraint(:check_inventory_movements_quantity_presence).with_expression("quantity IS NOT NULL") }
     it { is_expected.to have_check_constraint(:check_inventory_movements_total_cost_numericality).with_expression("total_cost >= unit_cost") }
     it { is_expected.to have_check_constraint(:check_inventory_movements_total_cost_presence).with_expression("total_cost IS NOT NULL") }
-    it { is_expected.to have_check_constraint(:check_inventory_movements_unit_cost_numericality).with_expression("unit_cost >= 0.0") }
+    it { is_expected.to have_check_constraint(:check_inventory_movements_unit_cost_non_negative).with_expression("unit_cost >= 0.0") }
     it { is_expected.to have_check_constraint(:check_inventory_movements_unit_cost_presence).with_expression("unit_cost IS NOT NULL") }
   end
 

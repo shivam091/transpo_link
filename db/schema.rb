@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_03_28_091723) do
+ActiveRecord::Schema[8.0].define(version: 2025_03_23_132952) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -25,8 +25,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_28_091723) do
   create_enum "tracking_methods", ["fifo", "lifo", "average_cost"]
 
   create_table "addresses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "addressable_type"
-    t.uuid "addressable_id"
+    t.string "addressable_type", null: false
+    t.uuid "addressable_id", null: false
     t.string "address1"
     t.string "address2"
     t.string "city"
@@ -44,6 +44,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_28_091723) do
   end
 
   create_table "feedbacks", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "reference_code"
     t.uuid "user_id", null: false
     t.string "reviewable_type", null: false
     t.uuid "reviewable_id", null: false
@@ -52,7 +53,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_28_091723) do
     t.boolean "is_unread", default: true
     t.timestamptz "created_at", null: false
     t.timestamptz "updated_at", null: false
-    t.string "reference_code"
     t.index ["is_unread"], name: "index_feedbacks_on_is_unread"
     t.index ["reference_code"], name: "index_feedbacks_on_reference_code", unique: true
     t.index ["reviewable_type", "reviewable_id"], name: "index_feedbacks_on_reviewable"
@@ -68,29 +68,23 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_28_091723) do
     t.string "reference_code"
     t.uuid "product_id", null: false
     t.uuid "warehouse_id", null: false
-    t.string "batch_number"
-    t.date "expiration_date"
-    t.decimal "stock_quantity", precision: 12, scale: 2, default: "0.0"
-    t.decimal "reserved_stock", precision: 12, scale: 2, default: "0.0"
+    t.enum "tracking_method", enum_type: "tracking_methods"
     t.string "inventory_unit"
-    t.decimal "cost_price", precision: 12, scale: 2, default: "0.0"
+    t.decimal "average_cost_price", precision: 12, scale: 2, default: "0.0"
     t.string "currency"
+    t.decimal "low_stock_threshold", precision: 12, scale: 2, default: "0.0"
     t.timestamptz "created_at", null: false
     t.timestamptz "updated_at", null: false
-    t.enum "tracking_method", enum_type: "tracking_methods"
     t.index ["product_id", "warehouse_id"], name: "index_inventories_on_product_id_and_warehouse_id", unique: true
     t.index ["product_id"], name: "index_inventories_on_product_id"
     t.index ["reference_code"], name: "index_inventories_on_reference_code", unique: true
     t.index ["warehouse_id"], name: "index_inventories_on_warehouse_id"
-    t.check_constraint "cost_price >= 0.0", name: "check_inventories_cost_price_numericality"
-    t.check_constraint "cost_price IS NOT NULL", name: "check_inventories_cost_price_presence"
+    t.check_constraint "average_cost_price >= 0.0", name: "check_inventories_average_cost_price_non_negative"
+    t.check_constraint "average_cost_price IS NOT NULL", name: "check_inventories_average_cost_price_presence"
     t.check_constraint "currency IS NOT NULL AND currency::text <> ''::text", name: "check_inventories_currency_presence"
-    t.check_constraint "expiration_date >= CURRENT_DATE", name: "check_inventories_expiration_date_future"
     t.check_constraint "inventory_unit IS NOT NULL AND inventory_unit::text <> ''::text", name: "check_inventories_inventory_unit_presence"
-    t.check_constraint "reserved_stock >= 0.0", name: "check_inventories_reserved_stock_numericality"
-    t.check_constraint "reserved_stock IS NOT NULL", name: "check_inventories_reserved_stock_presence"
-    t.check_constraint "stock_quantity >= 0.0", name: "check_inventories_stock_quantity_numericality"
-    t.check_constraint "stock_quantity IS NOT NULL", name: "check_inventories_stock_quantity_presence"
+    t.check_constraint "low_stock_threshold >= 0.0", name: "check_inventories_low_stock_threshold_non_negative"
+    t.check_constraint "low_stock_threshold IS NOT NULL", name: "check_inventories_low_stock_threshold_presence"
     t.check_constraint "tracking_method = ANY (ARRAY['fifo'::tracking_methods, 'lifo'::tracking_methods, 'average_cost'::tracking_methods])", name: "check_inventories_tracking_method_inclusion"
     t.check_constraint "tracking_method IS NOT NULL", name: "check_inventories_tracking_method_presence"
   end
@@ -142,7 +136,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_28_091723) do
     t.check_constraint "quantity IS NOT NULL", name: "check_inventory_movements_quantity_presence"
     t.check_constraint "total_cost >= unit_cost", name: "check_inventory_movements_total_cost_numericality"
     t.check_constraint "total_cost IS NOT NULL", name: "check_inventory_movements_total_cost_presence"
-    t.check_constraint "unit_cost >= 0.0", name: "check_inventory_movements_unit_cost_numericality"
+    t.check_constraint "unit_cost >= 0.0", name: "check_inventory_movements_unit_cost_non_negative"
     t.check_constraint "unit_cost IS NOT NULL", name: "check_inventory_movements_unit_cost_presence"
   end
 
@@ -154,9 +148,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_28_091723) do
     t.string "tax_identifier"
     t.string "business_identifier_type"
     t.string "business_identifier"
+    t.enum "status", enum_type: "legal_identifier_statuses"
     t.timestamptz "created_at", null: false
     t.timestamptz "updated_at", null: false
-    t.enum "status", enum_type: "legal_identifier_statuses"
     t.index ["business_identifier", "business_identifier_type", "country"], name: "idx_on_business_identifier_business_identifier_type_ce079aa798", unique: true
     t.index ["entity_type"], name: "index_legal_identifiers_on_entity_type"
     t.index ["status"], name: "index_legal_identifiers_on_status"
@@ -302,7 +296,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_28_091723) do
     t.check_constraint "business_category = ANY (ARRAY['b2b'::business_categories, 'b2c'::business_categories])", name: "check_tax_rates_business_category_inclusion"
     t.check_constraint "business_category IS NOT NULL", name: "check_tax_rates_business_category_presence"
     t.check_constraint "country IS NOT NULL AND country::text <> ''::text", name: "check_tax_rates_country_presence"
-    t.check_constraint "rate >= 0::numeric AND rate <= 100::numeric", name: "check_tax_rates_rate_numericality"
+    t.check_constraint "rate >= 0.0 AND rate <= 100.0", name: "check_tax_rates_rate_numericality"
     t.check_constraint "rate IS NOT NULL", name: "check_tax_rates_rate_presence"
     t.check_constraint "tax_identifier_type IS NOT NULL AND tax_identifier_type::text <> ''::text", name: "check_tax_rates_tax_identifier_type_presence"
     t.check_constraint "valid_from >= CURRENT_DATE", name: "check_tax_rates_valid_from_future"
@@ -378,13 +372,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_28_091723) do
     t.integer "failed_attempts", default: 0
     t.string "unlock_token"
     t.timestamptz "locked_at"
+    t.timestamptz "last_activity_at"
+    t.timestamptz "password_updated_at"
     t.boolean "is_active", default: false
     t.boolean "is_banned", default: false
     t.uuid "role_id", null: false
     t.timestamptz "created_at", null: false
     t.timestamptz "updated_at", null: false
-    t.timestamptz "last_activity_at"
-    t.timestamptz "password_updated_at"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["is_active"], name: "index_users_on_is_active"
