@@ -93,6 +93,7 @@ RSpec.describe Product, type: :model do
     it { is_expected.to have_many(:product_prices).inverse_of(:product).dependent(:destroy) }
     it { is_expected.to have_many(:unit_conversions).inverse_of(:product).dependent(:destroy) }
     it { is_expected.to have_many(:feedbacks).inverse_of(:reviewable).dependent(:nullify) }
+    it { is_expected.to have_many(:purchase_order_items).inverse_of(:product).dependent(:restrict_with_exception) }
 
     it { is_expected.to belong_to(:product_category).inverse_of(:products).counter_cache }
   end
@@ -168,7 +169,7 @@ RSpec.describe Product, type: :model do
           it "does not create a unit conversion if required attributes are blank" do
             expect {
               product.update(unit_conversions_attributes: {0 => {from_unit: "", to_unit: "", conversion_rate: ""}})
-            }.to_not change(UnitConversion, :count)
+            }.to not_change(UnitConversion, :count)
           end
         end
       end
@@ -177,7 +178,7 @@ RSpec.describe Product, type: :model do
         it "updates the existing unit conversion without changing the count" do
           expect {
             product.update(unit_conversions_attributes: {id: unit_conversion.id, from_unit: "cm", to_unit: "m", conversion_rate: 0.01})
-          }.to_not change(UnitConversion, :count)
+          }.to not_change(UnitConversion, :count)
 
           expect(unit_conversion.reload.conversion_rate).to eq(0.01)
         end
@@ -208,7 +209,7 @@ RSpec.describe Product, type: :model do
           it "does not create a product price if required attributes are blank" do
             expect {
               product.update(product_prices_attributes: {0 => {min_quantity: "", unit_price: "", currency: ""}})
-            }.to_not change(ProductPrice, :count)
+            }.to not_change(ProductPrice, :count)
           end
         end
       end
@@ -217,7 +218,7 @@ RSpec.describe Product, type: :model do
         it "updates the existing product price without changing the count" do
           expect {
             product.update(product_prices_attributes: {id: product_price.id, min_quantity: 10, unit_price: 202, currency: "USD"})
-          }.to_not change(ProductPrice, :count)
+          }.to not_change(ProductPrice, :count)
 
           expect(product_price.reload.currency).to eq("USD")
         end

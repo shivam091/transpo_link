@@ -38,7 +38,7 @@ RSpec.describe Inventory, type: :model do
     it { is_expected.to have_check_constraint(:check_inventories_average_cost_price_presence).with_expression("average_cost_price IS NOT NULL") }
     it { is_expected.to have_check_constraint(:check_inventories_currency_presence).with_expression("currency IS NOT NULL AND currency::text <> ''::text") }
     it { is_expected.to have_check_constraint(:check_inventories_inventory_unit_presence).with_expression("inventory_unit IS NOT NULL AND inventory_unit::text <> ''::text") }
-    it { is_expected.to have_check_constraint(:check_inventories_low_stock_threshold_non_negative).with_expression("low_stock_threshold >= 0.0") }
+    it { is_expected.to have_check_constraint(:check_inventories_low_stock_threshold_positive).with_expression("low_stock_threshold > 0.0") }
     it { is_expected.to have_check_constraint(:check_inventories_low_stock_threshold_presence).with_expression("low_stock_threshold IS NOT NULL") }
     it { is_expected.to have_check_constraint(:check_inventories_tracking_method_presence).with_expression("tracking_method IS NOT NULL") }
     it { is_expected.to have_check_constraint(:check_inventories_tracking_method_inclusion).with_expression("tracking_method = ANY (ARRAY['fifo'::tracking_methods, 'lifo'::tracking_methods, 'average_cost'::tracking_methods])") }
@@ -104,7 +104,7 @@ RSpec.describe Inventory, type: :model do
 
     describe "#low_stock_threshold" do
       it { is_expected.to validate_presence_of(:low_stock_threshold) }
-      it { is_expected.to validate_numericality_of(:low_stock_threshold).is_greater_than_or_equal_to(0.0) }
+      it { is_expected.to validate_numericality_of(:low_stock_threshold).is_greater_than(0.0) }
     end
 
     describe "#average_cost_price" do

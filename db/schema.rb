@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_03_23_132952) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_01_084516) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -22,6 +22,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_23_132952) do
   create_enum "entity_types", ["business", "individual"]
   create_enum "legal_identifier_statuses", ["unapproved", "approved", "rejected"]
   create_enum "movement_types", ["restock", "purchase", "sale", "return", "transfer_in", "transfer_out", "adjustment", "reservation"]
+  create_enum "purchase_order_item_statuses", ["pending", "delivered", "cancelled"]
+  create_enum "purchase_order_statuses", ["draft", "pending", "approved", "cancelled", "rejected", "partially_delivered", "fully_delivered"]
   create_enum "tax_types", ["exclusive", "inclusive"]
   create_enum "tracking_methods", ["fifo", "lifo", "average_cost"]
 
@@ -84,7 +86,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_23_132952) do
     t.check_constraint "average_cost_price IS NOT NULL", name: "check_inventories_average_cost_price_presence"
     t.check_constraint "currency IS NOT NULL AND currency::text <> ''::text", name: "check_inventories_currency_presence"
     t.check_constraint "inventory_unit IS NOT NULL AND inventory_unit::text <> ''::text", name: "check_inventories_inventory_unit_presence"
-    t.check_constraint "low_stock_threshold >= 0.0", name: "check_inventories_low_stock_threshold_non_negative"
+    t.check_constraint "low_stock_threshold > 0.0", name: "check_inventories_low_stock_threshold_positive"
     t.check_constraint "low_stock_threshold IS NOT NULL", name: "check_inventories_low_stock_threshold_presence"
     t.check_constraint "tracking_method = ANY (ARRAY['fifo'::tracking_methods, 'lifo'::tracking_methods, 'average_cost'::tracking_methods])", name: "check_inventories_tracking_method_inclusion"
     t.check_constraint "tracking_method IS NOT NULL", name: "check_inventories_tracking_method_presence"
@@ -125,12 +127,12 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_23_132952) do
     t.index ["inventory_id"], name: "index_inventory_batches_on_inventory_id"
     t.check_constraint "batch_number IS NOT NULL AND batch_number::text <> ''::text", name: "check_inventory_batches_batch_number_presence"
     t.check_constraint "char_length(batch_number::text) <= 55", name: "check_inventory_batches_batch_number_length"
-    t.check_constraint "cost_price >= 0.0", name: "check_inventory_batches_cost_price_non_negative"
+    t.check_constraint "cost_price > 0.0", name: "check_inventory_batches_cost_price_positive"
     t.check_constraint "cost_price IS NOT NULL", name: "check_inventory_batches_cost_price_presence"
     t.check_constraint "currency IS NOT NULL AND currency::text <> ''::text", name: "check_inventory_batches_currency_presence"
     t.check_constraint "expiration_date >= CURRENT_DATE", name: "check_inventory_batches_expiration_date_future"
     t.check_constraint "inventory_unit IS NOT NULL AND inventory_unit::text <> ''::text", name: "check_inventory_batches_inventory_unit_presence"
-    t.check_constraint "quantity >= 0.0", name: "check_inventory_batches_quantity_non_negative"
+    t.check_constraint "quantity > 0.0", name: "check_inventory_batches_quantity_positive"
     t.check_constraint "quantity IS NOT NULL", name: "check_inventory_batches_quantity_presence"
   end
 
@@ -142,7 +144,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_23_132952) do
     t.decimal "unit_cost", precision: 12, scale: 2
     t.decimal "total_cost", precision: 12, scale: 2
     t.string "currency"
-    t.timestamptz "movement_date", default: -> { "now()" }
+    t.timestamptz "movement_date", default: -> { "CURRENT_TIMESTAMP" }
     t.string "source_type", null: false
     t.uuid "source_id", null: false
     t.jsonb "metadata", default: "{}"
@@ -252,6 +254,60 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_23_132952) do
     t.check_constraint "min_stock_threshold IS NOT NULL", name: "check_products_min_stock_threshold_presence"
     t.check_constraint "name IS NOT NULL AND name::text <> ''::text", name: "check_products_name_presence"
     t.check_constraint "sku IS NOT NULL AND sku::text <> ''::text", name: "check_products_sku_presence"
+  end
+
+  create_table "purchase_order_items", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "purchase_order_id", null: false
+    t.uuid "product_id", null: false
+    t.decimal "ordered_quantity", precision: 12, scale: 2, default: "0.0"
+    t.decimal "received_quantity", precision: 12, scale: 2, default: "0.0"
+    t.string "uom"
+    t.decimal "unit_cost", precision: 12, scale: 2, default: "0.0"
+    t.virtual "total_cost", type: :decimal, precision: 12, scale: 2, as: "(ordered_quantity * unit_cost)", stored: true
+    t.string "currency"
+    t.enum "status", enum_type: "purchase_order_item_statuses"
+    t.timestamptz "created_at", null: false
+    t.timestamptz "updated_at", null: false
+    t.index ["ordered_quantity"], name: "index_purchase_order_items_on_ordered_quantity"
+    t.index ["product_id"], name: "index_purchase_order_items_on_product_id"
+    t.index ["purchase_order_id", "product_id"], name: "index_purchase_order_items_on_purchase_order_id_and_product_id", unique: true
+    t.index ["purchase_order_id"], name: "index_purchase_order_items_on_purchase_order_id"
+    t.index ["received_quantity"], name: "index_purchase_order_items_on_received_quantity"
+    t.check_constraint "currency IS NOT NULL AND currency::text <> ''::text", name: "check_purchase_order_items_currency_presence"
+    t.check_constraint "ordered_quantity > 0.0", name: "check_purchase_order_items_ordered_quantity_positive"
+    t.check_constraint "ordered_quantity IS NOT NULL", name: "check_purchase_order_items_ordered_quantity_presence"
+    t.check_constraint "received_quantity >= 0.0", name: "check_purchase_order_items_received_quantity_non_negative"
+    t.check_constraint "received_quantity IS NOT NULL", name: "check_purchase_order_items_received_quantity_presence"
+    t.check_constraint "status = ANY (ARRAY['pending'::purchase_order_item_statuses, 'delivered'::purchase_order_item_statuses, 'cancelled'::purchase_order_item_statuses])", name: "check_purchase_order_items_status_inclusion"
+    t.check_constraint "status IS NOT NULL", name: "check_purchase_order_items_status_presence"
+    t.check_constraint "unit_cost > 0.0", name: "check_purchase_order_items_unit_cost_positive"
+    t.check_constraint "unit_cost IS NOT NULL", name: "check_purchase_order_items_unit_cost_presence"
+    t.check_constraint "uom IS NOT NULL AND uom::text <> ''::text", name: "check_purchase_order_items_uom_presence"
+  end
+
+  create_table "purchase_orders", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "reference_code"
+    t.uuid "warehouse_id", null: false
+    t.uuid "manager_id", null: false
+    t.uuid "supplier_id", null: false
+    t.string "reference_document"
+    t.timestamptz "order_date", default: -> { "CURRENT_TIMESTAMP" }
+    t.date "expected_delivery_date"
+    t.date "actual_delivery_date"
+    t.enum "status", enum_type: "purchase_order_statuses"
+    t.text "notes"
+    t.timestamptz "created_at", null: false
+    t.timestamptz "updated_at", null: false
+    t.index ["manager_id"], name: "index_purchase_orders_on_manager_id"
+    t.index ["order_date"], name: "index_purchase_orders_on_order_date"
+    t.index ["reference_code"], name: "index_purchase_orders_on_reference_code", unique: true
+    t.index ["supplier_id"], name: "index_purchase_orders_on_supplier_id"
+    t.index ["warehouse_id"], name: "index_purchase_orders_on_warehouse_id"
+    t.check_constraint "char_length(notes) <= 1000", name: "check_purchase_orders_notes_length"
+    t.check_constraint "char_length(reference_document::text) <= 55", name: "check_purchase_orders_reference_document_length"
+    t.check_constraint "expected_delivery_date >= order_date", name: "check_purchase_orders_expected_delivery_after_order"
+    t.check_constraint "status = ANY (ARRAY['draft'::purchase_order_statuses, 'pending'::purchase_order_statuses, 'approved'::purchase_order_statuses, 'cancelled'::purchase_order_statuses, 'rejected'::purchase_order_statuses, 'partially_delivered'::purchase_order_statuses, 'fully_delivered'::purchase_order_statuses])", name: "check_purchase_orders_status_inclusion"
+    t.check_constraint "status IS NOT NULL", name: "check_purchase_orders_status_presence"
   end
 
   create_table "replenishments", primary_key: "inventory_id", id: :uuid, default: nil, force: :cascade do |t|
@@ -499,6 +555,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_23_132952) do
   add_foreign_key "product_prices", "products", name: "fk_product_prices_product_id_on_products", on_delete: :cascade
   add_foreign_key "product_prices", "warehouses", name: "fk_product_prices_warehouse_id_on_warehouses", on_delete: :restrict
   add_foreign_key "products", "product_categories", name: "fk_products_product_category_id_on_product_categories", on_delete: :restrict
+  add_foreign_key "purchase_order_items", "products", name: "fk_purchase_order_items_product_id_on_products", on_delete: :restrict
+  add_foreign_key "purchase_order_items", "purchase_orders", name: "fk_purchase_order_items_purchase_order_id_on_purchase_orders", on_delete: :cascade
+  add_foreign_key "purchase_orders", "users", column: "manager_id", name: "fk_purchase_orders_manager_id_on_users", on_delete: :restrict
+  add_foreign_key "purchase_orders", "users", column: "supplier_id", name: "fk_purchase_orders_supplier_id_on_users", on_delete: :restrict
+  add_foreign_key "purchase_orders", "warehouses", name: "fk_purchase_orders_warehouse_id_on_warehouses", on_delete: :restrict
   add_foreign_key "replenishments", "inventories", name: "fk_replenishments_inventory_id_on_inventories", on_delete: :cascade
   add_foreign_key "request_logs", "users", name: "fk_request_logs_user_id_on_users", on_delete: :nullify
   add_foreign_key "stocks", "inventories", name: "fk_stocks_inventory_id_on_inventories", on_delete: :cascade

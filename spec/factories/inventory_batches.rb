@@ -10,5 +10,6 @@ FactoryBot.define do
     quantity { Faker::Number.between(from: 10, to: 500) }
     inventory_unit { TranspoLink::MeasurementUnits.units_for(:weight).sample }
     currency { Faker::Currency.code }
+    cost_price { Faker::Commerce.price(range: 5.0..1000.0) }
   end
 end

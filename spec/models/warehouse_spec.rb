@@ -85,6 +85,7 @@ RSpec.describe Warehouse, type: :model do
 
     it { is_expected.to have_many(:product_prices).inverse_of(:warehouse).dependent(:restrict_with_exception) }
     it { is_expected.to have_many(:inventories).inverse_of(:warehouse).dependent(:restrict_with_exception) }
+    it { is_expected.to have_many(:purchase_orders).inverse_of(:warehouse).dependent(:restrict_with_exception) }
   end
 
   include_examples "apply default scope on created_at:desc"

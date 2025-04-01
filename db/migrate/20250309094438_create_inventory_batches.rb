@@ -28,10 +28,10 @@ class CreateInventoryBatches < ActiveRecord::Migration[8.0]
       t.check_constraint "CHAR_LENGTH(batch_number) <= 55", name: :check_inventory_batches_batch_number_length
 
       t.check_constraint "quantity IS NOT NULL", name: :check_inventory_batches_quantity_presence
-      t.check_constraint "quantity >= 0.0", name: :check_inventory_batches_quantity_non_negative
+      t.check_constraint "quantity > 0.0", name: :check_inventory_batches_quantity_positive
 
       t.check_constraint "cost_price IS NOT NULL", name: :check_inventory_batches_cost_price_presence
-      t.check_constraint "cost_price >= 0.0", name: :check_inventory_batches_cost_price_non_negative
+      t.check_constraint "cost_price > 0.0", name: :check_inventory_batches_cost_price_positive
 
       t.check_constraint "inventory_unit IS NOT NULL AND inventory_unit  <> ''", name: :check_inventory_batches_inventory_unit_presence
 

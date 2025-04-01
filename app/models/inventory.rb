@@ -33,7 +33,7 @@ class Inventory < ApplicationRecord
             reduce: true
   validates :low_stock_threshold,
             presence: true,
-            numericality: {greater_than_or_equal_to: 0.0},
+            numericality: {greater_than: 0.0},
             reduce: true
   validates :average_cost_price,
             presence: true,
