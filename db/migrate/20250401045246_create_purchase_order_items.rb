@@ -37,7 +37,7 @@ class CreatePurchaseOrderItems < ActiveRecord::Migration[8.0]
       t.index [:purchase_order_id, :product_id], using: :btree, unique: true
 
       t.check_constraint "ordered_quantity IS NOT NULL", name: :check_purchase_order_items_ordered_quantity_presence
-      t.check_constraint "ordered_quantity >= 0.0", name: :check_purchase_order_items_ordered_quantity_non_negative
+      t.check_constraint "ordered_quantity > 0.0", name: :check_purchase_order_items_ordered_quantity_positive
 
       t.check_constraint "received_quantity IS NOT NULL", name: :check_purchase_order_items_received_quantity_presence
       t.check_constraint "received_quantity >= 0.0", name: :check_purchase_order_items_received_quantity_non_negative
@@ -45,7 +45,7 @@ class CreatePurchaseOrderItems < ActiveRecord::Migration[8.0]
       t.check_constraint "uom IS NOT NULL AND uom  <> ''", name: :check_purchase_order_items_uom_presence
 
       t.check_constraint "unit_cost IS NOT NULL", name: :check_purchase_order_items_unit_cost_presence
-      t.check_constraint "unit_cost >= 0.0", name: :check_purchase_order_items_unit_cost_non_negative
+      t.check_constraint "unit_cost > 0.0", name: :check_purchase_order_items_unit_cost_positive
 
       t.check_constraint "currency IS NOT NULL AND currency  <> ''", name: :check_purchase_order_items_currency_presence
 

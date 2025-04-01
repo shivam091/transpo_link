@@ -41,7 +41,7 @@ class CreateInventories < ActiveRecord::Migration[8.0]
       t.check_constraint "average_cost_price >= 0.0", name: :check_inventories_average_cost_price_non_negative
 
       t.check_constraint "low_stock_threshold IS NOT NULL", name: :check_inventories_low_stock_threshold_presence
-      t.check_constraint "low_stock_threshold >= 0.0", name: :check_inventories_low_stock_threshold_non_negative
+      t.check_constraint "low_stock_threshold > 0.0", name: :check_inventories_low_stock_threshold_positive
 
       t.check_constraint "inventory_unit IS NOT NULL AND inventory_unit  <> ''", name: :check_inventories_inventory_unit_presence
 

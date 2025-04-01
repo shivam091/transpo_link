@@ -37,13 +37,13 @@ RSpec.describe PurchaseOrderItem, type: :model do
     it { is_expected.to have_foreign_key(:product_id).with_name(:fk_purchase_order_items_product_id_on_products).on_delete(:restrict) }
 
     it { is_expected.to have_check_constraint(:check_purchase_order_items_currency_presence).with_expression("currency IS NOT NULL AND currency::text <> ''::text") }
-    it { is_expected.to have_check_constraint(:check_purchase_order_items_ordered_quantity_non_negative).with_expression("ordered_quantity >= 0.0") }
+    it { is_expected.to have_check_constraint(:check_purchase_order_items_ordered_quantity_positive).with_expression("ordered_quantity > 0.0") }
     it { is_expected.to have_check_constraint(:check_purchase_order_items_ordered_quantity_presence).with_expression("ordered_quantity IS NOT NULL") }
     it { is_expected.to have_check_constraint(:check_purchase_order_items_received_quantity_non_negative).with_expression("received_quantity >= 0.0") }
     it { is_expected.to have_check_constraint(:check_purchase_order_items_received_quantity_presence).with_expression("received_quantity IS NOT NULL") }
     it { is_expected.to have_check_constraint(:check_purchase_order_items_status_inclusion) }
     it { is_expected.to have_check_constraint(:check_purchase_order_items_status_presence).with_expression("status IS NOT NULL") }
-    it { is_expected.to have_check_constraint(:check_purchase_order_items_unit_cost_non_negative).with_expression("unit_cost >= 0.0") }
+    it { is_expected.to have_check_constraint(:check_purchase_order_items_unit_cost_positive).with_expression("unit_cost > 0.0") }
     it { is_expected.to have_check_constraint(:check_purchase_order_items_unit_cost_presence).with_expression("unit_cost IS NOT NULL") }
     it { is_expected.to have_check_constraint(:check_purchase_order_items_uom_presence).with_expression("uom IS NOT NULL AND uom::text <> ''::text") }
   end
@@ -96,7 +96,7 @@ RSpec.describe PurchaseOrderItem, type: :model do
 
     describe "#ordered_quantity" do
       it { is_expected.to validate_presence_of(:ordered_quantity) }
-      it { is_expected.to validate_numericality_of(:ordered_quantity).is_greater_than_or_equal_to(0.0) }
+      it { is_expected.to validate_numericality_of(:ordered_quantity).is_greater_than(0.0) }
     end
 
     describe "#received_quantity" do
@@ -106,7 +106,7 @@ RSpec.describe PurchaseOrderItem, type: :model do
 
     describe "#unit_cost" do
       it { is_expected.to validate_presence_of(:unit_cost) }
-      it { is_expected.to validate_numericality_of(:unit_cost).is_greater_than_or_equal_to(0.0) }
+      it { is_expected.to validate_numericality_of(:unit_cost).is_greater_than(0.0) }
     end
 
     describe "#uom" do

@@ -33,7 +33,11 @@ class PurchaseOrderItem < ApplicationRecord
             presence: true,
             uniqueness: {scope: :purchase_order_id, message: :uniqueness},
             reduce: true
-  validates :ordered_quantity, :received_quantity, :unit_cost,
+  validates :ordered_quantity, :unit_cost,
+            presence: true,
+            numericality: {greater_than: 0.0},
+            reduce: true
+  validates :received_quantity,
             presence: true,
             numericality: {greater_than_or_equal_to: 0.0},
             reduce: true

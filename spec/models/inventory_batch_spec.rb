@@ -32,12 +32,12 @@ RSpec.describe InventoryBatch, type: :model do
 
     it { is_expected.to have_check_constraint(:check_inventory_batches_batch_number_presence).with_expression("batch_number IS NOT NULL AND batch_number::text <> ''::text") }
     it { is_expected.to have_check_constraint(:check_inventory_batches_batch_number_length).with_expression("char_length(batch_number::text) <= 55") }
-    it { is_expected.to have_check_constraint(:check_inventory_batches_cost_price_non_negative).with_expression("cost_price >= 0.0") }
+    it { is_expected.to have_check_constraint(:check_inventory_batches_cost_price_positive).with_expression("cost_price > 0.0") }
     it { is_expected.to have_check_constraint(:check_inventory_batches_cost_price_presence).with_expression("cost_price IS NOT NULL") }
     it { is_expected.to have_check_constraint(:check_inventory_batches_currency_presence).with_expression("currency IS NOT NULL AND currency::text <> ''::text") }
     it { is_expected.to have_check_constraint(:check_inventory_batches_expiration_date_future).with_expression("expiration_date >= CURRENT_DATE") }
     it { is_expected.to have_check_constraint(:check_inventory_batches_inventory_unit_presence).with_expression("inventory_unit IS NOT NULL AND inventory_unit::text <> ''::text") }
-    it { is_expected.to have_check_constraint(:check_inventory_batches_quantity_non_negative).with_expression("quantity >= 0.0") }
+    it { is_expected.to have_check_constraint(:check_inventory_batches_quantity_positive).with_expression("quantity > 0.0") }
     it { is_expected.to have_check_constraint(:check_inventory_batches_quantity_presence).with_expression("quantity IS NOT NULL") }
   end
 
@@ -80,12 +80,12 @@ RSpec.describe InventoryBatch, type: :model do
 
     describe "#quantity" do
       it { is_expected.to validate_presence_of(:quantity) }
-      it { is_expected.to validate_numericality_of(:quantity).is_greater_than_or_equal_to(0.0) }
+      it { is_expected.to validate_numericality_of(:quantity).is_greater_than(0.0) }
     end
 
     describe "#cost_price" do
       it { is_expected.to validate_presence_of(:cost_price) }
-      it { is_expected.to validate_numericality_of(:cost_price).is_greater_than_or_equal_to(0.0) }
+      it { is_expected.to validate_numericality_of(:cost_price).is_greater_than(0.0) }
     end
 
     describe "#inventory_unit" do

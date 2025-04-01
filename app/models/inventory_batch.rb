@@ -26,11 +26,11 @@ class InventoryBatch < ApplicationRecord
             reduce: true
   validates :quantity,
             presence: true,
-            numericality: {greater_than_or_equal_to: 0.0},
+            numericality: {greater_than: 0.0},
             reduce: true
   validates :cost_price,
             presence: true,
-            numericality: {greater_than_or_equal_to: 0.0},
+            numericality: {greater_than: 0.0},
             reduce: true
   validates :inventory_unit,
             presence: true,
