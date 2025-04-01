@@ -4,6 +4,19 @@
 
 FactoryBot.define do
   factory :purchase_order_item do
+    association :purchase_order
+    association :product
+    ordered_quantity { Faker::Number.between(from: 1, to: 100) }
+    received_quantity { 0.0 }
+    uom { TranspoLink::MeasurementUnits.units_for(:weight).sample }
+    unit_cost { Faker::Commerce.price(range: 5.0..1000.0) }
+    currency { Faker::Currency.code }
+    status { PurchaseOrderItem.statuses[:pending] }
 
+    PurchaseOrderItem.statuses.keys.each do |status|
+      trait status do
+        status { PurchaseOrderItem.statuses[status] }
+      end
+    end
   end
 end

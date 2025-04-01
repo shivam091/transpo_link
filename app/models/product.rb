@@ -55,6 +55,7 @@ class Product < ApplicationRecord
   has_many :product_prices, inverse_of: :product, dependent: :destroy
   has_many :unit_conversions, inverse_of: :product, dependent: :destroy
   has_many :feedbacks, as: :reviewable, inverse_of: :reviewable, dependent: :nullify
+  has_many :purchase_order_items, inverse_of: :product, dependent: :restrict_with_exception
 
   belongs_to :product_category, counter_cache: true, inverse_of: :products
 
@@ -83,11 +84,11 @@ class Product < ApplicationRecord
     ].all?(&:blank?)
   end
 
-  def reject_product_price?(attribute)
+  def reject_product_price?(attributes)
     [
       attributes[:min_quantity],
       attributes[:unit_price],
-      attribute[:currency]
+      attributes[:currency]
     ].all?(&:blank?)
   end
 end

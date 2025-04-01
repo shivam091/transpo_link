@@ -29,7 +29,8 @@ module HasReferenceCode
     "Warehouse" => {prefix: "WH", seq_name: "warehouse_reference_code_seq"},
     "Product" => {prefix: "PRD", seq_name: "product_reference_code_seq"},
     "Inventory" => {prefix: "INV", seq_name: "inventory_reference_code_seq"},
-    "Feedback" => {prefix: "FBK", seq_name: "feedback_reference_code_seq"}
+    "Feedback" => {prefix: "FBK", seq_name: "feedback_reference_code_seq"},
+    "PurchaseOrder" => {prefix: "PO", seq_name: "po_reference_code_seq"}
   }
 
   def set_reference_code

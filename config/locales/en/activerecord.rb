@@ -223,7 +223,30 @@
         replenishment: {
           inventory_id: "Inventory",
           quantity_pending_from_supplier: "Quantity pending from supplier",
-        }
+        },
+        purchase_order: {
+          reference_code: "Reference code",
+          warehouse_id: "Warehouse",
+          manager_id: "Manager",
+          supplier_id: "Supplier",
+          reference_document: "Reference document",
+          order_date: "Order date",
+          expected_delivery_date: "Expected delivery date",
+          actual_delivery_date: "Actual delivery date",
+          status: "Status",
+          notes: "Notes"
+        },
+        purchase_order_item: {
+          purchase_order_id: "Purchase order",
+          product_id: "Product",
+          ordered_quantity: "Ordered quantity",
+          received_quantity: "Received quantity",
+          uom: "Unit of measure",
+          unit_cost: "Unit cost",
+          total_cost: "Total cost",
+          currency: "Currency",
+          status: "Status"
+        },
       },
       errors: {
         format: "%{attribute} %{message}",
@@ -318,6 +341,23 @@
               },
               expiration_date: {
                 greater_than_or_equal_to: "must be today or a future date"
+              },
+            }
+          },
+          purchase_order: {
+            attributes: {
+              status: {
+                inclusion: "'%{value}' is not a valid status for purchase order",
+              },
+            }
+          },
+          purchase_order_item: {
+            attributes: {
+              product_id: {
+                uniqueness: "has already been added",
+              },
+              status: {
+                inclusion: "'%{value}' is not a valid status for purchase order item",
               },
             }
           },
