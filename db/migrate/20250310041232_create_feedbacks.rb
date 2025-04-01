@@ -27,7 +27,7 @@ class CreateFeedbacks < ActiveRecord::Migration[8.0]
 
       t.check_constraint "rating IS NOT NULL", name: :check_feedbacks_rating_presence
       t.check_constraint "rating >= 0.0 AND rating <= 10.0", name: :check_feedbacks_rating_numericality
-      t.check_constraint "rating * 2 = FLOOR(rating * 2)", name: :check_feedbacks_rating_step
+      t.check_constraint "rating * 2.0 = FLOOR(rating * 2.0)", name: :check_feedbacks_rating_step
 
       t.check_constraint "comment IS NOT NULL AND comment <> ''", name: :check_feedbacks_comment_presence
       t.check_constraint "CHAR_LENGTH(comment) <= 1000 AND CHAR_LENGTH(comment) > 0", name: :check_feedbacks_comment_length

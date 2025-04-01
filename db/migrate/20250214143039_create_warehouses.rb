@@ -26,9 +26,9 @@ class CreateWarehouses < ActiveRecord::Migration[8.0]
       t.check_constraint "CHAR_LENGTH(email_address) <= 55 AND CHAR_LENGTH(email_address) >= 2", name: :check_warehouses_email_address_length
       t.check_constraint "CHAR_LENGTH(contact_number) <= 55 AND CHAR_LENGTH(contact_number) >= 2", name: :check_warehouses_contact_number_length
 
-      t.check_constraint "total_capacity BETWEEN 0 AND 100000000000", name: :check_warehouses_total_capacity_range
-      t.check_constraint "latitude BETWEEN -90 AND 90", name: :check_warehouses_latitude_range
-      t.check_constraint "longitude BETWEEN -180 AND 180", name: :check_warehouses_longitude_range
+      t.check_constraint "total_capacity BETWEEN 0.0 AND 100000000000.0", name: :check_warehouses_total_capacity_range
+      t.check_constraint "latitude BETWEEN -90.0 AND 90.0", name: :check_warehouses_latitude_range
+      t.check_constraint "longitude BETWEEN -180.0 AND 180.0", name: :check_warehouses_longitude_range
     end
   end
 end

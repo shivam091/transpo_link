@@ -58,7 +58,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_23_132952) do
     t.index ["reference_code"], name: "index_feedbacks_on_reference_code", unique: true
     t.index ["reviewable_type", "reviewable_id"], name: "index_feedbacks_on_reviewable"
     t.index ["user_id"], name: "index_feedbacks_on_user_id"
-    t.check_constraint "(rating * 2::numeric) = floor(rating * 2::numeric)", name: "check_feedbacks_rating_step"
+    t.check_constraint "(rating * 2.0) = floor(rating * 2.0)", name: "check_feedbacks_rating_step"
     t.check_constraint "char_length(comment) <= 1000 AND char_length(comment) > 0", name: "check_feedbacks_comment_length"
     t.check_constraint "comment IS NOT NULL AND comment <> ''::text", name: "check_feedbacks_comment_presence"
     t.check_constraint "rating >= 0.0 AND rating <= 10.0", name: "check_feedbacks_rating_numericality"
@@ -479,10 +479,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_23_132952) do
     t.check_constraint "char_length(description) <= 1000", name: "check_warehouses_description_length"
     t.check_constraint "char_length(email_address::text) <= 55 AND char_length(email_address::text) >= 2", name: "check_warehouses_email_address_length"
     t.check_constraint "char_length(name::text) <= 255 AND char_length(name::text) >= 2", name: "check_warehouses_name_length"
-    t.check_constraint "latitude >= '-90'::integer::numeric AND latitude <= 90::numeric", name: "check_warehouses_latitude_range"
-    t.check_constraint "longitude >= '-180'::integer::numeric AND longitude <= 180::numeric", name: "check_warehouses_longitude_range"
+    t.check_constraint "latitude >= '-90.0'::numeric AND latitude <= 90.0", name: "check_warehouses_latitude_range"
+    t.check_constraint "longitude >= '-180.0'::numeric AND longitude <= 180.0", name: "check_warehouses_longitude_range"
     t.check_constraint "name IS NOT NULL AND name::text <> ''::text", name: "check_warehouses_name_presence"
-    t.check_constraint "total_capacity >= 0::numeric AND total_capacity <= '100000000000'::bigint::numeric", name: "check_warehouses_total_capacity_range"
+    t.check_constraint "total_capacity >= 0.0 AND total_capacity <= 100000000000.0", name: "check_warehouses_total_capacity_range"
     t.check_constraint "total_capacity IS NOT NULL", name: "check_warehouses_total_capacity_presence"
   end
 
