@@ -121,6 +121,7 @@
         tax_rate: {
           country: "Country or region",
           tax_identifier_type: "Tax identifier type",
+          tax_type: "Tax type",
           business_category: "Business category",
           rate: "Rate",
           valid_from: "Valid from",
@@ -171,14 +172,22 @@
           reference_code: "Reference code",
           product_id: "Product",
           warehouse_id: "Warehouse",
+          tracking_method: "Tracking method",
+          inventory_unit: "Inventory unit",
+          average_cost_price: "Average cost price",
+          currency: "Currency",
+          low_stock_threshold: "Low stock threshold",
+          created_at: "Created at",
+          updated_at: "Updated at",
+        },
+        inventory_batch: {
+          inventory_id: "Inventory",
           batch_number: "Batch number",
           expiration_date: "Expiration date",
-          stock_quantity: "Stock quantity",
-          reserved_stock: "Reserved stock",
+          quantity: "Quantity",
           inventory_unit: "Inventory unit",
           cost_price: "Cost price",
           currency: "Currency",
-          tracking_method: "Tracking method",
           created_at: "Created at",
           updated_at: "Updated at",
         },
@@ -206,6 +215,15 @@
           created_at: "Created at",
           updated_at: "Updated at",
         },
+        stock: {
+          inventory_id: "Inventory",
+          quantity_in_hand: "Quantity in hand",
+          quantity_pending_to_buyer: "Quantity pending to buyer",
+        },
+        replenishment: {
+          inventory_id: "Inventory",
+          quantity_pending_from_supplier: "Quantity pending from supplier",
+        }
       },
       errors: {
         format: "%{attribute} %{message}",
@@ -240,20 +258,26 @@
               entity_type: {
                 inclusion: "'%{value}' is not a valid entity type",
               },
+              status: {
+                inclusion: "'%{value}' is not a valid status",
+              },
             },
           },
           tax_rate: {
             attributes: {
               base: {
-                no_overlapping_tax_rates: "There is already an active tax rate for this country, tax identifier type, and business category in the selected date range",
+                no_overlapping_tax_rates: "There is already an active tax rate for this country, tax identifier type, tax type, and business category in the selected date range",
               },
               tax_identifier_type: {
                 inclusion: "'%{value}' is not a valid tax identifier type",
-                uniqueness: "already exist for this country and business category for selected date range",
+                uniqueness: "already exist for this country, tax type, and business category for selected date range",
                 invalid: "is not valid for the selected country"
               },
+              tax_type: {
+                inclusion: "'%{value}' is not a valid tax type",
+              },
               business_category: {
-                inclusion: "'%{value}' is not a valid tax identifier type",
+                inclusion: "'%{value}' is not a valid business category",
               },
               rate: {
                 cannot_change_rate_for_active_tax_rate: "cannot be changed for an active tax rate",
@@ -282,12 +306,19 @@
               product_id: {
                 uniqueness: "already has inventory for the selected warehouse",
               },
+              inventory_unit: {
+                inclusion: "is not valid for the selected product"
+              }
+            }
+          },
+          inventory_batch: {
+            attributes: {
+              batch_number: {
+                uniqueness: "already exists for the selected inventory"
+              },
               expiration_date: {
                 greater_than_or_equal_to: "must be today or a future date"
               },
-              inventory_unit: {
-                invalid: "is not valid for the selected product"
-              }
             }
           },
         },

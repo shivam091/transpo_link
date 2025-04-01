@@ -33,36 +33,18 @@
         .widget-row
           .widget-row-content
             .widget-row-title
-              = Inventory.human_attribute_name(:batch_number)
-            .widget-row-body
-              = @inventory.batch_number || "-"
-        .widget-row
-          .widget-row-content
-            .widget-row-title
-              = Inventory.human_attribute_name(:expiration_date)
-            .widget-row-body
-              = @inventory.expiration_date.presence&.to_fs(:long) || "-"
-        .widget-row
-          .widget-row-content
-            .widget-row-title
-              = Inventory.human_attribute_name(:stock_quantity)
-            .widget-row-body
-              = TranspoLink::MeasurementUnits.display_label(@inventory.stock_quantity, @inventory.inventory_unit)
-        .widget-row
-          .widget-row-content
-            .widget-row-title
-              = Inventory.human_attribute_name(:reserved_stock)
-            .widget-row-body
-              = TranspoLink::MeasurementUnits.display_label(@inventory.reserved_stock, @inventory.inventory_unit)
-        .widget-row
-          .widget-row-content
-            .widget-row-title
-              = Inventory.human_attribute_name(:cost_price)
-            .widget-row-body
-              = number_to_currency(@inventory.cost_price, unit: @inventory.currency.symbol)
-        .widget-row
-          .widget-row-content
-            .widget-row-title
               = Inventory.human_attribute_name(:tracking_method)
             .widget-row-body
               = enum_i18n(Inventory, :tracking_methods, @inventory.tracking_method)
+        .widget-row
+          .widget-row-content
+            .widget-row-title
+              = Inventory.human_attribute_name(:low_stock_threshold)
+            .widget-row-body
+              = TranspoLink::MeasurementUnits.display_label(@inventory.low_stock_threshold, @inventory.inventory_unit)
+        .widget-row
+          .widget-row-content
+            .widget-row-title
+              = Inventory.human_attribute_name(:average_cost_price)
+            .widget-row-body
+              = number_to_currency(@inventory.average_cost_price, unit: @inventory.currency.symbol)

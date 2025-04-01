@@ -8,11 +8,9 @@ require "spec_helper"
 
 RSpec.describe Toggleable do
   before(:all) do
-    ActiveRecord::Schema.define(version: 1) do
-      create_table :toggleable_models, force: true do |t|
-        t.boolean :is_active
-        t.timestamps
-      end
+    connection.create_table :toggleable_models, force: true do |t|
+      t.boolean :is_active
+      t.timestamps
     end
 
     class ToggleableModel < ApplicationRecord
@@ -21,7 +19,7 @@ RSpec.describe Toggleable do
   end
 
   after(:all) do
-    connection.drop_table(:toggleable_models, if_exists: true)
+    connection.drop_table :toggleable_models, if_exists: true
     Object.send(:remove_const, :ToggleableModel)
   end
 

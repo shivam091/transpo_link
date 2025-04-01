@@ -21,8 +21,8 @@ RSpec.describe Address, type: :model do
     it { is_expected.to have_db_column(:state).of_type(:string) }
     it { is_expected.to have_db_column(:country).of_type(:string) }
     it { is_expected.to have_db_column(:postal_code).of_type(:string) }
-    it { is_expected.to have_db_column(:addressable_id).of_type(:uuid) }
-    it { is_expected.to have_db_column(:addressable_type).of_type(:string) }
+    it { is_expected.to have_db_column(:addressable_id).of_type(:uuid).with_options(null: false) }
+    it { is_expected.to have_db_column(:addressable_type).of_type(:string).with_options(null: false) }
     it { is_expected.to have_db_column(:created_at).of_type(:timestamptz).with_options(null: false) }
     it { is_expected.to have_db_column(:updated_at).of_type(:timestamptz).with_options(null: false) }
 

@@ -19,6 +19,7 @@ class TaxRatesController < ApplicationController
 
   # GET /tax-rates/new
   def new
+    add_breadcrumb t(".breadcrumb"), new_tax_rate_path
     @tax_rate = TaxRate.new
   end
 
@@ -45,6 +46,7 @@ class TaxRatesController < ApplicationController
 
   # GET /tax-rates/:id/edit
   def edit
+    add_breadcrumb t(".breadcrumb"), edit_tax_rate_path(@tax_rate)
   end
 
   # PUT|PATCH /tax-rates/:id
@@ -87,6 +89,7 @@ class TaxRatesController < ApplicationController
     params.require(:tax_rate).permit(
       :tax_identifier_type,
       :country,
+      :tax_type,
       :business_category,
       :rate,
       :valid_from,

@@ -22,6 +22,7 @@ class CreateLegalIdentifiers < ActiveRecord::Migration[8.0]
       t.string :tax_identifier
       t.string :business_identifier_type
       t.string :business_identifier
+      t.enum :status, enum_type: :legal_identifier_statuses, index: {using: :btree}
       t.timestamps_with_timezone null: false
 
       t.index [:tax_identifier, :tax_identifier_type, :country, :entity_type], unique: true, using: :btree
@@ -46,6 +47,9 @@ class CreateLegalIdentifiers < ActiveRecord::Migration[8.0]
         (entity_type = 'business' AND business_identifier_type IS NOT NULL AND business_identifier_type <> '')
         OR (entity_type = 'individual' AND business_identifier_type IS NULL)
       )", name: :check_legal_identifiers_business_identifier_type_based_on_entity
+
+      t.check_constraint "status IS NOT NULL", name: :check_legal_identifiers_status_presence
+      t.check_constraint "status IN (#{enum_values('legal_identifier_statuses')})", name: :check_legal_identifiers_status_inclusion
     end
   end
 end
