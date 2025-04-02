@@ -42,15 +42,15 @@ class CreatePurchaseOrderItems < ActiveRecord::Migration[8.0]
       t.check_constraint "received_quantity IS NOT NULL", name: :check_purchase_order_items_received_quantity_presence
       t.check_constraint "received_quantity >= 0.0", name: :check_purchase_order_items_received_quantity_non_negative
 
-      t.check_constraint "uom IS NOT NULL AND uom  <> ''", name: :check_purchase_order_items_uom_presence
+      t.check_constraint "uom IS NOT NULL AND uom <> ''", name: :check_purchase_order_items_uom_presence
 
       t.check_constraint "unit_cost IS NOT NULL", name: :check_purchase_order_items_unit_cost_presence
       t.check_constraint "unit_cost > 0.0", name: :check_purchase_order_items_unit_cost_positive
 
-      t.check_constraint "currency IS NOT NULL AND currency  <> ''", name: :check_purchase_order_items_currency_presence
+      t.check_constraint "currency IS NOT NULL AND currency <> ''", name: :check_purchase_order_items_currency_presence
 
       t.check_constraint "status IS NOT NULL", name: :check_purchase_order_items_status_presence
-      t.check_constraint "status IN (#{enum_values('purchase_order_item_statuses')})", name: :check_purchase_order_items_status_inclusion
+      t.check_constraint "status IN (#{enum_values('purchase_order_item_statuses')})", name: :check_purchase_order_items_status_in_enum_values
     end
   end
 end

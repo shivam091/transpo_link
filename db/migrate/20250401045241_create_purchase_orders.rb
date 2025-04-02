@@ -48,7 +48,7 @@ class CreatePurchaseOrders < ActiveRecord::Migration[8.0]
       t.check_constraint "expected_delivery_date >= order_date", name: :check_purchase_orders_expected_delivery_after_order
 
       t.check_constraint "status IS NOT NULL", name: :check_purchase_orders_status_presence
-      t.check_constraint "status IN (#{enum_values('purchase_order_statuses')})", name: :check_purchase_orders_status_inclusion
+      t.check_constraint "status IN (#{enum_values('purchase_order_statuses')})", name: :check_purchase_orders_status_in_enum_values
 
       t.check_constraint "CHAR_LENGTH(notes) <= 1000", name: :check_purchase_orders_notes_length
     end

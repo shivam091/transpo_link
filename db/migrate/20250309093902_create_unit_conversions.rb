@@ -21,11 +21,11 @@ class CreateUnitConversions < ActiveRecord::Migration[8.0]
 
       t.index [:product_id, :from_unit, :to_unit], unique: true
 
-      t.check_constraint "from_unit IS NOT NULL AND from_unit  <> ''", name: :check_unit_conversions_from_unit_presence
-      t.check_constraint "to_unit IS NOT NULL AND to_unit  <> ''", name: :check_unit_conversions_to_unit_presence
+      t.check_constraint "from_unit IS NOT NULL AND from_unit <> ''", name: :check_unit_conversions_from_unit_presence
+      t.check_constraint "to_unit IS NOT NULL AND to_unit <> ''", name: :check_unit_conversions_to_unit_presence
 
       t.check_constraint "conversion_rate IS NOT NULL", name: :check_unit_conversions_conversion_rate_presence
-      t.check_constraint "conversion_rate > 0.0", name: :check_unit_conversions_conversion_rate_numericality
+      t.check_constraint "conversion_rate > 0.0", name: :check_unit_conversions_conversion_rate_positive
     end
   end
 end

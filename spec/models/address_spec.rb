@@ -26,13 +26,13 @@ RSpec.describe Address, type: :model do
     it { is_expected.to have_db_column(:created_at).of_type(:timestamptz).with_options(null: false) }
     it { is_expected.to have_db_column(:updated_at).of_type(:timestamptz).with_options(null: false) }
 
+    it { is_expected.to have_db_index([:addressable_type, :addressable_id]) }
+
     it { is_expected.to have_check_constraint(:check_addresses_address1_presence).with_expression("address1 IS NOT NULL AND address1::text <> ''::text") }
     it { is_expected.to have_check_constraint(:check_addresses_country_presence).with_expression("country IS NOT NULL AND country::text <> ''::text") }
     it { is_expected.to have_check_constraint(:check_addresses_address1_length).with_expression("char_length(address1::text) <= 100") }
     it { is_expected.to have_check_constraint(:check_addresses_address2_length).with_expression("char_length(address2::text) <= 100") }
     it { is_expected.to have_check_constraint(:check_addresses_postal_code_length).with_expression("char_length(postal_code::text) <= 20") }
-
-    it { is_expected.to have_db_index([:addressable_type, :addressable_id]) }
   end
 
   describe "included modules" do

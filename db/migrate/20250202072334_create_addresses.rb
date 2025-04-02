@@ -18,8 +18,8 @@ class CreateAddresses < ActiveRecord::Migration[8.0]
       t.string :postal_code
       t.timestamps_with_timezone null: false
 
-      t.check_constraint "address1 IS NOT NULL AND address1  <> ''", name: :check_addresses_address1_presence
-      t.check_constraint "country IS NOT NULL AND country  <> ''", name: :check_addresses_country_presence
+      t.check_constraint "address1 IS NOT NULL AND address1 <> ''", name: :check_addresses_address1_presence
+      t.check_constraint "country IS NOT NULL AND country <> ''", name: :check_addresses_country_presence
       t.check_constraint "CHAR_LENGTH(address1) <= 100", name: :check_addresses_address1_length
       t.check_constraint "CHAR_LENGTH(address2) <= 100", name: :check_addresses_address2_length
       t.check_constraint "CHAR_LENGTH(postal_code) <= 20", name: :check_addresses_postal_code_length

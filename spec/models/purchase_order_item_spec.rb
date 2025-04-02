@@ -41,7 +41,7 @@ RSpec.describe PurchaseOrderItem, type: :model do
     it { is_expected.to have_check_constraint(:check_purchase_order_items_ordered_quantity_presence).with_expression("ordered_quantity IS NOT NULL") }
     it { is_expected.to have_check_constraint(:check_purchase_order_items_received_quantity_non_negative).with_expression("received_quantity >= 0.0") }
     it { is_expected.to have_check_constraint(:check_purchase_order_items_received_quantity_presence).with_expression("received_quantity IS NOT NULL") }
-    it { is_expected.to have_check_constraint(:check_purchase_order_items_status_inclusion) }
+    it { is_expected.to have_check_constraint(:check_purchase_order_items_status_in_enum_values) }
     it { is_expected.to have_check_constraint(:check_purchase_order_items_status_presence).with_expression("status IS NOT NULL") }
     it { is_expected.to have_check_constraint(:check_purchase_order_items_unit_cost_positive).with_expression("unit_cost > 0.0") }
     it { is_expected.to have_check_constraint(:check_purchase_order_items_unit_cost_presence).with_expression("unit_cost IS NOT NULL") }

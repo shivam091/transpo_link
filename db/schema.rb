@@ -60,10 +60,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_01_084516) do
     t.index ["reference_code"], name: "index_feedbacks_on_reference_code", unique: true
     t.index ["reviewable_type", "reviewable_id"], name: "index_feedbacks_on_reviewable"
     t.index ["user_id"], name: "index_feedbacks_on_user_id"
-    t.check_constraint "(rating * 2.0) = floor(rating * 2.0)", name: "check_feedbacks_rating_step"
+    t.check_constraint "(rating * 2.0) = floor(rating * 2.0)", name: "check_feedbacks_rating_half_step"
     t.check_constraint "char_length(comment) <= 1000 AND char_length(comment) > 0", name: "check_feedbacks_comment_length"
     t.check_constraint "comment IS NOT NULL AND comment <> ''::text", name: "check_feedbacks_comment_presence"
-    t.check_constraint "rating >= 0.0 AND rating <= 10.0", name: "check_feedbacks_rating_numericality"
+    t.check_constraint "rating >= 0.0 AND rating <= 10.0", name: "check_feedbacks_rating_range"
     t.check_constraint "rating IS NOT NULL", name: "check_feedbacks_rating_presence"
   end
 
@@ -88,7 +88,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_01_084516) do
     t.check_constraint "inventory_unit IS NOT NULL AND inventory_unit::text <> ''::text", name: "check_inventories_inventory_unit_presence"
     t.check_constraint "low_stock_threshold > 0.0", name: "check_inventories_low_stock_threshold_positive"
     t.check_constraint "low_stock_threshold IS NOT NULL", name: "check_inventories_low_stock_threshold_presence"
-    t.check_constraint "tracking_method = ANY (ARRAY['fifo'::tracking_methods, 'lifo'::tracking_methods, 'average_cost'::tracking_methods])", name: "check_inventories_tracking_method_inclusion"
+    t.check_constraint "tracking_method = ANY (ARRAY['fifo'::tracking_methods, 'lifo'::tracking_methods, 'average_cost'::tracking_methods])", name: "check_inventories_tracking_method_in_enum_values"
     t.check_constraint "tracking_method IS NOT NULL", name: "check_inventories_tracking_method_presence"
   end
 
@@ -156,13 +156,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_01_084516) do
     t.index ["source_type", "source_id"], name: "index_inventory_movements_on_source"
     t.check_constraint "currency IS NOT NULL AND currency::text <> ''::text", name: "check_inventory_movements_currency_presence"
     t.check_constraint "inventory_unit IS NOT NULL AND inventory_unit::text <> ''::text", name: "check_inventory_movements_inventory_unit_presence"
-    t.check_constraint "movement_type = ANY (ARRAY['restock'::movement_types, 'purchase'::movement_types, 'sale'::movement_types, 'return'::movement_types, 'transfer_in'::movement_types, 'transfer_out'::movement_types, 'adjustment'::movement_types, 'reservation'::movement_types])", name: "check_inventory_movements_movement_type_inclusion"
+    t.check_constraint "movement_type = ANY (ARRAY['restock'::movement_types, 'purchase'::movement_types, 'sale'::movement_types, 'return'::movement_types, 'transfer_in'::movement_types, 'transfer_out'::movement_types, 'adjustment'::movement_types, 'reservation'::movement_types])", name: "check_inventory_movements_movement_type_in_enum_values"
     t.check_constraint "movement_type IS NOT NULL", name: "check_inventory_movements_movement_type_presence"
     t.check_constraint "quantity <> 0.0", name: "check_inventory_movements_quantity_nonzero"
     t.check_constraint "quantity IS NOT NULL", name: "check_inventory_movements_quantity_presence"
-    t.check_constraint "total_cost >= unit_cost", name: "check_inventory_movements_total_cost_numericality"
+    t.check_constraint "total_cost >= unit_cost", name: "check_inventory_movements_total_cost_gteq_unit_cost"
     t.check_constraint "total_cost IS NOT NULL", name: "check_inventory_movements_total_cost_presence"
-    t.check_constraint "unit_cost >= 0.0", name: "check_inventory_movements_unit_cost_non_negative"
+    t.check_constraint "unit_cost > 0.0", name: "check_inventory_movements_unit_cost_positive"
     t.check_constraint "unit_cost IS NOT NULL", name: "check_inventory_movements_unit_cost_presence"
   end
 
@@ -183,11 +183,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_01_084516) do
     t.index ["tax_identifier", "tax_identifier_type", "country", "entity_type"], name: "idx_on_tax_identifier_tax_identifier_type_country_e_6b3ba9dafd", unique: true
     t.index ["user_id"], name: "index_legal_identifiers_on_user_id"
     t.check_constraint "country IS NOT NULL AND country::text <> ''::text", name: "check_legal_identifiers_country_presence"
-    t.check_constraint "entity_type = 'business'::entity_types AND business_identifier IS NOT NULL AND business_identifier::text <> ''::text OR entity_type = 'individual'::entity_types AND business_identifier IS NULL", name: "check_legal_identifiers_business_identifier_based_on_entity"
-    t.check_constraint "entity_type = 'business'::entity_types AND business_identifier_type IS NOT NULL AND business_identifier_type::text <> ''::text OR entity_type = 'individual'::entity_types AND business_identifier_type IS NULL", name: "check_legal_identifiers_business_identifier_type_based_on_entit"
-    t.check_constraint "entity_type = ANY (ARRAY['business'::entity_types, 'individual'::entity_types])", name: "check_legal_identifiers_entity_type_inclusion"
+    t.check_constraint "entity_type = 'business'::entity_types AND business_identifier IS NOT NULL AND business_identifier::text <> ''::text OR entity_type = 'individual'::entity_types AND business_identifier IS NULL", name: "check_legal_identifiers_bi_presence_based_on_entity"
+    t.check_constraint "entity_type = 'business'::entity_types AND business_identifier_type IS NOT NULL AND business_identifier_type::text <> ''::text OR entity_type = 'individual'::entity_types AND business_identifier_type IS NULL", name: "check_legal_identifiers_bi_type_presence_based_on_entity"
+    t.check_constraint "entity_type = ANY (ARRAY['business'::entity_types, 'individual'::entity_types])", name: "check_legal_identifiers_entity_type_in_enum_values"
     t.check_constraint "entity_type IS NOT NULL", name: "check_legal_identifiers_entity_type_presence"
-    t.check_constraint "status = ANY (ARRAY['unapproved'::legal_identifier_statuses, 'approved'::legal_identifier_statuses, 'rejected'::legal_identifier_statuses])", name: "check_legal_identifiers_status_inclusion"
+    t.check_constraint "status = ANY (ARRAY['unapproved'::legal_identifier_statuses, 'approved'::legal_identifier_statuses, 'rejected'::legal_identifier_statuses])", name: "check_legal_identifiers_status_in_enum_values"
     t.check_constraint "status IS NOT NULL", name: "check_legal_identifiers_status_presence"
     t.check_constraint "tax_identifier IS NOT NULL AND tax_identifier::text <> ''::text", name: "check_legal_identifiers_tax_identifier_presence"
     t.check_constraint "tax_identifier_type IS NOT NULL AND tax_identifier_type::text <> ''::text", name: "check_legal_identifiers_tax_identifier_type_presence"
@@ -210,7 +210,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_01_084516) do
   create_table "product_prices", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "product_id", null: false
     t.uuid "warehouse_id"
-    t.integer "min_quantity", default: 1
+    t.decimal "min_quantity", precision: 12, scale: 2, default: "1.0"
     t.decimal "unit_price", precision: 12, scale: 2, default: "0.0"
     t.string "currency"
     t.timestamptz "created_at", null: false
@@ -218,9 +218,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_01_084516) do
     t.index ["product_id"], name: "index_product_prices_on_product_id"
     t.index ["warehouse_id"], name: "index_product_prices_on_warehouse_id"
     t.check_constraint "currency IS NOT NULL AND currency::text <> ''::text", name: "check_product_prices_currency_presence"
-    t.check_constraint "min_quantity >= 1", name: "check_product_prices_min_quantity_numericality"
+    t.check_constraint "min_quantity > 0.0", name: "check_product_prices_min_quantity_positive"
     t.check_constraint "min_quantity IS NOT NULL", name: "check_product_prices_min_quantity_presence"
-    t.check_constraint "unit_price > 0.0", name: "check_product_prices_unit_price_numericality"
+    t.check_constraint "unit_price > 0.0", name: "check_product_prices_unit_price_positive"
     t.check_constraint "unit_price IS NOT NULL", name: "check_product_prices_unit_price_presence"
   end
 
@@ -230,7 +230,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_01_084516) do
     t.text "description"
     t.string "sku"
     t.string "barcode"
-    t.integer "min_stock_threshold", default: 0
+    t.decimal "min_stock_threshold", precision: 12, scale: 2, default: "0.0"
     t.string "capacity_unit"
     t.string "currency"
     t.decimal "cost_price", precision: 12, scale: 2, default: "0.0"
@@ -247,10 +247,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_01_084516) do
     t.check_constraint "char_length(description) <= 2000", name: "check_products_description_length"
     t.check_constraint "char_length(name::text) <= 255 AND char_length(name::text) >= 2", name: "check_products_name_length"
     t.check_constraint "char_length(sku::text) <= 50", name: "check_products_sku_length"
-    t.check_constraint "cost_price > 0.0", name: "check_products_cost_price_numericality"
+    t.check_constraint "cost_price > 0.0", name: "check_products_cost_price_positive"
     t.check_constraint "cost_price IS NOT NULL", name: "check_products_cost_price_presence"
     t.check_constraint "currency IS NOT NULL AND currency::text <> ''::text", name: "check_products_currency_presence"
-    t.check_constraint "min_stock_threshold > 0", name: "check_products_min_stock_threshold_numericality"
+    t.check_constraint "min_stock_threshold > 0.0", name: "check_products_min_stock_threshold_positive"
     t.check_constraint "min_stock_threshold IS NOT NULL", name: "check_products_min_stock_threshold_presence"
     t.check_constraint "name IS NOT NULL AND name::text <> ''::text", name: "check_products_name_presence"
     t.check_constraint "sku IS NOT NULL AND sku::text <> ''::text", name: "check_products_sku_presence"
@@ -278,7 +278,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_01_084516) do
     t.check_constraint "ordered_quantity IS NOT NULL", name: "check_purchase_order_items_ordered_quantity_presence"
     t.check_constraint "received_quantity >= 0.0", name: "check_purchase_order_items_received_quantity_non_negative"
     t.check_constraint "received_quantity IS NOT NULL", name: "check_purchase_order_items_received_quantity_presence"
-    t.check_constraint "status = ANY (ARRAY['pending'::purchase_order_item_statuses, 'delivered'::purchase_order_item_statuses, 'cancelled'::purchase_order_item_statuses])", name: "check_purchase_order_items_status_inclusion"
+    t.check_constraint "status = ANY (ARRAY['pending'::purchase_order_item_statuses, 'delivered'::purchase_order_item_statuses, 'cancelled'::purchase_order_item_statuses])", name: "check_purchase_order_items_status_in_enum_values"
     t.check_constraint "status IS NOT NULL", name: "check_purchase_order_items_status_presence"
     t.check_constraint "unit_cost > 0.0", name: "check_purchase_order_items_unit_cost_positive"
     t.check_constraint "unit_cost IS NOT NULL", name: "check_purchase_order_items_unit_cost_presence"
@@ -306,7 +306,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_01_084516) do
     t.check_constraint "char_length(notes) <= 1000", name: "check_purchase_orders_notes_length"
     t.check_constraint "char_length(reference_document::text) <= 55", name: "check_purchase_orders_reference_document_length"
     t.check_constraint "expected_delivery_date >= order_date", name: "check_purchase_orders_expected_delivery_after_order"
-    t.check_constraint "status = ANY (ARRAY['draft'::purchase_order_statuses, 'pending'::purchase_order_statuses, 'approved'::purchase_order_statuses, 'cancelled'::purchase_order_statuses, 'rejected'::purchase_order_statuses, 'partially_delivered'::purchase_order_statuses, 'fully_delivered'::purchase_order_statuses])", name: "check_purchase_orders_status_inclusion"
+    t.check_constraint "status = ANY (ARRAY['draft'::purchase_order_statuses, 'pending'::purchase_order_statuses, 'approved'::purchase_order_statuses, 'cancelled'::purchase_order_statuses, 'rejected'::purchase_order_statuses, 'partially_delivered'::purchase_order_statuses, 'fully_delivered'::purchase_order_statuses])", name: "check_purchase_orders_status_in_enum_values"
     t.check_constraint "status IS NOT NULL", name: "check_purchase_orders_status_presence"
   end
 
@@ -354,7 +354,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_01_084516) do
     t.check_constraint "ip_info IS NOT NULL", name: "check_request_logs_ip_info_presence"
     t.check_constraint "method IS NOT NULL AND method::text <> ''::text", name: "check_request_logs_method_presence"
     t.check_constraint "remote_address IS NOT NULL", name: "check_request_logs_remote_address_presence"
-    t.check_constraint "upper(method::text) = method::text", name: "check_request_logs_method_uppercase"
+    t.check_constraint "upper(method::text) = method::text", name: "check_request_logs_method_in_uppercase"
     t.check_constraint "uri IS NOT NULL AND uri::text <> ''::text", name: "check_request_logs_uri_presence"
     t.check_constraint "uuid IS NOT NULL AND uuid::text <> ''::text", name: "check_request_logs_uuid_presence"
   end
@@ -396,17 +396,17 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_01_084516) do
     t.index ["tax_type"], name: "index_tax_rates_on_tax_type"
     t.index ["valid_from"], name: "index_tax_rates_on_valid_from"
     t.index ["valid_to"], name: "index_tax_rates_on_valid_to", where: "(valid_to IS NULL)"
-    t.check_constraint "business_category = ANY (ARRAY['b2b'::business_categories, 'b2c'::business_categories])", name: "check_tax_rates_business_category_inclusion"
+    t.check_constraint "business_category = ANY (ARRAY['b2b'::business_categories, 'b2c'::business_categories])", name: "check_tax_rates_business_category_in_enum_values"
     t.check_constraint "business_category IS NOT NULL", name: "check_tax_rates_business_category_presence"
     t.check_constraint "country IS NOT NULL AND country::text <> ''::text", name: "check_tax_rates_country_presence"
-    t.check_constraint "rate >= 0.0 AND rate <= 100.0", name: "check_tax_rates_rate_numericality"
+    t.check_constraint "rate >= 0.0 AND rate <= 100.0", name: "check_tax_rates_rate_range"
     t.check_constraint "rate IS NOT NULL", name: "check_tax_rates_rate_presence"
     t.check_constraint "tax_identifier_type IS NOT NULL AND tax_identifier_type::text <> ''::text", name: "check_tax_rates_tax_identifier_type_presence"
-    t.check_constraint "tax_type = ANY (ARRAY['exclusive'::tax_types, 'inclusive'::tax_types])", name: "check_tax_rates_tax_type_inclusion"
+    t.check_constraint "tax_type = ANY (ARRAY['exclusive'::tax_types, 'inclusive'::tax_types])", name: "check_tax_rates_tax_type_in_enum_values"
     t.check_constraint "tax_type IS NOT NULL", name: "check_tax_rates_tax_type_presence"
-    t.check_constraint "valid_from >= CURRENT_DATE", name: "check_tax_rates_valid_from_future"
+    t.check_constraint "valid_from >= CURRENT_DATE", name: "check_tax_rates_valid_from_today_or_in_future"
     t.check_constraint "valid_from IS NOT NULL", name: "check_tax_rates_valid_from_presence"
-    t.check_constraint "valid_to IS NULL OR valid_to > valid_from", name: "check_tax_rates_valid_to_comparison"
+    t.check_constraint "valid_to IS NULL OR valid_to > valid_from", name: "check_tax_rates_valid_to_after_valid_from"
   end
 
   create_table "unit_conversions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -418,7 +418,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_01_084516) do
     t.timestamptz "updated_at", null: false
     t.index ["product_id", "from_unit", "to_unit"], name: "index_unit_conversions_on_product_id_and_from_unit_and_to_unit", unique: true
     t.index ["product_id"], name: "index_unit_conversions_on_product_id"
-    t.check_constraint "conversion_rate > 0.0", name: "check_unit_conversions_conversion_rate_numericality"
+    t.check_constraint "conversion_rate > 0.0", name: "check_unit_conversions_conversion_rate_positive"
     t.check_constraint "conversion_rate IS NOT NULL", name: "check_unit_conversions_conversion_rate_presence"
     t.check_constraint "from_unit IS NOT NULL AND from_unit::text <> ''::text", name: "check_unit_conversions_from_unit_presence"
     t.check_constraint "to_unit IS NOT NULL AND to_unit::text <> ''::text", name: "check_unit_conversions_to_unit_presence"
@@ -452,7 +452,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_01_084516) do
     t.timestamptz "created_at", null: false
     t.timestamptz "updated_at", null: false
     t.index ["user_id"], name: "index_user_preferences_on_user_id", unique: true
-    t.check_constraint "preferred_color_scheme = ANY (ARRAY['auto'::color_schemes, 'dark'::color_schemes, 'light'::color_schemes])", name: "check_user_preferences_preferred_color_scheme_inclusion"
+    t.check_constraint "preferred_color_scheme = ANY (ARRAY['auto'::color_schemes, 'dark'::color_schemes, 'light'::color_schemes])", name: "check_user_preferences_preferred_color_scheme_in_enum_values"
     t.check_constraint "preferred_color_scheme IS NOT NULL", name: "check_user_preferences_preferred_color_scheme_presence"
     t.check_constraint "preferred_currency IS NOT NULL AND preferred_currency::text <> ''::text", name: "check_user_preferences_preferred_currency_presence"
     t.check_constraint "preferred_locale IS NOT NULL AND preferred_locale::text <> ''::text", name: "check_user_preferences_preferred_locale_presence"
