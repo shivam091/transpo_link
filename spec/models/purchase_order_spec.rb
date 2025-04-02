@@ -41,7 +41,7 @@ RSpec.describe PurchaseOrder, type: :model do
     it { is_expected.to have_check_constraint(:check_purchase_orders_notes_length).with_expression("char_length(notes) <= 1000") }
     it { is_expected.to have_check_constraint(:check_purchase_orders_reference_document_length).with_expression("char_length(reference_document::text) <= 55") }
     it { is_expected.to have_check_constraint(:check_purchase_orders_expected_delivery_after_order).with_expression("expected_delivery_date >= order_date") }
-    it { is_expected.to have_check_constraint(:check_purchase_orders_status_inclusion) }
+    it { is_expected.to have_check_constraint(:check_purchase_orders_status_in_enum_values) }
     it { is_expected.to have_check_constraint(:check_purchase_orders_status_presence).with_expression("status IS NOT NULL") }
   end
 

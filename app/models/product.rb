@@ -10,7 +10,7 @@ class Product < ApplicationRecord
     reference_code name sku barcode cost_price product_category_id
   ].freeze
 
-  attribute :min_stock_threshold, default: 0
+  attribute :min_stock_threshold, default: 0.0
   attribute :cost_price, default: 0.0
 
   nullify_if_blank :description, :barcode
@@ -37,7 +37,7 @@ class Product < ApplicationRecord
             reduce: true
   validates :min_stock_threshold,
             presence: true,
-            numericality: {only_integer: true, greater_than: 0},
+            numericality: {greater_than: 0.0},
             reduce: true
   validates :capacity_unit,
             presence: true,

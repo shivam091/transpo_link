@@ -27,18 +27,18 @@ class CreateTaxRates < ActiveRecord::Migration[8.0]
       t.check_constraint "tax_identifier_type IS NOT NULL AND tax_identifier_type <> ''", name: :check_tax_rates_tax_identifier_type_presence
 
       t.check_constraint "tax_type IS NOT NULL", name: :check_tax_rates_tax_type_presence
-      t.check_constraint "tax_type IN (#{enum_values('tax_types')})", name: :check_tax_rates_tax_type_inclusion
+      t.check_constraint "tax_type IN (#{enum_values('tax_types')})", name: :check_tax_rates_tax_type_in_enum_values
 
       t.check_constraint "business_category IS NOT NULL", name: :check_tax_rates_business_category_presence
-      t.check_constraint "business_category IN (#{enum_values('business_categories')})", name: :check_tax_rates_business_category_inclusion
+      t.check_constraint "business_category IN (#{enum_values('business_categories')})", name: :check_tax_rates_business_category_in_enum_values
 
       t.check_constraint "rate IS NOT NULL", name: :check_tax_rates_rate_presence
-      t.check_constraint "rate >= 0.0 AND rate <= 100.0", name: :check_tax_rates_rate_numericality
+      t.check_constraint "rate BETWEEN 0.0 AND 100.0", name: :check_tax_rates_rate_range
 
       t.check_constraint "valid_from IS NOT NULL", name: :check_tax_rates_valid_from_presence
-      t.check_constraint "valid_from >= CURRENT_DATE", name: :check_tax_rates_valid_from_future
+      t.check_constraint "valid_from >= CURRENT_DATE", name: :check_tax_rates_valid_from_today_or_in_future
 
-      t.check_constraint "valid_to IS NULL OR valid_to > valid_from", name: :check_tax_rates_valid_to_comparison
+      t.check_constraint "valid_to IS NULL OR valid_to > valid_from", name: :check_tax_rates_valid_to_after_valid_from
     end
   end
 end

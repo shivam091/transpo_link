@@ -17,7 +17,7 @@ RSpec.describe ProductPrice, type: :model do
     it { is_expected.to have_db_column(:id).of_type(:uuid) }
     it { is_expected.to have_db_column(:product_id).of_type(:uuid).with_options(null: false) }
     it { is_expected.to have_db_column(:warehouse_id).of_type(:uuid).with_options(null: true) }
-    it { is_expected.to have_db_column(:min_quantity).of_type(:integer).with_options(default: 1) }
+    it { is_expected.to have_db_column(:min_quantity).of_type(:decimal).with_options(precision: 12, scale: 2, default: 1.0) }
     it { is_expected.to have_db_column(:unit_price).of_type(:decimal).with_options(precision: 12, scale: 2, default: 0.0) }
     it { is_expected.to have_db_column(:currency).of_type(:string) }
     it { is_expected.to have_db_column(:created_at).of_type(:timestamptz).with_options(null: false) }
@@ -29,14 +29,18 @@ RSpec.describe ProductPrice, type: :model do
     it { is_expected.to have_foreign_key(:product_id).with_name(:fk_product_prices_product_id_on_products).on_delete(:cascade) }
     it { is_expected.to have_foreign_key(:warehouse_id).with_name(:fk_product_prices_warehouse_id_on_warehouses).on_delete(:restrict) }
 
-    it { is_expected.to have_check_constraint(:check_product_prices_unit_price_numericality).with_expression("unit_price > 0.0") }
+    it { is_expected.to have_check_constraint(:check_product_prices_currency_presence).with_expression("currency IS NOT NULL AND currency::text <> ''::text") }
+    it { is_expected.to have_check_constraint(:check_product_prices_min_quantity_presence).with_expression("min_quantity IS NOT NULL") }
+    it { is_expected.to have_check_constraint(:check_product_prices_min_quantity_positive).with_expression("min_quantity > 0.0") }
+    it { is_expected.to have_check_constraint(:check_product_prices_unit_price_positive).with_expression("unit_price > 0.0") }
+    it { is_expected.to have_check_constraint(:check_product_prices_unit_price_presence).with_expression("unit_price IS NOT NULL") }
   end
 
   describe "default values" do
     let(:product_price) { described_class.new }
 
-    it "should set 1 as default value for #min_quantity" do
-      expect(product_price.min_quantity).to eq(1)
+    it "should set 1.0 as default value for #min_quantity" do
+      expect(product_price.min_quantity).to eq(1.0)
     end
 
     it "should set 0.0 as default value for #unit_price" do
@@ -65,7 +69,7 @@ RSpec.describe ProductPrice, type: :model do
   describe "validations" do
     describe "#min_quantity" do
       it { is_expected.to validate_presence_of(:min_quantity) }
-      it { is_expected.to validate_numericality_of(:min_quantity).is_greater_than_or_equal_to(1).only_integer }
+      it { is_expected.to validate_numericality_of(:min_quantity).is_greater_than(0.0) }
     end
 
     describe "#unit_price" do

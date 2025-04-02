@@ -17,9 +17,9 @@ class CreateWarehouses < ActiveRecord::Migration[8.0]
       t.boolean :is_active, default: false, index: {using: :btree}
       t.timestamps_with_timezone null: false
 
-      t.check_constraint "name IS NOT NULL AND name  <> ''", name: :check_warehouses_name_presence
+      t.check_constraint "name IS NOT NULL AND name <> ''", name: :check_warehouses_name_presence
       t.check_constraint "total_capacity IS NOT NULL", name: :check_warehouses_total_capacity_presence
-      t.check_constraint "capacity_unit IS NOT NULL AND capacity_unit  <> ''", name: :check_warehouses_capacity_unit_presence
+      t.check_constraint "capacity_unit IS NOT NULL AND capacity_unit <> ''", name: :check_warehouses_capacity_unit_presence
 
       t.check_constraint "CHAR_LENGTH(name) <= 255 AND CHAR_LENGTH(name) >= 2", name: :check_warehouses_name_length
       t.check_constraint "CHAR_LENGTH(description) <= 1000", name: :check_warehouses_description_length

@@ -27,7 +27,7 @@ RSpec.describe UnitConversion, type: :model do
 
     it { is_expected.to have_foreign_key(:product_id).with_name(:fk_unit_conversions_product_id_on_products).on_delete(:cascade) }
 
-    it { is_expected.to have_check_constraint(:check_unit_conversions_conversion_rate_numericality).with_expression("conversion_rate > 0.0") }
+    it { is_expected.to have_check_constraint(:check_unit_conversions_conversion_rate_positive).with_expression("conversion_rate > 0.0") }
     it { is_expected.to have_check_constraint(:check_unit_conversions_conversion_rate_presence).with_expression("conversion_rate IS NOT NULL") }
     it { is_expected.to have_check_constraint(:check_unit_conversions_from_unit_presence).with_expression("from_unit IS NOT NULL AND from_unit::text <> ''::text") }
     it { is_expected.to have_check_constraint(:check_unit_conversions_to_unit_presence).with_expression("to_unit IS NOT NULL AND to_unit::text <> ''::text") }

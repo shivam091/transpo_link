@@ -38,11 +38,11 @@ RSpec.describe LegalIdentifier, type: :model do
     it { is_expected.to have_check_constraint(:check_legal_identifiers_tax_identifier_presence).with_expression("tax_identifier IS NOT NULL AND tax_identifier::text <> ''::text") }
     it { is_expected.to have_check_constraint(:check_legal_identifiers_country_presence).with_expression("country IS NOT NULL AND country::text <> ''::text") }
     it { is_expected.to have_check_constraint(:check_legal_identifiers_entity_type_presence).with_expression("entity_type IS NOT NULL") }
-    it { is_expected.to have_check_constraint(:check_legal_identifiers_entity_type_inclusion).with_expression("entity_type = ANY (ARRAY['business'::entity_types, 'individual'::entity_types])") }
-    it { is_expected.to have_check_constraint(:check_legal_identifiers_business_identifier_based_on_entity) }
-    it { is_expected.to have_check_constraint(:check_legal_identifiers_business_identifier_type_based_on_entit) }
+    it { is_expected.to have_check_constraint(:check_legal_identifiers_entity_type_in_enum_values).with_expression("entity_type = ANY (ARRAY['business'::entity_types, 'individual'::entity_types])") }
+    it { is_expected.to have_check_constraint(:check_legal_identifiers_bi_presence_based_on_entity) }
+    it { is_expected.to have_check_constraint(:check_legal_identifiers_bi_type_presence_based_on_entity) }
     it { is_expected.to have_check_constraint(:check_legal_identifiers_status_presence) }
-    it { is_expected.to have_check_constraint(:check_legal_identifiers_status_inclusion).with_expression("status = ANY (ARRAY['unapproved'::legal_identifier_statuses, 'approved'::legal_identifier_statuses, 'rejected'::legal_identifier_statuses])") }
+    it { is_expected.to have_check_constraint(:check_legal_identifiers_status_in_enum_values).with_expression("status = ANY (ARRAY['unapproved'::legal_identifier_statuses, 'approved'::legal_identifier_statuses, 'rejected'::legal_identifier_statuses])") }
   end
 
   describe "included modules" do

@@ -35,7 +35,7 @@ class CreateInventories < ActiveRecord::Migration[8.0]
 
       t.index [:product_id, :warehouse_id], unique: true
 
-      t.check_constraint "currency IS NOT NULL AND currency  <> ''", name: :check_inventories_currency_presence
+      t.check_constraint "currency IS NOT NULL AND currency <> ''", name: :check_inventories_currency_presence
 
       t.check_constraint "average_cost_price IS NOT NULL", name: :check_inventories_average_cost_price_presence
       t.check_constraint "average_cost_price >= 0.0", name: :check_inventories_average_cost_price_non_negative
@@ -43,10 +43,10 @@ class CreateInventories < ActiveRecord::Migration[8.0]
       t.check_constraint "low_stock_threshold IS NOT NULL", name: :check_inventories_low_stock_threshold_presence
       t.check_constraint "low_stock_threshold > 0.0", name: :check_inventories_low_stock_threshold_positive
 
-      t.check_constraint "inventory_unit IS NOT NULL AND inventory_unit  <> ''", name: :check_inventories_inventory_unit_presence
+      t.check_constraint "inventory_unit IS NOT NULL AND inventory_unit <> ''", name: :check_inventories_inventory_unit_presence
 
       t.check_constraint "tracking_method IS NOT NULL", name: :check_inventories_tracking_method_presence
-      t.check_constraint "tracking_method IN (#{enum_values('tracking_methods')})", name: :check_inventories_tracking_method_inclusion
+      t.check_constraint "tracking_method IN (#{enum_values('tracking_methods')})", name: :check_inventories_tracking_method_in_enum_values
     end
   end
 end

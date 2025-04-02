@@ -24,7 +24,7 @@ class CreateInventoryBatches < ActiveRecord::Migration[8.0]
 
       t.index [:inventory_id, :batch_number], unique: true
 
-      t.check_constraint "batch_number IS NOT NULL AND batch_number  <> ''", name: :check_inventory_batches_batch_number_presence
+      t.check_constraint "batch_number IS NOT NULL AND batch_number <> ''", name: :check_inventory_batches_batch_number_presence
       t.check_constraint "CHAR_LENGTH(batch_number) <= 55", name: :check_inventory_batches_batch_number_length
 
       t.check_constraint "quantity IS NOT NULL", name: :check_inventory_batches_quantity_presence
@@ -33,9 +33,9 @@ class CreateInventoryBatches < ActiveRecord::Migration[8.0]
       t.check_constraint "cost_price IS NOT NULL", name: :check_inventory_batches_cost_price_presence
       t.check_constraint "cost_price > 0.0", name: :check_inventory_batches_cost_price_positive
 
-      t.check_constraint "inventory_unit IS NOT NULL AND inventory_unit  <> ''", name: :check_inventory_batches_inventory_unit_presence
+      t.check_constraint "inventory_unit IS NOT NULL AND inventory_unit <> ''", name: :check_inventory_batches_inventory_unit_presence
 
-      t.check_constraint "currency IS NOT NULL AND currency  <> ''", name: :check_inventory_batches_currency_presence
+      t.check_constraint "currency IS NOT NULL AND currency <> ''", name: :check_inventory_batches_currency_presence
 
       t.check_constraint "expiration_date >= CURRENT_DATE", name: :check_inventory_batches_expiration_date_future
     end

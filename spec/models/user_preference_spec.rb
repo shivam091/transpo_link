@@ -20,11 +20,18 @@ RSpec.describe UserPreference, type: :model do
     it { is_expected.to have_db_column(:preferred_currency).of_type(:string) }
     it { is_expected.to have_db_column(:preferred_color_scheme).of_type(:enum) }
     it { is_expected.to have_db_column(:are_notifications_enabled).of_type(:boolean) }
+    it { is_expected.to have_db_column(:created_at).of_type(:timestamptz).with_options(null: false) }
+    it { is_expected.to have_db_column(:updated_at).of_type(:timestamptz).with_options(null: false) }
+
+    it { is_expected.to have_db_index(:user_id).unique }
 
     it { is_expected.to have_foreign_key(:user_id).with_name(:fk_user_preferences_user_id_on_users).on_delete(:cascade) }
 
-    it { is_expected.to have_db_column(:created_at).of_type(:timestamptz).with_options(null: false) }
-    it { is_expected.to have_db_column(:updated_at).of_type(:timestamptz).with_options(null: false) }
+    it { is_expected.to have_check_constraint(:check_user_preferences_preferred_color_scheme_in_enum_values).with_expression("preferred_color_scheme = ANY (ARRAY['auto'::color_schemes, 'dark'::color_schemes, 'light'::color_schemes])") }
+    it { is_expected.to have_check_constraint(:check_user_preferences_preferred_color_scheme_presence).with_expression("preferred_color_scheme IS NOT NULL") }
+    it { is_expected.to have_check_constraint(:check_user_preferences_preferred_currency_presence).with_expression("preferred_currency IS NOT NULL AND preferred_currency::text <> ''::text") }
+    it { is_expected.to have_check_constraint(:check_user_preferences_preferred_locale_presence).with_expression("preferred_locale IS NOT NULL AND preferred_locale::text <> ''::text") }
+    it { is_expected.to have_check_constraint(:check_user_preferences_preferred_time_zone_presence).with_expression("preferred_time_zone IS NOT NULL AND preferred_time_zone::text <> ''::text") }
   end
 
   describe "enum" do

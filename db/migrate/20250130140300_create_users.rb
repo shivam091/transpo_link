@@ -50,8 +50,8 @@ class CreateUsers < ActiveRecord::Migration[8.0]
                    index: {using: :btree}
       t.timestamps_with_timezone null: false
 
-      t.check_constraint "email IS NOT NULL AND email  <> ''", name: :check_users_email_presence
-      t.check_constraint "encrypted_password IS NOT NULL AND encrypted_password  <> ''", name: :check_users_encrypted_password_presence
+      t.check_constraint "email IS NOT NULL AND email <> ''", name: :check_users_email_presence
+      t.check_constraint "encrypted_password IS NOT NULL AND encrypted_password <> ''", name: :check_users_encrypted_password_presence
       t.check_constraint "CHAR_LENGTH(email) <= 55 AND CHAR_LENGTH(email) >= 2", name: :check_users_email_length
     end
   end
