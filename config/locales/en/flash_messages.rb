@@ -136,6 +136,10 @@
           success: "Purchase order has been successfully updated.",
           error: "We encountered a problem updating purchase order. Please try again."
         },
+        destroy: {
+          success: "Purchase order has been successfully deleted.",
+          error: "We encountered a problem deleting purchase order. Please try again."
+        },
       },
     }
   }
