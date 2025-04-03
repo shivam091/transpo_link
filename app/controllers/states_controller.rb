@@ -9,6 +9,7 @@ class StatesController < ApplicationController
   # GET /states
   def index
     @states = TranspoLink::CountryInfo.new(params[:country_code]).select_subdivision_options
+    @target = params[:target]
 
     respond_to do |format|
       format.turbo_stream

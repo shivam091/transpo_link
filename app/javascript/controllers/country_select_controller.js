@@ -2,19 +2,20 @@ import { Controller } from "@hotwired/stimulus";
 import { get } from "@rails/request.js";
 
 export default class CountrySelectController extends Controller {
-  static values = {url: String}
+  static targets = ["countrySelect", "stateSelect"];
+  static values = {url: String};
 
-  connect() {
-    this.element.addEventListener("change", this.updateStates.bind(this));
-  }
+  updateStates() {
+    if (!this.hasCountrySelectTarget || !this.hasStateSelectTarget) return;
 
-  updateStates(event) {
-    let params = new URLSearchParams();
-    params.append("country_code", event.target.value);
+    const params = new URLSearchParams({
+      country_code: this.countrySelectTarget.value,
+      target: this.stateSelectTarget.id
+    });
 
     get(this.urlValue, {
       query: params,
       responseKind: "turbo-stream"
-    })
+    }).catch((error) => console.error("Failed to fetch states:", error));
   }
 }

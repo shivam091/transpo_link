@@ -15,7 +15,7 @@ RSpec.describe "States", type: :request do
       it "returns a list of states for country_code" do
         allow(TranspoLink::CountryInfo).to receive(:new).with(country_code) { double(select_subdivision_options: states) }
 
-        get states_path, params: {country_code: country_code}, as: :turbo_stream
+        get states_path, params: {country_code: country_code, target: "state-select"}, as: :turbo_stream
 
         expect(response).to have_http_status(:ok)
         expect(response.media_type).to eq(Mime[:turbo_stream])
@@ -29,7 +29,7 @@ RSpec.describe "States", type: :request do
         get states_path, as: :turbo_stream
 
         expect(response).to have_http_status(:ok)
-        expect(response.body).to include("<turbo-stream action=\"update\" target=\"state-select\">")
+        expect(response.body).to include("<turbo-stream action=\"update\"")
         expect(response.body).to include("No states available")
       end
     end

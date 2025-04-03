@@ -1,4 +1,5 @@
-= pretty_form_with model: @user, url: profile_path, class: "row g-3" do |form|
+= pretty_form_with model: @user, url: profile_path, class: "row g-3",
+  data: {controller: "country-select", country_select_url_value: states_url} do |form|
   = form_errors(@user)
   .subheader
     = t(".profile_details")
