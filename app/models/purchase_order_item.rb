@@ -11,7 +11,7 @@ class PurchaseOrderItem < ApplicationRecord
     cancelled: "cancelled"
   }
 
-  attribute :ordered_quantity, default: 0.0
+  attribute :quantity, default: 0.0
   attribute :received_quantity, default: 0.0
   attribute :unit_cost, default: 0.0
   attribute :status, :enum, default: statuses[:pending]
@@ -33,7 +33,7 @@ class PurchaseOrderItem < ApplicationRecord
             presence: true,
             uniqueness: {scope: :purchase_order_id, message: :uniqueness},
             reduce: true
-  validates :ordered_quantity, :unit_cost,
+  validates :quantity, :unit_cost,
             presence: true,
             numericality: {greater_than: 0.0},
             reduce: true

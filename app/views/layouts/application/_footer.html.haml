@@ -2,9 +2,8 @@
   .position-relative.d-flex.align-items-center.flex-column-reverse.flex-lg-row.flex-wrap.flex-lg-nowrap.my-2
     .list-style-none.d-flex.flex-wrap.col-0.col-lg-6.justify-content-start.justify-content-lg-between
       .d-flex.align-items-center.gap-2
-        = link_to root_path, class: "logo text-decoration-none" do
-          %span
-          %span
+        = link_to root_path do
+          = external_svg_tag("logo.svg", height: "24px", width: "24px")
         %span.fw-bold
           = t(".copyright_notice", copyright_year: copyright_year).html_safe
     %nav.col-12.col-lg-6{aria: {label: t(".footer")}}
