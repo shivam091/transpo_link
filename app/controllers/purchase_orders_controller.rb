@@ -4,6 +4,7 @@
 
 class PurchaseOrdersController < ApplicationController
   before_action :set_breadcrumbs, :fetch_accessible_purchase_orders
+  before_action :find_purchase_order, except: [:index, :new, :create]
 
   # GET /purchase-orders
   def index
@@ -37,6 +38,32 @@ class PurchaseOrdersController < ApplicationController
     end
   end
 
+  # GET /purchase-orders/:id/edit
+  def edit
+    add_breadcrumb t(".breadcrumb", reference_code: @purchase_order.reference_code), edit_purchase_order_path(@purchase_order)
+  end
+
+  # PUT|PATCH /purchase-orders/:id
+  def update
+    response = PurchaseOrders::UpdateService.(@purchase_order, purchase_order_params)
+    @purchase_order = response.payload[:purchase_order]
+
+    if response.success?
+      set_flash_message(:notice, :success)
+      redirect_to purchase_orders_path, status: :see_other
+    else
+      set_flash_message(:alert, :error, immediate: true)
+      respond_to do |format|
+        format.turbo_stream do
+          render turbo_stream: [
+            turbo_stream.update(:edit_purchase_order_form_frame, partial: "purchase_orders/form"),
+            render_flash
+          ], status: :unprocessable_entity
+        end
+      end
+    end
+  end
+
   private
 
   def purchase_order_params
@@ -60,5 +87,9 @@ class PurchaseOrdersController < ApplicationController
 
   def set_breadcrumbs
     add_breadcrumb t("purchase_orders.breadcrumb"), purchase_orders_path
+  end
+
+  def find_purchase_order
+    @purchase_order ||= @purchase_orders.find(params[:id])
   end
 end

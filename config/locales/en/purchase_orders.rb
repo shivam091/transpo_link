@@ -15,6 +15,10 @@
         breadcrumb: "New",
         title: "New purchase order",
       },
+      edit: {
+        breadcrumb: "Edit %{reference_code}",
+        title: "Edit %{reference_code}",
+      },
       form: {
         basic_details: "Basic details",
         purchase_order_items: "Purchase order items",

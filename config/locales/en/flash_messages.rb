@@ -132,6 +132,10 @@
           success: "Purchase order has been successfully created.",
           error: "We encountered a problem creating purchase order. Please try again.",
         },
+        update: {
+          success: "Purchase order has been successfully updated.",
+          error: "We encountered a problem updating purchase order. Please try again."
+        },
       },
     }
   }
