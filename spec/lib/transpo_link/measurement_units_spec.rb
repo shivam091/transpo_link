@@ -47,17 +47,30 @@ RSpec.describe TranspoLink::MeasurementUnits do
       allow(I18n).to receive(:t).with("item", scope: "measurement_units.sub_categories") { "Item" }
     end
 
-    let(:result) { described_class.select_options }
+    context "when no specific category is provided" do
+      let(:result) { described_class.select_options }
 
-    it "returns a hash with translated categories and subcategories" do
-      expect(result).to be_a(Hash)
-      expect(result.keys).to contain_exactly("Area", "Weight", "Volume", "Length", "Count")
+      it "returns all measurement categories with their translated units" do
+        expect(result).to be_a(Hash)
+        expect(result.keys).to contain_exactly("Area", "Weight", "Volume", "Length", "Count")
 
-      expect(result["Area"]).to include(["Square Centimeter", "cm²"])
-      expect(result["Weight"]).to include(["Kilogram", "kg"])
-      expect(result["Volume"]).to include(["Liter", "L"])
-      expect(result["Length"]).to include(["Meter", "m"])
-      expect(result["Count"]).to include(["Item", "item"])
+        expect(result["Area"]).to include(["Square Centimeter", "cm²"])
+        expect(result["Weight"]).to include(["Kilogram", "kg"])
+        expect(result["Volume"]).to include(["Liter", "L"])
+        expect(result["Length"]).to include(["Meter", "m"])
+        expect(result["Count"]).to include(["Item", "item"])
+      end
+    end
+
+    context "when a specific category is provided" do
+      let(:result) { described_class.select_options(:area) }
+
+      it "returns only the specified category with its translated units" do
+        expect(result).to be_a(Hash)
+        expect(result.keys).to contain_exactly("Area")
+
+        expect(result["Area"]).to include(["Square Centimeter", "cm²"])
+      end
     end
   end
 

@@ -14,9 +14,10 @@ module TranspoLink
       volume: %i[ml L cm³ m³ in³ ft³ gal pt qt bbl],
     }.with_indifferent_access.freeze
 
+    def select_options(category = nil)
+      target_units = category ? {category => units_for(category)} : UNITS
 
-    def select_options
-      UNITS.map do |category, units|
+      target_units.map do |category, units|
         [
           ::I18n.t(category, scope: "measurement_units.categories"),
           units.map(&:to_s).map do |unit|
