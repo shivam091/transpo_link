@@ -18,6 +18,7 @@ RSpec.describe PrettyFormBuilder, type: :helper do
       t.integer :age
       t.text :bio
       t.boolean :is_active
+      t.string :measurement_unit
       t.timestamps
     end
 
@@ -30,7 +31,7 @@ RSpec.describe PrettyFormBuilder, type: :helper do
     Object.send(:remove_const, :TestUser)
   end
 
-  let(:object) { TestUser.new(name: "Test", email: "test@example.com", role: "admin") }
+  let(:object) { TestUser.new(name: "Test", email: "test@example.com", role: "admin", measurement_unit: "kg") }
   let(:builder) { described_class.new(:test_user, object, self, {}) }
 
   describe "#text_field" do
@@ -318,6 +319,78 @@ RSpec.describe PrettyFormBuilder, type: :helper do
       output = builder.check_box(:is_active, class: "form-check-input custom-class")
 
       expect(output).to match_html(expected)
+    end
+  end
+
+  describe "#measurement_unit_select" do
+    before do
+      # Mocking TranspoLink::MeasurementUnits.select_options
+      allow(TranspoLink::MeasurementUnits).to receive(:select_options).and_return({
+        "weight" => [["Kilogram", "kg"], ["Gram", "g"]],
+        "volume" => [["Liter", "l"], ["Milliliter", "ml"]]
+      })
+    end
+
+    context "when category is provided" do
+      it "renders a select field with non-grouped options" do
+        expected = <<~HTML
+          <select class="form-select" name="test_user[measurement_unit]" id="test_user_measurement_unit">
+            <option selected="selected" value="kg">Kilogram</option>
+            <option value="g">Gram</option>
+          </select>
+        HTML
+        output = builder.measurement_unit_select(:measurement_unit, category: "weight")
+
+        expect(output).to match_html(expected)
+      end
+    end
+
+    context "when category is NOT provided (grouped options)" do
+      it "renders a select field with grouped options" do
+        expected = <<~HTML
+          <select class="form-select" name="test_user[measurement_unit]" id="test_user_measurement_unit">
+            <optgroup label="weight">
+              <option selected="selected" value="kg">Kilogram</option>
+              <option value="g">Gram</option>
+            </optgroup>
+            <optgroup label="volume">
+              <option value="l">Liter</option>
+              <option value="ml">Milliliter</option>
+            </optgroup>
+          </select>
+        HTML
+        output = builder.measurement_unit_select(:measurement_unit)
+
+        expect(output).to match_html(expected)
+      end
+    end
+
+    context "when a custom selected value is passed" do
+      it "overrides the object's attribute and selects the passed value" do
+        expected = <<~HTML
+          <select class="form-select" name="test_user[measurement_unit]" id="test_user_measurement_unit">
+            <option value="kg">Kilogram</option>
+            <option selected="selected" value="g">Gram</option>
+          </select>
+        HTML
+        output = builder.measurement_unit_select(:measurement_unit, category: "weight", selected: "g")
+
+        expect(output).to match_html(expected)
+      end
+    end
+
+    context "when extra HTML options are passed" do
+      it "includes additional attributes in the select field" do
+        expected = <<~HTML
+          <select class="custom-class form-select" data-toggle="dropdown" name="test_user[measurement_unit]" id="test_user_measurement_unit">
+            <option selected="selected" value="kg">Kilogram</option>
+            <option value="g">Gram</option>
+          </select>
+        HTML
+        output = builder.measurement_unit_select(:measurement_unit, category: "weight", class: "custom-class", data: {toggle: "dropdown"})
+
+        expect(output).to match_html(expected)
+      end
     end
   end
 end
