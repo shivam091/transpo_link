@@ -122,6 +122,14 @@ RSpec.describe Inventory, type: :model do
   include_examples "apply default scope on created_at:desc"
 
   describe "instance methods" do
+    describe "#key_associations" do
+      let!(:inventory) { create(:inventory) }
+
+      it "returns array of key associations" do
+        expect(inventory.key_associations).to eq([inventory.product, inventory.warehouse])
+      end
+    end
+
     describe "#inventory_unit_is_in_valid_category" do
       let(:product) { create(:product, capacity_unit: "kg") }
       let(:valid_unit) { "g" }
