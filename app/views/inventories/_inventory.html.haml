@@ -1,5 +1,3 @@
-- product = inventory.product
-- warehouse = inventory.warehouse
 - product, warehouse = inventory.key_associations
 %tr
   %th{scope: "row"}
@@ -11,7 +9,7 @@
   %td
     = link_to warehouse.name, warehouse_path(warehouse), target: :_blank
   %td
-    = enum_i18n(Inventory, :tracking_methods, inventory.tracking_method)
+    = enum_l(inventory, :tracking_method)
   %td
     = TranspoLink::MeasurementUnits.display_label(inventory.low_stock_threshold, inventory.inventory_unit)
   %td

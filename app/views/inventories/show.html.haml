@@ -35,7 +35,7 @@
             .widget-row-title
               = Inventory.human_attribute_name(:tracking_method)
             .widget-row-body
-              = enum_i18n(Inventory, :tracking_methods, @inventory.tracking_method)
+              = enum_l(@inventory, :tracking_method)
         .widget-row
           .widget-row-content
             .widget-row-title
