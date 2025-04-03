@@ -1,0 +1,34 @@
+# -*- encoding: utf-8 -*-
+# -*- frozen_string_literal: true -*-
+# -*- warn_indent: true -*-
+
+# spec/services/purchase_orders/update_service_spec.rb
+
+require "spec_helper"
+
+RSpec.describe PurchaseOrders::UpdateService, type: :service do
+  let!(:purchase_order) { create(:purchase_order) }
+  let(:purchase_order_attributes) { {notes: "Test notes"} }
+
+  subject(:service_response) { described_class.(purchase_order, purchase_order_attributes) }
+
+  describe ".call" do
+    context "when update is successful" do
+      it "updates the purchase order" do
+        expect { service_response }.to change { purchase_order.reload.notes }.to("Test notes")
+      end
+
+      include_examples "returns a success response"
+    end
+
+    context "when update fails" do
+      before { allow(purchase_order).to receive(:update) { false } }
+
+      it "does not update the purchase order" do
+        expect { service_response }.to not_change { purchase_order.reload.notes }
+      end
+
+      include_examples "returns an error response"
+    end
+  end
+end
