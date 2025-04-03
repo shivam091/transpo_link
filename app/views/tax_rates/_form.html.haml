@@ -1,30 +1,34 @@
 = pretty_form_with model: @tax_rate, class: "row g-2" do |form|
   = form_errors(@tax_rate)
-  .col-12
+  .col-sm-12.col-md-6.col-lg-4
     = form.label :country, class: "form-label required"
     = form.select :country, options_for_select(TranspoLink::CountryInfo.select_options, form.object.country),
       {include_blank: t(".select_country")}, {autofocus: true}
-  .col-12
+  .col-sm-12.col-md-6.col-lg-4
     = form.label :tax_identifier_type, class: "form-label required"
     = form.select :tax_identifier_type, options_for_select(enum_options_for_select(TaxRate, :tax_identifier_types), form.object.tax_identifier_type),
       {include_blank: t(".select_tax_identifier_type")}, {}
-  .col-12
+  .col-sm-12.col-md-6.col-lg-4
+    = form.label :tax_type, class: "form-label required"
+    = form.select :tax_type, options_for_select(enum_options_for_select(TaxRate, :tax_types), form.object.tax_type),
+      {include_blank: t(".select_tax_type")}, {}
+  .col-sm-12.col-md-6.col-lg-4
     = form.label :business_category, class: "form-label required"
     = form.select :business_category, options_for_select(enum_options_for_select(TaxRate, :business_categories), form.object.business_category),
       {include_blank: t(".select_business_category")}, {}
-  .col-12
+  .col-sm-12.col-md-6.col-lg-4
     = form.label :rate, class: "form-label required"
     = form.number_field :rate, step: 0.01
-  .col-12
+  .col-sm-12.col-md-6.col-lg-4
     = form.label :valid_from, class: "form-label required"
     = form.date_field :valid_from
-  .col-12
+  .col-sm-12.col-md-6.col-lg-4
     = form.label :valid_to, class: "form-label"
     = form.date_field :valid_to
-  .modal-actions
+  .actions
     = button_tag type: :submit, class: "btn btn-primary" do
       = external_svg_tag("svgs/floppy.svg")
       = form.object.new_record? ? button_text(:create) : button_text(:update)
     = button_tag type: :button, class: "btn btn-secondary", data: {action: "click->remote-modal#hide"} do
-      = external_svg_tag("svgs/cancel.svg")
+      = external_svg_tag("svgs/times.svg")
       = button_text(:cancel)

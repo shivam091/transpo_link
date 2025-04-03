@@ -32,10 +32,10 @@ RSpec.describe Feedback, type: :model do
 
     it { is_expected.to have_foreign_key(:user_id).with_name(:fk_feedbacks_user_id_on_users).on_delete(:nullify) }
 
-    it { is_expected.to have_check_constraint(:check_feedbacks_rating_step).with_expression("(rating * 2::numeric) = floor(rating * 2::numeric)") }
+    it { is_expected.to have_check_constraint(:check_feedbacks_rating_half_step).with_expression("(rating * 2.0) = floor(rating * 2.0)") }
     it { is_expected.to have_check_constraint(:check_feedbacks_comment_length).with_expression("char_length(comment) <= 1000 AND char_length(comment) > 0") }
     it { is_expected.to have_check_constraint(:check_feedbacks_comment_presence).with_expression("comment IS NOT NULL AND comment <> ''::text") }
-    it { is_expected.to have_check_constraint(:check_feedbacks_rating_numericality).with_expression("rating >= 0.0 AND rating <= 10.0") }
+    it { is_expected.to have_check_constraint(:check_feedbacks_rating_range).with_expression("rating >= 0.0 AND rating <= 10.0") }
     it { is_expected.to have_check_constraint(:check_feedbacks_rating_presence).with_expression("rating IS NOT NULL") }
   end
 
@@ -56,6 +56,7 @@ RSpec.describe Feedback, type: :model do
     it { is_expected.to include_module(Sortable) }
     it { is_expected.to include_module(HasReferenceCode) }
     it { is_expected.to include_module(Sanitizable) }
+    it { is_expected.to include_module(Navigable) }
   end
 
   describe "sanitized attributes" do

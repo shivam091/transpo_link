@@ -51,7 +51,7 @@ RSpec.describe RequestLog, type: :model do
     it { is_expected.to have_check_constraint(:check_request_logs_method_presence).with_expression("method IS NOT NULL AND method::text <> ''::text") }
     it { is_expected.to have_check_constraint(:check_request_logs_remote_address_presence).with_expression("remote_address IS NOT NULL") }
     it { is_expected.to have_check_constraint(:check_request_logs_ip_info_presence).with_expression("ip_info IS NOT NULL") }
-    it { is_expected.to have_check_constraint(:check_request_logs_method_uppercase).with_expression("upper(method::text) = method::text") }
+    it { is_expected.to have_check_constraint(:check_request_logs_method_in_uppercase).with_expression("upper(method::text) = method::text") }
   end
 
   describe "associations" do
@@ -69,6 +69,7 @@ RSpec.describe RequestLog, type: :model do
   describe "included modules" do
     it { is_expected.to include_module(Pageable) }
     it { is_expected.to include_module(Sortable) }
+    it { is_expected.to include_module(Navigable) }
   end
 
   include_examples "apply default scope on created_at:desc"

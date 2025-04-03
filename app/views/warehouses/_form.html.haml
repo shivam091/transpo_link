@@ -1,4 +1,5 @@
-= pretty_form_with model: @warehouse, class: "row g-3" do |form|
+= pretty_form_with model: @warehouse, class: "row g-3",
+  data: {controller: "country-select", country_select_url_value: states_url} do |form|
   = form_errors(@warehouse)
   .subheader
     = t(".basic_details")
@@ -12,5 +13,5 @@
       = external_svg_tag("svgs/floppy.svg")
       = form.object.new_record? ? button_text(:create) : button_text(:update)
     = link_to warehouses_path, class: "btn btn-secondary" do
-      = external_svg_tag("svgs/cancel.svg")
+      = external_svg_tag("svgs/times.svg")
       = button_text(:cancel)

@@ -11,7 +11,8 @@
             = Feedback.human_attribute_name(:created_at)
             = time_ago_with_tooltip(@feedback.created_at)
         - if @feedback.is_unread?
-          = link_to mark_as_read_feedback_path(@feedback), class: "btn btn-secondary", data: {turbo_method: :patch} do
+          = link_to mark_as_read_feedback_path(@feedback), class: "btn btn-secondary",
+            data: {turbo_method: :patch, turbo_confirm: t(".mark_as_read_confirmation_text", reference_code: @feedback.reference_code)} do
             = external_svg_tag("svgs/check-circle.svg")
             = button_text(:mark_as_read)
       .widget-body
@@ -39,3 +40,5 @@
               = Feedback.human_attribute_name(:comment)
             .widget-row-body
               = @feedback.comment
+  .card-footer
+    = render_if_exists("shared/navigable_links", locals: {record: @feedback})

@@ -29,7 +29,7 @@ RSpec.describe FormsHelper, type: :helper do
       end
 
       it "renders the error icon for each message" do
-        expect(result.scan("icon-cancel").count).to eq(2)
+        expect(result.scan("icon-times").count).to eq(2)
       end
     end
 

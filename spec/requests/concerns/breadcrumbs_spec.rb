@@ -39,9 +39,6 @@ RSpec.describe "Breadcrumbs", type: :request do
     end
 
     I18n.backend.store_translations(:en, {
-      shared_layout: {
-        breadcrumb: "breadcrumb"
-      },
       breadcrumbs: {
         home: "Home"
       }
@@ -85,7 +82,7 @@ RSpec.describe "Breadcrumbs", type: :request do
     it "renders the correct breadcrumb structure" do
       rendered_html = controller_class.new.view_context.render_breadcrumbs
 
-      expect(rendered_html).to include("<nav aria-label=\"breadcrumb\">")
+      expect(rendered_html).to include("<nav aria-label=\"Breadcrumb\">")
       expect(rendered_html).to include("<ol class=\"breadcrumb\">")
       expect(rendered_html).to include("<li class=\"breadcrumb-item\"><a href=\"/\">Home</a></li>")
       expect(rendered_html).to include("<li class=\"breadcrumb-item\"><a href=\"/anonymous\">Anonymous</a></li>")

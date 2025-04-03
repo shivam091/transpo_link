@@ -32,10 +32,9 @@ class CreateInventoryAuditLogs < ActiveRecord::Migration[8.0]
                    },
                    null: false,
                    index: {using: :btree}
-
       t.string :movement_type, index: {using: :btree}
-      t.integer :previous_quantity
-      t.integer :new_quantity
+      t.decimal :previous_quantity, precision: 12, scale: 2, default: 0.0
+      t.decimal :new_quantity, precision: 12, scale: 2, default: 0.0
       t.jsonb :metadata, default: "{}", index: {using: :gin}
       t.timestamps_with_timezone null: false
 

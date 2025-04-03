@@ -9,7 +9,7 @@ require "spec_helper"
 RSpec.describe "LegalIdentifiers", type: :request do
   let(:buyer) { create(:buyer) }
 
-  let!(:legal_identifier) { create(:legal_identifier, user: buyer) }
+  let!(:unapproved_legal_identifier) { create(:legal_identifier, user: buyer) }
 
   let(:valid_attributes) { attributes_for(:legal_identifier, tax_identifier: "29AACCB3455A1Z9").merge(user_id: buyer.id) }
   let(:invalid_attributes) { attributes_for(:legal_identifier, tax_identifier: "") }
@@ -17,10 +17,45 @@ RSpec.describe "LegalIdentifiers", type: :request do
   include_context "sign in as buyer"
 
   describe "GET /legal-identifiers" do
+    let!(:approved_legal_identifier) { create(:legal_identifier, :approved, user: buyer, country: "US", tax_identifier_type: "ssn", tax_identifier: "514-14-8905") }
+    let!(:rejected_legal_identifier) { create(:legal_identifier, :rejected, user: buyer, country: "AT", tax_identifier_type: "vat", tax_identifier: "ATU10223006") }
+
     it "renders list of all legal identifiers with pagination" do
       get legal_identifiers_path
 
-      expect(controller_assigns(:legal_identifiers)).to include(legal_identifier)
+      expect(controller_assigns(:legal_identifiers)).to include(unapproved_legal_identifier)
+      expect(controller_assigns(:legal_identifiers)).to include(approved_legal_identifier)
+      expect(controller_assigns(:legal_identifiers)).to include(rejected_legal_identifier)
+      expect(controller_assigns(:pagination_metadata)).to be_present
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "renders list of unapproved legal identifiers with pagination" do
+      get unapproved_legal_identifiers_path
+
+      expect(controller_assigns(:legal_identifiers)).to include(unapproved_legal_identifier)
+      expect(controller_assigns(:legal_identifiers)).to exclude(approved_legal_identifier)
+      expect(controller_assigns(:legal_identifiers)).to exclude(rejected_legal_identifier)
+      expect(controller_assigns(:pagination_metadata)).to be_present
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "renders list of approved legal identifiers with pagination" do
+      get approved_legal_identifiers_path
+
+      expect(controller_assigns(:legal_identifiers)).to exclude(unapproved_legal_identifier)
+      expect(controller_assigns(:legal_identifiers)).to include(approved_legal_identifier)
+      expect(controller_assigns(:legal_identifiers)).to exclude(rejected_legal_identifier)
+      expect(controller_assigns(:pagination_metadata)).to be_present
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "renders list of rejected legal identifiers with pagination" do
+      get rejected_legal_identifiers_path
+
+      expect(controller_assigns(:legal_identifiers)).to exclude(unapproved_legal_identifier)
+      expect(controller_assigns(:legal_identifiers)).to exclude(approved_legal_identifier)
+      expect(controller_assigns(:legal_identifiers)).to include(rejected_legal_identifier)
       expect(controller_assigns(:pagination_metadata)).to be_present
       expect(response).to have_http_status(:ok)
     end
@@ -57,9 +92,9 @@ RSpec.describe "LegalIdentifiers", type: :request do
 
   describe "GET /legal-identifiers/:id/edit" do
     it "renders legal identifier edit page" do
-      get edit_legal_identifier_path(legal_identifier)
+      get edit_legal_identifier_path(unapproved_legal_identifier)
 
-      expect(controller_assigns(:legal_identifier)).to eq(legal_identifier)
+      expect(controller_assigns(:legal_identifier)).to eq(unapproved_legal_identifier)
       expect(response).to have_http_status(:ok)
     end
   end
@@ -67,9 +102,9 @@ RSpec.describe "LegalIdentifiers", type: :request do
   describe "PUT|PATCH /legal-identifiers/:id" do
     context "when provided attributes are valid" do
       it "updates the legal identifier and redirects" do
-        expect { 
-          put legal_identifier_path(legal_identifier), params: {legal_identifier: valid_attributes}, as: :turbo_stream
-        }.to change { legal_identifier.reload.tax_identifier }.to("29AACCB3455A1Z9")
+        expect {
+          put legal_identifier_path(unapproved_legal_identifier), params: {legal_identifier: valid_attributes}, as: :turbo_stream
+        }.to change { unapproved_legal_identifier.reload.tax_identifier }.to("29AACCB3455A1Z9")
 
         expect(response).to redirect_to(legal_identifiers_path)
         expect(flash[:notice]).to eq("Legal identifier was successfully updated.")
@@ -79,9 +114,9 @@ RSpec.describe "LegalIdentifiers", type: :request do
 
     context "when provided attributes are invalid" do
       it "does not update the legal identifier and renders errors" do
-        expect { 
-          put legal_identifier_path(legal_identifier), params: {legal_identifier: invalid_attributes}, as: :turbo_stream
-        }.to not_change { legal_identifier.reload.tax_identifier }
+        expect {
+          put legal_identifier_path(unapproved_legal_identifier), params: {legal_identifier: invalid_attributes}, as: :turbo_stream
+        }.to not_change { unapproved_legal_identifier.reload.tax_identifier }
 
         expect(flash[:alert]).to eq("Legal identifier could not be updated.")
         expect(response.media_type).to eq(Mime[:turbo_stream])
@@ -94,7 +129,7 @@ RSpec.describe "LegalIdentifiers", type: :request do
   describe "DELETE /legal-identifiers/:id" do
     context "when valid id" do
       it "deletes the legal identifier and redirects" do
-        delete legal_identifier_path(legal_identifier)
+        delete legal_identifier_path(unapproved_legal_identifier)
 
         expect(response).to redirect_to(legal_identifiers_path)
         expect(flash[:info]).to eq("Legal identifier was successfully deleted.")
@@ -106,10 +141,58 @@ RSpec.describe "LegalIdentifiers", type: :request do
       it "does not delete the legal identifier and redirects with an error message" do
         allow(LegalIdentifiers::DestroyService).to receive(:call) { ServiceResponse.error }
 
-        delete legal_identifier_path(legal_identifier)
+        delete legal_identifier_path(unapproved_legal_identifier)
 
         expect(response).to redirect_to(legal_identifiers_path)
         expect(flash[:alert]).to eq("Legal identifier could not be deleted.")
+        expect(response).to have_http_status(:see_other)
+      end
+    end
+  end
+
+  describe "PATCH /legal-identifiers/:id/approve" do
+    context "when approve succeeds" do
+      it "approves the legal identifier and redirects" do
+        patch approve_legal_identifier_path(unapproved_legal_identifier)
+
+        expect(response).to redirect_to(legal_identifiers_path)
+        expect(flash[:info]).to eq("Legal identifier was successfully approved.")
+        expect(response).to have_http_status(:see_other)
+      end
+    end
+
+    context "when approve fails" do
+      it "does not approve the legal identifier and redirects with an error message" do
+        allow(LegalIdentifiers::ApproveService).to receive(:call) { ServiceResponse.error }
+
+        patch approve_legal_identifier_path(unapproved_legal_identifier)
+
+        expect(response).to redirect_to(legal_identifiers_path)
+        expect(flash[:alert]).to eq("Legal identifier could not be approved.")
+        expect(response).to have_http_status(:see_other)
+      end
+    end
+  end
+
+  describe "PATCH /legal-identifiers/:id/reject" do
+    context "when reject succeeds" do
+      it "rejects the legal identifier and redirects" do
+        patch reject_legal_identifier_path(unapproved_legal_identifier)
+
+        expect(response).to redirect_to(legal_identifiers_path)
+        expect(flash[:info]).to eq("Legal identifier was successfully rejected.")
+        expect(response).to have_http_status(:see_other)
+      end
+    end
+
+    context "when reject fails" do
+      it "does not reject the legal identifier and redirects with an error message" do
+        allow(LegalIdentifiers::RejectService).to receive(:call) { ServiceResponse.error }
+
+        patch reject_legal_identifier_path(unapproved_legal_identifier)
+
+        expect(response).to redirect_to(legal_identifiers_path)
+        expect(flash[:alert]).to eq("Legal identifier could not be rejected.")
         expect(response).to have_http_status(:see_other)
       end
     end

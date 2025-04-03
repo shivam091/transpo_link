@@ -8,17 +8,11 @@ require "spec_helper"
 
 RSpec.describe TranspoLink::MigrationHelpers do
   let!(:dummy_class) { Class.new { extend TranspoLink::MigrationHelpers } }
-  let!(:enum_name) { "business_categories" }
+  let!(:enum_name) { "sizes" }
 
   describe "#enum_values" do
     before do
-      allow(connection).to receive(:execute) {
-        [
-          {"enumlabel" => "small"},
-          {"enumlabel" => "medium"},
-          {"enumlabel" => "large"}
-        ]
-      }
+      allow(connection).to receive(:select_values) { ["small", "medium", "large"] }
     end
 
     it "returns a comma-separated string of quoted enum values" do
@@ -35,13 +29,13 @@ RSpec.describe TranspoLink::MigrationHelpers do
         WHERE typname = '#{enum_name}'
       SQL
 
-      expect(connection).to receive(:execute).with(query)
+      expect(connection).to receive(:select_values).with(query)
 
       dummy_class.enum_values(enum_name)
     end
 
     it "returns an empty string when no values are found" do
-      allow(connection).to receive(:execute) { [] }
+      allow(connection).to receive(:select_values) { [] }
       result = dummy_class.enum_values(enum_name)
 
       expect(result).to eq("")

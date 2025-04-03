@@ -24,3 +24,5 @@
           = t(".additional_details")
       .widget-body
         = render_if_exists("users/additional_details", locals: {user: @user})
+  .card-footer
+    = render_if_exists("shared/navigable_links", locals: {record: @user})

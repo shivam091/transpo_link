@@ -3,9 +3,8 @@
     %main.devise-section
       = turbo_frame_tag :flash_messages_frame do
         = render_if_exists("shared/flash_messages")
-      .text-center
-        = link_to root_path, class: "logo mb-2" do
-          %span{style: "font-size: 32px;"}
-          %span{style: "font-size: 32px;"}
+      .text-center.mb-2
+        = link_to new_user_session_path do
+          = external_svg_tag("logo.svg", height: "48px", width: "48px")
       = yield
       = render_if_exists("layouts/devise/footer")

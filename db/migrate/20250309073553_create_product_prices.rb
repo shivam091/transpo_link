@@ -24,18 +24,18 @@ class CreateProductPrices < ActiveRecord::Migration[8.0]
                    },
                    null: true,
                    index: {using: :btree}
-      t.integer :min_quantity, default: 1  # Minimum quantity for this price tier
+      t.decimal :min_quantity, precision: 12, scale: 2, default: 1.0  # Minimum quantity for this price tier
       t.decimal :unit_price, precision: 12, scale: 2, default: 0.0  # Price per unit for this tier
       t.string :currency
       t.timestamps_with_timezone null: false
 
-      t.check_constraint "currency IS NOT NULL AND currency  <> ''", name: :check_product_prices_currency_presence
+      t.check_constraint "currency IS NOT NULL AND currency <> ''", name: :check_product_prices_currency_presence
 
       t.check_constraint "min_quantity IS NOT NULL", name: :check_product_prices_min_quantity_presence
-      t.check_constraint "min_quantity >= 1", name: :check_product_prices_min_quantity_numericality
+      t.check_constraint "min_quantity > 0.0", name: :check_product_prices_min_quantity_positive
 
       t.check_constraint "unit_price IS NOT NULL", name: :check_product_prices_unit_price_presence
-      t.check_constraint "unit_price > 0.0", name: :check_product_prices_unit_price_numericality
+      t.check_constraint "unit_price > 0.0", name: :check_product_prices_unit_price_positive
     end
   end
 end

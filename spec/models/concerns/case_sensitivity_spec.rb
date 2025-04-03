@@ -8,12 +8,10 @@ require "spec_helper"
 
 RSpec.describe CaseSensitivity do
   before(:all) do
-    ActiveRecord::Schema.define(version: 1) do
-      create_table :case_sensitive_models, force: true do |t|
-        t.string :name
-        t.string :email
-        t.timestamps
-      end
+    connection.create_table :case_sensitive_models, force: true do |t|
+      t.string :name
+      t.string :email
+      t.timestamps
     end
 
     class CaseSensitiveModel < ApplicationRecord
@@ -22,7 +20,7 @@ RSpec.describe CaseSensitivity do
   end
 
   after(:all) do
-    connection.drop_table(:case_sensitive_models, if_exists: true)
+    connection.drop_table :case_sensitive_models, if_exists: true
     Object.send(:remove_const, :CaseSensitiveModel)
   end
 
