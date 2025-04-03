@@ -38,23 +38,6 @@ a {
 a:link {
   transition: none;
 }
-.logo {
-  display: inline-flex;
-  span {
-    &:nth-of-type(1) {
-      color: #2a9d8f;
-      &:before {
-        content: "Transpo";
-      }
-    }
-    &:nth-of-type(2) {
-      color: #e76f51;
-      &:before {
-        content: "Link";
-      }
-    }
-  }
-}
 svg:not(:root) {
   overflow: hidden;
 }

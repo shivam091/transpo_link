@@ -3,7 +3,7 @@
 # -*- warn_indent: true -*-
 
 class LegalIdentifier < ApplicationRecord
-  include Sortable, Pageable, Taxable, NullifyIfBlank, Sanitizable
+  include AASM, Sortable, Pageable, Taxable, NullifyIfBlank, Sanitizable
 
   LISTING_ATTRIBUTES = %i[
     country entity_type tax_identifier_type tax_identifier
@@ -13,6 +13,12 @@ class LegalIdentifier < ApplicationRecord
   enum :entity_type, {
     business: "business",
     individual: "individual"
+  }
+
+  enum :status, {
+    unapproved: "unapproved",
+    approved: "approved",
+    rejected: "rejected"
   }
 
   enum :business_identifier_type, {
@@ -49,6 +55,8 @@ class LegalIdentifier < ApplicationRecord
     rtn: "rtn",
     uscc: "uscc"
   }, prefix: true
+
+  attribute :status, :enum, default: statuses[:unapproved]
 
   normalizes :business_identifier, with: ->(business_identifier) { business_identifier.strip.upcase }
 
@@ -91,6 +99,19 @@ class LegalIdentifier < ApplicationRecord
     uscc:     %w[CN]
   }
 
+  aasm column: :status, enum: true, requires_lock: true do
+    state :unapproved, initial: true
+    state :approved, :rejected
+
+    event :approve do
+      transitions from: :unapproved, to: :approved
+    end
+
+    event :reject do
+      transitions from: :unapproved, to: :rejected
+    end
+  end
+
   validates :user_id,
             presence: true,
             reduce: true
@@ -125,6 +146,10 @@ class LegalIdentifier < ApplicationRecord
             },
             business_identifier: true,
             if: :business?,
+            reduce: true
+  validates :status,
+            presence: true,
+            inclusion: {in: statuses.values, message: :inclusion},
             reduce: true
 
   validate :business_identifier_type_country_combination

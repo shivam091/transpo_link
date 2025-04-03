@@ -12,6 +12,8 @@
         your_legal_identifiers_help_text: "Manage your legal identifiers across different countries with ease.",
       },
       legal_identifier: {
+        approve_confirmation_text: "Are you sure you want to approve this? This action cannot be undone.",
+        reject_confirmation_text: "Are you sure you want to reject this? This action cannot be undone.",
         delete_confirmation_text: "Are you sure you want to delete this? This action cannot be undone.",
       },
       help_texts: {

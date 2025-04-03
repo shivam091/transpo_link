@@ -8,11 +8,9 @@ require "spec_helper"
 
 RSpec.describe HasReferenceCode do
   before(:all) do
-    ActiveRecord::Schema.define(version: 1) do
-      create_table :reference_code_models, force: true do |t|
-        t.string :reference_code
-        t.timestamps
-      end
+    connection.create_table :reference_code_models, force: true do |t|
+      t.string :reference_code
+      t.timestamps
     end
 
     class ReferenceCodeModel < ApplicationRecord
@@ -21,7 +19,7 @@ RSpec.describe HasReferenceCode do
   end
 
   after(:all) do
-    connection.drop_table(:reference_code_models, if_exists: true)
+    connection.drop_table :reference_code_models, if_exists: true
     Object.send(:remove_const, :ReferenceCodeModel)
   end
 

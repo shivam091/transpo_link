@@ -76,12 +76,11 @@ class InventoriesController < ApplicationController
     params.require(:inventory).permit(
       :product_id,
       :warehouse_id,
-      :batch_number,
-      :cost_price,
-      :expiration_date,
-      :currency,
+      :tracking_method,
       :inventory_unit,
-      :tracking_method
+      :average_cost_price,
+      :currency,
+      :low_stock_threshold,
     )
   end
 

@@ -8,6 +8,12 @@ class LegalIdentifiersController < ApplicationController
 
   # GET /legal-identifiers
   def index
+    @legal_identifiers = case params[:status]
+                         when "unapproved" then @legal_identifiers.unapproved
+                         when "approved"   then @legal_identifiers.approved
+                         when "rejected"   then @legal_identifiers.rejected
+                         else                   @legal_identifiers
+                         end
     @legal_identifiers, @pagination_metadata = @legal_identifiers.paginate(page: params[:page])
   end
 
@@ -65,6 +71,32 @@ class LegalIdentifiersController < ApplicationController
   # DELETE /legal-identifiers/:id
   def destroy
     response = LegalIdentifiers::DestroyService.(@legal_identifier)
+    @legal_identifier = response.payload[:legal_identifier]
+
+    if response.success?
+      set_flash_message(:info, :success)
+    else
+      set_flash_message(:alert, :error)
+    end
+    redirect_to legal_identifiers_path, status: :see_other
+  end
+
+  # PATCH /legal-identifiers/:id/approve
+  def approve
+    response = LegalIdentifiers::ApproveService.(@legal_identifier)
+    @legal_identifier = response.payload[:legal_identifier]
+
+    if response.success?
+      set_flash_message(:info, :success)
+    else
+      set_flash_message(:alert, :error)
+    end
+    redirect_to legal_identifiers_path, status: :see_other
+  end
+
+  # PATCH /legal-identifiers/:id/reject
+  def reject
+    response = LegalIdentifiers::RejectService.(@legal_identifier)
     @legal_identifier = response.payload[:legal_identifier]
 
     if response.success?
