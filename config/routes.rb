@@ -48,6 +48,7 @@ Rails.application.routes.draw do
   resource :preference, only: [:show, :edit, :update]
   resource :locale, only: [:edit, :update]
 
+  resources :states, only: :index
   resources :roles, except: [:new, :create, :destroy]
   resources :users, only: [:index, :show], concerns: :toggleable do
     collection do
