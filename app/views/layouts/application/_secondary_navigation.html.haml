@@ -6,6 +6,9 @@
     = link_to products_path, class: class_names("nav-link", "active": current_controller?(:products)) do
       = external_svg_tag("svgs/cube.svg")
       = t(".products")
+    = link_to purchase_orders_path, class: class_names("nav-link", "active": current_controller?(:purchase_orders)) do
+      = external_svg_tag("svgs/file.svg")
+      = t(".purchase_orders")
     = link_to inventories_path, class: class_names("nav-link", "active": current_controller?(:inventories)) do
       = external_svg_tag("svgs/database.svg")
       = t(".inventories")

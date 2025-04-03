@@ -32,6 +32,7 @@
           secondary_navigation: "Secondary navigation",
           warehouses: "Warehouses",
           products: "Products",
+          purchase_orders: "Purchase orders",
           inventories: "Inventories",
           orders: "Orders",
           invoices: "Invoices",

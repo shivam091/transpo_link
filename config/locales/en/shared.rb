@@ -39,6 +39,7 @@
         no_unit_conversions_to_display: "No unit conversions to display",
         no_product_prices_to_display: "No product prices to display",
         no_inventories_to_display: "No inventories to display",
+        no_purchase_orders_to_display: "No purchase orders to display",
       },
       remote_modal: {
         close: "Close",
