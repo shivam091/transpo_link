@@ -90,7 +90,7 @@ RSpec.describe "Products", type: :request do
         expect {
           put product_path(active_product), params: {product: valid_attributes}, as: :turbo_stream
         }.to change { active_product.reload.name }.to("Product")
-        
+
         expect(response).to redirect_to(products_path)
         expect(flash[:notice]).to eq("Product was successfully updated.")
         expect(response).to have_http_status(:see_other)
@@ -102,7 +102,7 @@ RSpec.describe "Products", type: :request do
         expect {
           put product_path(active_product), params: {product: invalid_attributes}, as: :turbo_stream
         }.to not_change { active_product.reload.name }
-        
+
         expect(flash[:alert]).to eq("Product could not be updated.")
         expect(response.media_type).to eq(Mime[:turbo_stream])
         expect(response.body).to include("<turbo-stream action=\"update\" target=\"edit_product_form_frame\">")

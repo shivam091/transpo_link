@@ -45,11 +45,16 @@ RSpec.describe PurchaseOrder, type: :model do
     it { is_expected.to have_check_constraint(:check_purchase_orders_status_presence).with_expression("status IS NOT NULL") }
   end
 
+  describe "constants" do
+    it { is_expected.to have_constant(:LISTING_ATTRIBUTES) }
+  end
+
   describe "included modules" do
     it { is_expected.to include_module(AASM) }
     it { is_expected.to include_module(HasReferenceCode) }
     it { is_expected.to include_module(Sanitizable) }
     it { is_expected.to include_module(NullifyIfBlank) }
+    it { is_expected.to include_module(Pageable) }
   end
 
   describe "enum" do
@@ -132,6 +137,16 @@ RSpec.describe PurchaseOrder, type: :model do
   describe "instance methods" do
     let!(:purchase_order) { create(:purchase_order) }
 
+    describe "#key_associations" do
+      it "returns array of key associations" do
+        expect(purchase_order.key_associations).to contain_exactly(
+          purchase_order.warehouse,
+          purchase_order.manager,
+          purchase_order.supplier
+        )
+      end
+    end
+
     describe "#reject_purchase_order_item?" do
       let!(:purchase_order_item) { create(:purchase_order_item, purchase_order: purchase_order) }
 
@@ -189,6 +204,14 @@ RSpec.describe PurchaseOrder, type: :model do
             purchase_order.update(purchase_order_items_attributes: {id: purchase_order_item.id, _destroy: true})
           }.to change(PurchaseOrderItem, :count).by(-1)
         end
+      end
+    end
+  end
+
+  describe "class methods" do
+    describe ".accessible" do
+      it "returns list of accessible purchase orders" do
+        expect(described_class.accessible(subject.manager)).to include(subject)
       end
     end
   end
