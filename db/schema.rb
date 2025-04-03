@@ -259,23 +259,23 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_01_084516) do
   create_table "purchase_order_items", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "purchase_order_id", null: false
     t.uuid "product_id", null: false
-    t.decimal "ordered_quantity", precision: 12, scale: 2, default: "0.0"
+    t.decimal "quantity", precision: 12, scale: 2, default: "0.0"
     t.decimal "received_quantity", precision: 12, scale: 2, default: "0.0"
     t.string "uom"
     t.decimal "unit_cost", precision: 12, scale: 2, default: "0.0"
-    t.virtual "total_cost", type: :decimal, precision: 12, scale: 2, as: "(ordered_quantity * unit_cost)", stored: true
+    t.virtual "total_cost", type: :decimal, precision: 12, scale: 2, as: "(quantity * unit_cost)", stored: true
     t.string "currency"
     t.enum "status", enum_type: "purchase_order_item_statuses"
     t.timestamptz "created_at", null: false
     t.timestamptz "updated_at", null: false
-    t.index ["ordered_quantity"], name: "index_purchase_order_items_on_ordered_quantity"
     t.index ["product_id"], name: "index_purchase_order_items_on_product_id"
     t.index ["purchase_order_id", "product_id"], name: "index_purchase_order_items_on_purchase_order_id_and_product_id", unique: true
     t.index ["purchase_order_id"], name: "index_purchase_order_items_on_purchase_order_id"
+    t.index ["quantity"], name: "index_purchase_order_items_on_quantity"
     t.index ["received_quantity"], name: "index_purchase_order_items_on_received_quantity"
     t.check_constraint "currency IS NOT NULL AND currency::text <> ''::text", name: "check_purchase_order_items_currency_presence"
-    t.check_constraint "ordered_quantity > 0.0", name: "check_purchase_order_items_ordered_quantity_positive"
-    t.check_constraint "ordered_quantity IS NOT NULL", name: "check_purchase_order_items_ordered_quantity_presence"
+    t.check_constraint "quantity > 0.0", name: "check_purchase_order_items_quantity_positive"
+    t.check_constraint "quantity IS NOT NULL", name: "check_purchase_order_items_quantity_presence"
     t.check_constraint "received_quantity >= 0.0", name: "check_purchase_order_items_received_quantity_non_negative"
     t.check_constraint "received_quantity IS NOT NULL", name: "check_purchase_order_items_received_quantity_presence"
     t.check_constraint "status = ANY (ARRAY['pending'::purchase_order_item_statuses, 'delivered'::purchase_order_item_statuses, 'cancelled'::purchase_order_item_statuses])", name: "check_purchase_order_items_status_in_enum_values"
