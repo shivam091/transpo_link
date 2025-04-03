@@ -144,7 +144,7 @@ RSpec.describe PurchaseOrder, type: :model do
                 purchase_order.update(purchase_order_items_attributes: {
                   0 => {
                     product_id: product.id,
-                    ordered_quantity: 92,
+                    quantity: 92,
                     uom: "mg",
                     unit_cost: 100,
                     currency: "INR"
@@ -159,7 +159,7 @@ RSpec.describe PurchaseOrder, type: :model do
             expect {
               purchase_order.update(purchase_order_items_attributes: {
                 0 => {
-                  ordered_quantity: 0.0,
+                  quantity: 0.0,
                   uom: "",
                   unit_cost: "",
                   currency: ""
@@ -175,11 +175,11 @@ RSpec.describe PurchaseOrder, type: :model do
           expect {
             purchase_order.update(purchase_order_items_attributes: {
               id: purchase_order_item.id,
-              ordered_quantity: 20
+              quantity: 20
             })
           }.to not_change(PurchaseOrderItem, :count)
 
-          expect(purchase_order_item.reload.ordered_quantity).to eq(20)
+          expect(purchase_order_item.reload.quantity).to eq(20)
         end
       end
 
