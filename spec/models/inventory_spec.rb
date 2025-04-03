@@ -69,6 +69,7 @@ RSpec.describe Inventory, type: :model do
     it { is_expected.to include_module(Pageable) }
     it { is_expected.to include_module(Sortable) }
     it { is_expected.to include_module(ActsAsMoney) }
+    it { is_expected.to include_module(Navigable) }
   end
 
   describe "associations" do

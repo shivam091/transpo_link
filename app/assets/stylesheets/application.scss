@@ -154,3 +154,13 @@ p {
   --bs-breadcrumb-margin-bottom: 0.5rem;
   border: 1px solid rgba(var(--bs-primary-rgb), 1) !important;
 }
+.navigable-links-container {
+  display: flex;
+  width: 100%;
+  .left-link {
+    margin-right: auto;
+  }
+  .right-link {
+    margin-left: auto;
+  }
+}
