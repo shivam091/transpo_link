@@ -17,6 +17,6 @@
           = button_text(:edit)
       %li
         = link_to product_category_path(product_category), class: "dropdown-item",
-          data: {turbo_confirm: t(".delete_confirmation_text", product_category_name: product_category.name), turbo_method: :delete} do
+          data: {turbo_confirm: t(".delete_confirmation_text", name: product_category.name), turbo_method: :delete} do
           = external_svg_tag("svgs/trash.svg")
           = button_text(:delete)
