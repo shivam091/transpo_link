@@ -7,14 +7,13 @@ module TranspoLink
     extend self
 
     UNITS = {
-      area:   %i[cm² m² km² in² ft² yd² ac ha],
-      weight: %i[mg g kg q t lb oz],
-      volume: %i[ml L cm³ m³ in³ ft³ gal pt qt bbl],
-      length: %i[mm cm m km in ft yd mi],
       count:  %i[item pack box carton pallet bundle dz case roll],
+      length: %i[mm cm m km in ft yd mi],
+      weight: %i[mg g kg q t lb oz],
+      area:   %i[cm² m² km² in² ft² yd² ac ha],
+      volume: %i[ml L cm³ m³ in³ ft³ gal pt qt bbl],
     }.with_indifferent_access.freeze
 
-    UNIT_TO_CATEGORY = UNITS.flat_map { |category, units| units.product([category]) }.to_h.with_indifferent_access.freeze
 
     def select_options
       UNITS.map do |category, units|
@@ -36,7 +35,7 @@ module TranspoLink
     end
 
     def category_for_unit(unit)
-      UNIT_TO_CATEGORY[unit]
+      UNITS.find { |category, units| units.include?(unit.to_sym) }&.first
     end
 
     def display_label(count, unit)

@@ -30,17 +30,6 @@ RSpec.describe TranspoLink::MeasurementUnits do
     end
   end
 
-  describe "::UNIT_TO_CATEGORY" do
-    it "is a frozen hash" do
-      expect(described_class::UNIT_TO_CATEGORY).to be_frozen
-    end
-
-    it "allows access using symbols and strings" do
-      expect(described_class::UNIT_TO_CATEGORY[:km]).to eq("length")
-      expect(described_class::UNIT_TO_CATEGORY["km"]).to eq("length")
-    end
-  end
-
   describe ".select_options" do
     before do
       allow(I18n).to receive(:t) { |key, **| key.to_s.humanize }
