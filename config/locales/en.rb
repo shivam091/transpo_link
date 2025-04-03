@@ -128,6 +128,8 @@
       export: "Export",
       previous: "&lsaquo; Previous",
       next: "Next &rsaquo;",
+      approve: "Approve",
+      reject: "Reject",
     },
   },
 }

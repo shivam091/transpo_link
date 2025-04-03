@@ -20,7 +20,7 @@ RSpec.describe Product, type: :model do
     it { is_expected.to have_db_column(:description).of_type(:text) }
     it { is_expected.to have_db_column(:sku).of_type(:string) }
     it { is_expected.to have_db_column(:barcode).of_type(:string) }
-    it { is_expected.to have_db_column(:min_stock_threshold).of_type(:integer).with_options(default: 0) }
+    it { is_expected.to have_db_column(:min_stock_threshold).of_type(:decimal).with_options(precision: 12, scale: 2, default: 0.0) }
     it { is_expected.to have_db_column(:capacity_unit).of_type(:string) }
     it { is_expected.to have_db_column(:currency).of_type(:string) }
     it { is_expected.to have_db_column(:cost_price).of_type(:decimal).with_options(precision: 12, scale: 2, default: 0.0) }
@@ -43,18 +43,18 @@ RSpec.describe Product, type: :model do
     it { is_expected.to have_check_constraint(:check_products_sku_presence).with_expression("sku IS NOT NULL AND sku::text <> ''::text") }
     it { is_expected.to have_check_constraint(:check_products_sku_length).with_expression("char_length(sku::text) <= 50") }
     it { is_expected.to have_check_constraint(:check_products_min_stock_threshold_presence).with_expression("min_stock_threshold IS NOT NULL") }
-    it { is_expected.to have_check_constraint(:check_products_min_stock_threshold_numericality).with_expression("min_stock_threshold > 0") }
+    it { is_expected.to have_check_constraint(:check_products_min_stock_threshold_positive).with_expression("min_stock_threshold > 0.0") }
     it { is_expected.to have_check_constraint(:check_products_capacity_unit_presence).with_expression("capacity_unit IS NOT NULL AND capacity_unit::text <> ''::text") }
     it { is_expected.to have_check_constraint(:check_products_currency_presence).with_expression("currency IS NOT NULL AND currency::text <> ''::text") }
     it { is_expected.to have_check_constraint(:check_products_cost_price_presence).with_expression("cost_price IS NOT NULL") }
-    it { is_expected.to have_check_constraint(:check_products_cost_price_numericality).with_expression("cost_price > 0.0") }
+    it { is_expected.to have_check_constraint(:check_products_cost_price_positive).with_expression("cost_price > 0.0") }
   end
 
   describe "default values" do
     let(:product) { described_class.new }
 
-    it "should set 0 as default value for #min_stock_threshold" do
-      expect(product.min_stock_threshold).to eq(0)
+    it "should set 0.0 as default value for #min_stock_threshold" do
+      expect(product.min_stock_threshold).to eq(0.0)
     end
 
     it "should set 0.0 as default value for #cost_price" do
@@ -94,6 +94,7 @@ RSpec.describe Product, type: :model do
     it { is_expected.to have_many(:product_prices).inverse_of(:product).dependent(:destroy) }
     it { is_expected.to have_many(:unit_conversions).inverse_of(:product).dependent(:destroy) }
     it { is_expected.to have_many(:feedbacks).inverse_of(:reviewable).dependent(:nullify) }
+    it { is_expected.to have_many(:purchase_order_items).inverse_of(:product).dependent(:restrict_with_exception) }
 
     it { is_expected.to belong_to(:product_category).inverse_of(:products).counter_cache }
   end
@@ -130,7 +131,7 @@ RSpec.describe Product, type: :model do
 
     describe "#min_stock_threshold" do
       it { is_expected.to validate_presence_of(:min_stock_threshold) }
-      it { is_expected.to validate_numericality_of(:min_stock_threshold).is_greater_than(0).only_integer }
+      it { is_expected.to validate_numericality_of(:min_stock_threshold).is_greater_than(0.0) }
     end
 
     describe "#capacity_unit" do
@@ -169,7 +170,7 @@ RSpec.describe Product, type: :model do
           it "does not create a unit conversion if required attributes are blank" do
             expect {
               product.update(unit_conversions_attributes: {0 => {from_unit: "", to_unit: "", conversion_rate: ""}})
-            }.not_to change(UnitConversion, :count)
+            }.to not_change(UnitConversion, :count)
           end
         end
       end
@@ -178,7 +179,7 @@ RSpec.describe Product, type: :model do
         it "updates the existing unit conversion without changing the count" do
           expect {
             product.update(unit_conversions_attributes: {id: unit_conversion.id, from_unit: "cm", to_unit: "m", conversion_rate: 0.01})
-          }.not_to change(UnitConversion, :count)
+          }.to not_change(UnitConversion, :count)
 
           expect(unit_conversion.reload.conversion_rate).to eq(0.01)
         end
@@ -209,7 +210,7 @@ RSpec.describe Product, type: :model do
           it "does not create a product price if required attributes are blank" do
             expect {
               product.update(product_prices_attributes: {0 => {min_quantity: "", unit_price: "", currency: ""}})
-            }.not_to change(ProductPrice, :count)
+            }.to not_change(ProductPrice, :count)
           end
         end
       end
@@ -218,7 +219,7 @@ RSpec.describe Product, type: :model do
         it "updates the existing product price without changing the count" do
           expect {
             product.update(product_prices_attributes: {id: product_price.id, min_quantity: 10, unit_price: 202, currency: "USD"})
-          }.not_to change(ProductPrice, :count)
+          }.to not_change(ProductPrice, :count)
 
           expect(product_price.reload.currency).to eq("USD")
         end

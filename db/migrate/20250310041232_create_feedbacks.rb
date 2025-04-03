@@ -5,6 +5,7 @@
 class CreateFeedbacks < ActiveRecord::Migration[8.0]
   def change
     create_table :feedbacks, id: :uuid do |t|
+      t.string :reference_code, index: {using: :btree, unique: true}
       t.references :user,
                    type: :uuid,
                    foreign_key: {
@@ -25,8 +26,8 @@ class CreateFeedbacks < ActiveRecord::Migration[8.0]
       t.timestamps_with_timezone null: false
 
       t.check_constraint "rating IS NOT NULL", name: :check_feedbacks_rating_presence
-      t.check_constraint "rating >= 0.0 AND rating <= 10.0", name: :check_feedbacks_rating_numericality
-      t.check_constraint "rating * 2 = FLOOR(rating * 2)", name: :check_feedbacks_rating_step
+      t.check_constraint "rating BETWEEN 0.0 AND 10.0", name: :check_feedbacks_rating_range
+      t.check_constraint "rating * 2.0 = FLOOR(rating * 2.0)", name: :check_feedbacks_rating_half_step
 
       t.check_constraint "comment IS NOT NULL AND comment <> ''", name: :check_feedbacks_comment_presence
       t.check_constraint "CHAR_LENGTH(comment) <= 1000 AND CHAR_LENGTH(comment) > 0", name: :check_feedbacks_comment_length

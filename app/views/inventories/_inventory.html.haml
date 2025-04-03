@@ -10,13 +10,11 @@
   %td
     = link_to warehouse.name, warehouse_path(warehouse), target: :_blank
   %td
-    = inventory.batch_number || "-"
+    = enum_i18n(Inventory, :tracking_methods, inventory.tracking_method)
   %td
-    = TranspoLink::MeasurementUnits.display_label(inventory.stock_quantity, inventory.inventory_unit)
+    = TranspoLink::MeasurementUnits.display_label(inventory.low_stock_threshold, inventory.inventory_unit)
   %td
-    = TranspoLink::MeasurementUnits.display_label(inventory.reserved_stock, inventory.inventory_unit)
-  %td
-    = number_to_currency(inventory.cost_price, unit: inventory.currency.symbol)
+    = number_to_currency(inventory.average_cost_price, unit: inventory.currency.symbol)
   %td
     = link_to "javascript:void(0)", class: "text-reset", data: {bs_toggle: "dropdown"}, aria: {expanded: false} do
       = external_svg_tag("svgs/ellipsis-vertical.svg")

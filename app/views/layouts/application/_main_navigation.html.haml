@@ -1,9 +1,8 @@
 = render_if_exists("layouts/application/top_menu") do
   %nav.navbar.navbar-expand-lg.divider.bg-body{aria: {label: t(".main_navigation")}}
     .container-fluid
-      = link_to root_path, class: "navbar-brand logo" do
-        %span
-        %span
+      = link_to root_path, class: "navbar-brand" do
+        = external_svg_tag("logo.svg", height: "36px", width: "36px")
       .d-flex.ms-auto
         = button_tag type: :button, class: "navbar-toggler collapsed", data: {bs_toggle: "collapse", bs_target: "#navbar"},
           aria: {controls: "navbar-default", expanded: false, label: t(".toggle_navigation")} do

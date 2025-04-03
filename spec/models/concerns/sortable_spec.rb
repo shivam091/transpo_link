@@ -8,10 +8,8 @@ require "spec_helper"
 
 RSpec.describe Sortable do
   before(:all) do
-    ActiveRecord::Schema.define(version: 1) do
-      create_table :sortable_models, force: true do |t|
-        t.timestamps
-      end
+    connection.create_table :sortable_models, force: true do |t|
+      t.timestamps
     end
 
     class SortableModel < ApplicationRecord
@@ -20,7 +18,7 @@ RSpec.describe Sortable do
   end
 
   after(:all) do
-    connection.drop_table(:sortable_models, if_exists: true)
+    connection.drop_table :sortable_models, if_exists: true
     Object.send(:remove_const, :SortableModel)
   end
 

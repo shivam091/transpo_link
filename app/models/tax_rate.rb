@@ -6,7 +6,7 @@ class TaxRate < ApplicationRecord
   include Pageable, Taxable, Sortable, NullifyIfBlank
 
   LISTING_ATTRIBUTES = %i[
-    country tax_identifier_type business_category rate valid_from valid_to
+    country tax_identifier_type tax_type business_category rate valid_from valid_to
   ].freeze
 
   enum :business_category, {
@@ -14,19 +14,29 @@ class TaxRate < ApplicationRecord
     b2c: "b2c"
   }
 
+  enum :tax_type, {
+    exclusive: "exclusive",
+    inclusive: "inclusive"
+  }
+
   attribute :business_category, :enum, default: business_categories[:b2b]
+  attribute :tax_type, :enum, default: tax_types[:exclusive]
 
   nullify_if_blank :valid_to
 
   validates :tax_identifier_type,
             uniqueness: {
-              scope: [:country, :business_category, :valid_from],
+              scope: [:country, :business_category, :tax_type, :valid_from],
               message: :uniqueness
             },
             reduce: true
   validates :business_category,
             presence: true,
             inclusion: {in: business_categories.values, message: :inclusion},
+            reduce: true
+  validates :tax_type,
+            presence: true,
+            inclusion: {in: tax_types.values, message: :inclusion},
             reduce: true
   validates :rate,
             presence: true,
@@ -73,12 +83,15 @@ class TaxRate < ApplicationRecord
   # Scope to get tax rates for a specific tax identifier type
   scope :for_tax_identifier_type, ->(tax_identifier_type) { where(arel_table[:tax_identifier_type].eq(tax_identifier_type)) }
 
-  # Scope for filtering by category
-  scope :for_category, ->(category) { where(arel_table[:business_category].eq(category)) }
+  # Scope for filtering by tax type
+  scope :for_tax_type, ->(tax_type) { where(arel_table[:tax_type].eq(tax_type)) }
+
+  # Scope for filtering by business category
+  scope :for_business_category, ->(business_category) { where(arel_table[:business_category].eq(business_category)) }
 
   # Scope for applicable tax rates based on type, country, and category
   scope :applicable_rates, ->(type, country, category) {
-    for_tax_identifier_type(type).for_country(country).for_category(category)
+    for_tax_identifier_type(type).for_country(country).for_business_category(category)
   }
 
   # Scope to find tax rates valid on a specific date
@@ -111,11 +124,11 @@ class TaxRate < ApplicationRecord
     scope = TaxRate.where(
       tax_rates[:country].eq(country)
         .and(tax_rates[:tax_identifier_type].eq(tax_identifier_type))
+        .and(tax_rates[:tax_type].eq(tax_type))
         .and(tax_rates[:business_category].eq(business_category))
         .and(tax_rates[:valid_from].lt(valid_to))
         .and(tax_rates[:valid_to].eq(nil).or(tax_rates[:valid_to].gt(valid_from)))
     )
-
     scope = scope.where.not(tax_rates[:id].eq(id)) if persisted? # Exclude itself if updating
 
     if scope.exists?

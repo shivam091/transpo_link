@@ -8,12 +8,10 @@ require "spec_helper"
 
 RSpec.describe Taxable do
   before(:all) do
-    ActiveRecord::Schema.define(version: 1) do
-      create_table :taxable_models, force: true do |t|
-        t.string :tax_identifier_type
-        t.string :country
-        t.timestamps
-      end
+    connection.create_table :taxable_models, force: true do |t|
+      t.string :tax_identifier_type
+      t.string :country
+      t.timestamps
     end
 
     class TaxableModel < ApplicationRecord
@@ -22,7 +20,7 @@ RSpec.describe Taxable do
   end
 
   after(:all) do
-    connection.drop_table(:taxable_models, if_exists: true)
+    connection.drop_table :taxable_models, if_exists: true
     Object.send(:remove_const, :TaxableModel)
   end
 

@@ -96,6 +96,8 @@ RSpec.describe User, type: :model do
     it { is_expected.to have_many(:legal_identifiers).inverse_of(:user).dependent(:destroy) }
     it { is_expected.to have_many(:inventory_audit_logs).inverse_of(:user).dependent(:nullify) }
     it { is_expected.to have_many(:feedbacks).inverse_of(:user).dependent(:nullify) }
+    it { is_expected.to have_many(:purchase_orders).inverse_of(:manager).dependent(:restrict_with_exception) }
+    it { is_expected.to have_many(:supplied_purchase_orders).inverse_of(:supplier).class_name("PurchaseOrder").dependent(:restrict_with_exception) }
 
     it { is_expected.to have_many(:warehouse_managers).inverse_of(:manager).with_foreign_key(:manager_id).dependent(:restrict_with_exception) }
     it { is_expected.to have_many(:managed_warehouses).through(:warehouse_managers).inverse_of(:managers).source(:warehouse) }
@@ -137,7 +139,7 @@ RSpec.describe User, type: :model do
       it { is_expected.to validate_presence_of(:email) }
       it { is_expected.to validate_uniqueness_of(:email).ignoring_case_sensitivity }
       it { is_expected.to allow_value("abc@email.com").for(:email) }
-      it { is_expected.not_to allow_value("abc").for(:email) }
+      it { is_expected.to_not allow_value("abc").for(:email) }
 
       it "validates the length of email" do
         expect(build(:buyer, email: "ab@example.com")).to be_valid # 6 characters, within range
@@ -156,7 +158,7 @@ RSpec.describe User, type: :model do
       context "when password is not required" do
         before { allow(subject).to receive(:password_required?) { false } }
 
-        it { is_expected.not_to validate_presence_of(:password) }
+        it { is_expected.to_not validate_presence_of(:password) }
       end
 
       context "when password is present and not password_confirmation" do

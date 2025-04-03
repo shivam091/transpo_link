@@ -22,6 +22,7 @@ class CreateLegalIdentifiers < ActiveRecord::Migration[8.0]
       t.string :tax_identifier
       t.string :business_identifier_type
       t.string :business_identifier
+      t.enum :status, enum_type: :legal_identifier_statuses, index: {using: :btree}
       t.timestamps_with_timezone null: false
 
       t.index [:tax_identifier, :tax_identifier_type, :country, :entity_type], unique: true, using: :btree
@@ -30,22 +31,26 @@ class CreateLegalIdentifiers < ActiveRecord::Migration[8.0]
 
       t.check_constraint "tax_identifier_type IS NOT NULL AND tax_identifier_type <> ''", name: :check_legal_identifiers_tax_identifier_type_presence
       t.check_constraint "tax_identifier IS NOT NULL AND tax_identifier <> ''", name: :check_legal_identifiers_tax_identifier_presence
-      t.check_constraint "country IS NOT NULL AND country <> ''", name: :check_legal_identifiers_country_presence
-      t.check_constraint "entity_type IS NOT NULL", name: :check_legal_identifiers_entity_type_presence
 
-      t.check_constraint "entity_type IN (#{enum_values('entity_types')})", name: :check_legal_identifiers_entity_type_inclusion
+      t.check_constraint "country IS NOT NULL AND country <> ''", name: :check_legal_identifiers_country_presence
+
+      t.check_constraint "entity_type IS NOT NULL", name: :check_legal_identifiers_entity_type_presence
+      t.check_constraint "entity_type IN (#{enum_values('entity_types')})", name: :check_legal_identifiers_entity_type_in_enum_values
 
       # business_identifier presence based on entity_type
       t.check_constraint "(
         (entity_type = 'business' AND business_identifier IS NOT NULL AND business_identifier <> '')
         OR (entity_type = 'individual' AND business_identifier IS NULL)
-      )", name: :check_legal_identifiers_business_identifier_based_on_entity
+      )", name: :check_legal_identifiers_bi_presence_based_on_entity
 
       # business_identifier_type presence based on entity_type
       t.check_constraint "(
         (entity_type = 'business' AND business_identifier_type IS NOT NULL AND business_identifier_type <> '')
         OR (entity_type = 'individual' AND business_identifier_type IS NULL)
-      )", name: :check_legal_identifiers_business_identifier_type_based_on_entity
+      )", name: :check_legal_identifiers_bi_type_presence_based_on_entity
+
+      t.check_constraint "status IS NOT NULL", name: :check_legal_identifiers_status_presence
+      t.check_constraint "status IN (#{enum_values('legal_identifier_statuses')})", name: :check_legal_identifiers_status_in_enum_values
     end
   end
 end

@@ -131,6 +131,10 @@
           b2b: "Business to Business (B2B)",
           b2c: "Business to Consumer (B2C)"
         },
+        tax_types: {
+          exclusive: "Exclusive",
+          inclusive: "Inclusive"
+        },
       },
       inventory: {
         tracking_methods: {
