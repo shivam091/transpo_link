@@ -5,6 +5,8 @@
 class PurchaseOrderItem < ApplicationRecord
   include AASM, ActsAsMoney
 
+  LISTING_ATTRIBUTES = %i[product_id quantity unit_cost total_cost status].freeze
+
   enum :status, {
     pending: "pending",
     delivered: "delivered",

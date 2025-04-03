@@ -1,0 +1,30 @@
+= title(@purchase_order.reference_code)
+.card.card-primary.border.border-primary
+  .card-body
+    .widget
+      .widget-header.d-flex.align-items-center.justify-content-between
+        .d-block
+          .widget-title
+            = @purchase_order.reference_code
+          .widget-help
+            %span.middle-dot-divider
+              = PurchaseOrder.human_attribute_name(:order_date)
+              = time_ago_with_tooltip(@purchase_order.order_date)
+            %span.middle-dot-divider
+              = PurchaseOrder.human_attribute_name(:updated_at)
+              = time_ago_with_tooltip(@purchase_order.updated_at)
+        = link_to edit_purchase_order_path(@purchase_order), class: "btn btn-secondary" do
+          = external_svg_tag("svgs/pencil.svg")
+          = button_text(:edit)
+    .widget
+      .widget-header
+        .widget-title
+          = t(".basic_details")
+      .widget-body
+        = render_if_exists("purchase_orders/basic_details", locals: {purchase_order: @purchase_order})
+    .widget
+      .widget-header
+        .widget-title
+          = t(".purchase_order_items")
+      .widget-body
+        = render_if_exists("purchase_orders/purchase_order_items/index", locals: {purchase_order: @purchase_order})

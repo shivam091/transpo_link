@@ -28,6 +28,10 @@
         select_warehouse: "Select warehouse",
         select_supplier: "Select supplier",
       },
+      show: {
+        basic_details: "Basic details",
+        purchase_order_items: "Purchase order items",
+      },
       purchase_order_items: {
         form: {
         },

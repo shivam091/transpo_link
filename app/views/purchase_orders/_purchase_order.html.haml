@@ -3,7 +3,7 @@
   %th{scope: "row"}
     = @pagination_metadata.offset + index
   %td
-    = purchase_order.reference_code
+    = link_to purchase_order.reference_code, purchase_order_path(purchase_order)
   %td
     = link_to warehouse.name, warehouse_path(warehouse), target: :_blank
   %td
@@ -20,6 +20,10 @@
     = link_to "javascript:void(0)", class: "text-reset", data: {bs_toggle: "dropdown"}, aria: {expanded: false} do
       = external_svg_tag("svgs/ellipsis-vertical.svg")
     %ul.dropdown-menu
+      %li
+        = link_to purchase_order_path(purchase_order), class: "dropdown-item" do
+          = external_svg_tag("svgs/arrow-right.svg")
+          = button_text(:view_details)
       %li
         = link_to edit_purchase_order_path(purchase_order), class: "dropdown-item" do
           = external_svg_tag("svgs/pencil.svg")

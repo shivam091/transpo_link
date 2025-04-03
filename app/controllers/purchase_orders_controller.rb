@@ -64,6 +64,11 @@ class PurchaseOrdersController < ApplicationController
     end
   end
 
+  # GET /purchase-orders/:id
+  def show
+    add_breadcrumb @purchase_order.reference_code, purchase_order_path(@purchase_order)
+  end
+
   # DELETE /purchase-orders/:id
   def destroy
     response = PurchaseOrders::DestroyService.(@purchase_order)

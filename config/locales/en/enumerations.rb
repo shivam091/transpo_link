@@ -154,6 +154,13 @@
           fully_delivered: "Fully delivered"
         },
       },
+      purchase_order_item: {
+        statuses: {
+          pending: "Pending",
+          delivered: "Delivered",
+          cancelled: "Cancelled",
+        },
+      },
     }
   }
 }
