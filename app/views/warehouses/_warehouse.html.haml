@@ -13,7 +13,7 @@
     %td
       = warehouse.contact_number || "-"
     %td
-      = warehouse.capacity
+      = number_to_measurement_unit(warehouse.total_capacity, warehouse.capacity_unit)
     %td
       = warehouse.formatted_latitude || "-"
     %td

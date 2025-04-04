@@ -89,6 +89,183 @@
         separator: ".",
         format: "%{n}°",
       },
+      measurement_unit: {
+        format: "%{n} %{u}",
+        precision: 2,
+        strip_insignificant_zeros: false,
+        delimiter: ",",
+        separator: ".",
+        units: {
+          cm²: {
+            one: "sq. centimetre",
+            other: "sq. centimetres",
+          },
+          m²: {
+            one: "sq. metre",
+            other: "sq. metres",
+          },
+          km²: {
+            one: "sq. kilometre",
+            other: "sq. kilometres",
+          },
+          in²: {
+            one: "sq. inch",
+            other: "sq. inches",
+          },
+          ft²: {
+            one: "sq. foot",
+            other: "sq. feet",
+          },
+          yd²: {
+            one: "sq. yard",
+            other: "sq. yards",
+          },
+          ac: {
+            one: "acre",
+            other: "acres",
+          },
+          ha: {
+            one: "hectare",
+            other: "hectares",
+          },
+          mg: {
+            one: "milligramme",
+            other: "milligrammes",
+          },
+          g: {
+            one: "gramme",
+            other: "grammes",
+          },
+          kg: {
+            one: "kilogramme",
+            other: "kilogrammes",
+          },
+          q: {
+            one: "quintal",
+            other: "quintals",
+          },
+          t: {
+            one: "ton",
+            other: "tons",
+          },
+          lb: {
+            one: "pound",
+            other: "pounds",
+          },
+          oz: {
+            one: "ounce",
+            other: "ounces",
+          },
+          ml: {
+            one: "millilitre",
+            other: "millilitres",
+          },
+          L: {
+            one: "litre",
+            other: "litres",
+          },
+          item: {
+            one: "item",
+            other: "items"
+          },
+          pack: {
+            one: "pack",
+            other: "packs"
+          },
+          box: {
+            one: "box",
+            other: "boxes"
+          },
+          carton: {
+            one: "carton",
+            other: "cartons"
+          },
+          pallet: {
+            one: "pallet",
+            other: "pallets"
+          },
+          bundle: {
+            one: "bundle",
+            other: "bundles"
+          },
+          dz: {
+            one: "dozen",
+            other: "dozens"
+          },
+          case: {
+            one: "case",
+            other: "cases"
+          },
+          roll: {
+            one: "role",
+            other: "roles"
+          },
+          cm³: {
+            one: "cu. centimetre",
+            other: "cu. centimetres",
+          },
+          m³: {
+            one: "cu. metre",
+            other: "cu. metres",
+          },
+          in³: {
+            one: "cu. inch",
+            other: "cu. inches",
+          },
+          ft³: {
+            one: "cu. foot",
+            other: "cu. feet",
+          },
+          gal: {
+            one: "gallon",
+            other: "gallons",
+          },
+          pt: {
+            one: "pint",
+            other: "pints",
+          },
+          qt: {
+            one: "quart",
+            other: "quarts",
+          },
+          bbl: {
+            one: "barrel",
+            other: "barrels",
+          },
+          mm: {
+            one: "millimetre",
+            other: "millimetres",
+          },
+          cm: {
+            one: "centimetre",
+            other: "centimetres",
+          },
+          m: {
+            one: "metre",
+            other: "metres",
+          },
+          km: {
+            one: "kilometre",
+            other: "kilometres",
+          },
+          in: {
+            one: "inch",
+            other: "inches",
+          },
+          ft: {
+            one: "foot",
+            other: "feet",
+          },
+          yd: {
+            one: "yard",
+            other: "yards",
+          },
+          mi: {
+            one: "mile",
+            other: "miles",
+          },
+        },
+      },
     },
     pagination: {
       aria_labels: {

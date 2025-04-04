@@ -11,7 +11,7 @@
   %td
     = enum_l(inventory, :tracking_method)
   %td
-    = TranspoLink::MeasurementUnits.display_label(inventory.low_stock_threshold, inventory.inventory_unit)
+    = number_to_measurement_unit(inventory.low_stock_threshold, inventory.inventory_unit)
   %td
     = number_to_currency(inventory.average_cost_price, unit: inventory.currency.symbol)
   %td

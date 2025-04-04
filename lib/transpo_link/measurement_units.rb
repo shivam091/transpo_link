@@ -38,9 +38,5 @@ module TranspoLink
     def category_for_unit(unit)
       UNITS.find { |category, units| units.include?(unit.to_sym) }&.first
     end
-
-    def display_label(count, unit)
-      ::I18n.t(unit, scope: "measurement_units.display_labels", count: count)
-    end
   end
 end
