@@ -3,7 +3,7 @@
 # -*- warn_indent: true -*-
 
 RSpec.shared_context "sign in as buyer" do
-  let(:buyer) { create(:buyer, :active, :confirmed, :with_address) }
+  let(:buyer) { create(:buyer, :active, :confirmed) }
 
   before { sign_in(buyer, scope: :user) }
 

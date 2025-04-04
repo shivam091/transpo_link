@@ -150,6 +150,14 @@ RSpec.describe Feedback, type: :model do
       end
     end
 
+    describe "#key_associations" do
+      let!(:feedback) { create(:feedback) }
+
+      it "returns array of key associations" do
+        expect(feedback.key_associations).to eq([feedback.user, feedback.reviewable])
+      end
+    end
+
     describe "#rating_in_valid_steps" do
       let(:feedback) { build(:feedback, rating: rating) }
 

@@ -67,6 +67,10 @@ class Feedback < ApplicationRecord
     update!(is_unread: false) if is_unread?
   end
 
+  def key_associations
+    [user, reviewable]
+  end
+
   private
 
   def rating_in_valid_steps

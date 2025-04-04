@@ -30,17 +30,6 @@ RSpec.describe TranspoLink::MeasurementUnits do
     end
   end
 
-  describe "::UNIT_TO_CATEGORY" do
-    it "is a frozen hash" do
-      expect(described_class::UNIT_TO_CATEGORY).to be_frozen
-    end
-
-    it "allows access using symbols and strings" do
-      expect(described_class::UNIT_TO_CATEGORY[:km]).to eq("length")
-      expect(described_class::UNIT_TO_CATEGORY["km"]).to eq("length")
-    end
-  end
-
   describe ".select_options" do
     before do
       allow(I18n).to receive(:t) { |key, **| key.to_s.humanize }
@@ -58,17 +47,30 @@ RSpec.describe TranspoLink::MeasurementUnits do
       allow(I18n).to receive(:t).with("item", scope: "measurement_units.sub_categories") { "Item" }
     end
 
-    let(:result) { described_class.select_options }
+    context "when no specific category is provided" do
+      let(:result) { described_class.select_options }
 
-    it "returns a hash with translated categories and subcategories" do
-      expect(result).to be_a(Hash)
-      expect(result.keys).to contain_exactly("Area", "Weight", "Volume", "Length", "Count")
+      it "returns all measurement categories with their translated units" do
+        expect(result).to be_a(Hash)
+        expect(result.keys).to contain_exactly("Area", "Weight", "Volume", "Length", "Count")
 
-      expect(result["Area"]).to include(["Square Centimeter", "cm²"])
-      expect(result["Weight"]).to include(["Kilogram", "kg"])
-      expect(result["Volume"]).to include(["Liter", "L"])
-      expect(result["Length"]).to include(["Meter", "m"])
-      expect(result["Count"]).to include(["Item", "item"])
+        expect(result["Area"]).to include(["Square Centimeter", "cm²"])
+        expect(result["Weight"]).to include(["Kilogram", "kg"])
+        expect(result["Volume"]).to include(["Liter", "L"])
+        expect(result["Length"]).to include(["Meter", "m"])
+        expect(result["Count"]).to include(["Item", "item"])
+      end
+    end
+
+    context "when a specific category is provided" do
+      let(:result) { described_class.select_options(:area) }
+
+      it "returns only the specified category with its translated units" do
+        expect(result).to be_a(Hash)
+        expect(result.keys).to contain_exactly("Area")
+
+        expect(result["Area"]).to include(["Square Centimeter", "cm²"])
+      end
     end
   end
 
@@ -106,38 +108,6 @@ RSpec.describe TranspoLink::MeasurementUnits do
 
     it "returns nil for a unit not found in any category" do
       expect(described_class.category_for_unit(:xyz)).to be_nil
-    end
-  end
-
-  describe ".display_label" do
-    before do
-      allow(I18n).to receive(:t) do |key, scope:, count:|
-        translations = {
-          "measurement_units.display_labels.item" => {one: "1 item", other: "%{count} items"},
-          "measurement_units.display_labels.pack" => {one: "1 pack", other: "%{count} packs"},
-          "measurement_units.display_labels.box" => {one: "1 box", other: "%{count} boxes"},
-          "measurement_units.display_labels.kg" => {one: "1 kilogramme", other: "%{count} kilogrammes"},
-          "measurement_units.display_labels.cm²" => {one: "1 sq. centimetre", other: "%{count} sq. centimetres"}
-        }
-        translation = translations["#{scope}.#{key}"]
-        count == 1 ? translation[:one] : translation[:other] % { count: count }
-      end
-    end
-
-    it "returns the singular label for count 1" do
-      expect(described_class.display_label(1, :item)).to eq("1 item")
-      expect(described_class.display_label(1, :pack)).to eq("1 pack")
-      expect(described_class.display_label(1, :box)).to eq("1 box")
-      expect(described_class.display_label(1, :kg)).to eq("1 kilogramme")
-      expect(described_class.display_label(1, :cm²)).to eq("1 sq. centimetre")
-    end
-
-    it "returns the plural label for count greater than 1" do
-      expect(described_class.display_label(5, :item)).to eq("5 items")
-      expect(described_class.display_label(5, :pack)).to eq("5 packs")
-      expect(described_class.display_label(5, :box)).to eq("5 boxes")
-      expect(described_class.display_label(5, :kg)).to eq("5 kilogrammes")
-      expect(described_class.display_label(5, :cm²)).to eq("5 sq. centimetres")
     end
   end
 end

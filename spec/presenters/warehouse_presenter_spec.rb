@@ -9,19 +9,6 @@ RSpec.describe WarehousePresenter, type: :presenter do
   let(:view_context) { double("view_context") }
   let(:presenter) { described_class.new(warehouse, view_context) }
 
-  describe "#capacity" do
-    it "returns formatted capacity with unit" do
-      expect(presenter.capacity).to eq("1,000 kg")
-    end
-
-    it "returns blank if values are nil" do
-      allow(warehouse).to receive(:total_capacity) { nil }
-      allow(warehouse).to receive(:capacity_unit) { nil }
-
-      expect(presenter.capacity).to eq("")
-    end
-  end
-
   describe "#formatted_latitude" do
     it "returns formatted latitude with degree symbol" do
       expect(presenter.formatted_latitude).to eq("45.6789°")

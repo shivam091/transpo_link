@@ -55,6 +55,10 @@ class Inventory < ApplicationRecord
   delegate :quantity_in_hand, :quantity_pending_to_buyer, to: :stock
   delegate :quantity_pending_from_supplier, to: :replenishment
 
+  def key_associations
+    [product, warehouse]
+  end
+
   private
 
   def inventory_unit_is_in_valid_category

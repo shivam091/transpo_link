@@ -4,11 +4,9 @@
     = form.hidden_field :id, value: form.object.id
     = form.hidden_field :_destroy
   %td
-    = form.select :from_unit, grouped_options_for_select(TranspoLink::MeasurementUnits.select_options, form.object.from_unit),
-      {include_blank: t(".select_source_unit")}
+    = form.measurement_unit_select :from_unit, {include_blank: t(".select_source_unit")}, {}
   %td
-    = form.select :to_unit, grouped_options_for_select(TranspoLink::MeasurementUnits.select_options, form.object.to_unit),
-      {include_blank: t(".select_target_unit")}
+    = form.measurement_unit_select :to_unit, {include_blank: t(".select_target_unit")}, {}
   %td
     = form.number_field :conversion_rate, step: 0.0001
   %td
