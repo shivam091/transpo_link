@@ -3,7 +3,7 @@
 # -*- warn_indent: true -*-
 
 class Feedback < ApplicationRecord
-  include Sortable, Pageable, HasReferenceCode, Sanitizable
+  include Sortable, Pageable, HasReferenceCode, Sanitizable, Navigable
 
   LISTING_ATTRIBUTES = %i[reference_code user_id reviewable rating comment].freeze
 
@@ -30,7 +30,6 @@ class Feedback < ApplicationRecord
 
   scope :unread, -> { where(arel_table[:is_unread].eq(true)) }
   scope :read, -> { where(arel_table[:is_unread].eq(false)) }
-  default_scope -> { order_created_desc }
 
   class << self
     def accessible(user)
@@ -66,6 +65,10 @@ class Feedback < ApplicationRecord
 
   def mark_as_read!
     update!(is_unread: false) if is_unread?
+  end
+
+  def key_associations
+    [user, reviewable]
   end
 
   private

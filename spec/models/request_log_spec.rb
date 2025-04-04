@@ -69,6 +69,7 @@ RSpec.describe RequestLog, type: :model do
   describe "included modules" do
     it { is_expected.to include_module(Pageable) }
     it { is_expected.to include_module(Sortable) }
+    it { is_expected.to include_module(Navigable) }
   end
 
   include_examples "apply default scope on created_at:desc"

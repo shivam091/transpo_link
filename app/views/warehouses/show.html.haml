@@ -59,7 +59,7 @@
               .widget-row-title
                 = Warehouse.human_attribute_name(:capacity)
               .widget-row-body
-                = warehouse.capacity
+                = number_to_measurement_unit(warehouse.total_capacity, warehouse.capacity_unit)
           .widget-row
             .widget-row-content
               .widget-row-title
@@ -78,3 +78,5 @@
                 = Warehouse.human_attribute_name(:address)
               .widget-row-body
                 = warehouse.address.persisted? ? warehouse.address.humanize : "-"
+    .card-footer
+      = render_if_exists("shared/navigable_links", locals: {record: @warehouse})

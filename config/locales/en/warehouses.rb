@@ -10,7 +10,7 @@
         title: "Warehouses",
       },
       warehouse: {
-        delete_confirmation_text: "Are you sure you want to delete the warehouse ‘%{warehouse_name}’? All related data may be lost.",
+        delete_confirmation_text: "Are you sure you want to delete the warehouse ‘%{name}’? All related data may be lost.",
       },
       new: {
         breadcrumb: "New",

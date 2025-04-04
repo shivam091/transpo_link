@@ -13,7 +13,7 @@
     %td
       = warehouse.contact_number || "-"
     %td
-      = warehouse.capacity
+      = number_to_measurement_unit(warehouse.total_capacity, warehouse.capacity_unit)
     %td
       = warehouse.formatted_latitude || "-"
     %td
@@ -32,6 +32,6 @@
             = button_text(:edit)
         %li
           = link_to warehouse_path(warehouse), class: "dropdown-item",
-            data: {turbo_confirm: t(".delete_confirmation_text", warehouse_name: warehouse.name), turbo_method: :delete} do
+            data: {turbo_confirm: t(".delete_confirmation_text", name: warehouse.name), turbo_method: :delete} do
             = external_svg_tag("svgs/trash.svg")
             = button_text(:delete)

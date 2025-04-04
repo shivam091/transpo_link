@@ -3,7 +3,8 @@
 # -*- warn_indent: true -*-
 
 class User < ApplicationRecord
-  include Toggleable, CaseSensitivity, WithoutTimestamps, Pageable, Sanitizable
+  include Toggleable, CaseSensitivity, WithoutTimestamps, Pageable, Sanitizable,
+          Navigable
 
   devise :database_authenticatable, :registerable, :confirmable, :lockable,
          :recoverable, :rememberable, :validatable, :timeoutable, :trackable

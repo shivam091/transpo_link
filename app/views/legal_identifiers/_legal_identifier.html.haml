@@ -4,13 +4,13 @@
   %td
     = TranspoLink::CountryInfo.new(legal_identifier.country).country_name
   %td
-    = enum_i18n(LegalIdentifier, :entity_types, legal_identifier.entity_type)
+    = enum_l(legal_identifier, :entity_type)
   %td
-    = enum_i18n(LegalIdentifier, :tax_identifier_types, legal_identifier.tax_identifier_type)
+    = enum_l(legal_identifier, :tax_identifier_type)
   %td
     = legal_identifier.tax_identifier
   %td
-    = enum_i18n(LegalIdentifier, :business_identifier_types, legal_identifier.business_identifier_type) rescue "-"
+    = enum_l(legal_identifier, :business_identifier_type) || "-"
   %td
     = legal_identifier.business_identifier || "-"
   %td
