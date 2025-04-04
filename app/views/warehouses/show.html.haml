@@ -59,7 +59,7 @@
               .widget-row-title
                 = Warehouse.human_attribute_name(:capacity)
               .widget-row-body
-                = warehouse.capacity
+                = number_to_measurement_unit(warehouse.total_capacity, warehouse.capacity_unit)
           .widget-row
             .widget-row-content
               .widget-row-title

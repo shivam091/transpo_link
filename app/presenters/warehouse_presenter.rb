@@ -7,10 +7,6 @@ class WarehousePresenter < ApplicationPresenter
 
   presents :warehouse
 
-  def capacity
-    "#{number_to_delimited(try(:total_capacity))} #{try(:capacity_unit)}".strip
-  end
-
   def formatted_latitude
     number_to_angle(try(:latitude))
   end

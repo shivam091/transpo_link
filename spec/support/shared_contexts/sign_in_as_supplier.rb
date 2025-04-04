@@ -3,7 +3,7 @@
 # -*- warn_indent: true -*-
 
 RSpec.shared_context "sign in as supplier" do
-  let(:supplier) { create(:supplier, :active, :confirmed, :with_address) }
+  let(:supplier) { create(:supplier, :active, :confirmed) }
 
   before { sign_in(supplier, scope: :user) }
 

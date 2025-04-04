@@ -1,5 +1,5 @@
 = title(@inventory.reference_code)
-- product, warehouse  = @inventory.product, @inventory.warehouse
+- product, warehouse = @inventory.key_associations
 .card.card-primary.border.border-primary
   .card-body
     .widget
@@ -35,13 +35,13 @@
             .widget-row-title
               = Inventory.human_attribute_name(:tracking_method)
             .widget-row-body
-              = enum_i18n(Inventory, :tracking_methods, @inventory.tracking_method)
+              = enum_l(@inventory, :tracking_method)
         .widget-row
           .widget-row-content
             .widget-row-title
               = Inventory.human_attribute_name(:low_stock_threshold)
             .widget-row-body
-              = TranspoLink::MeasurementUnits.display_label(@inventory.low_stock_threshold, @inventory.inventory_unit)
+              = number_to_measurement_unit(@inventory.low_stock_threshold, @inventory.inventory_unit)
         .widget-row
           .widget-row-content
             .widget-row-title

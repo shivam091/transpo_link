@@ -22,20 +22,4 @@ module FormsHelper
       end
     end
   end
-
-  def help_text(*args, &block)
-    if block_given?
-      build_help_text(capture(&block), *args)
-    else
-      build_help_text(*args)
-    end
-  end
-
-  private
-
-  def build_help_text(help_text, help_tag = :small)
-    return unless help_text.present?
-
-    content_tag(help_tag, help_text, class: "form-text text-muted")
-  end
 end

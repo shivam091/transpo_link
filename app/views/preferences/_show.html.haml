@@ -21,7 +21,7 @@
     .widget-row-title
       = UserPreference.human_attribute_name(:preferred_color_scheme)
     .widget-row-body
-      = enum_i18n(UserPreference, :preferred_color_schemes, user.preferred_color_scheme)
+      = enum_l(user, :preferred_color_scheme)
 .widget-row
   .widget-row-content
     .widget-row-title
