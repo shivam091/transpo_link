@@ -40,3 +40,5 @@
               = Feedback.human_attribute_name(:comment)
             .widget-row-body
               = @feedback.comment
+  .card-footer
+    = render_if_exists("shared/navigable_links", locals: {record: @feedback})

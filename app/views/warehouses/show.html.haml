@@ -78,3 +78,5 @@
                 = Warehouse.human_attribute_name(:address)
               .widget-row-body
                 = warehouse.address.persisted? ? warehouse.address.humanize : "-"
+    .card-footer
+      = render_if_exists("shared/navigable_links", locals: {record: @warehouse})

@@ -51,6 +51,7 @@ RSpec.describe Warehouse, type: :model do
     it { is_expected.to include_module(Sortable) }
     it { is_expected.to include_module(NullifyIfBlank) }
     it { is_expected.to include_module(Sanitizable) }
+    it { is_expected.to include_module(Navigable) }
   end
 
   describe "constants" do

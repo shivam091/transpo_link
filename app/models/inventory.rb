@@ -3,7 +3,7 @@
 # -*- warn_indent: true -*-
 
 class Inventory < ApplicationRecord
-  include HasReferenceCode, Pageable, Sortable, ActsAsMoney
+  include HasReferenceCode, Pageable, Sortable, ActsAsMoney, Navigable
 
   LISTING_ATTRIBUTES = %i[
     reference_code product_id warehouse_id tracking_method low_stock_threshold
@@ -51,8 +51,6 @@ class Inventory < ApplicationRecord
 
   belongs_to :warehouse, inverse_of: :inventories
   belongs_to :product, inverse_of: :inventories, touch: true
-
-  default_scope -> { order_created_desc }
 
   delegate :quantity_in_hand, :quantity_pending_to_buyer, to: :stock
   delegate :quantity_pending_from_supplier, to: :replenishment
