@@ -31,6 +31,21 @@ module MigrationHelpers
     SQL
   end
 
+  # Checks if a PostgreSQL enum type exists
+  def enum_type_exists?(enum_type)
+    connection.select_value(<<~SQL)
+      SELECT EXISTS (
+        SELECT
+          1
+        FROM
+          pg_type
+        WHERE
+          typname = #{quote(enum_type)}
+          AND typtype = 'e'
+      )
+    SQL
+  end
+
   # Returns column objects for a given table
   def table_columns(table_name)
     connection.columns(table_name)
@@ -119,6 +134,21 @@ module MigrationHelpers
         seq.relkind = 'S'
         AND seq.relname = #{quote(sequence_name)}
         AND dep.deptype = 'a' -- 'a' means auto dependency (like serial or identity)
+    SQL
+  end
+
+  # Returns the ordered list of enum values
+  def enum_values(enum_name)
+    connection.select_values(<<~SQL)
+      SELECT
+        e.enumlabel
+      FROM
+        pg_enum e
+      JOIN pg_type t ON t.oid = e.enumtypid
+      WHERE
+        t.typname = #{quote(enum_name)}
+      ORDER BY
+        e.enumsortorder;
     SQL
   end
 
