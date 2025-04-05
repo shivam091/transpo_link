@@ -143,6 +143,24 @@
           average_cost: "Weighted average costing"
         },
       },
+      purchase_order: {
+        statuses: {
+          draft: "Draft",
+          pending: "Pending",
+          approved: "Approved",
+          cancelled: "Cancelled",
+          rejected: "Rejected",
+          partially_delivered: "Partially delivered",
+          fully_delivered: "Fully delivered"
+        },
+      },
+      purchase_order_item: {
+        statuses: {
+          pending: "Pending",
+          delivered: "Delivered",
+          cancelled: "Cancelled",
+        },
+      },
     }
   }
 }

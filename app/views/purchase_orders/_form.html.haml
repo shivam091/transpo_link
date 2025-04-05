@@ -1,0 +1,14 @@
+= pretty_form_with model: @purchase_order, class: "row g-3" do |form|
+  .subheader
+    = t(".basic_details")
+  = render_if_exists("purchase_orders/basic_details_fields", locals: {form:})
+  .subheader
+    = t(".purchase_order_items")
+  = render_if_exists("purchase_orders/purchase_order_items/form", locals: {form:})
+  .actions
+    = button_tag type: :submit, class: "btn btn-primary" do
+      = external_svg_tag("svgs/floppy.svg")
+      = form.object.new_record? ? button_text(:create) : button_text(:update)
+    = link_to purchase_orders_path, class: "btn btn-secondary" do
+      = external_svg_tag("svgs/times.svg")
+      = button_text(:cancel)

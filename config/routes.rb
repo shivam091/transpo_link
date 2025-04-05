@@ -79,6 +79,7 @@ Rails.application.routes.draw do
   resources :products, concerns: [:reviewable, :toggleable]
   resources :feedbacks, only: [:index, :show], concerns: :notifiable
   resources :inventories, except: :destroy
+  resources :purchase_orders, path: "purchase-orders"
 
   root to: "dashboards#show"
 end

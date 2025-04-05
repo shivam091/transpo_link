@@ -3,7 +3,12 @@
 # -*- warn_indent: true -*-
 
 class PurchaseOrder < ApplicationRecord
-  include AASM, HasReferenceCode, Sanitizable, NullifyIfBlank
+  include AASM, HasReferenceCode, Sanitizable, NullifyIfBlank, Pageable, Navigable
+
+  LISTING_ATTRIBUTES = %i[
+    reference_code warehouse_id manager_id supplier_id order_date expected_delivery_date
+    status
+  ].freeze
 
   enum :status, {
     draft: "draft",
@@ -76,6 +81,16 @@ class PurchaseOrder < ApplicationRecord
 
   accepts_nested_attributes_for :purchase_order_items, allow_destroy: true, reject_if: :reject_purchase_order_item?
 
+  class << self
+    def accessible(user)
+      user.purchase_orders
+    end
+  end
+
+  def key_associations
+    [warehouse, manager, supplier]
+  end
+
   private
 
   def reject_purchase_order_item?(attributes)
@@ -84,6 +99,6 @@ class PurchaseOrder < ApplicationRecord
       attributes[:product_id],
       attributes[:uom],
       attributes[:currency]
-    ].all?(&:blank?) && attributes[:quantity].zero?
+    ].all?(&:blank?) && attributes[:quantity].to_d.zero?
   end
 end

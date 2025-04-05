@@ -5,6 +5,8 @@
 class PurchaseOrderItem < ApplicationRecord
   include AASM, ActsAsMoney
 
+  LISTING_ATTRIBUTES = %i[product_id quantity unit_cost total_cost status].freeze
+
   enum :status, {
     pending: "pending",
     delivered: "delivered",
@@ -51,4 +53,16 @@ class PurchaseOrderItem < ApplicationRecord
 
   belongs_to :purchase_order, inverse_of: :purchase_order_items
   belongs_to :product, inverse_of: :purchase_order_items
+
+  before_validation :set_unit_cost_and_currency
+
+  private
+
+  def set_unit_cost_and_currency
+    return unless will_save_change_to_product_id?
+
+    if product.present?
+      assign_attributes(unit_cost: product.cost_price, currency: product.currency)
+    end
+  end
 end
