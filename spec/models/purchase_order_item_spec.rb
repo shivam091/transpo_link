@@ -48,6 +48,10 @@ RSpec.describe PurchaseOrderItem, type: :model do
     it { is_expected.to have_check_constraint(:check_purchase_order_items_uom_presence).with_expression("uom IS NOT NULL AND uom::text <> ''::text") }
   end
 
+  describe "constants" do
+    it { is_expected.to have_constant(:LISTING_ATTRIBUTES) }
+  end
+
   describe "included modules" do
     it { is_expected.to include_module(AASM) }
     it { is_expected.to include_module(ActsAsMoney) }
@@ -88,6 +92,10 @@ RSpec.describe PurchaseOrderItem, type: :model do
     it { is_expected.to transition_from(:pending).to(:delivered).on_event(:deliver) }
   end
 
+  describe "callbacks" do
+    it { is_expected.to have_callback(:before, :validation, :set_unit_cost_and_currency) }
+  end
+
   describe "validations" do
     describe "#product_id" do
       it { is_expected.to validate_presence_of(:product_id) }
@@ -116,6 +124,55 @@ RSpec.describe PurchaseOrderItem, type: :model do
     describe "#status" do
       it { is_expected.to validate_presence_of(:status) }
       # it { is_expected.to validate_inclusion_of(:status).in_array(described_class.statuses.values) }
+    end
+  end
+
+  describe "instance methods" do
+    describe "#set_unit_cost_and_currency" do
+      let!(:product) { create(:product, cost_price: 100.5, currency: "USD") }
+      let!(:purchase_order) { create(:purchase_order) }
+
+      context "when #unit_cost & #currency are not set" do
+        let(:purchase_order_item) { build(:purchase_order_item, purchase_order: purchase_order, product: product) }
+
+        it "sets unit_cost and currency from the product" do
+          expect(purchase_order_item.unit_cost).to eq(0.0)
+          expect(purchase_order_item.currency.iso_code).to eq("INR")
+
+          purchase_order_item.valid?
+
+          expect(purchase_order_item.unit_cost).to eq(100.5)
+          expect(purchase_order_item.currency.iso_code).to eq("USD")
+        end
+      end
+
+      context "when #unit_cost & #currency are already set" do
+        let(:purchase_order_item) { build(:purchase_order_item, purchase_order: purchase_order, product: product, unit_cost: 120.75, currency: "EUR") }
+
+        it "overrides unit_cost and currency & sets them from the product" do
+          expect(purchase_order_item.unit_cost).to eq(120.75)
+          expect(purchase_order_item.currency.iso_code).to eq("EUR")
+
+          purchase_order_item.valid?
+
+          expect(purchase_order_item.unit_cost).to eq(100.5)
+          expect(purchase_order_item.currency.iso_code).to eq("USD")
+        end
+      end
+
+      context "when product is not set" do
+        let(:purchase_order_item) { build(:purchase_order_item, product: nil) }
+
+        it "does nothing" do
+          expect(purchase_order_item.unit_cost).to eq(0.0)
+          expect(purchase_order_item.currency.iso_code).to eq("INR")
+
+          purchase_order_item.valid?
+
+          expect(purchase_order_item.unit_cost).to eq(0.0)
+          expect(purchase_order_item.currency.iso_code).to eq("INR")
+        end
+      end
     end
   end
 end

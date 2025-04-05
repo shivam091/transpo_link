@@ -230,7 +230,7 @@
           manager_id: "Manager",
           supplier_id: "Supplier",
           reference_document: "Reference document",
-          order_date: "Order date",
+          order_date: "Ordered at",
           expected_delivery_date: "Expected delivery date",
           actual_delivery_date: "Actual delivery date",
           status: "Status",

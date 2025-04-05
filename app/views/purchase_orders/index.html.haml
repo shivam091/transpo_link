@@ -1,0 +1,26 @@
+= title(t(".title"))
+.card.card-primary.border.border-primary
+  .card-header
+    .d-flex.justify-content-end.align-items-center
+      = link_to new_purchase_order_path, class: "btn btn-primary" do
+        = external_svg_tag("svgs/plus.svg")
+        = button_text(:new)
+  .card-body
+    .table-responsive
+      %table.table.table-striped.table-borderless
+        %thead.border
+          %tr.table-active
+            %th{width: "3%", scope: "col"}#
+            - PurchaseOrder::LISTING_ATTRIBUTES.each do |attribute|
+              %th{scope: "col"}
+                = PurchaseOrder.human_attribute_name(attribute)
+            %th{width: "3%", scope: "col"}
+              = t("shared.actions")
+        %tbody.border
+          - if @purchase_orders&.each.with_index(1) do |purchase_order, index|
+            = render_if_exists("purchase_orders/purchase_order", locals: {purchase_order:, index:})
+          - end.empty?
+            = render_if_exists("shared/no_records", locals: {resource: PurchaseOrder})
+  - if @pagination_metadata.needs_pagination?
+    .card-footer
+      = render_pagination(@pagination_metadata)
