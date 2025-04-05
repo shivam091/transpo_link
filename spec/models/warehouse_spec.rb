@@ -35,15 +35,13 @@ RSpec.describe Warehouse, type: :model do
     it { is_expected.to have_check_constraint(:check_warehouses_name_presence).with_expression("name IS NOT NULL AND name::text <> ''::text") }
     it { is_expected.to have_check_constraint(:check_warehouses_total_capacity_presence).with_expression("total_capacity IS NOT NULL") }
     it { is_expected.to have_check_constraint(:check_warehouses_capacity_unit_presence).with_expression("capacity_unit IS NOT NULL AND capacity_unit::text <> ''::text") }
-
     it { is_expected.to have_check_constraint(:check_warehouses_name_length).with_expression("char_length(name::text) <= 255 AND char_length(name::text) >= 2") }
     it { is_expected.to have_check_constraint(:check_warehouses_description_length).with_expression("char_length(description) <= 1000") }
     it { is_expected.to have_check_constraint(:check_warehouses_email_address_length).with_expression("char_length(email_address::text) <= 55 AND char_length(email_address::text) >= 2") }
     it { is_expected.to have_check_constraint(:check_warehouses_contact_number_length).with_expression("char_length(contact_number::text) <= 55 AND char_length(contact_number::text) >= 2") }
-
-    it { is_expected.to have_check_constraint(:check_warehouses_total_capacity_range).with_expression("total_capacity >= 0::numeric AND total_capacity <= '100000000000'::bigint::numeric") }
-    it { is_expected.to have_check_constraint(:check_warehouses_latitude_range).with_expression("latitude >= '-90'::integer::numeric AND latitude <= 90::numeric") }
-    it { is_expected.to have_check_constraint(:check_warehouses_longitude_range).with_expression("longitude >= '-180'::integer::numeric AND longitude <= 180::numeric") }
+    it { is_expected.to have_check_constraint(:check_warehouses_total_capacity_range).with_expression("total_capacity >= 0.0 AND total_capacity <= 100000000000.0") }
+    it { is_expected.to have_check_constraint(:check_warehouses_latitude_range).with_expression("latitude >= '-90.0'::numeric AND latitude <= 90.0") }
+    it { is_expected.to have_check_constraint(:check_warehouses_longitude_range).with_expression("longitude >= '-180.0'::numeric AND longitude <= 180.0") }
   end
 
   describe "included modules" do
@@ -53,6 +51,7 @@ RSpec.describe Warehouse, type: :model do
     it { is_expected.to include_module(Sortable) }
     it { is_expected.to include_module(NullifyIfBlank) }
     it { is_expected.to include_module(Sanitizable) }
+    it { is_expected.to include_module(Navigable) }
   end
 
   describe "constants" do
@@ -85,6 +84,7 @@ RSpec.describe Warehouse, type: :model do
 
     it { is_expected.to have_many(:product_prices).inverse_of(:warehouse).dependent(:restrict_with_exception) }
     it { is_expected.to have_many(:inventories).inverse_of(:warehouse).dependent(:restrict_with_exception) }
+    it { is_expected.to have_many(:purchase_orders).inverse_of(:warehouse).dependent(:restrict_with_exception) }
   end
 
   include_examples "apply default scope on created_at:desc"

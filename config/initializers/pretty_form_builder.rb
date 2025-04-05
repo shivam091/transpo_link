@@ -58,6 +58,20 @@ class PrettyFormBuilder < ActionView::Helpers::FormBuilder
     super(attribute, options, checked_value, unchecked_value)
   end
 
+  def measurement_unit_select(attribute, options = {}, html_options = {})
+    category = options[:category]
+    selected_value = options.fetch(:selected, @object&.send(attribute))
+    units = TranspoLink::MeasurementUnits.select_options(category)
+
+    select_options = if category
+      @template.options_for_select(units.values.flatten(1), selected_value)
+    else
+      @template.grouped_options_for_select(units, selected_value)
+    end
+
+    select(attribute, select_options, options, html_options)
+  end
+
   private
 
   # Append new class to existing classes without duplication

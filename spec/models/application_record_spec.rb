@@ -8,36 +8,36 @@ require "spec_helper"
 
 RSpec.describe ApplicationRecord, type: :model do
   before(:all) do
-    connection.create_table :dummy_models, force: true do |t|
+    connection.create_table :emails, force: true do |t|
       t.string :email
       t.timestamps
     end
 
-    class DummyModel < ApplicationRecord
+    class Email < ApplicationRecord
     end
   end
 
   after(:all) do
-    connection.drop_table :dummy_models, if_exists: true
-    Object.send(:remove_const, :DummyModel)
+    connection.drop_table :emails, if_exists: true
+    Object.send(:remove_const, :Email)
   end
 
-  subject { DummyModel.new(email: "test@example.com") }
+  subject { Email.new(email: "test@example.com") }
 
   describe ".[]" do
     it "returns the arel table attribute" do
-      expect(DummyModel[:email].name).to eq("email")
+      expect(Email[:email].name).to eq("email")
     end
   end
 
   describe ".table" do
     it "returns the arel table" do
-      expect(DummyModel.table.name).to eq("dummy_models")
+      expect(Email.table.name).to eq("emails")
     end
   end
 
   describe ".without_order" do
-    let(:query_with_order) { DummyModel.order(:created_at) }
+    let(:query_with_order) { Email.order(:created_at) }
     let(:query_without_order) { query_with_order.without_order }
 
     it "removes ordering from the query" do
@@ -48,13 +48,13 @@ RSpec.describe ApplicationRecord, type: :model do
 
   describe ".none" do
     it "returns an empty relation" do
-      expect(DummyModel.none).to be_empty
+      expect(Email.none).to be_empty
     end
   end
 
   describe ".scoped_table" do
     it "returns an aliased arel table" do
-      expect(DummyModel.scoped_table.name).to eq("dummy_models")
+      expect(Email.scoped_table.name).to eq("emails")
     end
   end
 
@@ -62,20 +62,20 @@ RSpec.describe ApplicationRecord, type: :model do
     let(:attributes) { {email: "test@example.com"} }
 
     context "when the record exists" do
-      let!(:existing_user) { DummyModel.create!(attributes) }
-      let!(:found_user) { DummyModel.safe_find_or_create_by!(attributes) }
+      let!(:existing_email) { Email.create!(attributes) }
+      let!(:found_email) { Email.safe_find_or_create_by!(attributes) }
 
       it "returns the existing record" do
-        expect(found_user).to eq(existing_user)
+        expect(found_email).to eq(existing_email)
       end
     end
 
     context "when the record does not exist" do
-      let(:new_user) { DummyModel.safe_find_or_create_by!(attributes) }
+      let(:new_email) { Email.safe_find_or_create_by!(attributes) }
 
       it "creates and returns the new record" do
-        expect(new_user).to be_persisted
-        expect(new_user.email).to eq("test@example.com")
+        expect(new_email).to be_persisted
+        expect(new_email.email).to eq("test@example.com")
       end
     end
   end
@@ -84,46 +84,47 @@ RSpec.describe ApplicationRecord, type: :model do
     let(:attributes) { {email: "test@example.com"} }
 
     context "when the record exists" do
-      let!(:existing_user) { DummyModel.create!(attributes) }
-      let!(:found_user) { DummyModel.safe_find_or_create_by(attributes) }
+      let!(:existing_email) { Email.create!(attributes) }
+      let!(:found_email) { Email.safe_find_or_create_by(attributes) }
 
       it "returns the existing record" do
-        expect(found_user).to eq(existing_user)
+        expect(found_email).to eq(existing_email)
       end
     end
 
     context "when the record does not exist" do
-      let(:new_user) { DummyModel.safe_find_or_create_by(attributes) }
+      let(:new_email) { Email.safe_find_or_create_by(attributes) }
 
       it "creates and returns the new record" do
-        expect(new_user).to be_persisted
-        expect(new_user.email).to eq("test@example.com")
+        expect(new_email).to be_persisted
+        expect(new_email.email).to eq("test@example.com")
       end
     end
 
     context "when a unique constraint is violated" do
-      let(:found_user) { DummyModel.safe_find_or_create_by(attributes) }
+      let(:found_email) { Email.safe_find_or_create_by(attributes) }
 
-      it "rescues from RecordNotUnique and returns the existing record" do
-        DummyModel.create!(attributes)
-        allow(DummyModel).to receive(:create).and_raise(ActiveRecord::RecordNotUnique)
+      it "creates the dummy model avoiding race conditions" do
+        expect(Email).to receive(:find_by).and_return(nil, found_email) # Don't change syntax
 
-        expect(found_user.email).to eq("test@example.com")
+        allow(Email).to receive(:create).and_raise(ActiveRecord::RecordNotUnique)
+
+        expect(Email.safe_find_or_create_by(attributes)).to eq(found_email)
       end
     end
   end
 
   describe "#touch_self" do
-    let!(:user) { DummyModel.create!(email: "test@example.com") }
-    let!(:other_user) { DummyModel.create!(email: "other@example.com") }
+    let!(:email) { Email.create!(email: "test@example.com") }
+    let!(:other_email) { Email.create!(email: "other@example.com") }
 
     it "updates the updated_at timestamps of both objects" do
-      user.update!(updated_at: 1.day.ago)
-      other_user.update!(updated_at: 1.day.ago)
+      email.update!(updated_at: 1.day.ago)
+      other_email.update!(updated_at: 1.day.ago)
 
       expect {
-        user.touch_self(other_user)
-      }.to change { user.reload.updated_at }.and change { other_user.reload.updated_at }
+        email.touch_self(other_email)
+      }.to change { email.reload.updated_at }.and change { other_email.reload.updated_at }
     end
   end
 end

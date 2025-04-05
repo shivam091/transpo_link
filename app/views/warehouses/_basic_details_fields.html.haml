@@ -19,8 +19,7 @@
   = form.number_field :total_capacity, step: 0.01
 .col-sm-12.col-md-6.col-lg-4
   = form.label :capacity_unit, class: "form-label required"
-  = form.select :capacity_unit, grouped_options_for_select(TranspoLink::MeasurementUnits.select_options, form.object.capacity_unit),
-    {include_blank: t(".select_capacity_unit")}
+  = form.measurement_unit_select :capacity_unit, {include_blank: t(".select_capacity_unit")}, {}
 .col-sm-12.col-md-6.col-lg-4
   = form.label :latitude, class: "form-label"
   = form.number_field :latitude, step: 0.00000001

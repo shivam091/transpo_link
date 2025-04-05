@@ -40,8 +40,7 @@ class CreateRequestLogs < ActiveRecord::Migration[8.0]
       t.check_constraint "method IS NOT NULL AND method <> ''", name: :check_request_logs_method_presence
       t.check_constraint "remote_address IS NOT NULL", name: :check_request_logs_remote_address_presence
       t.check_constraint "ip_info IS NOT NULL", name: :check_request_logs_ip_info_presence
-
-      t.check_constraint "UPPER(method) = method", name: :check_request_logs_method_uppercase
+      t.check_constraint "UPPER(method) = method", name: :check_request_logs_method_in_uppercase
     end
   end
 end

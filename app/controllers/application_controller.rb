@@ -13,14 +13,13 @@ class ApplicationController < ActionController::Base
   allow_browser versions: :modern
 
   rescue_from ActionController::InvalidAuthenticityToken do |exception|
-    if user_signed_in?
-      sign_out(current_user)
-    else
-      redirect_to new_user_session_path
-    end
+    sign_out(current_user) if user_signed_in?
+
+    redirect_to new_user_session_path
   end
 
   before_action :authenticate_user!, :set_main_breadcrumb
+  before_action :check_if_banned, if: :user_signed_in?
 
   around_action :with_locale, :with_time_zone
 
@@ -44,5 +43,15 @@ class ApplicationController < ActionController::Base
 
   def set_main_breadcrumb
     add_breadcrumb t("dashboards.breadcrumb"), root_path
+  end
+
+  # Ensures that the user is not banned after authentication.
+  def check_if_banned
+    if current_user.is_banned?
+      sign_out current_user
+      set_flash_message(:alert, :suspended, scope: "devise.failure")
+
+      redirect_to new_user_session_path
+    end
   end
 end

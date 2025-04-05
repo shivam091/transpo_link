@@ -22,11 +22,12 @@ class CreateUserDetails < ActiveRecord::Migration[8.0]
       t.string :alternate_email
       t.timestamps_with_timezone null: false
 
-      t.check_constraint "first_name IS NOT NULL AND first_name  <> ''", name: :check_user_details_first_name_presence
-      t.check_constraint "last_name IS NOT NULL AND last_name  <> ''", name: :check_user_details_last_name_presence
-
+      t.check_constraint "first_name IS NOT NULL AND first_name <> ''", name: :check_user_details_first_name_presence
       t.check_constraint "CHAR_LENGTH(first_name) <= 55 AND CHAR_LENGTH(first_name) >= 2", name: :check_user_details_first_name_length
+
+      t.check_constraint "last_name IS NOT NULL AND last_name <> ''", name: :check_user_details_last_name_presence
       t.check_constraint "CHAR_LENGTH(last_name) <= 55 AND CHAR_LENGTH(last_name) >= 2", name: :check_user_details_last_name_length
+
       t.check_constraint "CHAR_LENGTH(mobile_number) <= 55 AND CHAR_LENGTH(mobile_number) >= 2", name: :check_user_details_mobile_number_length
       t.check_constraint "CHAR_LENGTH(alternate_contact_number) <= 55 AND CHAR_LENGTH(alternate_contact_number) >= 2", name: :check_user_details_alternate_contact_number_length
       t.check_constraint "CHAR_LENGTH(alternate_email) <= 55 AND CHAR_LENGTH(alternate_email) >= 2", name: :check_user_details_alternate_email_length

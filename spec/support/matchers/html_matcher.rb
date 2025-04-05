@@ -32,8 +32,10 @@ RSpec::Matchers.define :match_html do |expected|
   def normalize_html(html)
     return "" unless html
 
-    doc = Nokogiri::HTML.fragment(html)
-    doc.traverse { |node| node.content = node.content.strip if node.text? }
-    sort_attributes(doc).to_xhtml.gsub(/\s+/, " ").strip
+    # Loofah sanitizes and normalizes HTML
+    sanitized_html = Loofah.fragment(html).scrub!(:strip).to_s.strip
+
+    # Sort attributes for consistent comparison
+    sort_attributes(sanitized_html).gsub(/\s+/, " ").strip!
   end
 end

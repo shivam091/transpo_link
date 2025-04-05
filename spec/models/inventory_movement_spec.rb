@@ -38,13 +38,13 @@ RSpec.describe InventoryMovement, type: :model do
 
     it { is_expected.to have_check_constraint(:check_inventory_movements_currency_presence).with_expression("currency IS NOT NULL AND currency::text <> ''::text") }
     it { is_expected.to have_check_constraint(:check_inventory_movements_inventory_unit_presence).with_expression("inventory_unit IS NOT NULL AND inventory_unit::text <> ''::text") }
-    it { is_expected.to have_check_constraint(:check_inventory_movements_movement_type_inclusion) }
+    it { is_expected.to have_check_constraint(:check_inventory_movements_movement_type_in_enum_values) }
     it { is_expected.to have_check_constraint(:check_inventory_movements_movement_type_presence).with_expression("movement_type IS NOT NULL") }
     it { is_expected.to have_check_constraint(:check_inventory_movements_quantity_nonzero).with_expression("quantity <> 0.0") }
     it { is_expected.to have_check_constraint(:check_inventory_movements_quantity_presence).with_expression("quantity IS NOT NULL") }
-    it { is_expected.to have_check_constraint(:check_inventory_movements_total_cost_numericality).with_expression("total_cost >= unit_cost") }
+    it { is_expected.to have_check_constraint(:check_inventory_movements_total_cost_gteq_unit_cost).with_expression("total_cost >= unit_cost") }
     it { is_expected.to have_check_constraint(:check_inventory_movements_total_cost_presence).with_expression("total_cost IS NOT NULL") }
-    it { is_expected.to have_check_constraint(:check_inventory_movements_unit_cost_numericality).with_expression("unit_cost >= 0.0") }
+    it { is_expected.to have_check_constraint(:check_inventory_movements_unit_cost_positive).with_expression("unit_cost > 0.0") }
     it { is_expected.to have_check_constraint(:check_inventory_movements_unit_cost_presence).with_expression("unit_cost IS NOT NULL") }
   end
 

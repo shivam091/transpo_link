@@ -18,6 +18,9 @@
         unread: "Unread",
         future: "Future",
         expired: "Expired",
+        unapproved: "Unapproved",
+        approved: "Approved",
+        rejected: "Rejected",
       },
       address_form_fields: {
         select_country: "Select country or region",

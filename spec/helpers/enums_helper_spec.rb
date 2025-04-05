@@ -14,21 +14,17 @@ RSpec.describe EnumsHelper, type: :helper do
       attr_accessor :color_scheme
 
       def self.color_schemes
-        {light: 0, dark: 1, auto: 2}
-      end
-
-      def self.model_name
-        ActiveModel::Name.new(self, nil, "Preference")
+        {light: 0, dark: 1, system: 2}
       end
     end
 
-    allow(I18n).to receive(:t).with("light", scope: "enumerations.preference.color_schemes") { "Light" }
-    allow(I18n).to receive(:t).with("dark", scope: "enumerations.preference.color_schemes") { "Dark" }
-    allow(I18n).to receive(:t).with("auto", scope: "enumerations.preference.color_schemes") { "Auto" }
+    allow(I18n).to receive(:t).with("light", scope: "enumerations.preference.color_schemes", default: "Light") { "Light mode" }
+    allow(I18n).to receive(:t).with("dark", scope: "enumerations.preference.color_schemes", default: "Dark") { "Dark mode" }
+    allow(I18n).to receive(:t).with("system", scope: "enumerations.preference.color_schemes", default: "System") { "System preferred" }
   end
 
   describe "#enum_options_for_select" do
-    let(:expected_result) { [["Light", 0], ["Dark", 1], ["Auto", 2]] }
+    let(:expected_result) { [["Light mode", 0], ["Dark mode", 1], ["System preferred", 2]] }
 
     it "returns an array of translated enum options with their values" do
       expect(helper.enum_options_for_select(Preference, :color_scheme)).to eq(expected_result)
@@ -36,16 +32,26 @@ RSpec.describe EnumsHelper, type: :helper do
   end
 
   describe "#enum_l" do
-    let!(:preference) { Preference.new(color_scheme: :dark) }
+    context "when key is present" do
+      let!(:preference) { Preference.new(color_scheme: :dark) }
 
-    it "returns the translated string for the current enum value of a model" do
-      expect(helper.enum_l(preference, :color_scheme)).to eq("Dark")
+      it "returns the translated string for the current enum value of a model" do
+        expect(helper.enum_l(preference, :color_scheme)).to eq("Dark mode")
+      end
+    end
+
+    context "when key is not present" do
+      let!(:preference) { Preference.new(color_scheme: nil) }
+
+      it "returns nil" do
+        expect(helper.enum_l(preference, :color_scheme)).to be_nil
+      end
     end
   end
 
   describe "#enum_i18n" do
     it "returns the translated string for a given enum key" do
-      expect(helper.enum_i18n(Preference, :color_scheme, :auto)).to eq("Auto")
+      expect(helper.enum_i18n(Preference, :color_scheme, :system)).to eq("System preferred")
     end
   end
 

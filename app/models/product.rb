@@ -4,13 +4,13 @@
 
 class Product < ApplicationRecord
   include Toggleable, HasReferenceCode, Pageable, Sortable, ActsAsMoney,
-          NullifyIfBlank, Sanitizable
+          NullifyIfBlank, Sanitizable, Navigable
 
   LISTING_ATTRIBUTES = %i[
     reference_code name sku barcode cost_price product_category_id
   ].freeze
 
-  attribute :min_stock_threshold, default: 0
+  attribute :min_stock_threshold, default: 0.0
   attribute :cost_price, default: 0.0
 
   nullify_if_blank :description, :barcode
@@ -37,7 +37,7 @@ class Product < ApplicationRecord
             reduce: true
   validates :min_stock_threshold,
             presence: true,
-            numericality: {only_integer: true, greater_than: 0},
+            numericality: {greater_than: 0.0},
             reduce: true
   validates :capacity_unit,
             presence: true,
@@ -55,12 +55,11 @@ class Product < ApplicationRecord
   has_many :product_prices, inverse_of: :product, dependent: :destroy
   has_many :unit_conversions, inverse_of: :product, dependent: :destroy
   has_many :feedbacks, as: :reviewable, inverse_of: :reviewable, dependent: :nullify
+  has_many :purchase_order_items, inverse_of: :product, dependent: :restrict_with_exception
 
   belongs_to :product_category, counter_cache: true, inverse_of: :products
 
   delegate :name, to: :product_category, prefix: true
-
-  default_scope -> { order_created_desc }
 
   with_options allow_destroy: true do |n|
     n.accepts_nested_attributes_for :unit_conversions, reject_if: :reject_unit_conversion?
@@ -83,11 +82,11 @@ class Product < ApplicationRecord
     ].all?(&:blank?)
   end
 
-  def reject_product_price?(attribute)
+  def reject_product_price?(attributes)
     [
       attributes[:min_quantity],
       attributes[:unit_price],
-      attribute[:currency]
+      attributes[:currency]
     ].all?(&:blank?)
   end
 end

@@ -6,7 +6,7 @@ FactoryBot.define do
   factory :product_price do
     association :product
     association :warehouse
-    min_quantity { Faker::Number.between(from: 1, to: 50) }
+    min_quantity { Faker::Number.between(from: 1, to: 100) }
     unit_price { product.cost_price * 0.8 }
     currency { Faker::Currency.code }
   end

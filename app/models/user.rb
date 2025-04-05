@@ -3,7 +3,8 @@
 # -*- warn_indent: true -*-
 
 class User < ApplicationRecord
-  include Toggleable, CaseSensitivity, WithoutTimestamps, Pageable, Sanitizable
+  include Toggleable, CaseSensitivity, WithoutTimestamps, Pageable, Sanitizable,
+          Navigable
 
   devise :database_authenticatable, :registerable, :confirmable, :lockable,
          :recoverable, :rememberable, :validatable, :timeoutable, :trackable
@@ -41,6 +42,8 @@ class User < ApplicationRecord
   has_many :legal_identifiers, inverse_of: :user, dependent: :destroy
   has_many :inventory_audit_logs, inverse_of: :user, dependent: :nullify
   has_many :feedbacks, inverse_of: :user, dependent: :nullify
+  has_many :purchase_orders, inverse_of: :manager, dependent: :restrict_with_exception
+  has_many :supplied_purchase_orders, inverse_of: :supplier, class_name: "PurchaseOrder", dependent: :restrict_with_exception
 
   has_many :warehouse_managers, inverse_of: :manager, foreign_key: :manager_id, dependent: :restrict_with_exception
   has_many :managed_warehouses, through: :warehouse_managers, inverse_of: :managers, source: :warehouse
@@ -99,7 +102,7 @@ class User < ApplicationRecord
   end
 
   def active_for_authentication?
-    super && is_active?
+    super && is_active? && role.is_active?
   end
 
   def user_detail

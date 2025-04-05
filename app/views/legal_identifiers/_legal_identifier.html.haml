@@ -4,19 +4,31 @@
   %td
     = TranspoLink::CountryInfo.new(legal_identifier.country).country_name
   %td
-    = enum_i18n(LegalIdentifier, :entity_types, legal_identifier.entity_type)
+    = enum_l(legal_identifier, :entity_type)
   %td
-    = enum_i18n(LegalIdentifier, :tax_identifier_types, legal_identifier.tax_identifier_type)
+    = enum_l(legal_identifier, :tax_identifier_type)
   %td
     = legal_identifier.tax_identifier
   %td
-    = enum_i18n(LegalIdentifier, :business_identifier_types, legal_identifier.business_identifier_type) rescue "-"
+    = enum_l(legal_identifier, :business_identifier_type) || "-"
   %td
     = legal_identifier.business_identifier || "-"
   %td
     = link_to "javascript:void(0)", class: "text-reset", data: {bs_toggle: "dropdown"}, aria: {expanded: false} do
       = external_svg_tag("svgs/ellipsis-vertical.svg")
     %ul.dropdown-menu
+      - if legal_identifier.unapproved?
+        %li
+          = link_to approve_legal_identifier_path(legal_identifier), class: "dropdown-item",
+            data: {turbo_method: :patch, turbo_confirm: t(".approve_confirmation_text")} do
+            = external_svg_tag("svgs/check.svg")
+            = button_text(:approve)
+        %li
+          = link_to reject_legal_identifier_path(legal_identifier), class: "dropdown-item",
+            data: {turbo_method: :patch, turbo_confirm: t(".reject_confirmation_text")} do
+            = external_svg_tag("svgs/times.svg")
+            = button_text(:reject)
+        %li.dropdown-divider
       %li
         = link_to edit_legal_identifier_path(legal_identifier), class: "dropdown-item", data: {turbo_frame: :remote_modal} do
           = external_svg_tag("svgs/pencil.svg")
