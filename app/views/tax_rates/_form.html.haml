@@ -29,6 +29,6 @@
     = button_tag type: :submit, class: "btn btn-primary" do
       = external_svg_tag("svgs/floppy.svg")
       = form.object.new_record? ? button_text(:create) : button_text(:update)
-    = button_tag type: :button, class: "btn btn-secondary", data: {action: "click->remote-modal#hide"} do
+    = link_to tax_rates_path, class: "btn btn-secondary" do
       = external_svg_tag("svgs/times.svg")
       = button_text(:cancel)

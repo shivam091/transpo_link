@@ -4,11 +4,11 @@
   %td
     = TranspoLink::CountryInfo.new(tax_rate.country).country_name
   %td
-    = enum_i18n(TaxRate, :tax_identifier_types, tax_rate.tax_identifier_type)
+    = enum_l(tax_rate, :tax_identifier_type)
   %td
-    = enum_i18n(TaxRate, :tax_types, tax_rate.tax_type)
+    = enum_l(tax_rate, :tax_type)
   %td
-    = enum_i18n(TaxRate, :business_categories, tax_rate.business_category)
+    = enum_l(tax_rate, :business_category)
   %td
     = number_to_percentage(tax_rate.rate, precision: 2)
   %td

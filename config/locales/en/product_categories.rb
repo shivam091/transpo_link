@@ -10,7 +10,7 @@
         title: "Product categories",
       },
       product_category: {
-        delete_confirmation_text: "Are you sure you want to delete the product category ‘%{product_category_name}’? This cannot be undone.",
+        delete_confirmation_text: "Are you sure you want to delete the product category ‘%{name}’? This cannot be undone.",
       },
       new: {
         title: "New product category",
