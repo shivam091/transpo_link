@@ -30,16 +30,16 @@ class PurchaseOrder < ApplicationRecord
     state :draft, initial: true
     state :pending, :approved, :cancelled, :rejected, :partially_delivered, :fully_delivered
 
-    event :pending do
+    event :cancel do
+      transitions from: [:draft, :pending], to: :cancelled
+    end
+
+    event :submit do
       transitions from: :draft, to: :pending
     end
 
     event :approve do
       transitions from: :pending, to: :approved
-    end
-
-    event :cancel do
-      transitions from: :pending, to: :cancelled
     end
 
     event :reject do
