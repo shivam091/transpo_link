@@ -3,7 +3,7 @@
 # -*- warn_indent: true -*-
 
 class PurchaseOrder < ApplicationRecord
-  include AASM, HasReferenceCode, Sanitizable, NullifyIfBlank, Pageable
+  include AASM, HasReferenceCode, Sanitizable, NullifyIfBlank, Pageable, Navigable
 
   LISTING_ATTRIBUTES = %i[
     reference_code warehouse_id manager_id supplier_id order_date expected_delivery_date

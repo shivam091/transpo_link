@@ -55,6 +55,7 @@ RSpec.describe PurchaseOrder, type: :model do
     it { is_expected.to include_module(Sanitizable) }
     it { is_expected.to include_module(NullifyIfBlank) }
     it { is_expected.to include_module(Pageable) }
+    it { is_expected.to include_module(Navigable) }
   end
 
   describe "enum" do
@@ -134,15 +135,19 @@ RSpec.describe PurchaseOrder, type: :model do
     end
   end
 
+  include_examples "apply default scope on created_at:desc"
+
   describe "instance methods" do
     let!(:purchase_order) { create(:purchase_order) }
 
     describe "#key_associations" do
       it "returns array of key associations" do
-        expect(purchase_order.key_associations).to contain_exactly(
-          purchase_order.warehouse,
-          purchase_order.manager,
-          purchase_order.supplier
+        expect(purchase_order.key_associations).to eq(
+          [
+            purchase_order.warehouse,
+            purchase_order.manager,
+            purchase_order.supplier
+          ]
         )
       end
     end

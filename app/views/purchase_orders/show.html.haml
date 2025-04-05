@@ -28,3 +28,5 @@
           = t(".purchase_order_items")
       .widget-body
         = render_if_exists("purchase_orders/purchase_order_items/index", locals: {purchase_order: @purchase_order})
+  .card-footer
+    = render_if_exists("shared/navigable_links", locals: {record: @purchase_order})
