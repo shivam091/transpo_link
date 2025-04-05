@@ -7,9 +7,28 @@ module MigrationHelpers
     ActiveRecord::Base.connection
   end
 
+  def quote(name)
+    connection.quote(name)
+  end
+
   # Checks if a table exists
   def table_exists?(table_name)
     connection.table_exists?(table_name)
+  end
+
+  # Checks if a PostgreSQL sequence exists
+  def sequence_exists?(sequence_name)
+    connection.select_value(<<~SQL)
+      SELECT EXISTS(
+        SELECT
+          1
+        FROM
+          pg_class
+        WHERE
+          relkind = 'S'
+          AND relname = #{quote(sequence_name)}
+      )
+    SQL
   end
 
   # Returns column objects for a given table
@@ -81,6 +100,31 @@ module MigrationHelpers
   def column_defaults(table_name)
     table_columns(table_name).each_with_object({}) do |col, hash|
       hash[col.name] = col.default
+    end
+  end
+
+  # Returns the table and column that owns the given sequence (if any)
+  def sequence_ownership(sequence_name)
+    connection.select_one(<<~SQL)
+      SELECT
+        cls.relname AS table_name,
+        attr.attname AS column_name
+      FROM
+        pg_class seq
+      JOIN pg_depend dep ON dep.objid = seq.oid
+      JOIN pg_class cls ON cls.oid = dep.refobjid
+      JOIN pg_attribute attr ON attr.attrelid = cls.oid
+        AND attr.attnum = dep.refobjsubid
+      WHERE
+        seq.relkind = 'S'
+        AND seq.relname = #{quote(sequence_name)}
+        AND dep.deptype = 'a' -- 'a' means auto dependency (like serial or identity)
+    SQL
+  end
+
+  def run_migration(direction)
+    ActiveRecord::Migration.suppress_messages do
+      described_class.new.migrate(direction)
     end
   end
 end
