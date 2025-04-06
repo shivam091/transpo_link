@@ -83,6 +83,62 @@ class PurchaseOrdersController < ApplicationController
     redirect_to purchase_orders_path, status: :see_other
   end
 
+  # PATCH /purchase-orders/:id/cancel
+  def cancel
+    response = PurchaseOrders::CancelService.(@purchase_order)
+    @purchase_order = response.payload[:purchase_order]
+
+    if response.success?
+      set_flash_message(:info, :success)
+    else
+      set_flash_message(:alert, :error)
+    end
+
+    redirect_to purchase_orders_path, status: :see_other
+  end
+
+  # PATCH /purchase-orders/:id/submit
+  def submit
+    response = PurchaseOrders::SubmitService.(@purchase_order)
+    @purchase_order = response.payload[:purchase_order]
+
+    if response.success?
+      set_flash_message(:info, :success)
+    else
+      set_flash_message(:alert, :error)
+    end
+
+    redirect_to purchase_orders_path, status: :see_other
+  end
+
+  # PATCH /purchase-orders/:id/approve
+  def approve
+    response = PurchaseOrders::ApproveService.(@purchase_order)
+    @purchase_order = response.payload[:purchase_order]
+
+    if response.success?
+      set_flash_message(:info, :success)
+    else
+      set_flash_message(:alert, :error)
+    end
+
+    redirect_to purchase_orders_path, status: :see_other
+  end
+
+  # PATCH /purchase-orders/:id/reject
+  def reject
+    response = PurchaseOrders::RejectService.(@purchase_order)
+    @purchase_order = response.payload[:purchase_order]
+
+    if response.success?
+      set_flash_message(:info, :success)
+    else
+      set_flash_message(:alert, :error)
+    end
+
+    redirect_to purchase_orders_path, status: :see_other
+  end
+
   private
 
   def purchase_order_params

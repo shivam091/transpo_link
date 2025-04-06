@@ -83,9 +83,10 @@ RSpec.describe PurchaseOrder, type: :model do
 
   describe "state machines" do
     it { is_expected.to have_state(:draft) }
-    it { is_expected.to transition_from(:draft).to(:pending).on_event(:pending) }
-    it { is_expected.to transition_from(:pending).to(:approved).on_event(:approve) }
+    it { is_expected.to transition_from(:draft).to(:cancelled).on_event(:cancel) }
     it { is_expected.to transition_from(:pending).to(:cancelled).on_event(:cancel) }
+    it { is_expected.to transition_from(:draft).to(:pending).on_event(:submit) }
+    it { is_expected.to transition_from(:pending).to(:approved).on_event(:approve) }
     it { is_expected.to transition_from(:pending).to(:rejected).on_event(:reject) }
     it { is_expected.to transition_from(:approved).to(:partially_delivered).on_event(:partially_deliver) }
     it { is_expected.to transition_from(:approved).to(:fully_delivered).on_event(:fully_deliver) }

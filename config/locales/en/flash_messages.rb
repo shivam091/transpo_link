@@ -140,6 +140,22 @@
           success: "Purchase order has been successfully deleted.",
           error: "We encountered a problem deleting purchase order. Please try again."
         },
+        cancel: {
+          success: "Purchase order has been successfully cancelled.",
+          error: "We encountered a problem cancelling purchase order. Please try again."
+        },
+        submit: {
+          success: "Purchase order has been successfully submitted to the supplier for approval.",
+          error: "We encountered a problem submitting purchase order. Please try again."
+        },
+        approve: {
+          success: "Purchase order has been successfully approved.",
+          error: "We encountered a problem approving purchase order. Please try again.",
+        },
+        reject: {
+          success: "Purchase order has been successfully rejected.",
+          error: "We encountered a problem rejecting purchase order. Please try again.",
+        },
       },
     }
   }
