@@ -84,6 +84,7 @@ Rails.application.routes.draw do
       patch :cancel
       patch :submit
       patch :approve
+      patch :reject
     end
   end
 

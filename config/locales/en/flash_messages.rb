@@ -152,6 +152,10 @@
           success: "Purchase order has been successfully approved.",
           error: "We encountered a problem approving purchase order. Please try again.",
         },
+        reject: {
+          success: "Purchase order has been successfully rejected.",
+          error: "We encountered a problem rejecting purchase order. Please try again.",
+        },
       },
     }
   }
