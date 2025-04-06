@@ -13,7 +13,7 @@ RSpec.describe "PurchaseOrders", type: :request do
 
   include_context "sign in as manager"
 
-  let!(:purchase_order) { create(:purchase_order, warehouse: warehouse, manager: manager, supplier: supplier) }
+  let!(:purchase_order) { create(:purchase_order, warehouse:, manager:, supplier:) }
 
   let(:valid_attributes) do
     attributes_for(
@@ -177,6 +177,32 @@ RSpec.describe "PurchaseOrders", type: :request do
 
         expect(response).to redirect_to(purchase_orders_path)
         expect(flash[:alert]).to eq("We encountered a problem submitting purchase order. Please try again.")
+        expect(response).to have_http_status(:see_other)
+      end
+    end
+  end
+
+  describe "PATCH /purchase-orders/:id/approve" do
+    let!(:purchase_order) { create(:purchase_order, :pending, warehouse:, manager:, supplier:) }
+
+    context "when approval is successful" do
+      it "approves the purchase order and redirects" do
+        patch approve_purchase_order_path(purchase_order)
+
+        expect(response).to redirect_to(purchase_orders_path)
+        expect(flash[:info]).to eq("Purchase order has been successfully approved.")
+        expect(response).to have_http_status(:see_other)
+      end
+    end
+
+    context "when approval fails" do
+      it "does not approve the purchase order and redirects with and error message" do
+        allow(PurchaseOrders::ApproveService).to receive(:call).and_return(ServiceResponse.error)
+
+        patch approve_purchase_order_path(purchase_order)
+
+        expect(response).to redirect_to(purchase_orders_path)
+        expect(flash[:alert]).to eq("We encountered a problem approving purchase order. Please try again.")
         expect(response).to have_http_status(:see_other)
       end
     end
