@@ -196,7 +196,7 @@ RSpec.describe "PurchaseOrders", type: :request do
     end
 
     context "when approval fails" do
-      it "does not approve the purchase order and redirects with and error message" do
+      it "does not approve the purchase order and redirects with an error message" do
         allow(PurchaseOrders::ApproveService).to receive(:call).and_return(ServiceResponse.error)
 
         patch approve_purchase_order_path(purchase_order)
@@ -222,7 +222,7 @@ RSpec.describe "PurchaseOrders", type: :request do
     end
 
     context "when rejection fails" do
-      it "does not reject the purchase order and redirects with and error message" do
+      it "does not reject the purchase order and redirects with an error message" do
         allow(PurchaseOrders::RejectService).to receive(:call).and_return(ServiceResponse.error)
 
         patch reject_purchase_order_path(purchase_order)
