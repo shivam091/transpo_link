@@ -140,6 +140,10 @@
           success: "Purchase order has been successfully deleted.",
           error: "We encountered a problem deleting purchase order. Please try again."
         },
+        cancel: {
+          success: "Purchase order has been successfully cancelled.",
+          error: "We encountered a problem cancelling purchase order. Please try again."
+        },
       },
     }
   }

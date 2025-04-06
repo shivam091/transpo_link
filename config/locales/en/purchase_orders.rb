@@ -10,6 +10,7 @@
         title: "Purchase orders",
       },
       purchase_order: {
+        cancel_confirmation_text: "Are you sure you want to cancel the purchase order ‘%{reference_code}’? This cannot be undone.",
         delete_confirmation_text: "Are you sure you want to delete the purchase order ‘%{reference_code}’? This cannot be undone.",
       },
       new: {

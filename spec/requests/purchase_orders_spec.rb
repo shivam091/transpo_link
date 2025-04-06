@@ -133,4 +133,28 @@ RSpec.describe "PurchaseOrders", type: :request do
       end
     end
   end
+
+  describe "PATCH /purchase-orders/:id/cancel" do
+    context "when cancellation is successful" do
+      it "cancels the purchase order and redirects" do
+        patch cancel_purchase_order_path(purchase_order)
+
+        expect(response).to redirect_to(purchase_orders_path)
+        expect(flash[:info]).to eq("Purchase order has been successfully cancelled.")
+        expect(response).to have_http_status(:see_other)
+      end
+    end
+
+    context "when cancellation fails" do
+      it "does not cancel the purchase order and redirects with an error message" do
+        allow(PurchaseOrders::CancelService).to receive(:call).and_return(ServiceResponse.error)
+
+        patch cancel_purchase_order_path(purchase_order)
+
+        expect(response).to redirect_to(purchase_orders_path)
+        expect(flash[:alert]).to eq("We encountered a problem cancelling purchase order. Please try again.")
+        expect(response).to have_http_status(:see_other)
+      end
+    end
+  end
 end
