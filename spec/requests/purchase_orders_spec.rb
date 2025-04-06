@@ -157,4 +157,28 @@ RSpec.describe "PurchaseOrders", type: :request do
       end
     end
   end
+
+  describe "PATCH /purchase-orders/:id/submit" do
+    context "when submission is successful" do
+      it "submits the purchase order and redirects" do
+        patch submit_purchase_order_path(purchase_order)
+
+        expect(response).to redirect_to(purchase_orders_path)
+        expect(flash[:info]).to eq("Purchase order has been successfully submitted to the supplier for approval.")
+        expect(response).to have_http_status(:see_other)
+      end
+    end
+
+    context "when submission fails" do
+      it "does not submit the purchase order and redirects with an error message" do
+        allow(PurchaseOrders::SubmitService).to receive(:call).and_return(ServiceResponse.error)
+
+        patch submit_purchase_order_path(purchase_order)
+
+        expect(response).to redirect_to(purchase_orders_path)
+        expect(flash[:alert]).to eq("We encountered a problem submitting purchase order. Please try again.")
+        expect(response).to have_http_status(:see_other)
+      end
+    end
+  end
 end

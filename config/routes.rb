@@ -82,6 +82,7 @@ Rails.application.routes.draw do
   resources :purchase_orders, path: "purchase-orders" do
     member do
       patch :cancel
+      patch :submit
     end
   end
 

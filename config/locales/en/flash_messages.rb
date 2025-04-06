@@ -144,6 +144,10 @@
           success: "Purchase order has been successfully cancelled.",
           error: "We encountered a problem cancelling purchase order. Please try again."
         },
+        submit: {
+          success: "Purchase order has been successfully submitted to the supplier for approval.",
+          error: "We encountered a problem submitting purchase order. Please try again."
+        },
       },
     }
   }

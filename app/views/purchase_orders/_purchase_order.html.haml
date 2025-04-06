@@ -26,6 +26,12 @@
             data: {turbo_confirm: t(".cancel_confirmation_text", reference_code: purchase_order.reference_code), turbo_method: :patch} do
             = external_svg_tag("svgs/times.svg")
             = button_text(:cancel)
+      - if purchase_order.may_submit?
+        %li
+          = link_to submit_purchase_order_path(purchase_order), class: "dropdown-item",
+            data: {turbo_confirm: t(".submit_confirmation_text", reference_code: purchase_order.reference_code, supplier_name: supplier.full_name), turbo_method: :patch} do
+            = external_svg_tag("svgs/check.svg")
+            = button_text(:submit)
       %li
         = link_to purchase_order_path(purchase_order), class: "dropdown-item" do
           = external_svg_tag("svgs/arrow-right.svg")
