@@ -22,10 +22,6 @@
         approved: "Approved",
         rejected: "Rejected",
       },
-      address_form_fields: {
-        select_country: "Select country or region",
-        select_state: "Select state, province, county, or territory",
-      },
       no_records: {
         no_users_to_display: "No users to display",
         no_roles_to_display: "No roles to display",

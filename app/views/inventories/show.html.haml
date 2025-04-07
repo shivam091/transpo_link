@@ -49,4 +49,4 @@
             .widget-row-body
               = number_to_currency(@inventory.average_cost_price, unit: @inventory.currency.symbol)
   .card-footer
-    = render_if_exists("shared/navigable_links", locals: {record: @inventory})
+    = safe_render.partial("shared/navigable_links", resource: @inventory)

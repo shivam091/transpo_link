@@ -41,4 +41,4 @@
             .widget-row-body
               = @feedback.comment
   .card-footer
-    = render_if_exists("shared/navigable_links", locals: {record: @feedback})
+    = safe_render.partial("shared/navigable_links", resource: @feedback)

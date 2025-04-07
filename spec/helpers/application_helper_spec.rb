@@ -7,49 +7,6 @@
 require "spec_helper"
 
 RSpec.describe ApplicationHelper, type: :helper do
-  describe "#render_if_exists" do
-    it "renders the partial if it exists" do
-      allow(helper).to receive(:partial_exists?).with("existing_partial") { true }
-
-      expect(helper).to receive(:render).with("existing_partial", {}) { "rendered_partial" }
-      expect(helper.render_if_exists("existing_partial")).to eq("rendered_partial")
-    end
-
-    it "does not render if the partial does not exist" do
-      allow(helper).to receive(:partial_exists?).with("missing_partial") { false }
-
-      expect(helper.render_if_exists("missing_partial")).to be_nil
-    end
-  end
-
-  describe "#partial_exists?" do
-    it "returns true if partial exists" do
-      allow(helper.lookup_context).to receive(:exists?).with("existing_partial", [], true) { true }
-
-      expect(helper.partial_exists?("existing_partial")).to be_truthy
-    end
-
-    it "returns false if partial does not exist" do
-      allow(helper.lookup_context).to receive(:exists?).with("missing_partial", [], true) { false }
-
-      expect(helper.partial_exists?("missing_partial")).to be_falsy
-    end
-  end
-
-  describe "#template_exists?" do
-    it "returns true if template exists" do
-      allow(helper.lookup_context).to receive(:exists?).with("existing_template", [], false) { true }
-
-      expect(helper.template_exists?("existing_template")).to be_truthy
-    end
-
-    it "returns false if template does not exist" do
-      allow(helper.lookup_context).to receive(:exists?).with("missing_template", [], false) { false }
-
-      expect(helper.template_exists?("missing_template")).to be_falsy
-    end
-  end
-
   describe "#copyright_year" do
     it "returns the current year if start and end year are the same" do
       allow(Date).to receive(:current) { Date.new(2025) }

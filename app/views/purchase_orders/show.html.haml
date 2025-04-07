@@ -21,12 +21,12 @@
         .widget-title
           = t(".basic_details")
       .widget-body
-        = render_if_exists("purchase_orders/basic_details", locals: {purchase_order: @purchase_order})
+        = safe_render.partial("purchase_orders/basic_details", purchase_order: @purchase_order)
     .widget
       .widget-header
         .widget-title
           = t(".purchase_order_items")
       .widget-body
-        = render_if_exists("purchase_orders/purchase_order_items/index", locals: {purchase_order: @purchase_order})
+        = safe_render.template("purchase_order_items/index")
   .card-footer
-    = render_if_exists("shared/navigable_links", locals: {record: @purchase_order})
+    = safe_render.partial("shared/navigable_links", resource: @purchase_order)
