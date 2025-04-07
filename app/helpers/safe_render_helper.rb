@@ -119,7 +119,7 @@ module SafeRenderHelper
       context.respond_to?(:render) &&
         context.respond_to?(:request) &&
         context.request.format.symbol == format
-    rescue
+    rescue NoMethodError, StandardError
       true
     end
   end
