@@ -136,7 +136,7 @@ RSpec.describe SafeRenderHelper::SafeRenderer do
       it "raises an error when context lacks both lookup_context and view_context" do
         expect {
           renderer.partial("existing_partial")
-        }.to raise_error(RuntimeError, /SafeRenderer needs a context that responds to `lookup_context`/)
+        }.to raise_error(SafeRenderHelper::SafeRendererContextError, /SafeRenderer needs a context that responds to `lookup_context`/)
       end
     end
 

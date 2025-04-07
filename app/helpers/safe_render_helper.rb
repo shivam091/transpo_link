@@ -29,6 +29,9 @@ module SafeRenderHelper
     @safe_render ||= SafeRenderer.new(self)
   end
 
+  # Custom exception class for SafeRenderer context errors
+  class SafeRendererContextError < StandardError; end
+
   # Encapsulates logic for rendering partials, templates, JSON, or XML only if safe.
   class SafeRenderer
     # @return [ActionView::Base] The current rendering context
@@ -104,7 +107,7 @@ module SafeRenderHelper
       elsif context.respond_to?(:view_context)
         context.view_context.lookup_context
       else
-        raise "SafeRenderer needs a context that responds to `lookup_context`"
+        raise SafeRendererContextError, "SafeRenderer needs a context that responds to `lookup_context`"
       end
     end
 
