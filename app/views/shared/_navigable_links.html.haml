@@ -1,5 +1,5 @@
 .navigable-links-container
-  - if record.previous_record
-    = link_to button_text(:previous).html_safe, record.previous_record, class: "btn btn-secondary left-link"
-  - if record.next_record
-    = link_to button_text(:next).html_safe, record.next_record, class: "btn btn-secondary right-link"
+  - if resource.previous_record
+    = link_to button_text(:previous).html_safe, resource.previous_record, class: "btn btn-secondary left-link"
+  - if resource.next_record
+    = link_to button_text(:next).html_safe, resource.next_record, class: "btn btn-secondary right-link"

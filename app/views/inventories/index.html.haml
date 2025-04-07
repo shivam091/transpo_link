@@ -18,9 +18,9 @@
               = t("shared.actions")
         %tbody.border
           - if @inventories&.each.with_index(1) do |inventory, index|
-            = render_if_exists("inventories/inventory", locals: {inventory:, index:})
+            = safe_render.partial("inventories/inventory", inventory:, index:)
           - end.empty?
-            = render_if_exists("shared/no_records", locals: {resource: Inventory})
+            = safe_render.partial("shared/no_records", resource: Inventory)
   - if @pagination_metadata.needs_pagination?
     .card-footer
       = render_pagination(@pagination_metadata)

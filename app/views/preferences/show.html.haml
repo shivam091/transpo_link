@@ -12,4 +12,4 @@
           = external_svg_tag("svgs/pencil.svg")
           = button_text(:edit)
       .widget-body
-        = render_if_exists("preferences/show", locals: {user: @user})
+        = safe_render.partial("preferences/show", user: @user)

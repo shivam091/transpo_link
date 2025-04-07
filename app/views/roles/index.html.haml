@@ -13,6 +13,6 @@
               = t("shared.actions")
         %tbody.border
           - if @roles&.each.with_index(1) do |role, index|
-            = render_if_exists("roles/role", locals: {role:, index:})
+            = safe_render.partial("roles/role", role:, index:)
           - end.empty?
-            = render_if_exists("shared/no_records", locals: {resource: Role})
+            = safe_render.partial("shared/no_records", resource: Role)

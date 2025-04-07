@@ -13,9 +13,9 @@
               = t("shared.actions")
         %tbody.border
           - if @request_logs&.each.with_index(1) do |request_log, index|
-            = render_if_exists("request_logs/request_log", locals: {request_log:, index:})
+            = safe_render.partial("request_logs/request_log", request_log:, index:)
           - end.empty?
-            = render_if_exists("shared/no_records", locals: {resource: RequestLog})
+            = safe_render.partial("shared/no_records", resource: RequestLog)
   - if @pagination_metadata.needs_pagination?
     .card-footer
       = render_pagination(@pagination_metadata)

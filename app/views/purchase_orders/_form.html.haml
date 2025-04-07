@@ -1,10 +1,10 @@
 = pretty_form_with model: @purchase_order, class: "row g-3" do |form|
   .subheader
     = t(".basic_details")
-  = render_if_exists("purchase_orders/basic_details_fields", locals: {form:})
+  = safe_render.partial("purchase_orders/basic_details_fields", form:)
   .subheader
     = t(".purchase_order_items")
-  = render_if_exists("purchase_orders/purchase_order_items/form", locals: {form:})
+  = safe_render.partial("purchase_order_items/form/tabular_view", form:)
   .actions
     = button_tag type: :submit, class: "btn btn-primary" do
       = external_svg_tag("svgs/floppy.svg")

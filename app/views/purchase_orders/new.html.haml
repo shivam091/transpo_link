@@ -2,4 +2,4 @@
 .card.card-primary.border.border-primary
   .card-body
     = turbo_frame_tag :new_purchase_order_form_frame, target: :_top do
-      = render_if_exists("purchase_orders/form")
+      = safe_render.partial("purchase_orders/form")

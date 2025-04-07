@@ -2,4 +2,4 @@
 .card.card-primary.border.border-primary
   .card-body
     = turbo_frame_tag :edit_role_form_frame, target: :_top do
-      = render_if_exists("roles/form")
+      = safe_render.partial("roles/form")

@@ -15,16 +15,20 @@ RSpec.describe ModalsHelper, type: :helper do
         size_class: "modal-md"
       }
     end
+    let(:renderer) { instance_double(SafeRenderHelper::SafeRenderer) }
 
-    before { allow(helper).to receive(:render_if_exists) }
+    before do
+      allow(helper).to receive(:safe_render).and_return(renderer)
+      allow(renderer).to receive(:partial)
+    end
 
     context "when no options are provided" do
       it "uses the default options" do
         helper.render_modal
 
-        expect(helper).to have_received(:render_if_exists).with(
+        expect(renderer).to have_received(:partial).with(
           "shared/remote_modal",
-          locals: default_options
+          default_options
         )
       end
     end
@@ -33,9 +37,8 @@ RSpec.describe ModalsHelper, type: :helper do
       it "overrides the default title" do
         helper.render_modal(title: "Custom Title")
 
-        expect(helper).to have_received(:render_if_exists).with(
-          "shared/remote_modal",
-          locals: default_options.merge(title: "Custom Title")
+        expect(renderer).to have_received(:partial).with(
+          "shared/remote_modal", default_options.merge(title: "Custom Title")
         )
       end
     end
@@ -44,9 +47,9 @@ RSpec.describe ModalsHelper, type: :helper do
       it "overrides the default modal_id" do
         helper.render_modal(modal_id: "custom-modal")
 
-        expect(helper).to have_received(:render_if_exists).with(
+        expect(renderer).to have_received(:partial).with(
           "shared/remote_modal",
-          locals: default_options.merge(modal_id: "custom-modal")
+          default_options.merge(modal_id: "custom-modal")
         )
       end
     end
@@ -55,27 +58,27 @@ RSpec.describe ModalsHelper, type: :helper do
       it "sets the correct size_class for :lg" do
         helper.render_modal(size: :lg)
 
-        expect(helper).to have_received(:render_if_exists).with(
+        expect(renderer).to have_received(:partial).with(
           "shared/remote_modal",
-          locals: default_options.merge(size_class: "modal-lg")
+          default_options.merge(size_class: "modal-lg")
         )
       end
 
       it "sets the correct size_class for :sm" do
         helper.render_modal(size: :sm)
 
-        expect(helper).to have_received(:render_if_exists).with(
+        expect(renderer).to have_received(:partial).with(
           "shared/remote_modal",
-          locals: default_options.merge(size_class: "modal-sm")
+          default_options.merge(size_class: "modal-sm")
         )
       end
 
       it "sets the correct size_class for :xl" do
         helper.render_modal(size: :xl)
 
-        expect(helper).to have_received(:render_if_exists).with(
+        expect(renderer).to have_received(:partial).with(
           "shared/remote_modal",
-          locals: default_options.merge(size_class: "modal-xl")
+          default_options.merge(size_class: "modal-xl")
         )
       end
     end
@@ -84,9 +87,9 @@ RSpec.describe ModalsHelper, type: :helper do
       it "uses the provided size_class instead of size mapping" do
         helper.render_modal(size_class: "custom-size-class")
 
-        expect(helper).to have_received(:render_if_exists).with(
+        expect(renderer).to have_received(:partial).with(
           "shared/remote_modal",
-          locals: default_options.merge(size_class: "custom-size-class")
+          default_options.merge(size_class: "custom-size-class")
         )
       end
     end
@@ -95,9 +98,9 @@ RSpec.describe ModalsHelper, type: :helper do
       it "prioritizes the provided size_class over size" do
         helper.render_modal(size: :lg, size_class: "custom-size-class")
 
-        expect(helper).to have_received(:render_if_exists).with(
+        expect(renderer).to have_received(:partial).with(
           "shared/remote_modal",
-          locals: default_options.merge(size: :lg, size_class: "custom-size-class")
+          default_options.merge(size: :lg, size_class: "custom-size-class")
         )
       end
     end
@@ -108,9 +111,9 @@ RSpec.describe ModalsHelper, type: :helper do
       it "yields the block to the partial" do
         helper.render_modal(&block)
 
-        expect(helper).to have_received(:render_if_exists).with(
+        expect(renderer).to have_received(:partial).with(
           "shared/remote_modal",
-          locals: default_options
+          default_options
         )
       end
     end
