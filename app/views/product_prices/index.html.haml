@@ -7,7 +7,7 @@
           %th{scope: "col"}
             = ProductPrice.human_attribute_name(attribute)
     %tbody.border
-      - if product.product_prices&.each.with_index(1) do |product_price, index|
-        = safe_render.partial("products/product_prices/product_price", product:, product_price:, index:)
+      - if @product.product_prices&.each.with_index(1) do |product_price, index|
+        = safe_render.partial("product_prices/product_price", product:, product_price:, index:)
       - end.empty?
         = safe_render.partial("shared/no_records", resource: ProductPrice)

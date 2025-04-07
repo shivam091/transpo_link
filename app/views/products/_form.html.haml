@@ -4,10 +4,10 @@
   = safe_render.partial("products/basic_details_fields", form:)
   .subheader
     = t(".unit_conversions")
-  = safe_render.partial("products/unit_conversions/form", form:)
+  = safe_render.partial("unit_conversions/form/tabular_view", form:)
   .subheader
     = t(".product_prices")
-  = safe_render.partial("products/product_prices/form", form:)
+  = safe_render.partial("product_prices/form/tabular_view", form:)
   .actions
     = button_tag type: :submit, class: "btn btn-primary" do
       = external_svg_tag("svgs/floppy.svg")

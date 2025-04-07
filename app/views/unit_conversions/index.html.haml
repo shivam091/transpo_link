@@ -7,7 +7,7 @@
           %th{scope: "col"}
             = UnitConversion.human_attribute_name(attribute)
     %tbody.border
-      - if product.unit_conversions&.each.with_index(1) do |unit_conversion, index|
-        = safe_render.partial("products/unit_conversions/unit_conversion", unit_conversion:, index:)
+      - if @product.unit_conversions&.each.with_index(1) do |unit_conversion, index|
+        = safe_render.partial("unit_conversions/unit_conversion", unit_conversion:, index:)
       - end.empty?
         = safe_render.partial("shared/no_records", resource: UnitConversion)

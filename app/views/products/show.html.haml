@@ -27,12 +27,12 @@
         .widget-title
           = t(".unit_conversions")
       .widget-body
-        = safe_render.partial("products/unit_conversions/index", product: @product)
+        = safe_render.template("unit_conversions/index")
     .widget
       .widget-header
         .widget-title
           = t(".product_prices")
       .widget-body
-        = safe_render.partial("products/product_prices/index", product: @product)
+        = safe_render.template("product_prices/index")
   .card-footer
     = safe_render.partial("shared/navigable_links", resource: @product)
