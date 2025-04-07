@@ -41,7 +41,7 @@ a:link {
 svg:not(:root) {
   overflow: hidden;
 }
-[id^="icon-"], [id*=" icon-"] {
+[class^="icon-"], [class*=" icon-"] {
   display: inline-block;
   text-decoration: inherit;
   text-rendering: auto;

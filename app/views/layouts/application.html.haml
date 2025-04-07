@@ -1,5 +1,6 @@
 = render_if_exists("layouts/shared_layout") do
   %body{data: {bs_theme: current_user.preferred_color_scheme}}
+    = external_svg_tag("sprite.svg")
     = render_if_exists("layouts/application/main_navigation")
     = render_if_exists("layouts/application/secondary_navigation")
     .clearfix

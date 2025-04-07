@@ -1,5 +1,6 @@
 = render_if_exists("layouts/shared_layout") do
   %body.d-flex.align-items-center.justify-content-center{data: {bs_theme: "dark"}}
+    = external_svg_tag("sprite.svg")
     %main.devise-section
       = turbo_frame_tag :flash_messages_frame do
         = render_if_exists("shared/flash_messages")
