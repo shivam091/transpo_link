@@ -2,10 +2,6 @@
 # -*- frozen_string_literal: true -*-
 # -*- warn_indent: true -*-
 
-# -*- encoding: utf-8 -*-
-# -*- frozen_string_literal: true -*-
-# -*- warn_indent: true -*-
-
 # Helper module to render SVG icons from a sprite sheet (`sprite.svg`)
 #
 # This module provides a convenient helper method to include SVG icons

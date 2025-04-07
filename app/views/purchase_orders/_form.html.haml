@@ -7,8 +7,8 @@
   = render_if_exists("purchase_orders/purchase_order_items/form", locals: {form:})
   .actions
     = button_tag type: :submit, class: "btn btn-primary" do
-      = external_svg_tag("svgs/floppy.svg")
+      = sprite_icon("floppy")
       = form.object.new_record? ? button_text(:create) : button_text(:update)
     = link_to purchase_orders_path, class: "btn btn-secondary" do
-      = external_svg_tag("svgs/times.svg")
+      = sprite_icon("times")
       = button_text(:cancel)

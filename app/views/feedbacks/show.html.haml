@@ -13,7 +13,7 @@
         - if @feedback.is_unread?
           = link_to mark_as_read_feedback_path(@feedback), class: "btn btn-secondary",
             data: {turbo_method: :patch, turbo_confirm: t(".mark_as_read_confirmation_text", reference_code: @feedback.reference_code)} do
-            = external_svg_tag("svgs/check-circle.svg")
+            = sprite_icon("check-circle")
             = button_text(:mark_as_read)
       .widget-body
         .widget-row

@@ -13,15 +13,15 @@
         %ul.navbar-nav.me-auto
           %li.nav-item
             = link_to root_path, class: class_names("nav-link", "active": current_controller?(:dashboards)) do
-              = external_svg_tag("svgs/dashboard.svg")
+              = sprite_icon("dashboard")
               = t(".dashboard")
           %li.nav-item
             = link_to users_path, class: class_names("nav-link", "active": current_controller?(:users)) do
-              = external_svg_tag("svgs/users.svg")
+              = sprite_icon("users")
               = t(".users")
           %li.nav-item
             = link_to request_logs_path, class: class_names("nav-link", "active": current_controller?(:request_logs)) do
-              = external_svg_tag("svgs/logs.svg")
+              = sprite_icon("logs")
               = t(".request_logs")
         %ul.navbar-nav.d-none.d-lg-flex.ms-2
           = render_if_exists("layouts/application/menu")

@@ -14,7 +14,7 @@
               = Product.human_attribute_name(:updated_at)
               = time_ago_with_tooltip(@product.updated_at)
         = link_to edit_product_path(@product), class: "btn btn-secondary" do
-          = external_svg_tag("svgs/pencil.svg")
+          = sprite_icon("pencil")
           = button_text(:edit)
     .widget
       .widget-header
