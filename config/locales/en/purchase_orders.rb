@@ -36,15 +36,6 @@
         basic_details: "Basic details",
         purchase_order_items: "Purchase order items",
       },
-      purchase_order_items: {
-        form: {
-        },
-        field: {
-          select_product: "Select product",
-          select_uom: "Select unit of measure",
-          select_currency: "Select currency",
-        }
-      }
     }
   }
 }

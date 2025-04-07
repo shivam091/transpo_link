@@ -21,7 +21,7 @@
       %tbody.border
         %template{data: {nested_forms_target: "template"}}
           = form.fields_for :product_prices, form.object.product_prices.build, child_index: "NEW_RECORD" do |product_price_form|
-            = render_if_exists("products/product_prices/field", locals: {form: product_price_form})
+            = safe_render.partial("products/product_prices/field", form: product_price_form)
         = form.fields_for :product_prices do |product_price_form|
-          = render_if_exists("products/product_prices/field", locals: {form: product_price_form})
+          = safe_render.partial("products/product_prices/field", form: product_price_form)
         %tr{data: {nested_forms_target: "target"}}

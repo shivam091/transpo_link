@@ -1,10 +1,10 @@
-= render_if_exists("layouts/shared_layout") do
+= safe_render.partial("layouts/shared_layout") do
   %body.d-flex.align-items-center.justify-content-center{data: {bs_theme: "dark"}}
     %main.devise-section
       = turbo_frame_tag :flash_messages_frame do
-        = render_if_exists("shared/flash_messages")
+        = safe_render.partial("shared/flash_messages")
       .text-center.mb-2
         = link_to new_user_session_path do
           = external_svg_tag("logo.svg", height: "48px", width: "48px")
       = yield
-      = render_if_exists("layouts/devise/footer")
+      = safe_render.partial("layouts/devise/footer")

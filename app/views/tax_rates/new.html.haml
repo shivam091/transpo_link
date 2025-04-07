@@ -2,4 +2,4 @@
 .card.card-primary.border.border-primary
   .card-body
     = turbo_frame_tag :new_tax_rate_form_frame, target: :_top do
-      = render_if_exists("tax_rates/form")
+      = safe_render.partial("tax_rates/form")

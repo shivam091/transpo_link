@@ -3,18 +3,6 @@
 # -*- warn_indent: true -*-
 
 module ApplicationHelper
-  def render_if_exists(partial, locals: {}, &block)
-    render(partial, locals, &block) if partial_exists?(partial)
-  end
-
-  def partial_exists?(partial)
-    lookup_context.exists?(partial, [], true)
-  end
-
-  def template_exists?(template)
-    lookup_context.exists?(template, [], false)
-  end
-
   def copyright_year
     copyright_start_year, copyright_end_year = 2025, Date.current.year
 

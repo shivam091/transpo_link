@@ -8,8 +8,7 @@ require "spec_helper"
 
 RSpec.describe Navigable do
   before(:all) do
-    ActiveRecord::Schema.define(version: 1) do
-      create_table :navigable_models, force: true do |t|
+    connection.create_table :navigable_models, force: true do |t|
         t.string  :name
         t.integer :position
         t.timestamps
@@ -25,7 +24,7 @@ RSpec.describe Navigable do
   end
 
   after(:all) do
-    ActiveRecord::Base.connection.drop_table(:navigable_models, if_exists: true)
+    connection.drop_table(:navigable_models, if_exists: true)
     Object.send(:remove_const, :NavigableModel)
   end
 

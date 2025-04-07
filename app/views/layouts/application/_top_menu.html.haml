@@ -2,7 +2,7 @@
   .container-fluid.py-1.border-bottom
     .row.align-items-center
       .col-lg-6.col-12.d-flex.justify-content-center.justify-content-lg-start
-        = render_if_exists("shared/live_clock")
+        = safe_render.partial("shared/live_clock")
       .col-lg-6.col-12.d-none.d-lg-flex.justify-content-center.justify-content-lg-end
         .list-unstyled.d-flex.align-items-center
           .d-inline-block.middle-dot-divider.dropdown

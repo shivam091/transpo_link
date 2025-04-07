@@ -21,18 +21,18 @@
         .widget-title
           = t(".basic_details")
       .widget-body
-        = render_if_exists("products/basic_details", locals: {product: @product})
+        = safe_render.partial("products/basic_details", product: @product)
     .widget
       .widget-header
         .widget-title
           = t(".unit_conversions")
       .widget-body
-        = render_if_exists("products/unit_conversions/index", locals: {product: @product})
+        = safe_render.partial("products/unit_conversions/index", product: @product)
     .widget
       .widget-header
         .widget-title
           = t(".product_prices")
       .widget-body
-        = render_if_exists("products/product_prices/index", locals: {product: @product})
+        = safe_render.partial("products/product_prices/index", product: @product)
   .card-footer
-    = render_if_exists("shared/navigable_links", locals: {record: @product})
+    = safe_render.partial("shared/navigable_links", resource: @product)

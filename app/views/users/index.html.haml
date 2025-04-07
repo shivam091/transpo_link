@@ -1,7 +1,7 @@
 = title(t(".title"))
 .card.card-primary.border.border-primary
   .card-header
-    = render_if_exists("users/nav_tabs")
+    = safe_render.partial("users/nav_tabs")
   .card-body{data: {controller: "checkbox-selection"}}
     .mb-2{data: {checkbox_selection_target: "selectedCount", label_template: t("shared.selected", count: "%{count}")}}
     .table-responsive
@@ -28,9 +28,9 @@
               = t("shared.actions")
         %tbody.border
           - if @users&.each.with_index(1) do |user, index|
-            = render_if_exists("users/user", locals: {user:, index:})
+            = safe_render.partial("users/user", user:, index:)
           - end.empty?
-            = render_if_exists("shared/no_records", locals: {resource: User})
+            = safe_render.partial("shared/no_records", resource: User)
   - if @pagination_metadata.needs_pagination?
     .card-footer
       = render_pagination(@pagination_metadata)
