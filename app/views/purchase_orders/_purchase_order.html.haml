@@ -1,22 +1,22 @@
 - warehouse, manager, supplier = purchase_order.key_associations
-%tr
-  %th{scope: "row"}
+.table-row
+  .table-cell.cell-narrow
     = @pagination_metadata.offset + index
-  %td
+  .table-cell
     = link_to purchase_order.reference_code, purchase_order_path(purchase_order)
-  %td
+  .table-cell
     = link_to warehouse.name, warehouse_path(warehouse), target: :_blank
-  %td
+  .table-cell
     = link_to manager.full_name, user_path(manager), target: :_blank
-  %td
+  .table-cell
     = link_to supplier.full_name, user_path(supplier), target: :_blank
-  %td
+  .table-cell
     = purchase_order.order_date.to_date.to_fs(:long)
-  %td
+  .table-cell
     = purchase_order.expected_delivery_date&.to_fs(:long) || "-"
-  %td
+  .table-cell
     = enum_l(purchase_order, :status)
-  %td
+  .table-cell.cell-narrow
     = link_to "javascript:void(0)", class: "text-reset", data: {bs_toggle: "dropdown"}, aria: {expanded: false} do
       = sprite_icon("ellipsis-vertical")
     %ul.dropdown-menu

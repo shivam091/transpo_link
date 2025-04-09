@@ -1,9 +1,9 @@
-%tr
-  %th{scope: "row"}
+.table-row
+  .table-cell.cell-narrow
     = index
-  %td
+  .table-cell
     = t(unit_conversion.from_unit, scope: "measurement_units.sub_categories")
-  %td
+  .table-cell
     = t(unit_conversion.to_unit, scope: "measurement_units.sub_categories")
-  %td
+  .table-cell
     = number_to_delimited(unit_conversion.conversion_rate)

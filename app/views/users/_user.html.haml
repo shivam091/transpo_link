@@ -1,21 +1,22 @@
-%tr
-  %th{scope: "row"}
+.table-row
+  .table-cell.cell-narrow
     = index
-  %td
-    = check_box_tag "user_ids[]", user.id, false, class: "form-check-input", data: {checkbox_selection_target: "itemCheckbox"}
-  %td
+  .table-cell.cell-narrow
+    = check_box_tag "user_ids[]", user.id, false, id: dom_id(user), class: "form-check-input",
+      data: {checkbox_selection_target: "itemCheckbox"}
+  .table-cell
     = link_to user.full_name, user_path(user)
-  %td
+  .table-cell
     = mail_to user.email
-  %td
+  .table-cell
     = user.mobile_number || "-"
-  %td
+  .table-cell
     = user.alternate_contact_number || "-"
-  %td
+  .table-cell
     = user.alternate_email.present? ? mail_to(user.alternate_email) : "-"
-  %td
+  .table-cell
     = user.role_name.humanize
-  %td
+  .table-cell.cell-narrow
     = link_to "javascript:void(0)", class: "text-reset", data: {bs_toggle: "dropdown"}, aria: {expanded: false} do
       = sprite_icon("ellipsis-vertical")
     %ul.dropdown-menu

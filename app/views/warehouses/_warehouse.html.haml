@@ -1,24 +1,25 @@
 - present(warehouse) do |warehouse|
-  %tr
-    %th{scope: "row"}
+  .table-row
+    .table-cell.cell-narrow
       = @pagination_metadata.offset + index
-    %td
-      = check_box_tag "warehouse_ids[]", warehouse.id, false, class: "form-check-input", data: {checkbox_selection_target: "itemCheckbox"}
-    %td
+    .table-cell.cell-narrow
+      = check_box_tag "warehouse_ids[]", warehouse.id, false, id: dom_id(warehouse), class: "form-check-input",
+        data: {checkbox_selection_target: "itemCheckbox"}
+    .table-cell
       = link_to warehouse.reference_code, warehouse_path(warehouse)
-    %td
+    .table-cell
       = warehouse.name
-    %td
+    .table-cell
       = warehouse.email_address.present? ? mail_to(warehouse.email_address) : "-"
-    %td
+    .table-cell
       = warehouse.contact_number || "-"
-    %td
+    .table-cell
       = number_to_measurement_unit(warehouse.total_capacity, warehouse.capacity_unit)
-    %td
+    .table-cell
       = warehouse.formatted_latitude || "-"
-    %td
+    .table-cell
       = warehouse.formatted_longitude || "-"
-    %td
+    .table-cell.cell-narrow
       = link_to "javascript:void(0)", class: "text-reset", data: {bs_toggle: "dropdown"}, aria: {expanded: false} do
         = sprite_icon("ellipsis-vertical")
       %ul.dropdown-menu

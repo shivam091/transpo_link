@@ -16,16 +16,15 @@
         %hr
         = safe_render.partial("legal_identifiers/nav_tabs")
         .table-responsive
-          %table.table.table-striped.table-borderless
-            %thead.border
-              %tr.table-active
-                %th{width: "3%", scope: "col"}#
-                - LegalIdentifier::LISTING_ATTRIBUTES.each do |attribute|
-                  %th{scope: "col"}
-                    = LegalIdentifier.human_attribute_name(attribute)
-                %th{width: "3%", scope: "col"}
-                  = t("shared.actions")
-            %tbody.border
+          .table-container
+            .table-header
+              .table-cell.cell-narrow #
+              - LegalIdentifier::LISTING_ATTRIBUTES.each do |attribute|
+                .table-cell
+                  = LegalIdentifier.human_attribute_name(attribute)
+              .table-cell.cell-narrow
+                = t("shared.actions")
+            .table-body
               - if @legal_identifiers&.each.with_index(1) do |legal_identifier, index|
                 = safe_render.partial("legal_identifiers/legal_identifier", legal_identifier:, index:)
               - end.empty?

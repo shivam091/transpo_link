@@ -2,16 +2,15 @@
 .card.card-primary.border.border-primary
   .card-body
     .table-responsive
-      %table.table.table-striped.table-borderless
-        %thead.border
-          %tr.table-active
-            %th{width: "3%", scope: "col"}#
-            - RequestLog::LISTING_ATTRIBUTES.each do |attribute|
-              %th{scope: "col"}
-                = RequestLog.human_attribute_name(attribute)
-            %th{width: "3%", scope: "col"}
-              = t("shared.actions")
-        %tbody.border
+      .table-container
+        .table-header
+          .table-cell.cell-narrow #
+          - RequestLog::LISTING_ATTRIBUTES.each do |attribute|
+            .table-cell
+              = RequestLog.human_attribute_name(attribute)
+          .table-cell.cell-narrow
+            = t("shared.actions")
+        .table-body
           - if @request_logs&.each.with_index(1) do |request_log, index|
             = safe_render.partial("request_logs/request_log", request_log:, index:)
           - end.empty?

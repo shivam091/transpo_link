@@ -1,21 +1,22 @@
-%tr
-  %th{scope: "row"}
+.table-row
+  .table-cell.cell-narrow
     = @pagination_metadata.offset + index
-  %td
-    = check_box_tag "product_ids[]", product.id, false, class: "form-check-input", data: {checkbox_selection_target: "itemCheckbox"}
-  %td
+  .table-cell.cell-narrow
+    = check_box_tag "product_ids[]", product.id, false, id: dom_id(product), class: "form-check-input",
+      data: {checkbox_selection_target: "itemCheckbox"}
+  .table-cell
     = link_to product.reference_code, product_path(product)
-  %td
+  .table-cell
     = product.name
-  %td
+  .table-cell
     = product.sku
-  %td
+  .table-cell
     = product.barcode || "-"
-  %td
+  .table-cell
     = number_to_currency(product.cost_price, unit: product.currency.symbol)
-  %td
+  .table-cell
     = product.product_category_name
-  %td
+  .table-cell.cell-narrow
     = link_to "javascript:void(0)", class: "text-reset", data: {bs_toggle: "dropdown"}, aria: {expanded: false} do
       = sprite_icon("ellipsis-vertical")
     %ul.dropdown-menu

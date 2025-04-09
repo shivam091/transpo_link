@@ -9,19 +9,18 @@
   .card-body{data: {controller: "checkbox-selection"}}
     %p.mb-2{data: {checkbox_selection_target: "selectedCount", label_template: t("shared.selected", count: "%{count}")}}
     .table-responsive
-      %table.table.table-striped.table-borderless
-        %thead.border
-          %tr.table-active
-            %th{width: "3%", scope: "col"}#
-            - if @products.size > 0
-              %th{width: "1%", scope: "col"}
-                = check_box_tag "checkbox", nil, false, class: "form-check-input", data: {checkbox_selection_target: "selectAll"}
-            - Product::LISTING_ATTRIBUTES.each do |attribute|
-              %th{scope: "col"}
-                = Product.human_attribute_name(attribute)
-            %th{width: "3%", scope: "col"}
-              = t("shared.actions")
-        %tbody.border
+      .table-container
+        .table-header
+          .table-cell.cell-narrow #
+          - if @products.size > 0
+            .table-cell.cell-narrow
+              = check_box_tag "checkbox", nil, false, class: "form-check-input", data: {checkbox_selection_target: "selectAll"}
+          - Product::LISTING_ATTRIBUTES.each do |attribute|
+            .table-cell
+              = Product.human_attribute_name(attribute)
+          .table-cell.cell-narrow
+            = t("shared.actions")
+        .table-body
           - if @products&.each.with_index(1) do |product, index|
             = safe_render.partial("products/product", product:, index:)
           - end.empty?

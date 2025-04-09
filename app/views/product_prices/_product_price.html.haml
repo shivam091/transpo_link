@@ -1,10 +1,10 @@
-%tr
-  %th{scope: "row"}
+.table-row
+  .table-cell.cell-narrow
     = index
-  %td
+  .table-cell
     = product_price.warehouse_name
-  %td
+  .table-cell
     = product_price.min_quantity
-    = product.capacity_unit
-  %td
+    = @product.capacity_unit
+  .table-cell
     = number_to_currency(product_price.unit_price, unit: product_price.currency.symbol)

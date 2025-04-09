@@ -8,16 +8,15 @@
         = button_text(:new)
   .card-body
     .table-responsive
-      %table.table.table-striped.table-borderless
-        %thead.border
-          %tr.table-active
-            %th{width: "3%", scope: "col"}#
-            - TaxRate::LISTING_ATTRIBUTES.each do |attribute|
-              %th{scope: "col"}
-                = TaxRate.human_attribute_name(attribute)
-            %th{width: "3%", scope: "col"}
-              = t("shared.actions")
-        %tbody.border
+      .table-container
+        .table-header
+          .table-cell.cell-narrow #
+          - TaxRate::LISTING_ATTRIBUTES.each do |attribute|
+            .table-cell
+              = TaxRate.human_attribute_name(attribute)
+          .table-cell.cell-narrow
+            = t("shared.actions")
+        .table-body
           - if @tax_rates&.each.with_index(1) do |tax_rate, index|
             = safe_render.partial("tax_rates/tax_rate", tax_rate:, index:)
           - end.empty?

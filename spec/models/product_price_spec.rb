@@ -63,7 +63,7 @@ RSpec.describe ProductPrice, type: :model do
   end
 
   describe "delegates" do
-    it { is_expected.to delegate_method(:name).to(:warehouse).with_prefix }
+    it { is_expected.to delegate_method(:name).to(:warehouse).with_prefix.allow_nil }
   end
 
   describe "validations" do

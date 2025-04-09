@@ -1,18 +1,18 @@
-%tr.product-price-form-wrapper{data: {new_record: form.object.new_record?}}
-  %td
+.table-row.product-price-form-wrapper{data: {new_record: form.object.new_record?}}
+  = form.hidden_field :id, value: form.object.id
+  = form.hidden_field :_destroy
+  .table-cell.cell-narrow
     = (form.index + 1) if form.object.persisted?
-    = form.hidden_field :id, value: form.object.id
-    = form.hidden_field :_destroy
-  %td
+  .table-cell.flex-column
     = form.select :warehouse_id, options_for_select(Warehouse.select_options, form.object.warehouse_id),
       {include_blank: t(".select_warehouse")}, {}
-  %td
+  .table-cell.flex-column
     = form.number_field :min_quantity, step: 1
-  %td
+  .table-cell.flex-column
     = form.number_field :unit_price, step: 0.01
-  %td
+  .table-cell.flex-column
     = form.select :currency, options_for_select(TranspoLink::Currency.select_options, form.object.currency),
       {include_blank: t(".select_currency")}
-  %td
+  .table-cell.cell-narrow
     = button_tag type: :button, class: "btn btn-sm btn-danger", data: {action: "click->nested-forms#removeAssociation"} do
       = sprite_icon("trash")

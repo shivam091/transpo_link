@@ -1,18 +1,27 @@
 - accessed_by = request_log.user
-%tr
-  %th{scope: "row"}= @pagination_metadata.offset + index
-  %td= link_to request_log.uuid, request_log_path(request_log)
-  %td= link_to request_log.uri, request_log.uri, target: :_blank
-  %td= request_log.method
-  %td= IPAddr.new(request_log.remote_address, Socket::AF_INET) rescue ""
-  %td= prettify_seconds(request_log.elapsed_time)
-  %td= request_log.status
-  %td= number_to_human_size(request_log.response_size)
-  %td= time_ago_with_tooltip(request_log.created_at)
-  %td
+.table-row
+  .table-cell.cell-narrow
+    = @pagination_metadata.offset + index
+  .table-cell
+    = link_to request_log.uuid, request_log_path(request_log)
+  .table-cell
+    = link_to request_log.uri, request_log.uri, target: :_blank
+  .table-cell
+    = request_log.method
+  .table-cell
+    = IPAddr.new(request_log.remote_address, Socket::AF_INET) rescue ""
+  .table-cell
+    = prettify_seconds(request_log.elapsed_time)
+  .table-cell
+    = request_log.status
+  .table-cell
+    = number_to_human_size(request_log.response_size)
+  .table-cell
+    = time_ago_with_tooltip(request_log.created_at)
+  .table-cell
     - if accessed_by.present?
       = link_to accessed_by&.full_name, user_path(accessed_by), target: :_blank
-  %td
+  .table-cell.cell-narrow
     = link_to "javascript:void(0)", class: "text-reset", data: {bs_toggle: "dropdown"}, aria: {expanded: false} do
       = sprite_icon("ellipsis-vertical")
     %ul.dropdown-menu
