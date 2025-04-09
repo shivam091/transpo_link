@@ -86,6 +86,8 @@ Rails.application.routes.draw do
       patch :approve
       patch :reject
     end
+
+    resources :purchase_order_items, path: "purchase-order-items", only: :index
   end
 
   root to: "dashboards#show"
