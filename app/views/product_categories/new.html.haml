@@ -1,4 +1,4 @@
 = title(t(".title"))
 = render_modal(title: t(".title"), modal_id: "new-product-category") do
   = turbo_frame_tag :new_product_category_form_frame, target: :_top do
-    = render_if_exists("product_categories/form")
+    = safe_render.partial("product_categories/form")

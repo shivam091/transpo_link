@@ -1,7 +1,7 @@
 = title(t(".title"))
 .card.card-primary.border.border-primary
   .card-header
-    = render_if_exists("feedbacks/nav_tabs")
+    = safe_render.partial("feedbacks/nav_tabs")
   .card-body
     .table-responsive
       %table.table.table-striped.table-borderless
@@ -15,9 +15,9 @@
               = t("shared.actions")
         %tbody.border
           - if @feedbacks&.each.with_index(1) do |feedback, index|
-            = render_if_exists("feedbacks/feedback", locals: {feedback:, index:})
+            = safe_render.partial("feedbacks/feedback", feedback:, index:)
           - end.empty?
-            = render_if_exists("shared/no_records", locals: {resource: Feedback})
+            = safe_render.partial("shared/no_records", resource: Feedback)
   - if @pagination_metadata.needs_pagination?
     .card-footer
       = render_pagination(@pagination_metadata)

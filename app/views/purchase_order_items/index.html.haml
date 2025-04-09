@@ -1,0 +1,13 @@
+.table-responsive
+  %table.table.table-striped
+    %thead.border
+      %tr.table-active
+        %th{width: "3%", scope: "col"}#
+        - PurchaseOrderItem::LISTING_ATTRIBUTES.each do |attribute|
+          %th{scope: "col"}
+            = PurchaseOrderItem.human_attribute_name(attribute)
+    %tbody.border
+      - if @purchase_order.purchase_order_items&.each.with_index(1) do |purchase_order_item, index|
+        = safe_render.partial("purchase_order_items/purchase_order_item", purchase_order_item:, index:)
+      - end.empty?
+        = safe_render.partial("shared/no_records", resource: PurchaseOrderItem)

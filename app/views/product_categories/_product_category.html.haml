@@ -9,14 +9,14 @@
     = product_category.products_count
   %td
     = link_to "javascript:void(0)", class: "text-reset", data: {bs_toggle: "dropdown"}, aria: {expanded: false} do
-      = external_svg_tag("svgs/ellipsis-vertical.svg")
+      = sprite_icon("ellipsis-vertical")
     %ul.dropdown-menu
       %li
         = link_to edit_product_category_path(product_category), class: "dropdown-item", data: {turbo_frame: :remote_modal} do
-          = external_svg_tag("svgs/pencil.svg")
+          = sprite_icon("pencil")
           = button_text(:edit)
       %li
         = link_to product_category_path(product_category), class: "dropdown-item",
           data: {turbo_confirm: t(".delete_confirmation_text", name: product_category.name), turbo_method: :delete} do
-          = external_svg_tag("svgs/trash.svg")
+          = sprite_icon("trash")
           = button_text(:delete)

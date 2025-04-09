@@ -15,7 +15,7 @@
               = Inventory.human_attribute_name(:updated_at)
               = time_ago_with_tooltip(@inventory.updated_at)
         = link_to edit_inventory_path(@inventory), class: "btn btn-secondary" do
-          = external_svg_tag("svgs/pencil.svg")
+          = sprite_icon("pencil")
           = button_text(:edit)
       .widget-body
         .widget-row
@@ -49,4 +49,4 @@
             .widget-row-body
               = number_to_currency(@inventory.average_cost_price, unit: @inventory.currency.symbol)
   .card-footer
-    = render_if_exists("shared/navigable_links", locals: {record: @inventory})
+    = safe_render.partial("shared/navigable_links", resource: @inventory)

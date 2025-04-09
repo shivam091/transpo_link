@@ -35,22 +35,6 @@
         unit_conversions: "Unit conversions",
         product_prices: "Product prices",
       },
-      unit_conversions: {
-        form: {
-        },
-        field: {
-          select_source_unit: "Select source unit",
-          select_target_unit: "Select target unit",
-        },
-      },
-      product_prices: {
-        form: {
-        },
-        field: {
-          select_warehouse: "Select warehouse",
-          select_currency: "Select currency",
-        },
-      },
     }
   }
 }

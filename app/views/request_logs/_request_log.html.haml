@@ -14,9 +14,9 @@
       = link_to accessed_by&.full_name, user_path(accessed_by), target: :_blank
   %td
     = link_to "javascript:void(0)", class: "text-reset", data: {bs_toggle: "dropdown"}, aria: {expanded: false} do
-      = external_svg_tag("svgs/ellipsis-vertical.svg")
+      = sprite_icon("ellipsis-vertical")
     %ul.dropdown-menu
       %li
         = link_to request_log_path(request_log), class: "dropdown-item" do
-          = external_svg_tag("svgs/arrow-right.svg")
+          = sprite_icon("arrow-right")
           = button_text(:view_details)

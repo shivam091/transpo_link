@@ -15,7 +15,7 @@
                 = Warehouse.human_attribute_name(:updated_at)
                 = time_ago_with_tooltip(warehouse.updated_at)
           = link_to edit_warehouse_path(warehouse), class: "btn btn-secondary" do
-            = external_svg_tag("svgs/pencil.svg")
+            = sprite_icon("pencil")
             = button_text(:edit)
         .widget-body
           .widget-row
@@ -79,4 +79,4 @@
               .widget-row-body
                 = warehouse.address.persisted? ? warehouse.address.humanize : "-"
     .card-footer
-      = render_if_exists("shared/navigable_links", locals: {record: @warehouse})
+      = safe_render.partial("shared/navigable_links", resource: @warehouse)
