@@ -1,4 +1,4 @@
-= render_if_exists("layouts/application/top_menu") do
+= safe_render.partial("layouts/application/top_menu") do
   %nav.navbar.navbar-expand-lg.divider.bg-body{aria: {label: t(".main_navigation")}}
     .container-fluid
       = link_to root_path, class: "navbar-brand" do
@@ -13,18 +13,18 @@
         %ul.navbar-nav.me-auto
           %li.nav-item
             = link_to root_path, class: class_names("nav-link", "active": current_controller?(:dashboards)) do
-              = external_svg_tag("svgs/dashboard.svg")
+              = sprite_icon("dashboard")
               = t(".dashboard")
           %li.nav-item
             = link_to users_path, class: class_names("nav-link", "active": current_controller?(:users)) do
-              = external_svg_tag("svgs/users.svg")
+              = sprite_icon("users")
               = t(".users")
           %li.nav-item
             = link_to request_logs_path, class: class_names("nav-link", "active": current_controller?(:request_logs)) do
-              = external_svg_tag("svgs/logs.svg")
+              = sprite_icon("logs")
               = t(".request_logs")
         %ul.navbar-nav.d-none.d-lg-flex.ms-2
-          = render_if_exists("layouts/application/menu")
+          = safe_render.partial("layouts/application/menu")
         %ul.navbar-nav.d-lg-none
           %li.nav-item-divider
-          = render_if_exists("layouts/application/menu")
+          = safe_render.partial("layouts/application/menu")

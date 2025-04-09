@@ -9,8 +9,8 @@
       = form.check_box :is_active, autofocus: true
   .actions
     = button_tag type: :submit, class: "btn btn-primary" do
-      = external_svg_tag("svgs/floppy.svg")
+      = sprite_icon("floppy")
       = button_text(:update)
     = link_to roles_path, class: "btn btn-secondary" do
-      = external_svg_tag("svgs/times.svg")
+      = sprite_icon("times")
       = button_text(:cancel)

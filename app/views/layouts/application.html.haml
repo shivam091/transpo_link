@@ -1,13 +1,14 @@
-= render_if_exists("layouts/shared_layout") do
+= safe_render.partial("layouts/shared_layout") do
   %body{data: {bs_theme: current_user.preferred_color_scheme}}
-    = render_if_exists("layouts/application/main_navigation")
-    = render_if_exists("layouts/application/secondary_navigation")
+    = external_svg_tag("sprite.svg")
+    = safe_render.partial("layouts/application/main_navigation")
+    = safe_render.partial("layouts/application/secondary_navigation")
     .clearfix
     %main.container-fluid.my-2
       = turbo_frame_tag :flash_messages_frame do
-        = render_if_exists("shared/flash_messages")
+        = safe_render.partial("shared/flash_messages")
       = render_breadcrumbs
       = yield
     .clearfix
-    = render_if_exists("layouts/application/footer")
+    = safe_render.partial("layouts/application/footer")
     = turbo_frame_tag :remote_modal, target: :_top

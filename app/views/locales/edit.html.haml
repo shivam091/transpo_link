@@ -1,4 +1,4 @@
 = title(t(".title"))
 = render_modal(title: t(".title"), modal_id: "edit-locale") do
   = turbo_frame_tag :edit_locale_form_frame, target: :_top do
-    = render_if_exists("locales/form")
+    = safe_render.partial("locales/form")

@@ -1,0 +1,22 @@
+%div{data: {controller: "nested-forms", nested_forms_wrapper_selector_value: ".unit-conversion-form-wrapper"}}
+  .col-12.text-end.mb-2
+    = button_tag type: :button, class: "btn btn-secondary", data: {action: "click->nested-forms#addAssociation"} do
+      = sprite_icon("plus")
+      = button_text(:add)
+  .table-responsive
+    %table.table.table-striped
+      %thead.border
+        %tr.table-active
+          %th{width: "3%", scope: "col"}#
+          - UnitConversion::LISTING_ATTRIBUTES.each do |attribute|
+            %th{scope: "col"}
+              = UnitConversion.human_attribute_name(attribute)
+          %th{width: "3%", scope: "col"}
+            = t("shared.actions")
+      %tbody.border
+        %template{data: {nested_forms_target: "template"}}
+          = form.fields_for :unit_conversions, form.object.unit_conversions.build, child_index: "NEW_RECORD" do |unit_conversion_form|
+            = safe_render.partial("unit_conversions/form/tabular_field", form: unit_conversion_form)
+        = form.fields_for :unit_conversions do |unit_conversion_form|
+          = safe_render.partial("unit_conversions/form/tabular_field", form: unit_conversion_form)
+        %tr{data: {nested_forms_target: "target"}}

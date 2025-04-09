@@ -1,0 +1,16 @@
+%tr.purchase-order-item-form-wrapper{data: {new_record: form.object.new_record?}}
+  %td
+    = (form.index + 1) if form.object.persisted?
+    = form.hidden_field :id, value: form.object.id
+    = form.hidden_field :_destroy
+  %td
+    = form.select :product_id, options_for_select(Product.select_options, form.object.product_id),
+      {include_blank: t(".select_product")}, {}
+  %td
+    = form.number_field :quantity, step: 0.01
+  %td
+    = form.select :uom, grouped_options_for_select(TranspoLink::MeasurementUnits.select_options, form.object.uom),
+      {include_blank: t(".select_uom")}
+  %td
+    = button_tag type: :button, class: "btn btn-sm btn-danger", data: {action: "click->nested-forms#removeAssociation"} do
+      = sprite_icon("trash")
