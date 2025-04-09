@@ -3,12 +3,12 @@
   = form.hidden_field :_destroy
   .table-cell.cell-narrow
     = (form.index + 1) if form.object.persisted?
-  .table-cell
+  .table-cell.flex-column
     = form.select :product_id, options_for_select(Product.select_options, form.object.product_id),
       {include_blank: t(".select_product")}, {}
-  .table-cell
+  .table-cell.flex-column
     = form.number_field :quantity, step: 0.01
-  .table-cell
+  .table-cell.flex-column
     = form.select :uom, grouped_options_for_select(TranspoLink::MeasurementUnits.select_options, form.object.uom),
       {include_blank: t(".select_uom")}
   .table-cell.cell-narrow

@@ -3,14 +3,14 @@
   = form.hidden_field :_destroy
   .table-cell.cell-narrow
     = (form.index + 1) if form.object.persisted?
-  .table-cell
+  .table-cell.flex-column
     = form.select :warehouse_id, options_for_select(Warehouse.select_options, form.object.warehouse_id),
       {include_blank: t(".select_warehouse")}, {}
-  .table-cell
+  .table-cell.flex-column
     = form.number_field :min_quantity, step: 1
-  .table-cell
+  .table-cell.flex-column
     = form.number_field :unit_price, step: 0.01
-  .table-cell
+  .table-cell.flex-column
     = form.select :currency, options_for_select(TranspoLink::Currency.select_options, form.object.currency),
       {include_blank: t(".select_currency")}
   .table-cell.cell-narrow
