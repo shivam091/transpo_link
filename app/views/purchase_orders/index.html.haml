@@ -15,7 +15,7 @@
               = PurchaseOrder.human_attribute_name(attribute)
           .table-cell.cell-narrow
             = t("shared.actions")
-        .table-body
+        .table-body{data: {controller: "lazy-turbo-frame", lazy_turbo_frame_hidden_class: "d-none"}}
           - if @purchase_orders&.each.with_index(1) do |purchase_order, index|
             = safe_render.partial("purchase_orders/purchase_order", purchase_order:, index:)
           - end.empty?

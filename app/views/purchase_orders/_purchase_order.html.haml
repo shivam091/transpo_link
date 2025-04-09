@@ -17,6 +17,10 @@
   .table-cell
     = enum_l(purchase_order, :status)
   .table-cell.cell-narrow
+    = link_to purchase_order_purchase_order_items_path(purchase_order),
+      data: {turbo_frame: dom_id(purchase_order, :items), action: "lazy-turbo-frame#toggle"} do
+      = sprite_icon("fold-down", data: {lazy_turbo_frame_target: "icon"})
+      = sprite_icon("fold-up", class: "d-none", data: {lazy_turbo_frame_target: "icon"})
     = link_to "javascript:void(0)", class: "text-reset", data: {bs_toggle: "dropdown"}, aria: {expanded: false} do
       = sprite_icon("ellipsis-vertical")
     %ul.dropdown-menu
@@ -57,3 +61,4 @@
           data: {turbo_confirm: t(".delete_confirmation_text", reference_code: purchase_order.reference_code), turbo_method: :delete} do
           = sprite_icon("trash")
           = button_text(:delete)
+= turbo_frame_tag dom_id(purchase_order, :items)
