@@ -18,42 +18,42 @@
     = enum_l(purchase_order, :status)
   %td
     = link_to "javascript:void(0)", class: "text-reset", data: {bs_toggle: "dropdown"}, aria: {expanded: false} do
-      = external_svg_tag("svgs/ellipsis-vertical.svg")
+      = sprite_icon("ellipsis-vertical")
     %ul.dropdown-menu
       - if purchase_order.may_cancel?
         %li
           = link_to cancel_purchase_order_path(purchase_order), class: "dropdown-item",
             data: {turbo_confirm: t(".cancel_confirmation_text", reference_code: purchase_order.reference_code), turbo_method: :patch} do
-            = external_svg_tag("svgs/times.svg")
+            = sprite_icon("times")
             = button_text(:cancel)
       - if purchase_order.may_submit?
         %li
           = link_to submit_purchase_order_path(purchase_order), class: "dropdown-item",
             data: {turbo_confirm: t(".submit_confirmation_text", reference_code: purchase_order.reference_code, supplier_name: supplier.full_name), turbo_method: :patch} do
-            = external_svg_tag("svgs/check.svg")
+            = sprite_icon("check")
             = button_text(:submit)
       - if purchase_order.may_approve?
         %li
           = link_to approve_purchase_order_path(purchase_order), class: "dropdown-item",
             data: {turbo_confirm: t(".approve_confirmation_text", reference_code: purchase_order.reference_code), turbo_method: :patch} do
-            = external_svg_tag("svgs/check.svg")
+            = sprite_icon("check")
             = button_text(:approve)
       - if purchase_order.may_reject?
         %li
           = link_to reject_purchase_order_path(purchase_order), class: "dropdown-item",
             data: {turbo_confirm: t(".reject_confirmation_text", reference_code: purchase_order.reference_code), turbo_method: :patch} do
-            = external_svg_tag("svgs/times.svg")
+            = sprite_icon("times")
             = button_text(:reject)
       %li
         = link_to purchase_order_path(purchase_order), class: "dropdown-item" do
-          = external_svg_tag("svgs/arrow-right.svg")
+          = sprite_icon("arrow-right")
           = button_text(:view_details)
       %li
         = link_to edit_purchase_order_path(purchase_order), class: "dropdown-item" do
-          = external_svg_tag("svgs/pencil.svg")
+          = sprite_icon("pencil")
           = button_text(:edit)
       %li
         = link_to purchase_order_path(purchase_order), class: "dropdown-item",
           data: {turbo_confirm: t(".delete_confirmation_text", reference_code: purchase_order.reference_code), turbo_method: :delete} do
-          = external_svg_tag("svgs/trash.svg")
+          = sprite_icon("trash")
           = button_text(:delete)

@@ -6,23 +6,23 @@
       %h6.dropdown-header.fw-bold= t(".your_account")
     %li
       = link_to profile_path, class: "dropdown-item" do
-        = external_svg_tag("svgs/personalize.svg")
+        = sprite_icon("personalize")
         = t(".your_profile")
     %li
       = link_to preference_path, class: "dropdown-item" do
-        = external_svg_tag("svgs/cog.svg")
+        = sprite_icon("cog")
         = t(".your_preferences")
     %li
       = link_to legal_identifiers_path, class: "dropdown-item" do
-        = external_svg_tag("svgs/check-alt.svg")
+        = sprite_icon("check-alt")
         = t(".your_legal_identifiers")
     %li.dropdown-divider
     %li
       = link_to "javascript:void(0)", class: "dropdown-item" do
-        = external_svg_tag("svgs/keyboard.svg")
+        = sprite_icon("keyboard")
         = t(".keyboard_shortcuts")
     %li.dropdown-divider
     %li
       = link_to destroy_user_session_path, class: "dropdown-item", data: {turbo_method: :delete} do
-        = external_svg_tag("svgs/sign-out.svg")
+        = sprite_icon("sign-out")
         = t(".sign_out")

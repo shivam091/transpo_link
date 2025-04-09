@@ -10,8 +10,8 @@
     = form.text_area :comment, rows: 5
   .modal-actions
     = button_tag type: :submit, class: "btn btn-primary" do
-      = external_svg_tag("svgs/floppy.svg")
+      = sprite_icon("floppy")
       = button_text(:submit)
     = button_tag type: :button, class: "btn btn-secondary", data: {action: "click->remote-modal#hide"} do
-      = external_svg_tag("svgs/times.svg")
+      = sprite_icon("times")
       = button_text(:cancel)

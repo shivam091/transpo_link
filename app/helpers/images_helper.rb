@@ -26,13 +26,4 @@ module ImagesHelper
 
     sanitized_doc.to_html.html_safe
   end
-
-  def inline_svg_tag(symbol_id, options = {})
-    options = DEFAULT_SVG_OPTIONS.merge(options)
-    options[:class] = ["icon", "icon-#{symbol_id}", options[:class]].compact.join(" ")
-
-    icon = content_tag(:use, nil, "xlink:href": "#{image_url('svgs/defs.svg')}#icon-#{symbol_id}")
-
-    content_tag(:svg, icon, options)
-  end
 end

@@ -8,27 +8,27 @@
           .d-inline-block.middle-dot-divider.dropdown
             = link_to "javascript:void(0)", class: "top-menu-link", title: t(".change_color_scheme"),
               aria: {expanded: false}, data: {bs_toggle: "dropdown"} do
-              = external_svg_tag("svgs/background-color-toggle.svg")
+              = sprite_icon("background-color-toggle")
             %ul.dropdown-menu
               %li
                 = link_to "javascript:void(0)", class: class_names("dropdown-item", "dropdown-item-checked": current_user.preferred_color_scheme == "auto") do
-                  = external_svg_tag("svgs/background-color-toggle.svg")
+                  = sprite_icon("background-color-toggle")
                   = enum_i18n(UserPreference, :preferred_color_schemes, :auto)
               %li
                 = link_to "javascript:void(0)", class: class_names("dropdown-item", "dropdown-item-checked": current_user.preferred_color_scheme == "light") do
-                  = external_svg_tag("svgs/sun.svg")
+                  = sprite_icon("sun")
                   = enum_i18n(UserPreference, :preferred_color_schemes, :light)
               %li
                 = link_to "javascript:void(0)", class: class_names("dropdown-item", "dropdown-item-checked": current_user.preferred_color_scheme == "dark") do
-                  = external_svg_tag("svgs/moon.svg")
+                  = sprite_icon("moon")
                   = enum_i18n(UserPreference, :preferred_color_schemes, :dark)
           .d-inline-block.middle-dot-divider
             = link_to "javascript:void(0)", class: "top-menu-link", title: t(".switch_screen_mode")  do
-              = external_svg_tag("svgs/expand.svg")
+              = sprite_icon("expand")
           .d-inline-block.middle-dot-divider
             = link_to "javascript:void(0)", class: "top-menu-link", title: t(".notifications") do
-              = external_svg_tag("svgs/bell.svg", class: "animate-blinking")
+              = sprite_icon("bell", class: "animate-blinking")
           .d-inline-block.middle-dot-divider
             = link_to edit_locale_path, class: "top-menu-link", title: t(".change_language"), data: {turbo_frame: :remote_modal} do
-              = external_svg_tag("svgs/globe.svg")
+              = sprite_icon("globe")
   = yield

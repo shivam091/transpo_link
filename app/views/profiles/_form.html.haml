@@ -11,8 +11,8 @@
     = safe_render.partial("addresses/form_fields", form: address_form)
   .actions
     = button_tag type: :submit, class: "btn btn-primary" do
-      = external_svg_tag("svgs/floppy.svg")
+      = sprite_icon("floppy")
       = button_text(:update)
     = link_to profile_path, class: "btn btn-secondary" do
-      = external_svg_tag("svgs/times.svg")
+      = sprite_icon("times")
       = button_text(:cancel)

@@ -16,13 +16,13 @@
     = number_to_currency(inventory.average_cost_price, unit: inventory.currency.symbol)
   %td
     = link_to "javascript:void(0)", class: "text-reset", data: {bs_toggle: "dropdown"}, aria: {expanded: false} do
-      = external_svg_tag("svgs/ellipsis-vertical.svg")
+      = sprite_icon("ellipsis-vertical")
     %ul.dropdown-menu
       %li
         = link_to inventory_path(inventory), class: "dropdown-item" do
-          = external_svg_tag("svgs/arrow-right.svg")
+          = sprite_icon("arrow-right")
           = button_text(:view_details)
       %li
         = link_to edit_inventory_path(inventory), class: "dropdown-item" do
-          = external_svg_tag("svgs/pencil.svg")
+          = sprite_icon("pencil")
           = button_text(:edit)

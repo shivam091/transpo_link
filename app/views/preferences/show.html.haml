@@ -9,7 +9,7 @@
           .widget-help
             = t(".edit_preferences")
         = link_to edit_preference_path, class: "btn btn-secondary" do
-          = external_svg_tag("svgs/pencil.svg")
+          = sprite_icon("pencil")
           = button_text(:edit)
       .widget-body
         = safe_render.partial("preferences/show", user: @user)
