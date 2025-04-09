@@ -84,6 +84,7 @@ class Product < ApplicationRecord
 
   def reject_product_price?(attributes)
     [
+      attributes[:warehouse_id],
       attributes[:min_quantity],
       attributes[:unit_price],
       attributes[:currency]
