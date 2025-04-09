@@ -317,6 +317,13 @@
               },
             },
           },
+          unit_conversion: {
+            attributes: {
+              from_unit: {
+                uniqueness: "already has conversion for the selected product and target unit"
+              }
+            }
+          },
           feedback: {
             attributes: {
               rating: {

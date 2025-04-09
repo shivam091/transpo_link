@@ -7,7 +7,16 @@ class UnitConversion < ApplicationRecord
 
   LISTING_ATTRIBUTES = %i[from_unit to_unit conversion_rate].freeze
 
-  validates :from_unit, :to_unit,
+  validates :from_unit,
+            presence: true,
+            inclusion: {in: TranspoLink::MeasurementUnits.all_units.map(&:to_s)},
+            uniqueness: {
+              scope: [:product_id, :to_unit],
+              message: :uniqueness,
+              case_sensitive: false
+            },
+            reduce: true
+  validates :to_unit,
             presence: true,
             inclusion: {in: TranspoLink::MeasurementUnits.all_units.map(&:to_s)},
             reduce: true

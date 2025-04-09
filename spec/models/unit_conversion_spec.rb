@@ -7,7 +7,7 @@
 require "spec_helper"
 
 RSpec.describe UnitConversion, type: :model do
-  subject { build(:unit_conversion) }
+  subject { create(:unit_conversion) }
 
   describe "valid factory" do
     it { is_expected.to have_a_valid_factory(:unit_conversion) }
@@ -49,6 +49,7 @@ RSpec.describe UnitConversion, type: :model do
     describe "#from_unit" do
       it { is_expected.to validate_presence_of(:from_unit) }
       it { is_expected.to validate_inclusion_of(:from_unit).in_array(TranspoLink::MeasurementUnits.all_units.map(&:to_s)) }
+      it { is_expected.to validate_uniqueness_of(:from_unit).scoped_to([:product_id, :to_unit]).with_message("already has conversion for the selected product and target unit") }
     end
 
     describe "#to_unit" do
