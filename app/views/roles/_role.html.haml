@@ -1,11 +1,11 @@
-%tr
-  %th{scope: "row"}
+.table-row
+  .table-cell.cell-narrow
     = index
-  %td
+  .table-cell
     = link_to role.name, role_path(role)
-  %td
+  .table-cell
     = humanize_boolean(role.is_active)
-  %td
+  .table-cell.cell-narrow
     = link_to "javascript:void(0)", class: "text-reset", data: {bs_toggle: "dropdown"}, aria: {expanded: false} do
       = external_svg_tag("svgs/ellipsis-vertical.svg")
     %ul.dropdown-menu

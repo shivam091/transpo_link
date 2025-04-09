@@ -1,14 +1,14 @@
 - product = purchase_order_item.product
-%tr
-  %th{scope: "row"}
+.table-row
+  .table-cell.cell-narrow
     = index
-  %td
+  .table-cell
     = link_to product.name, product_path(product), target: :_blank
-  %td
+  .table-cell
     = number_to_measurement_unit(purchase_order_item.quantity, purchase_order_item.uom)
-  %td
+  .table-cell
     = number_to_currency(purchase_order_item.unit_cost, unit: purchase_order_item.currency.symbol)
-  %td
+  .table-cell
     = number_to_currency(purchase_order_item.total_cost, unit: purchase_order_item.currency.symbol)
-  %td
+  .table-cell
     = enum_l(purchase_order_item, :status)

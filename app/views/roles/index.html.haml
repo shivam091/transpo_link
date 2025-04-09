@@ -2,16 +2,15 @@
 .card.card-primary.border.border-primary
   .card-body
     .table-responsive
-      %table.table.table-striped.table-borderless
-        %thead.border
-          %tr.table-active
-            %th{width: "3%", scope: "col"}#
-            - Role::LISTING_ATTRIBUTES.each do |attribute|
-              %th{scope: "col"}
-                = Role.human_attribute_name(attribute)
-            %th{width: "3%", scope: "col"}
-              = t("shared.actions")
-        %tbody.border
+      .table-container
+        .table-header
+          .table-cell.cell-narrow #
+          - Role::LISTING_ATTRIBUTES.each do |attribute|
+            .table-cell
+              = Role.human_attribute_name(attribute)
+          .table-cell.cell-narrow
+            = t("shared.actions")
+        .table-body
           - if @roles&.each.with_index(1) do |role, index|
             = safe_render.partial("roles/role", role:, index:)
           - end.empty?

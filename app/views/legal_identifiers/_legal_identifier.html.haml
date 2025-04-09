@@ -1,19 +1,19 @@
-%tr
-  %th{scope: "row"}
+.table-row
+  .table-cell.cell-narrow
     = @pagination_metadata.offset + index
-  %td
+  .table-cell
     = TranspoLink::CountryInfo.new(legal_identifier.country).country_name
-  %td
+  .table-cell
     = enum_l(legal_identifier, :entity_type)
-  %td
+  .table-cell
     = enum_l(legal_identifier, :tax_identifier_type)
-  %td
+  .table-cell
     = legal_identifier.tax_identifier
-  %td
+  .table-cell
     = enum_l(legal_identifier, :business_identifier_type) || "-"
-  %td
+  .table-cell
     = legal_identifier.business_identifier || "-"
-  %td
+  .table-cell.cell-narrow
     = link_to "javascript:void(0)", class: "text-reset", data: {bs_toggle: "dropdown"}, aria: {expanded: false} do
       = external_svg_tag("svgs/ellipsis-vertical.svg")
     %ul.dropdown-menu

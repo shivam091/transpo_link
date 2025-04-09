@@ -1,14 +1,14 @@
-%tr.unit-conversion-form-wrapper{data: {new_record: form.object.new_record?}}
-  %td
+.table-row.unit-conversion-form-wrapper{data: {new_record: form.object.new_record?}}
+  .table-cell.cell-narrow
     = (form.index + 1) if form.object.persisted?
     = form.hidden_field :id, value: form.object.id
     = form.hidden_field :_destroy
-  %td
+  .table-cell
     = form.measurement_unit_select :from_unit, {include_blank: t(".select_source_unit")}, {}
-  %td
+  .table-cell
     = form.measurement_unit_select :to_unit, {include_blank: t(".select_target_unit")}, {}
-  %td
+  .table-cell
     = form.number_field :conversion_rate, step: 0.0001
-  %td
+  .table-cell.cell-narrow
     = button_tag type: :button, class: "btn btn-sm btn-danger", data: {action: "click->nested-forms#removeAssociation"} do
       = external_svg_tag("svgs/trash.svg")
