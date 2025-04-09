@@ -57,8 +57,8 @@ module ApplicationHelper
 
   def secret_reveal_button
     tag.button(type: :button, class: "btn-secret-reveal", data: {action: "click->secret-reveal#toggle"}) do
-      concat(external_svg_tag("svgs/eye-visible.svg", data: {secret_reveal_target: "icon"}))
-      concat(external_svg_tag("svgs/eye-hidden.svg", class: "d-none", data: {secret_reveal_target: "icon"}))
+      concat(sprite_icon("eye-visible", data: {secret_reveal_target: "icon"}))
+      concat(sprite_icon("eye-hidden", class: "d-none", data: {secret_reveal_target: "icon"}))
     end
   end
 

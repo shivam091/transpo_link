@@ -1,9 +1,9 @@
 #current-date-time{data: {controller: "live-clock", live_clock_user_time_zone_value: Time.zone.tzinfo.name}}
   .date.middle-dot-divider
-    = external_svg_tag("svgs/calendar.svg")
+    = sprite_icon("calendar")
     %span{data: {live_clock_target: "date"}}
       = Date.current.strftime("%a, %B %-d, %Y")
   .time.middle-dot-divider
-    = external_svg_tag("svgs/clock.svg")
+    = sprite_icon("clock")
     %span{data: {live_clock_target: "time"}}
       = Time.zone.now.strftime("%T")

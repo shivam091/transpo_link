@@ -1,5 +1,6 @@
 = safe_render.partial("layouts/shared_layout") do
   %body{data: {bs_theme: current_user.preferred_color_scheme}}
+    = external_svg_tag("sprite.svg")
     = safe_render.partial("layouts/application/main_navigation")
     = safe_render.partial("layouts/application/secondary_navigation")
     .clearfix

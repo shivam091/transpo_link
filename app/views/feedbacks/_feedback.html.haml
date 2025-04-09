@@ -21,15 +21,15 @@
       = word_wrap(feedback.comment, wrap_length: 120)
   .table-cell.cell-narrow
     = link_to "javascript:void(0)", class: "text-reset", data: {bs_toggle: "dropdown"}, aria: {expanded: false} do
-      = external_svg_tag("svgs/ellipsis-vertical.svg")
+      = sprite_icon("ellipsis-vertical")
     %ul.dropdown-menu
       %li
         = link_to feedback_path(feedback), class: "dropdown-item" do
-          = external_svg_tag("svgs/arrow-right.svg")
+          = sprite_icon("arrow-right")
           = button_text(:view_details)
       - if feedback.is_unread?
         %li
           = link_to mark_as_read_feedback_path(feedback), class: "dropdown-item",
             data: {turbo_method: :patch, turbo_confirm: t(".mark_as_read_confirmation_text", reference_code: feedback.reference_code)} do
-            = external_svg_tag("svgs/check-circle.svg")
+            = sprite_icon("check-circle")
             = button_text(:mark_as_read)
