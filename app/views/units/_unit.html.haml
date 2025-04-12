@@ -1,0 +1,7 @@
+.table-row
+  .table-cell.cell-narrow
+    = @pagination_metadata.offset + index
+  .table-cell
+    = unit.symbol
+  .table-cell
+    = enum_l(unit, :category)

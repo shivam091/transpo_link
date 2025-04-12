@@ -1,0 +1,18 @@
+= title(t(".title"))
+.card.card-primary.border.border-primary
+  .card-body
+    .table-responsive
+      .table-container
+        .table-header
+          .table-cell.cell-narrow #
+          - Unit::LISTING_ATTRIBUTES.each do |attribute|
+            .table-cell
+              = Unit.human_attribute_name(attribute)
+        .table-body
+          - if @units&.each.with_index(1) do |unit, index|
+            = safe_render.partial("units/unit", unit:, index:)
+          - end.empty?
+            = safe_render.partial("shared/no_records", resource: Unit)
+  - if @pagination_metadata.needs_pagination?
+    .card-footer
+      = render_pagination(@pagination_metadata)

@@ -3,7 +3,9 @@
 # -*- warn_indent: true -*-
 
 class Unit < ApplicationRecord
-  include Sanitizable
+  include Pageable, Sanitizable
+
+  LISTING_ATTRIBUTES = %i[symbol category].freeze
 
   enum :category, {
     count: "count",
