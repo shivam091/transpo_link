@@ -10,7 +10,7 @@
         },
         tabular_field: {
           select_product: "Select product",
-          select_uom: "Select unit of measure",
+          select_unit_of_measure: "Select unit of measure",
         }
       },
     }

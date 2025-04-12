@@ -12,7 +12,7 @@
         .table-cell.required{scope: "col"}
           = PurchaseOrderItem.human_attribute_name(:quantity)
         .table-cell.required{scope: "col"}
-          = PurchaseOrderItem.human_attribute_name(:uom)
+          = PurchaseOrderItem.human_attribute_name(:unit_id)
         .table-cell.cell-narrow
           = t("shared.actions")
       .table-body

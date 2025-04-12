@@ -9,6 +9,9 @@ namespace :transpo_link do
     desc "Seeds the database with default data"
     task seed: :environment do
       begin
+        Rake::Task["transpo_link:db:add_unit_conversions"].invoke
+
+        puts "↳ Database seeding completed"
       rescue Exception => e
         raise "↳ Database seeding is aborted due to internal errors!"
       end

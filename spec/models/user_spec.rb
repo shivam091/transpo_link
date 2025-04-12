@@ -72,6 +72,10 @@ RSpec.describe User, type: :model do
   describe "default values" do
     let(:user) { described_class.new }
 
+    it "should set false as default value for #is_active" do
+      expect(user.is_active).to be_falsy
+    end
+
     it "should set false as default value for #is_banned" do
       expect(user.is_banned).to be_falsy
     end

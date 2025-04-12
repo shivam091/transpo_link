@@ -7,13 +7,13 @@
 require "spec_helper"
 
 RSpec.describe "Feedbacks", type: :request do
-  let(:product) { create(:product) }
-
-  let!(:unread_feedback) { create(:feedback) }
-  let!(:read_feedback) { create(:feedback, :read) }
-
+  let(:unit) { create(:acre_unit) }
+  let(:reviewable) { create(:product, unit:) }
   let(:valid_attributes) { attributes_for(:feedback, rating: 0.5) }
   let(:invalid_attributes) { attributes_for(:feedback, rating: nil) }
+
+  let!(:unread_feedback) { create(:feedback, reviewable:) }
+  let!(:read_feedback) { create(:feedback, :read, reviewable:) }
 
   include_context "sign in as admin"
 
@@ -47,7 +47,7 @@ RSpec.describe "Feedbacks", type: :request do
   end
 
   describe "GET /feedbacks/new" do
-    before { get new_product_feedback_path(product) }
+    before { get new_product_feedback_path(reviewable) }
 
     include_examples "initializes a new instance", :feedback, Feedback
   end
@@ -55,7 +55,7 @@ RSpec.describe "Feedbacks", type: :request do
   describe "POST /feedbacks" do
     context "when provided attributes are valid" do
       it "creates the feedback and redirects" do
-        post product_feedbacks_path(product), params: {feedback: valid_attributes}, headers: {"HTTP_REFERER" => root_path}, as: :turbo_stream
+        post product_feedbacks_path(reviewable), params: {feedback: valid_attributes}, headers: {"HTTP_REFERER" => root_path}, as: :turbo_stream
 
         expect(response).to redirect_to(root_path)
         expect(flash[:notice]).to eq("Your feedback helps us improve. Thanks for being a part of our community!")
@@ -65,7 +65,7 @@ RSpec.describe "Feedbacks", type: :request do
 
     context "when provided attributes are invalid" do
       it "does not create the feedback and renders errors" do
-        post product_feedbacks_path(product), params: {feedback: invalid_attributes}, as: :turbo_stream
+        post product_feedbacks_path(reviewable), params: {feedback: invalid_attributes}, as: :turbo_stream
 
         expect(flash[:alert]).to eq("We encountered a problem submitting your feedback. Please try again.")
         expect(response.media_type).to eq(Mime[:turbo_stream])

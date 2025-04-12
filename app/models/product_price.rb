@@ -7,9 +7,6 @@ class ProductPrice < ApplicationRecord
 
   LISTING_ATTRIBUTES = %i[warehouse_id min_quantity unit_price].freeze
 
-  attribute :min_quantity, default: 1.0
-  attribute :unit_price, default: 0.0
-
   validates :min_quantity,
             presence: true,
             numericality: {greater_than: 0.0},

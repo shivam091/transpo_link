@@ -41,7 +41,7 @@
             .widget-row-title
               = Inventory.human_attribute_name(:low_stock_threshold)
             .widget-row-body
-              = number_to_measurement_unit(@inventory.low_stock_threshold, @inventory.inventory_unit)
+              = number_to_measurement_unit(@inventory.low_stock_threshold, @inventory.unit_symbol)
         .widget-row
           .widget-row-content
             .widget-row-title

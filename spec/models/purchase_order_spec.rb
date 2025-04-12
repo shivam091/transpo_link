@@ -65,7 +65,7 @@ RSpec.describe PurchaseOrder, type: :model do
   describe "default values" do
     let(:purchase_order) { described_class.new }
 
-    it "should set 'draft' as default value for #status" do
+    it "should set draft as default value for #status" do
       expect(purchase_order.status).to eq("draft")
     end
   end
@@ -154,19 +154,22 @@ RSpec.describe PurchaseOrder, type: :model do
     end
 
     describe "#reject_purchase_order_item?" do
-      let!(:purchase_order_item) { create(:purchase_order_item, purchase_order: purchase_order) }
+      let(:unit) { create(:gramme_unit) }
+      let(:product) { create(:product, unit: unit) }
+
+      let!(:purchase_order_item) { create(:purchase_order_item, product:, purchase_order:) }
 
       context "when creating purchase order items" do
         context "when valid attributes are provided" do
-          let!(:product) { create(:product) }
+          let!(:another_product) { create(:product, unit: unit) }
 
           it "creates a purchase order item" do
             expect {
                 purchase_order.update(purchase_order_items_attributes: {
                   0 => {
-                    product_id: product.id,
+                    product_id: another_product.id,
                     quantity: 92,
-                    uom: "mg",
+                    unit_id: unit.id,
                     unit_cost: 100,
                     currency: "INR"
                   }
@@ -181,7 +184,7 @@ RSpec.describe PurchaseOrder, type: :model do
               purchase_order.update(purchase_order_items_attributes: {
                 0 => {
                   quantity: 0.0,
-                  uom: "",
+                  unit_id: "",
                   unit_cost: "",
                   currency: ""
                 }

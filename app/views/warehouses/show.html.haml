@@ -1,82 +1,81 @@
-- present(@warehouse) do |warehouse|
-  = title(warehouse.reference_code)
-  .card.card-primary.border.border-primary
-    .card-body
-      .widget
-        .widget-header.d-flex.align-items-center.justify-content-between
-          .d-block
-            .widget-title
-              = warehouse.reference_code
-            .widget-help
-              %span.middle-dot-divider
-                = Warehouse.human_attribute_name(:created_at)
-                = time_ago_with_tooltip(warehouse.created_at)
-              %span.middle-dot-divider
-                = Warehouse.human_attribute_name(:updated_at)
-                = time_ago_with_tooltip(warehouse.updated_at)
-          = link_to edit_warehouse_path(warehouse), class: "btn btn-secondary" do
-            = sprite_icon("pencil")
-            = button_text(:edit)
-        .widget-body
-          .widget-row
-            .widget-row-content
-              .widget-row-title
-                = Warehouse.human_attribute_name(:name)
-              .widget-row-body
-                = warehouse.name
-          .widget-row
-            .widget-row-content
-              .widget-row-title
-                = Warehouse.human_attribute_name(:email_address)
-              .widget-row-body
-                = warehouse.email_address.present? ? mail_to(warehouse.email_address) : "-"
-          .widget-row
-            .widget-row-content
-              .widget-row-title
-                = Warehouse.human_attribute_name(:contact_number)
-              .widget-row-body
-                = warehouse.contact_number || "-"
-          .widget-row
-            .widget-row-content
-              .widget-row-title
-                = Warehouse.human_attribute_name(:description)
-              .widget-row-body
-                = warehouse.description || "-"
-          .widget-row
-            .widget-row-content
-              .widget-row-title
-                = Warehouse.human_attribute_name(:manager_ids)
-              .widget-row-body
-                = warehouse.managers.includes(:user_detail).map { |manager| link_to(manager.full_name, user_path(manager)) }.join(", ").html_safe
-          .widget-row
-            .widget-row-content
-              .widget-row-title
-                = Warehouse.human_attribute_name(:supplier_ids)
-              .widget-row-body
-                = warehouse.suppliers.includes(:user_detail).map { |supplier| link_to(supplier.full_name, user_path(supplier)) }.join(", ").html_safe
-          .widget-row
-            .widget-row-content
-              .widget-row-title
-                = Warehouse.human_attribute_name(:capacity)
-              .widget-row-body
-                = number_to_measurement_unit(warehouse.total_capacity, warehouse.capacity_unit)
-          .widget-row
-            .widget-row-content
-              .widget-row-title
-                = Warehouse.human_attribute_name(:latitude)
-              .widget-row-body
-                = warehouse.formatted_latitude || "-"
-          .widget-row
-            .widget-row-content
-              .widget-row-title
-                = Warehouse.human_attribute_name(:longitude)
-              .widget-row-body
-                = warehouse.formatted_longitude || "-"
-          .widget-row
-            .widget-row-content
-              .widget-row-title
-                = Warehouse.human_attribute_name(:address)
-              .widget-row-body
-                = warehouse.address.persisted? ? warehouse.address.humanize : "-"
-    .card-footer
-      = safe_render.partial("shared/navigable_links", resource: @warehouse)
+= title(@warehouse.reference_code)
+.card.card-primary.border.border-primary
+  .card-body
+    .widget
+      .widget-header.d-flex.align-items-center.justify-content-between
+        .d-block
+          .widget-title
+            = @warehouse.reference_code
+          .widget-help
+            %span.middle-dot-divider
+              = Warehouse.human_attribute_name(:created_at)
+              = time_ago_with_tooltip(@warehouse.created_at)
+            %span.middle-dot-divider
+              = Warehouse.human_attribute_name(:updated_at)
+              = time_ago_with_tooltip(@warehouse.updated_at)
+        = link_to edit_warehouse_path(@warehouse), class: "btn btn-secondary" do
+          = sprite_icon("pencil")
+          = button_text(:edit)
+      .widget-body
+        .widget-row
+          .widget-row-content
+            .widget-row-title
+              = Warehouse.human_attribute_name(:name)
+            .widget-row-body
+              = @warehouse.name
+        .widget-row
+          .widget-row-content
+            .widget-row-title
+              = Warehouse.human_attribute_name(:email_address)
+            .widget-row-body
+              = @warehouse.email_address.present? ? mail_to(@warehouse.email_address) : "-"
+        .widget-row
+          .widget-row-content
+            .widget-row-title
+              = Warehouse.human_attribute_name(:contact_number)
+            .widget-row-body
+              = @warehouse.contact_number || "-"
+        .widget-row
+          .widget-row-content
+            .widget-row-title
+              = Warehouse.human_attribute_name(:description)
+            .widget-row-body
+              = @warehouse.description || "-"
+        .widget-row
+          .widget-row-content
+            .widget-row-title
+              = Warehouse.human_attribute_name(:manager_ids)
+            .widget-row-body
+              = @warehouse.managers.includes(:user_detail).map { |manager| link_to(manager.full_name, user_path(manager)) }.join(", ")
+        .widget-row
+          .widget-row-content
+            .widget-row-title
+              = Warehouse.human_attribute_name(:supplier_ids)
+            .widget-row-body
+              = @warehouse.suppliers.includes(:user_detail).map { |supplier| link_to(supplier.full_name, user_path(supplier)) }.join(", ")
+        .widget-row
+          .widget-row-content
+            .widget-row-title
+              = Warehouse.human_attribute_name(:capacity)
+            .widget-row-body
+              = number_to_measurement_unit(@warehouse.total_capacity, @warehouse.unit_symbol)
+        .widget-row
+          .widget-row-content
+            .widget-row-title
+              = Warehouse.human_attribute_name(:latitude)
+            .widget-row-body
+              = number_to_angle(@warehouse.latitude) || "-"
+        .widget-row
+          .widget-row-content
+            .widget-row-title
+              = Warehouse.human_attribute_name(:longitude)
+            .widget-row-body
+              = number_to_angle(@warehouse.longitude) || "-"
+        .widget-row
+          .widget-row-content
+            .widget-row-title
+              = Warehouse.human_attribute_name(:address)
+            .widget-row-body
+              = @warehouse.address.persisted? ? @warehouse.address.humanize : "-"
+  .card-footer
+    = safe_render.partial("shared/navigable_links", resource: @warehouse)

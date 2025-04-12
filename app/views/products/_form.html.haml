@@ -3,9 +3,6 @@
     = t(".basic_details")
   = safe_render.partial("products/basic_details_fields", form:)
   .subheader
-    = t(".unit_conversions")
-  = safe_render.partial("unit_conversions/form/tabular_view", form:)
-  .subheader
     = t(".product_prices")
   = safe_render.partial("product_prices/form/tabular_view", form:)
   .actions

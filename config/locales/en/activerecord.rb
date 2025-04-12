@@ -83,6 +83,15 @@
           country: "Country or region",
           postal_code: "Postal code, postcode, or PIN code",
         },
+        unit: {
+          category: "Category",
+          symbol: "Symbol",
+        },
+        unit_conversion: {
+          source_unit_id: "Source unit",
+          target_unit_id: "Target unit",
+          multiplier: "Multiplier",
+        },
         warehouse: {
           name: "Name",
           reference_code: "Reference code",
@@ -90,7 +99,7 @@
           contact_number: "Contact number",
           description: "Description",
           total_capacity: "Total capacity",
-          capacity_unit: "Capacity unit",
+          unit_id: "Capacity unit",
           capacity: "Capacity",
           latitude: "Latitude",
           longitude: "Longitude",
@@ -149,18 +158,13 @@
           description: "Description",
           barcode: "Barcode",
           min_stock_threshold: "Min. stock threshold",
-          capacity_unit: "Capacity unit",
+          unit_id: "Measurement unit",
           currency: "Currency",
           cost_price: "Cost price",
           product_category_id: "Product category",
           is_active: "Is active",
           created_at: "Created at",
           updated_at: "Updated at",
-        },
-        unit_conversion: {
-          from_unit: "Source unit",
-          to_unit: "Target unit",
-          conversion_rate: "Conversion rate",
         },
         product_price: {
           warehouse_id: "Warehouse",
@@ -173,7 +177,7 @@
           product_id: "Product",
           warehouse_id: "Warehouse",
           tracking_method: "Tracking method",
-          inventory_unit: "Inventory unit",
+          unit_id: "Inventory unit",
           average_cost_price: "Average cost price",
           currency: "Currency",
           low_stock_threshold: "Low stock threshold",
@@ -185,7 +189,7 @@
           batch_number: "Batch number",
           expiration_date: "Expiration date",
           quantity: "Quantity",
-          inventory_unit: "Inventory unit",
+          unit_id: "Inventory unit",
           cost_price: "Cost price",
           currency: "Currency",
           created_at: "Created at",
@@ -195,7 +199,7 @@
           inventory_id: "Inventory",
           quantity: "Quantity",
           movement_type: "Movement type",
-          inventory_unit: "Inventory unit",
+          unit_id: "Inventory unit",
           unit_cost: "Unit cost",
           total_cost: "Total cost",
           currency: "Currency",
@@ -241,7 +245,7 @@
           product_id: "Product",
           quantity: "Quantity",
           received_quantity: "Received quantity",
-          uom: "Unit of measure",
+          unit_id: "Unit of measure",
           unit_cost: "Unit cost",
           total_cost: "Total cost",
           currency: "Currency",
@@ -312,10 +316,25 @@
           },
           product: {
             attributes: {
-              capacity_unit: {
-                inclusion: "%{value} is not a valid unit",
-              },
             },
+          },
+          unit: {
+            attributes: {
+              symbol: {
+                uniqueness: "already exists for the selected category"
+              },
+            }
+          },
+          unit_conversion: {
+            attributes: {
+              source_unit_id: {
+                uniqueness: "already has conversion for the selected target unit"
+              },
+              target_unit_id: {
+                same_as_source_unit: "must be different from source unit",
+                category_mismatch: "must belong to the same category as source unit"
+              },
+            }
           },
           feedback: {
             attributes: {
@@ -329,7 +348,7 @@
               product_id: {
                 uniqueness: "already has inventory for the selected warehouse",
               },
-              inventory_unit: {
+              unit_id: {
                 inclusion: "is not valid for the selected product"
               }
             }

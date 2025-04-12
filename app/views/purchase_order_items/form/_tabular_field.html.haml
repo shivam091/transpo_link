@@ -9,8 +9,7 @@
   .table-cell.flex-column
     = form.number_field :quantity, step: 0.01
   .table-cell.flex-column
-    = form.select :uom, grouped_options_for_select(TranspoLink::MeasurementUnits.select_options, form.object.uom),
-      {include_blank: t(".select_uom")}
+    = form.measurement_unit_select :unit_id, {include_blank: t(".select_unit_of_measure")}, {}
   .table-cell.cell-narrow
     = button_tag type: :button, class: "btn btn-sm btn-danger", data: {action: "click->nested-forms#removeAssociation"} do
       = sprite_icon("trash")

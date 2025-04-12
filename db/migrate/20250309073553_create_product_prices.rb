@@ -24,8 +24,8 @@ class CreateProductPrices < ActiveRecord::Migration[8.0]
                    },
                    null: true,
                    index: {using: :btree}
-      t.decimal :min_quantity, precision: 12, scale: 2, default: 1.0  # Minimum quantity for this price tier
-      t.decimal :unit_price, precision: 12, scale: 2, default: 0.0  # Price per unit for this tier
+      t.decimal :min_quantity, precision: 12, scale: 2  # Minimum quantity for this price tier
+      t.decimal :unit_price, precision: 12, scale: 2  # Price per unit for this tier
       t.string :currency
       t.timestamps_with_timezone null: false
 

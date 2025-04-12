@@ -16,16 +16,16 @@
   = form.text_area :description, rows: 5
 .col-sm-12.col-md-6.col-lg-4
   = form.label :total_capacity, class: "form-label required"
-  = form.number_field :total_capacity, step: 0.01
+  = form.number_field :total_capacity, step: 0.0001
 .col-sm-12.col-md-6.col-lg-4
-  = form.label :capacity_unit, class: "form-label required"
-  = form.measurement_unit_select :capacity_unit, {include_blank: t(".select_capacity_unit")}, {}
+  = form.label :unit_id, class: "form-label required"
+  = form.measurement_unit_select :unit_id, {include_blank: t(".select_capacity_unit")}, {}
 .col-sm-12.col-md-6.col-lg-4
   = form.label :latitude, class: "form-label"
-  = form.number_field :latitude, step: 0.00000001
+  = form.number_field :latitude, step: 0.0000000000001
 .col-sm-12.col-md-6.col-lg-4
   = form.label :longitude, class: "form-label"
-  = form.number_field :longitude, step: 0.00000001
+  = form.number_field :longitude, step: 0.000000000001
 .col-sm-12.col-md-6.col-lg-4
   = form.label :manager_ids, class: "form-label required"
   = form.select :manager_ids, options_for_select(User.managers.select_options, form.object.manager_ids),

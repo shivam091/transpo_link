@@ -19,13 +19,10 @@ class Inventory < ApplicationRecord
   attribute :average_cost_price, default: 0.0
   attribute :tracking_method, :enum, default: tracking_methods[:average_cost]
 
-  validates :warehouse_id, presence: true, reduce: true
+  validates :warehouse_id, :unit_id, presence: true, reduce: true
   validates :product_id,
             presence: true,
             uniqueness: {scope: :warehouse_id, message: :uniqueness},
-            reduce: true
-  validates :inventory_unit,
-            presence: true,
             reduce: true
   validates :tracking_method,
             presence: true,
@@ -40,7 +37,7 @@ class Inventory < ApplicationRecord
             numericality: {greater_than_or_equal_to: 0.0},
             reduce: true
 
-  validate :inventory_unit_is_in_valid_category
+  validate :unit_is_in_valid_category
 
   has_one :stock, inverse_of: :inventory, dependent: :destroy
   has_one :replenishment, inverse_of: :inventory, dependent: :destroy
@@ -51,9 +48,11 @@ class Inventory < ApplicationRecord
 
   belongs_to :warehouse, inverse_of: :inventories
   belongs_to :product, inverse_of: :inventories, touch: true
+  belongs_to :unit, inverse_of: :inventories
 
   delegate :quantity_in_hand, :quantity_pending_to_buyer, to: :stock
   delegate :quantity_pending_from_supplier, to: :replenishment
+  delegate :symbol, to: :unit, prefix: true
 
   def key_associations
     [product, warehouse]
@@ -61,14 +60,13 @@ class Inventory < ApplicationRecord
 
   private
 
-  def inventory_unit_is_in_valid_category
-    return unless product.present? && inventory_unit.present?
+  def unit_is_in_valid_category
+    return unless product.present? && unit.present?
 
-    category = TranspoLink::MeasurementUnits.category_for_unit(product.capacity_unit)
-    allowed_units = TranspoLink::MeasurementUnits.units_for(category).map(&:to_s)
+    allowed_units = Unit.for_category(product.unit_category).map(&:symbol)
 
-    if allowed_units.blank? || !allowed_units.include?(inventory_unit)
-      errors.add(:inventory_unit, :inclusion)
+    if allowed_units.blank? || !allowed_units.include?(unit_symbol)
+      errors.add(:unit_id, :inclusion)
     end
   end
 end

@@ -9,12 +9,17 @@ require "spec_helper"
 RSpec.describe "Warehouses", type: :request do
   let(:manager) { create(:manager) }
   let(:supplier) { create(:supplier) }
+  let(:unit) { create(:item_unit) }
 
-  let!(:active_warehouse) { create(:warehouse, :active) }
-  let!(:inactive_warehouse) { create(:warehouse) }
+  let!(:active_warehouse) { create(:warehouse, :active, unit:) }
+  let!(:inactive_warehouse) { create(:warehouse, unit:) }
 
   let(:valid_attributes) do
-    attributes_for(:warehouse, name: "New warehouse").merge(manager_ids: [manager.id], supplier_ids: [supplier.id])
+    attributes_for(:warehouse, name: "New warehouse").merge(
+      manager_ids: [manager.id],
+      supplier_ids: [supplier.id],
+      unit_id: unit.id
+    )
   end
   let(:invalid_attributes) { attributes_for(:warehouse, name: "") }
 
