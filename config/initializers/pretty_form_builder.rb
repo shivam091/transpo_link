@@ -64,9 +64,9 @@ class PrettyFormBuilder < ActionView::Helpers::FormBuilder
 
     units = Unit.select_options(category).map do |category, units|
       [
-        ::I18n.t(category, scope: "measurement_units.categories"),
+        I18n.t(category, scope: "measurement_units.categories"),
         units.map do |unit|
-          [::I18n.t(unit.symbol, scope: "measurement_units.sub_categories"), unit.id]
+          [I18n.t(unit.symbol, scope: "measurement_units.sub_categories"), unit.id]
         end
       ]
     end.to_h

@@ -13,7 +13,7 @@ Rails.application.configure do
       Bullet.console              = true
       Bullet.rails_logger         = true
       Bullet.add_footer           = true
-      Bullet.raise                = Rails.env.development?
+      Bullet.raise                = false
       Bullet.counter_cache_enable = true
     end
   end
