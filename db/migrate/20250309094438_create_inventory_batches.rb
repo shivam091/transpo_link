@@ -16,7 +16,7 @@ class CreateInventoryBatches < ActiveRecord::Migration[8.0]
                    index: {using: :btree}
       t.string :batch_number
       t.date :expiration_date # Useful for perishable products
-      t.decimal :quantity, precision: 12, scale: 2, default: 0.0 # quantity in this batch
+      t.decimal :quantity, precision: 12, scale: 2 # quantity in this batch
       t.references :unit,
                    type: :uuid,
                    foreign_key: {
@@ -26,7 +26,7 @@ class CreateInventoryBatches < ActiveRecord::Migration[8.0]
                    },
                    null: false,
                    index: {using: :btree} # Unit used in this batch
-      t.decimal :cost_price, precision: 12, scale: 2, default: 0.0 # Cost per unit
+      t.decimal :cost_price, precision: 12, scale: 2 # Cost per unit
       t.string :currency # Currency from the purchase order
       t.timestamps_with_timezone null: false
 

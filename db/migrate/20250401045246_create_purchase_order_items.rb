@@ -25,7 +25,7 @@ class CreatePurchaseOrderItems < ActiveRecord::Migration[8.0]
                    },
                    null: false,
                    index: {using: :btree}
-      t.decimal :quantity, precision: 12, scale: 2, default: 0.0, index: {using: :btree}
+      t.decimal :quantity, precision: 12, scale: 2, index: {using: :btree}
       t.decimal :received_quantity, precision: 12, scale: 2, default: 0.0, index: {using: :btree}
       t.references :unit,
                    type: :uuid,
@@ -36,7 +36,7 @@ class CreatePurchaseOrderItems < ActiveRecord::Migration[8.0]
                    },
                    null: false,
                    index: {using: :btree}
-      t.decimal :unit_cost, precision: 12, scale: 2, default: 0.0
+      t.decimal :unit_cost, precision: 12, scale: 2
       t.decimal :total_cost, precision: 12, scale: 2, as: "quantity * unit_cost", stored: true
       t.string :currency
       t.enum :status, enum_type: :purchase_order_item_statuses

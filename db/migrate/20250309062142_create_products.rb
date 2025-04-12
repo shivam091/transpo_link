@@ -10,7 +10,7 @@ class CreateProducts < ActiveRecord::Migration[8.0]
       t.text :description
       t.string :sku, index: {using: :btree, unique: true}
       t.string :barcode, index: {using: :btree, unique: true}
-      t.decimal :min_stock_threshold, precision: 12, scale: 2, default: 0.0 # For alerts
+      t.decimal :min_stock_threshold, precision: 12, scale: 2, default: 10.0 # For alerts
       t.references :unit,
                    type: :uuid,
                    foreign_key: {
@@ -21,7 +21,7 @@ class CreateProducts < ActiveRecord::Migration[8.0]
                    null: false,
                    index: {using: :btree}
       t.string :currency
-      t.decimal :cost_price, precision: 12, scale: 2, default: 0.0
+      t.decimal :cost_price, precision: 12, scale: 2
       t.references :product_category,
                    type: :uuid,
                    foreign_key: {

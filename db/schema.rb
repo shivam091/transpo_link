@@ -118,9 +118,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_01_084516) do
     t.uuid "inventory_id", null: false
     t.string "batch_number"
     t.date "expiration_date"
-    t.decimal "quantity", precision: 12, scale: 2, default: "0.0"
+    t.decimal "quantity", precision: 12, scale: 2
     t.uuid "unit_id", null: false
-    t.decimal "cost_price", precision: 12, scale: 2, default: "0.0"
+    t.decimal "cost_price", precision: 12, scale: 2
     t.string "currency"
     t.timestamptz "created_at", null: false
     t.timestamptz "updated_at", null: false
@@ -211,8 +211,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_01_084516) do
   create_table "product_prices", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "product_id", null: false
     t.uuid "warehouse_id"
-    t.decimal "min_quantity", precision: 12, scale: 2, default: "1.0"
-    t.decimal "unit_price", precision: 12, scale: 2, default: "0.0"
+    t.decimal "min_quantity", precision: 12, scale: 2
+    t.decimal "unit_price", precision: 12, scale: 2
     t.string "currency"
     t.timestamptz "created_at", null: false
     t.timestamptz "updated_at", null: false
@@ -231,10 +231,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_01_084516) do
     t.text "description"
     t.string "sku"
     t.string "barcode"
-    t.decimal "min_stock_threshold", precision: 12, scale: 2, default: "0.0"
+    t.decimal "min_stock_threshold", precision: 12, scale: 2, default: "10.0"
     t.uuid "unit_id", null: false
     t.string "currency"
-    t.decimal "cost_price", precision: 12, scale: 2, default: "0.0"
+    t.decimal "cost_price", precision: 12, scale: 2
     t.uuid "product_category_id", null: false
     t.boolean "is_active", default: false
     t.timestamptz "created_at", null: false
@@ -260,10 +260,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_01_084516) do
   create_table "purchase_order_items", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "purchase_order_id", null: false
     t.uuid "product_id", null: false
-    t.decimal "quantity", precision: 12, scale: 2, default: "0.0"
+    t.decimal "quantity", precision: 12, scale: 2
     t.decimal "received_quantity", precision: 12, scale: 2, default: "0.0"
     t.uuid "unit_id", null: false
-    t.decimal "unit_cost", precision: 12, scale: 2, default: "0.0"
+    t.decimal "unit_cost", precision: 12, scale: 2
     t.virtual "total_cost", type: :decimal, precision: 12, scale: 2, as: "(quantity * unit_cost)", stored: true
     t.string "currency"
     t.enum "status", enum_type: "purchase_order_item_statuses"
