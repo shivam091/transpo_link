@@ -11,7 +11,15 @@ class CreateProducts < ActiveRecord::Migration[8.0]
       t.string :sku, index: {using: :btree, unique: true}
       t.string :barcode, index: {using: :btree, unique: true}
       t.decimal :min_stock_threshold, precision: 12, scale: 2, default: 0.0 # For alerts
-      t.string :capacity_unit
+      t.references :unit,
+                   type: :uuid,
+                   foreign_key: {
+                     to_table: :units,
+                     name: :fk_products_unit_id_on_units,
+                     on_delete: :restrict
+                   },
+                   null: false,
+                   index: {using: :btree}
       t.string :currency
       t.decimal :cost_price, precision: 12, scale: 2, default: 0.0
       t.references :product_category,
@@ -36,8 +44,6 @@ class CreateProducts < ActiveRecord::Migration[8.0]
 
       t.check_constraint "min_stock_threshold IS NOT NULL", name: :check_products_min_stock_threshold_presence
       t.check_constraint "min_stock_threshold > 0.0", name: :check_products_min_stock_threshold_positive
-
-      t.check_constraint "capacity_unit IS NOT NULL AND capacity_unit <> ''", name: :check_products_capacity_unit_presence
 
       t.check_constraint "currency IS NOT NULL AND currency <> ''", name: :check_products_currency_presence
 

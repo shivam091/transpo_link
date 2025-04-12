@@ -17,7 +17,15 @@ class CreateInventoryBatches < ActiveRecord::Migration[8.0]
       t.string :batch_number
       t.date :expiration_date # Useful for perishable products
       t.decimal :quantity, precision: 12, scale: 2, default: 0.0 # quantity in this batch
-      t.string :inventory_unit # Unit used in this batch
+      t.references :unit,
+                   type: :uuid,
+                   foreign_key: {
+                     to_table: :units,
+                     name: :fk_inventory_batches_unit_id_on_units,
+                     on_delete: :restrict
+                   },
+                   null: false,
+                   index: {using: :btree} # Unit used in this batch
       t.decimal :cost_price, precision: 12, scale: 2, default: 0.0 # Cost per unit
       t.string :currency # Currency from the purchase order
       t.timestamps_with_timezone null: false
@@ -32,8 +40,6 @@ class CreateInventoryBatches < ActiveRecord::Migration[8.0]
 
       t.check_constraint "cost_price IS NOT NULL", name: :check_inventory_batches_cost_price_presence
       t.check_constraint "cost_price > 0.0", name: :check_inventory_batches_cost_price_positive
-
-      t.check_constraint "inventory_unit IS NOT NULL AND inventory_unit <> ''", name: :check_inventory_batches_inventory_unit_presence
 
       t.check_constraint "currency IS NOT NULL AND currency <> ''", name: :check_inventory_batches_currency_presence
 
