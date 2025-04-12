@@ -9,8 +9,6 @@ FactoryBot.define do
     password_confirmation { Rails.application.credentials.config[:TEST_PASSWORD] }
     last_activity_at { nil }
     password_updated_at { DateTime.now }
-    is_active { false }
-    is_banned { false }
 
     factory :admin, parent: :user do
       role { Role.find_by(name: "admin") || create(:admin_role, :active) }

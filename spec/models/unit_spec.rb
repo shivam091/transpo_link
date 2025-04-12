@@ -32,6 +32,14 @@ RSpec.describe Unit, type: :model do
     it { is_expected.to define_enum_for(:category).backed_by_column_of_type(:enum).with_prefix }
   end
 
+  describe "included modules" do
+    it { is_expected.to include_module(Sanitizable) }
+  end
+
+  describe "sanitized attributes" do
+    it { is_expected.to sanitize_attribute(:symbol) }
+  end
+
   describe "associations" do
     it { is_expected.to have_many(:source_conversions).with_foreign_key(:source_unit_id).inverse_of(:source_unit).class_name("UnitConversion").dependent(:restrict_with_exception) }
     it { is_expected.to have_many(:target_conversions).with_foreign_key(:target_unit_id).inverse_of(:target_unit).class_name("UnitConversion").dependent(:restrict_with_exception) }

@@ -9,7 +9,6 @@ FactoryBot.define do
     association :reviewable, factory: :product
     rating { (0..10).step(0.5).to_a.sample } # Ensures valid step values
     comment { Faker::Lorem.sentence(word_count: 50) }
-    is_unread { true } # Defaults to unread for tracking new feedbacks
 
     trait :read do
       is_unread { false }

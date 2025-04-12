@@ -22,9 +22,9 @@ RSpec.describe InventoryBatch, type: :model do
     it { is_expected.to have_db_column(:inventory_id).of_type(:uuid).with_options(null: false) }
     it { is_expected.to have_db_column(:batch_number).of_type(:string) }
     it { is_expected.to have_db_column(:expiration_date).of_type(:date) }
-    it { is_expected.to have_db_column(:quantity).of_type(:decimal).with_options(precision: 12, scale: 2, default: 0.0) }
+    it { is_expected.to have_db_column(:quantity).of_type(:decimal).with_options(precision: 12, scale: 2) }
     it { is_expected.to have_db_column(:unit_id).of_type(:uuid).with_options(null: false) }
-    it { is_expected.to have_db_column(:cost_price).of_type(:decimal).with_options(precision: 12, scale: 2, default: 0.0) }
+    it { is_expected.to have_db_column(:cost_price).of_type(:decimal).with_options(precision: 12, scale: 2) }
     it { is_expected.to have_db_column(:currency).of_type(:string) }
     it { is_expected.to have_db_column(:created_at).of_type(:timestamptz).with_options(null: false) }
     it { is_expected.to have_db_column(:updated_at).of_type(:timestamptz).with_options(null: false) }
@@ -44,18 +44,6 @@ RSpec.describe InventoryBatch, type: :model do
     it { is_expected.to have_check_constraint(:check_inventory_batches_expiration_date_future).with_expression("expiration_date >= CURRENT_DATE") }
     it { is_expected.to have_check_constraint(:check_inventory_batches_quantity_positive).with_expression("quantity > 0.0") }
     it { is_expected.to have_check_constraint(:check_inventory_batches_quantity_presence).with_expression("quantity IS NOT NULL") }
-  end
-
-  describe "default values" do
-    let(:inventory_batch) { described_class.new }
-
-    it "should set 0.0 as default value for #quantity" do
-      expect(inventory_batch.quantity).to eq(0.0)
-    end
-
-    it "should set 0.0 as default value for #cost_price" do
-      expect(inventory_batch.cost_price).to eq(0.0)
-    end
   end
 
   describe "included modules" do

@@ -65,7 +65,7 @@ RSpec.describe PurchaseOrder, type: :model do
   describe "default values" do
     let(:purchase_order) { described_class.new }
 
-    it "should set 'draft' as default value for #status" do
+    it "should set draft as default value for #status" do
       expect(purchase_order.status).to eq("draft")
     end
   end

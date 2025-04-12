@@ -5,9 +5,6 @@
 class InventoryBatch < ApplicationRecord
   include ActsAsMoney, NullifyIfBlank, Sanitizable
 
-  attribute :quantity, default: 0.0
-  attribute :cost_price, default: 0.0
-
   nullify_if_blank :expiration_date
 
   sanitize_attributes :batch_number

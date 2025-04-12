@@ -20,10 +20,10 @@ RSpec.describe PurchaseOrderItem, type: :model do
     it { is_expected.to have_db_column(:id).of_type(:uuid) }
     it { is_expected.to have_db_column(:purchase_order_id).of_type(:uuid) }
     it { is_expected.to have_db_column(:product_id).of_type(:uuid) }
-    it { is_expected.to have_db_column(:quantity).of_type(:decimal).with_options(precision: 12, scale: 2, default: 0.0) }
+    it { is_expected.to have_db_column(:quantity).of_type(:decimal).with_options(precision: 12, scale: 2) }
     it { is_expected.to have_db_column(:received_quantity).of_type(:decimal).with_options(precision: 12, scale: 2, default: 0.0) }
     it { is_expected.to have_db_column(:unit_id).of_type(:uuid).with_options(null: false) }
-    it { is_expected.to have_db_column(:unit_cost).of_type(:decimal).with_options(precision: 12, scale: 2, default: 0.0) }
+    it { is_expected.to have_db_column(:unit_cost).of_type(:decimal).with_options(precision: 12, scale: 2) }
     it { is_expected.to have_db_column(:total_cost).of_type(:decimal).with_options(precision: 12, scale: 2) }
     it { is_expected.to have_db_column(:currency).of_type(:string) }
     it { is_expected.to have_db_column(:status).of_type(:enum) }
@@ -68,19 +68,11 @@ RSpec.describe PurchaseOrderItem, type: :model do
   describe "default values" do
     let(:purchase_order_item) { described_class.new }
 
-    it "should set '0.0' as default value for #quantity" do
-      expect(purchase_order_item.quantity).to eq(0.0)
-    end
-
-    it "should set '0.0' as default value for #received_quantity" do
+    it "should set 0.0 as default value for #received_quantity" do
       expect(purchase_order_item.received_quantity).to eq(0.0)
     end
 
-    it "should set '0.0' as default value for #unit_cost" do
-      expect(purchase_order_item.unit_cost).to eq(0.0)
-    end
-
-    it "should set 'pending' as default value for #status" do
+    it "should set pending as default value for #status" do
       expect(purchase_order_item.status).to eq("pending")
     end
   end
@@ -145,7 +137,7 @@ RSpec.describe PurchaseOrderItem, type: :model do
         let(:purchase_order_item) { build(:purchase_order_item, purchase_order: purchase_order, product: product) }
 
         it "sets unit_cost and currency from the product" do
-          expect(purchase_order_item.unit_cost).to eq(0.0)
+          expect(purchase_order_item.unit_cost).to be_nil
           expect(purchase_order_item.currency.iso_code).to eq("INR")
 
           purchase_order_item.valid?
@@ -173,12 +165,12 @@ RSpec.describe PurchaseOrderItem, type: :model do
         let(:purchase_order_item) { build(:purchase_order_item, product: nil) }
 
         it "does nothing" do
-          expect(purchase_order_item.unit_cost).to eq(0.0)
+          expect(purchase_order_item.unit_cost).to be_nil
           expect(purchase_order_item.currency.iso_code).to eq("INR")
 
           purchase_order_item.valid?
 
-          expect(purchase_order_item.unit_cost).to eq(0.0)
+          expect(purchase_order_item.unit_cost).to be_nil
           expect(purchase_order_item.currency.iso_code).to eq("INR")
         end
       end

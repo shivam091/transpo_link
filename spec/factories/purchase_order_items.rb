@@ -9,7 +9,6 @@ FactoryBot.define do
     association :product
     quantity { Faker::Number.between(from: 1, to: 100) }
     association :unit, factory: :litre_unit
-    status { PurchaseOrderItem.statuses[:draft] }
 
     PurchaseOrderItem.statuses.keys.each do |status|
       trait status do

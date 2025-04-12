@@ -98,7 +98,8 @@ class PurchaseOrder < ApplicationRecord
       attributes[:purchase_order_id],
       attributes[:product_id],
       attributes[:unit_id],
-      attributes[:currency]
-    ].all?(&:blank?) && attributes[:quantity].to_d.zero?
+      attributes[:currency],
+      attributes[:quantity]
+    ].all?(&:blank?)
   end
 end

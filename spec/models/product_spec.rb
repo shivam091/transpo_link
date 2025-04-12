@@ -20,10 +20,10 @@ RSpec.describe Product, type: :model do
     it { is_expected.to have_db_column(:description).of_type(:text) }
     it { is_expected.to have_db_column(:sku).of_type(:string) }
     it { is_expected.to have_db_column(:barcode).of_type(:string) }
-    it { is_expected.to have_db_column(:min_stock_threshold).of_type(:decimal).with_options(precision: 12, scale: 2, default: 0.0) }
+    it { is_expected.to have_db_column(:min_stock_threshold).of_type(:decimal).with_options(precision: 12, scale: 2, default: 10.0) }
     it { is_expected.to have_db_column(:unit_id).of_type(:uuid).with_options(null: false) }
     it { is_expected.to have_db_column(:currency).of_type(:string) }
-    it { is_expected.to have_db_column(:cost_price).of_type(:decimal).with_options(precision: 12, scale: 2, default: 0.0) }
+    it { is_expected.to have_db_column(:cost_price).of_type(:decimal).with_options(precision: 12, scale: 2) }
     it { is_expected.to have_db_column(:product_category_id).of_type(:uuid).with_options(null: false) }
     it { is_expected.to have_db_column(:is_active).of_type(:boolean).with_options(default: false) }
     it { is_expected.to have_db_column(:created_at).of_type(:timestamptz).with_options(null: false) }
@@ -54,12 +54,8 @@ RSpec.describe Product, type: :model do
   describe "default values" do
     let(:product) { described_class.new }
 
-    it "should set 0.0 as default value for #min_stock_threshold" do
-      expect(product.min_stock_threshold).to eq(0.0)
-    end
-
-    it "should set 0.0 as default value for #cost_price" do
-      expect(product.cost_price).to eq(0.0)
+    it "should set 10.0 as default value for #min_stock_threshold" do
+      expect(product.min_stock_threshold).to eq(10.0)
     end
   end
 

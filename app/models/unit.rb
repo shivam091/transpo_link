@@ -3,6 +3,8 @@
 # -*- warn_indent: true -*-
 
 class Unit < ApplicationRecord
+  include Sanitizable
+
   enum :category, {
     count: "count",
     length: "length",
@@ -10,6 +12,8 @@ class Unit < ApplicationRecord
     area: "area",
     volume: "volume"
   }, prefix: true
+
+  sanitize_attributes :symbol
 
   validates :category,
             presence: true,

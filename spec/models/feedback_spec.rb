@@ -83,7 +83,7 @@ RSpec.describe Feedback, type: :model do
     end
   end
 
-  describe "Scopes" do
+  describe "scopes" do
     let!(:unread_feedback) { create(:feedback, reviewable:) }
     let!(:read_feedback) { create(:feedback, :read, reviewable:) }
 

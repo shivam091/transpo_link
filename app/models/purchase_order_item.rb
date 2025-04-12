@@ -13,9 +13,7 @@ class PurchaseOrderItem < ApplicationRecord
     cancelled: "cancelled"
   }
 
-  attribute :quantity, default: 0.0
   attribute :received_quantity, default: 0.0
-  attribute :unit_cost, default: 0.0
   attribute :status, :enum, default: statuses[:pending]
 
   aasm column: :status, enum: true, requires_lock: true do
