@@ -11,7 +11,7 @@
   .table-cell
     = enum_l(inventory, :tracking_method)
   .table-cell
-    = number_to_measurement_unit(inventory.low_stock_threshold, inventory.inventory_unit)
+    = number_to_measurement_unit(inventory.low_stock_threshold, inventory.unit_symbol)
   .table-cell
     = number_to_currency(inventory.average_cost_price, unit: inventory.currency.symbol)
   .table-cell.cell-narrow

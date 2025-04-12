@@ -22,7 +22,6 @@
       },
       form: {
         basic_details: "Basic details",
-        unit_conversions: "Unit conversions",
         product_prices: "Product prices",
       },
       basic_details_fields: {
@@ -32,7 +31,6 @@
       },
       show: {
         basic_details: "Basic details",
-        unit_conversions: "Unit conversions",
         product_prices: "Product prices",
       },
     }

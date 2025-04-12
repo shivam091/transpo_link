@@ -151,7 +151,7 @@ class PurchaseOrdersController < ApplicationController
         :_destroy,
         :product_id,
         :quantity,
-        :uom
+        :unit_id
       ]
     )
   end

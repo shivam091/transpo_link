@@ -39,5 +39,4 @@
     .widget-row-title
       = Product.human_attribute_name(:min_stock_threshold)
     .widget-row-body
-      = product.min_stock_threshold
-      = product.capacity_unit
+      = number_to_measurement_unit(product.min_stock_threshold, product.unit_symbol)
