@@ -323,11 +323,16 @@ RSpec.describe PrettyFormBuilder, type: :helper do
   end
 
   describe "#measurement_unit_select" do
+    let(:kilogramme_unit) { build_stubbed(:kilogramme_unit) }
+    let(:gramme_unit) { build_stubbed(:gramme_unit) }
+    let(:litre_unit) { build_stubbed(:litre_unit) }
+    let(:millilitre_unit) { build_stubbed(:millilitre_unit) }
+
     before do
-      # Mocking TranspoLink::MeasurementUnits.select_options
-      allow(TranspoLink::MeasurementUnits).to receive(:select_options).and_return({
-        "weight" => [["Kilogram", "kg"], ["Gram", "g"]],
-        "volume" => [["Liter", "l"], ["Milliliter", "ml"]]
+      # Mocking Unit.select_options
+      allow(Unit).to receive(:select_options).and_return({
+        "weight" => [kilogramme_unit, gramme_unit],
+        "volume" => [litre_unit, millilitre_unit]
       })
     end
 

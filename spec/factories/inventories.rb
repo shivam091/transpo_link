@@ -6,8 +6,8 @@ FactoryBot.define do
   factory :inventory do
     association :product
     association :warehouse
+    association :unit, factory: :dozen_unit
     tracking_method { Inventory.tracking_methods[:average_cost] }
-    inventory_unit { TranspoLink::MeasurementUnits.units_for(:weight).sample }
     currency { Faker::Currency.code }
     low_stock_threshold { 10 }
   end

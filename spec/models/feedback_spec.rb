@@ -7,7 +7,10 @@
 require "spec_helper"
 
 RSpec.describe Feedback, type: :model do
-  subject { create(:feedback) }
+  let(:unit) { create(:acre_unit) }
+  let(:reviewable) { create(:product, unit:) }
+
+  subject { create(:feedback, reviewable:) }
 
   describe "valid factory" do
     it { is_expected.to have_a_valid_factory(:feedback) }
@@ -81,8 +84,8 @@ RSpec.describe Feedback, type: :model do
   end
 
   describe "Scopes" do
-    let!(:unread_feedback) { create(:feedback) }
-    let!(:read_feedback) { create(:feedback, :read) }
+    let!(:unread_feedback) { create(:feedback, reviewable:) }
+    let!(:read_feedback) { create(:feedback, :read, reviewable:) }
 
     describe ".unread" do
       it "returns only unread feedbacks" do
@@ -104,12 +107,11 @@ RSpec.describe Feedback, type: :model do
   describe "class methods" do
     let!(:user1) { create(:buyer) }
     let!(:user2) { create(:buyer) }
-    let!(:product) { create(:product) }
 
-    let!(:feedback1) { create(:feedback, user: user1, reviewable: product, rating: 7.0, is_unread: true) }
-    let!(:feedback2) { create(:feedback, user: user2, reviewable: product, rating: 9.5, is_unread: false) }
-    let!(:feedback3) { create(:feedback, user: user1, reviewable: product, rating: 6.0, is_unread: true) }
-    let!(:feedback4) { create(:feedback, user: user2, reviewable: product, rating: 8.0, is_unread: false) }
+    let!(:feedback1) { create(:feedback, user: user1, reviewable:, rating: 7.0, is_unread: true) }
+    let!(:feedback2) { create(:feedback, user: user2, reviewable:, rating: 9.5, is_unread: false) }
+    let!(:feedback3) { create(:feedback, user: user1, reviewable:, rating: 6.0, is_unread: true) }
+    let!(:feedback4) { create(:feedback, user: user2, reviewable:, rating: 8.0, is_unread: false) }
 
     describe ".accessible" do
       it "returns list of accessible feedbacks" do
@@ -126,13 +128,13 @@ RSpec.describe Feedback, type: :model do
 
     describe ".average_rating_for" do
       it "calculates the average rating for a product" do
-        expect(described_class.average_rating_for(product)).to eq(7.6) # (7.0 + 9.5 + 6.0 + 8.0) / 4 = 7.625 -> rounded to 7.6
+        expect(described_class.average_rating_for(reviewable)).to eq(7.6) # (7.0 + 9.5 + 6.0 + 8.0) / 4 = 7.625 -> rounded to 7.6
       end
     end
 
     describe ".for_user_and_reviewable" do
       it "returns feedback given by a specific user for a product" do
-        expect(described_class.for_user_and_reviewable(user1, product)).to match_array([feedback1, feedback3])
+        expect(described_class.for_user_and_reviewable(user1, reviewable)).to match_array([feedback1, feedback3])
       end
 
       it "returns an empty array if no feedback exists for the user and reviewable" do

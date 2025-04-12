@@ -8,9 +8,8 @@ FactoryBot.define do
     association :purchase_order
     association :product
     quantity { Faker::Number.between(from: 1, to: 100) }
-    received_quantity { 0.0 }
-    uom { TranspoLink::MeasurementUnits.units_for(:weight).sample }
-    status { PurchaseOrderItem.statuses[:pending] }
+    association :unit, factory: :litre_unit
+    status { PurchaseOrderItem.statuses[:draft] }
 
     PurchaseOrderItem.statuses.keys.each do |status|
       trait status do
