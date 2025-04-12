@@ -43,9 +43,7 @@ class PurchaseOrderItem < ApplicationRecord
             presence: true,
             numericality: {greater_than_or_equal_to: 0.0},
             reduce: true
-  validates :uom,
-            presence: true,
-            reduce: true
+  validates :unit_id, presence: true, reduce: true
   validates :status,
             presence: true,
             inclusion: {in: statuses.values, message: :inclusion},
@@ -53,8 +51,11 @@ class PurchaseOrderItem < ApplicationRecord
 
   belongs_to :purchase_order, inverse_of: :purchase_order_items
   belongs_to :product, inverse_of: :purchase_order_items
+  belongs_to :unit, inverse_of: :purchase_order_items
 
   before_validation :set_unit_cost_and_currency
+
+  delegate :symbol, to: :unit, prefix: true
 
   private
 

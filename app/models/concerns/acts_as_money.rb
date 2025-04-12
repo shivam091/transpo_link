@@ -10,9 +10,7 @@ module ActsAsMoney
   included do
     attribute :currency, default: Money.default_currency.iso_code
 
-    validates :currency,
-              presence: true,
-              reduce: true
+    validates :currency, presence: true, reduce: true
 
     def currency
       Money::Currency.new(self[:currency]) if self[:currency].present?

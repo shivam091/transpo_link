@@ -32,9 +32,8 @@ class InventoryBatch < ApplicationRecord
             presence: true,
             numericality: {greater_than: 0.0},
             reduce: true
-  validates :inventory_unit,
-            presence: true,
-            reduce: true
+  validates :unit_id, presence: true, reduce: true
 
   belongs_to :inventory, inverse_of: :inventory_batches, touch: true
+  belongs_to :unit, inverse_of: :inventory_batches
 end
