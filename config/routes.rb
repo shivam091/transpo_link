@@ -90,6 +90,7 @@ Rails.application.routes.draw do
     resources :purchase_order_items, path: "purchase-order-items", only: :index
   end
   resources :units, only: :index
+  resources :unit_conversions, path: "unit-conversions", only: :index
 
   root to: "dashboards#show"
 end
