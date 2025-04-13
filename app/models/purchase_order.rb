@@ -40,6 +40,10 @@ class PurchaseOrder < ApplicationRecord
 
     event :approve do
       transitions from: :pending, to: :approved
+
+      after do
+        update_replenishment!
+      end
     end
 
     event :reject do
@@ -103,5 +107,18 @@ class PurchaseOrder < ApplicationRecord
       attributes[:currency],
       attributes[:quantity]
     ].all?(&:blank?)
+  end
+
+  def update_replenishment!
+    purchase_order_items.each do |item|
+      product = item.product
+      inventory = warehouse.inventories.for_product(product)
+      raise PurchaseOrders::MissingInventoryError.new(product) if inventory.nil?
+
+      quantity = UnitConversion.convert(item.unit, inventory.unit, item.quantity)
+      raise PurchaseOrders::UnitConversionError.new(product) if quantity.nil?
+
+      inventory.replenishment.increment!(:quantity_pending_from_supplier, quantity)
+    end
   end
 end
