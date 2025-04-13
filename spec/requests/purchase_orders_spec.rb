@@ -143,7 +143,7 @@ RSpec.describe "PurchaseOrders", type: :request do
 
     context "when cancellation fails" do
       it "does not cancel the purchase order and redirects with an error message" do
-        allow(PurchaseOrders::CancelService).to receive(:call).and_return(ServiceResponse.error)
+        allow(PurchaseOrders::CancelService).to receive(:call) { ServiceResponse.error }
 
         patch cancel_purchase_order_path(purchase_order)
 
@@ -167,7 +167,7 @@ RSpec.describe "PurchaseOrders", type: :request do
 
     context "when submission fails" do
       it "does not submit the purchase order and redirects with an error message" do
-        allow(PurchaseOrders::SubmitService).to receive(:call).and_return(ServiceResponse.error)
+        allow(PurchaseOrders::SubmitService).to receive(:call) { ServiceResponse.error }
 
         patch submit_purchase_order_path(purchase_order)
 
@@ -193,7 +193,7 @@ RSpec.describe "PurchaseOrders", type: :request do
 
     context "when approval fails" do
       it "does not approve the purchase order and redirects with an error message" do
-        allow(PurchaseOrders::ApproveService).to receive(:call).and_return(ServiceResponse.error)
+        allow(PurchaseOrders::ApproveService).to receive(:call) { ServiceResponse.error }
 
         patch approve_purchase_order_path(purchase_order)
 
@@ -219,7 +219,7 @@ RSpec.describe "PurchaseOrders", type: :request do
 
     context "when rejection fails" do
       it "does not reject the purchase order and redirects with an error message" do
-        allow(PurchaseOrders::RejectService).to receive(:call).and_return(ServiceResponse.error)
+        allow(PurchaseOrders::RejectService).to receive(:call) { ServiceResponse.error }
 
         patch reject_purchase_order_path(purchase_order)
 
