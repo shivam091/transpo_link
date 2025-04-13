@@ -165,9 +165,7 @@ RSpec.describe LegalIdentifier, type: :model do
   end
 
   describe "#business_identifier_type_country_combination" do
-    let(:legal_identifier) do
-      build(:legal_identifier, :for_business, business_identifier_type: business_identifier_type, country: country)
-    end
+    let(:legal_identifier) { build(:legal_identifier, :for_business, business_identifier_type:, country:) }
 
     context "when business identifier type and country combination is valid" do
       where(:business_identifier_type, :country) do

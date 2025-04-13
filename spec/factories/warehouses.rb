@@ -9,7 +9,7 @@ FactoryBot.define do
     contact_number { Faker::PhoneNumber.phone_number_with_country_code }
     description { Faker::Company.bs }
     total_capacity { 1000000.0 }
-    association :unit, factory: :item_unit
+    unit { find_or_create_unit("item") }
     latitude { Faker::Address.latitude }
     longitude { Faker::Address.longitude }
 

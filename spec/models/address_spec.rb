@@ -7,7 +7,17 @@
 require "spec_helper"
 
 RSpec.describe Address, type: :model do
-  let(:attributes) { {address1: "Halvorson Rapids", address2: "Suite 380", city: "Port Ophelia", state: "KS", country: "US", postal_code: "79131"} }
+  let(:attributes) do
+    {
+      address1: "Halvorson Rapids",
+      address2: "Suite 380",
+      city: "Port Ophelia",
+      state: "KS",
+      country: "US",
+      postal_code: "79131"
+    }
+  end
+
   subject { build(:address, **attributes) }
 
   describe "valid factory" do

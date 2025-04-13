@@ -81,7 +81,7 @@ RSpec.describe Unit, type: :model do
     describe ".select_options" do
       let!(:item_unit) { create(:item_unit) }
       let!(:dozen_unit) { create(:dozen_unit) }
-      let!(:kilogramme_unit)  { create(:kilogramme_unit) }
+      let!(:kilogramme_unit) { create(:kilogramme_unit) }
 
       context "when category is provided" do
         let(:result) { described_class.select_options("count") }

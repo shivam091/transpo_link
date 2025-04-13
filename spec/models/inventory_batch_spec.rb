@@ -7,11 +7,7 @@
 require "spec_helper"
 
 RSpec.describe InventoryBatch, type: :model do
-  let(:unit) { create(:acre_unit) }
-  let(:product) { create(:product, unit:) }
-  let(:inventory) { create(:inventory, unit:, product:) }
-
-  subject { create(:inventory_batch, inventory:, unit:) }
+  subject { create(:inventory_batch) }
 
   describe "valid factory" do
     it { is_expected.to have_a_valid_factory(:inventory_batch) }

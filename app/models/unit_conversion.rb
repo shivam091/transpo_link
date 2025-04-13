@@ -30,6 +30,21 @@ class UnitConversion < ApplicationRecord
   delegate :symbol, :category, to: :source_unit, prefix: true
   delegate :symbol, :category, to: :target_unit, prefix: true
 
+  class << self
+    def convert(source_unit, target_unit, quantity)
+      return quantity if source_unit == target_unit
+
+      unit_conversion = find_by(
+        arel_table[:source_unit_id].eq(source_unit.id)
+          .and(arel_table[:target_unit_id].eq(target_unit.id))
+      )
+
+      return nil unless unit_conversion # Return nil if no conversion exists
+
+      quantity * unit_conversion.multiplier
+    end
+  end
+
   private
 
   def units_must_be_different
