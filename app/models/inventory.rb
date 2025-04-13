@@ -37,7 +37,8 @@ class Inventory < ApplicationRecord
             numericality: {greater_than_or_equal_to: 0.0},
             reduce: true
 
-  validate :unit_is_in_valid_category
+  validate :inventory_unit_matches_product_unit_category
+  validate :product_unit_category_matches_warehouse_capacity
 
   has_one :stock, inverse_of: :inventory, dependent: :destroy
   has_one :replenishment, inverse_of: :inventory, dependent: :destroy
@@ -60,13 +61,23 @@ class Inventory < ApplicationRecord
 
   private
 
-  def unit_is_in_valid_category
+  def inventory_unit_matches_product_unit_category
     return unless product.present? && unit.present?
 
     allowed_units = Unit.for_category(product.unit_category).map(&:symbol)
 
     if allowed_units.blank? || !allowed_units.include?(unit_symbol)
-      errors.add(:unit_id, :inclusion)
+      errors.add(:unit_id, :incompatible_unit_category)
+    end
+  end
+
+  def product_unit_category_matches_warehouse_capacity
+    return unless warehouse.present? && product.present?
+
+    allowed_units = Unit.for_category(warehouse.unit_category).map(&:symbol)
+
+    if allowed_units.blank? || !allowed_units.include?(product.unit_symbol)
+      errors.add(:product_id, :incompatible_unit_category)
     end
   end
 end

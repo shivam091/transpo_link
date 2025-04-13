@@ -73,6 +73,8 @@ class PurchaseOrder < ApplicationRecord
             allow_blank: true,
             reduce: true
 
+  validates_associated :purchase_order_items
+
   has_many :purchase_order_items, inverse_of: :purchase_order, dependent: :destroy
 
   belongs_to :warehouse, inverse_of: :purchase_orders

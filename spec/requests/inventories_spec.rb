@@ -7,14 +7,17 @@
 require "spec_helper"
 
 RSpec.describe "Inventories", type: :request do
-  let(:unit) { create(:acre_unit) }
-  let(:product) { create(:product, unit:) }
-  let(:warehouse) { create(:warehouse) }
-  let(:another_product) { create(:product, unit:) }
+  let!(:inventory) { create(:inventory) }
 
-  let!(:inventory) { create(:inventory, warehouse:, product:, unit:) }
-
-  let(:valid_attributes) { attributes_for(:inventory, currency: "INR", product_id: another_product.id, warehouse_id: warehouse.id, unit_id: unit.id) }
+  let(:product) { create(:product) }
+  let(:valid_attributes) do
+    attributes_for(:inventory,
+      currency: "INR",
+      product_id: product.id,
+      warehouse_id: inventory.warehouse.id,
+      unit_id: inventory.unit.id
+    )
+  end
   let(:invalid_attributes) { attributes_for(:inventory, currency: nil) }
 
   include_context "sign in as admin"

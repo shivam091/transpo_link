@@ -8,22 +8,22 @@ FactoryBot.define do
     password { Rails.application.credentials.config[:TEST_PASSWORD] }
     password_confirmation { Rails.application.credentials.config[:TEST_PASSWORD] }
     last_activity_at { nil }
-    password_updated_at { DateTime.now }
+    password_updated_at { Time.current }
 
     factory :admin, parent: :user do
-      role { Role.find_by(name: "admin") || create(:admin_role, :active) }
+      role { find_or_create_role("admin", [:active]) }
     end
 
     factory :buyer, parent: :user do
-      role { Role.find_by(name: "buyer") || create(:buyer_role, :active) }
+      role { find_or_create_role("buyer", [:active]) }
     end
 
     factory :supplier, parent: :user do
-      role { Role.find_by(name: "supplier") || create(:supplier_role, :active) }
+      role { find_or_create_role("supplier", [:active]) }
     end
 
     factory :manager, parent: :user do
-      role { Role.find_by(name: "manager") || create(:manager_role, :active) }
+      role { find_or_create_role("manager", [:active]) }
     end
 
     after(:create) do |user|

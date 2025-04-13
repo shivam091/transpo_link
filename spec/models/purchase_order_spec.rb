@@ -7,7 +7,7 @@
 require "spec_helper"
 
 RSpec.describe PurchaseOrder, type: :model do
-  subject { create(:purchase_order) }
+  subject { build_stubbed(:purchase_order) }
 
   describe "valid factory" do
     it { is_expected.to have_a_valid_factory(:purchase_order) }
@@ -154,14 +154,11 @@ RSpec.describe PurchaseOrder, type: :model do
     end
 
     describe "#reject_purchase_order_item?" do
-      let(:unit) { create(:gramme_unit) }
-      let(:product) { create(:product, unit: unit) }
-
-      let!(:purchase_order_item) { create(:purchase_order_item, product:, purchase_order:) }
+      let!(:purchase_order_item) { create(:purchase_order_item, purchase_order:) }
 
       context "when creating purchase order items" do
         context "when valid attributes are provided" do
-          let!(:another_product) { create(:product, unit: unit) }
+          let!(:another_product) { create(:product) }
 
           it "creates a purchase order item" do
             expect {
@@ -169,7 +166,7 @@ RSpec.describe PurchaseOrder, type: :model do
                   0 => {
                     product_id: another_product.id,
                     quantity: 92,
-                    unit_id: unit.id,
+                    unit_id: another_product.unit.id,
                     unit_cost: 100,
                     currency: "INR"
                   }
@@ -219,8 +216,10 @@ RSpec.describe PurchaseOrder, type: :model do
 
   describe "class methods" do
     describe ".accessible" do
+      let!(:purchase_order) { create(:purchase_order) }
+
       it "returns list of accessible purchase orders" do
-        expect(described_class.accessible(subject.manager)).to include(subject)
+        expect(described_class.accessible(purchase_order.manager)).to include(purchase_order)
       end
     end
   end

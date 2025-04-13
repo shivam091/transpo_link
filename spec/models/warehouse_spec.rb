@@ -7,9 +7,7 @@
 require "spec_helper"
 
 RSpec.describe Warehouse, type: :model do
-  let(:unit) { create(:item_unit) }
-
-  subject { build(:warehouse, unit:) }
+  subject { build(:warehouse) }
 
   describe "valid factory" do
     it { is_expected.to have_a_valid_factory(:warehouse) }
@@ -95,6 +93,7 @@ RSpec.describe Warehouse, type: :model do
 
   describe "delegates" do
     it { is_expected.to delegate_method(:symbol).to(:unit).with_prefix }
+    it { is_expected.to delegate_method(:category).to(:unit).with_prefix }
   end
 
   include_examples "apply default scope on created_at:desc"

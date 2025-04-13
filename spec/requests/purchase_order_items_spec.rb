@@ -7,14 +7,10 @@
 require "spec_helper"
 
 RSpec.describe "PurchaseOrderItems", type: :request do
-  let(:kilogramme_unit) { create(:kilogramme_unit) }
-  let(:gramme_unit) { create(:gramme_unit) }
-  let(:product) { create(:product, unit: kilogramme_unit) }
-  let(:another_product) { create(:product, unit: gramme_unit) }
   let(:purchase_order) { create(:purchase_order) }
 
-  let!(:po_item1) { create(:purchase_order_item, purchase_order:, product:, unit: kilogramme_unit) }
-  let!(:po_item2) { create(:purchase_order_item, purchase_order:, product: another_product, unit: gramme_unit) }
+  let!(:po_item1) { create(:purchase_order_item, purchase_order:) }
+  let!(:po_item2) { create(:purchase_order_item, purchase_order:) }
 
   include_context "sign in as manager"
 

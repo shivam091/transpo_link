@@ -7,20 +7,16 @@
 require "spec_helper"
 
 RSpec.describe "PurchaseOrders", type: :request do
-  let!(:warehouse) { create(:warehouse, :active) }
-
-  let(:supplier) { warehouse.suppliers.first }
-
   include_context "sign in as manager"
 
-  let!(:purchase_order) { create(:purchase_order, warehouse:, manager:, supplier:) }
+  let!(:purchase_order) { create(:purchase_order, manager:) }
 
   let(:valid_attributes) do
     attributes_for(
       :purchase_order,
-      warehouse_id: warehouse.id,
+      warehouse_id: purchase_order.warehouse.id,
       manager_id: manager.id,
-      supplier_id: supplier.id,
+      supplier_id: purchase_order.supplier.id,
       notes: "Test notes"
     )
   end
@@ -183,7 +179,7 @@ RSpec.describe "PurchaseOrders", type: :request do
   end
 
   describe "PATCH /purchase-orders/:id/approve" do
-    let!(:purchase_order) { create(:purchase_order, :pending, warehouse:, manager:, supplier:) }
+    let!(:purchase_order) { create(:purchase_order, :pending, manager:) }
 
     context "when approval is successful" do
       it "approves the purchase order and redirects" do
@@ -209,7 +205,7 @@ RSpec.describe "PurchaseOrders", type: :request do
   end
 
   describe "PATCH /purchase-orders/:id/reject" do
-    let!(:purchase_order) { create(:purchase_order, :pending, warehouse:, manager:, supplier:) }
+    let!(:purchase_order) { create(:purchase_order, :pending, manager:) }
 
     context "when rejection is successful" do
       it "rejects the purchase order and redirects" do
