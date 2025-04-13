@@ -50,6 +50,8 @@ class Inventory < ApplicationRecord
   belongs_to :product, inverse_of: :inventories, touch: true
   belongs_to :unit, inverse_of: :inventories
 
+  after_create :create_stock, :create_replenishment
+
   delegate :quantity_in_hand, :quantity_pending_to_buyer, to: :stock
   delegate :quantity_pending_from_supplier, to: :replenishment
   delegate :symbol, to: :unit, prefix: true
@@ -61,6 +63,13 @@ class Inventory < ApplicationRecord
   private
 
   def unit_is_in_valid_category
+  def create_stock
+    Stock.create!(inventory: self)
+  end
+
+  def create_replenishment
+    Replenishment.create!(inventory: self)
+  end
     return unless product.present? && unit.present?
 
     allowed_units = Unit.for_category(product.unit_category).map(&:symbol)
