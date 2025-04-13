@@ -14,6 +14,6 @@ class UnitsController < ApplicationController
   private
 
   def set_breadcrumbs
-    add_breadcrumb t("units.breadcrumb"), unit_path
+    add_breadcrumb t("units.breadcrumb"), units_path
   end
 end
