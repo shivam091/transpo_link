@@ -7,10 +7,7 @@
 require "spec_helper"
 
 RSpec.describe Inventory, type: :model do
-  let(:unit) { create(:acre_unit) }
-  let(:product) { create(:product, unit:) }
-
-  subject { create(:inventory, unit:, product:) }
+  subject { create(:inventory) }
 
   describe "valid factory" do
     it { is_expected.to have_a_valid_factory(:inventory) }
@@ -130,7 +127,7 @@ RSpec.describe Inventory, type: :model do
 
   describe "instance methods" do
     describe "#key_associations" do
-      let!(:inventory) { create(:inventory, unit:, product:) }
+      let!(:inventory) { create(:inventory) }
 
       it "returns array of key associations" do
         expect(inventory.key_associations).to eq([inventory.product, inventory.warehouse])

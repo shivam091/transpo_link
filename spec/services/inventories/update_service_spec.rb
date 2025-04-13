@@ -7,10 +7,7 @@
 require "spec_helper"
 
 RSpec.describe Inventories::UpdateService, type: :service do
-  let(:unit) { create(:kilogramme_unit) }
-
-  let!(:product) { create(:product, unit:) }
-  let!(:inventory) { create(:inventory, product:, unit:) }
+  let!(:inventory) { create(:inventory) }
 
   let(:inventory_attributes) { {tracking_method: "fifo"} }
 

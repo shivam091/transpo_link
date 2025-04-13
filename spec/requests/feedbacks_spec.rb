@@ -7,13 +7,12 @@
 require "spec_helper"
 
 RSpec.describe "Feedbacks", type: :request do
-  let(:unit) { create(:acre_unit) }
-  let(:reviewable) { create(:product, unit:) }
+  let!(:unread_feedback) { create(:feedback) }
+  let!(:read_feedback) { create(:feedback, :read) }
+
+  let(:reviewable) { unread_feedback.reviewable }
   let(:valid_attributes) { attributes_for(:feedback, rating: 0.5) }
   let(:invalid_attributes) { attributes_for(:feedback, rating: nil) }
-
-  let!(:unread_feedback) { create(:feedback, reviewable:) }
-  let!(:read_feedback) { create(:feedback, :read, reviewable:) }
 
   include_context "sign in as admin"
 

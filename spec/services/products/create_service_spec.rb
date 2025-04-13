@@ -15,7 +15,12 @@ RSpec.describe Products::CreateService, type: :service do
 
   describe ".call" do
     context "when provided attributes are valid" do
-      let(:product_attributes) { attributes_for(:product).merge(product_category_id: product_category.id, unit_id: unit.id) }
+      let(:product_attributes) do
+        attributes_for(:product).merge(
+          product_category_id: product_category.id,
+          unit_id: unit.id
+        )
+      end
 
       include_examples "creates a record", Product
       include_examples "returns a success response"

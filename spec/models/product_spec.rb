@@ -149,11 +149,10 @@ RSpec.describe Product, type: :model do
   include_examples "apply default scope on created_at:desc"
 
   describe "instance methods" do
-    let!(:unit) { create(:kilogramme_unit) }
-    let!(:product) { create(:product, unit:) }
+    let!(:product) { create(:product) }
 
     describe "#reject_product_price?" do
-      let!(:product_price) { create(:product_price, product: product) }
+      let!(:product_price) { create(:product_price, product:) }
 
       context "when creating product prices" do
         context "when valid attributes are provided" do

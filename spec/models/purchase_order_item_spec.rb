@@ -7,10 +7,7 @@
 require "spec_helper"
 
 RSpec.describe PurchaseOrderItem, type: :model do
-  let(:unit) { create(:acre_unit) }
-  let(:product) { create(:product, unit:) }
-
-  subject { create(:purchase_order_item, product:, unit:) }
+  subject { create(:purchase_order_item) }
 
   describe "valid factory" do
     it { is_expected.to have_a_valid_factory(:purchase_order_item) }
@@ -130,11 +127,11 @@ RSpec.describe PurchaseOrderItem, type: :model do
 
   describe "instance methods" do
     describe "#set_unit_cost_and_currency" do
-      let!(:product) { create(:product, cost_price: 100.5, currency: "USD", unit:) }
+      let!(:product) { create(:product, cost_price: 100.5, currency: "USD") }
       let!(:purchase_order) { create(:purchase_order) }
 
       context "when #unit_cost & #currency are not set" do
-        let(:purchase_order_item) { build(:purchase_order_item, purchase_order: purchase_order, product: product) }
+        let(:purchase_order_item) { build(:purchase_order_item, purchase_order:, product:) }
 
         it "sets unit_cost and currency from the product" do
           expect(purchase_order_item.unit_cost).to be_nil
@@ -148,7 +145,7 @@ RSpec.describe PurchaseOrderItem, type: :model do
       end
 
       context "when #unit_cost & #currency are already set" do
-        let(:purchase_order_item) { build(:purchase_order_item, purchase_order: purchase_order, product: product, unit_cost: 120.75, currency: "EUR") }
+        let(:purchase_order_item) { build(:purchase_order_item, unit_cost: 120.75, currency: "EUR", purchase_order:, product:) }
 
         it "overrides unit_cost and currency & sets them from the product" do
           expect(purchase_order_item.unit_cost).to eq(120.75)
