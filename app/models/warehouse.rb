@@ -68,7 +68,7 @@ class Warehouse < ApplicationRecord
 
   belongs_to :unit, inverse_of: :warehouses
 
-  delegate :symbol, to: :unit, prefix: true
+  delegate :symbol, :category, to: :unit, prefix: true
 
   accepts_nested_attributes_for :address, update_only: true
 

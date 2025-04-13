@@ -47,6 +47,8 @@ class PurchaseOrderItem < ApplicationRecord
             inclusion: {in: statuses.values, message: :inclusion},
             reduce: true
 
+  validate :unit_is_in_product_unit_category
+
   belongs_to :purchase_order, inverse_of: :purchase_order_items
   belongs_to :product, inverse_of: :purchase_order_items
   belongs_to :unit, inverse_of: :purchase_order_items
@@ -56,6 +58,16 @@ class PurchaseOrderItem < ApplicationRecord
   delegate :symbol, to: :unit, prefix: true
 
   private
+
+  def unit_is_in_product_unit_category
+    return unless product.present? && unit.present?
+
+    allowed_units = Unit.for_category(product.unit_category).map(&:symbol)
+
+    if allowed_units.blank? || !allowed_units.include?(unit_symbol)
+      errors.add(:unit_id, :incompatible_unit_category)
+    end
+  end
 
   def set_unit_cost_and_currency
     return unless will_save_change_to_product_id?
