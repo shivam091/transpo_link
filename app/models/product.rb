@@ -48,6 +48,7 @@ class Product < ApplicationRecord
             reduce: true
 
   has_many :inventories, inverse_of: :product, dependent: :destroy
+  has_many :warehouses, through: :inventories, inverse_of: :products
   has_many :product_prices, inverse_of: :product, dependent: :destroy
   has_many :feedbacks, as: :reviewable, inverse_of: :reviewable, dependent: :nullify
   has_many :purchase_order_items, inverse_of: :product, dependent: :restrict_with_exception
