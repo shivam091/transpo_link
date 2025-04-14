@@ -113,10 +113,11 @@ class PurchaseOrder < ApplicationRecord
     purchase_order_items.each do |item|
       product = item.product
       inventory = warehouse.inventories.for_product(product)
-      raise PurchaseOrders::MissingInventoryError.new(product) if inventory.nil?
+      raise PurchaseOrders::MissingInventoryError.new(warehouse, product) if inventory.nil?
 
-      quantity = UnitConversion.convert(item.unit, inventory.unit, item.quantity)
-      raise PurchaseOrders::UnitConversionError.new(product) if quantity.nil?
+      source_unit, target_unit = item.unit, inventory.unit
+      quantity = UnitConversion.convert(source_unit, target_unit, item.quantity)
+      raise PurchaseOrders::UnitConversionError.new(source_unit, target_unit) if quantity.nil?
 
       inventory.replenishment.increment!(:quantity_pending_from_supplier, quantity)
     end

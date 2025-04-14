@@ -179,7 +179,7 @@ RSpec.describe "PurchaseOrders", type: :request do
   end
 
   describe "PATCH /purchase-orders/:id/approve" do
-    let(:warehouse) { create(:warehouse) }
+    let(:warehouse) { create(:warehouse, name: "Test warehouse") }
     let(:product) { create(:product, name: "Test product") }
     let(:unit) { product.unit }
     let(:supplier) { warehouse.suppliers.first }
@@ -191,9 +191,7 @@ RSpec.describe "PurchaseOrders", type: :request do
     end
 
     context "when inventory exists and unit conversion is successful" do
-      before do
-        create(:inventory, warehouse:, product:, unit:)
-      end
+      before { create(:inventory, warehouse:, product:, unit:) }
 
       it "approves the purchase order and redirects" do
         patch approve_purchase_order_path(purchase_order)
@@ -205,11 +203,11 @@ RSpec.describe "PurchaseOrders", type: :request do
     end
 
     context "when inventory is missing" do
-      it "does not approve and redirects with a missing inventory error" do
+      it "does not approve the purchase order and redirects with a missing inventory error" do
         patch approve_purchase_order_path(purchase_order)
 
         expect(response).to redirect_to(root_path)
-        expect(flash[:alert]).to eq("Inventory is missing for the product Test product in the warehouse.")
+        expect(flash[:alert]).to eq('Inventory is missing for the product "Test product" in the warehouse "Test warehouse".')
         expect(response).to have_http_status(:found)
       end
     end
@@ -220,11 +218,11 @@ RSpec.describe "PurchaseOrders", type: :request do
         allow(UnitConversion).to receive(:convert) { nil }
       end
 
-      it "does not approve and redirects with an unit conversion error" do
+      it "does not approve the purchase order and redirects with an unit conversion error" do
         patch approve_purchase_order_path(purchase_order)
 
         expect(response).to redirect_to(root_path)
-        expect(flash[:alert]).to eq("Could not convert base unit of Test product. Please ensure valid unit convertions exist.")
+        expect(flash[:alert]).to eq('Cannot convert from "Item" to "Item". Please ensure a valid unit conversion exists.')
         expect(response).to have_http_status(:found)
       end
     end
