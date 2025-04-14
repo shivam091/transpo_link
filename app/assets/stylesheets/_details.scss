@@ -1,0 +1,35 @@
+details summary > * {
+  display: inline;
+}
+details > summary {
+  list-style: none;
+  transition: 80ms cubic-bezier(0.33, 1, 0.68, 1);
+  transition-property: color,background-color,box-shadow,border-color;
+}
+details > summary::-webkit-details-marker {
+  appearance: none;
+}
+.summary-open,
+.summary-close {
+  align-items: center;
+  text-indent: 0.3rem;
+}
+details {
+  .summary-open {
+    display: inline-flex;
+  }
+  .summary-close {
+    display: none;
+  }
+}
+details[open] {
+  .summary-open {
+    display: none;
+  }
+  .summary-close {
+    display: inline-flex;
+  }
+  summary {
+    margin-bottom: 0.25rem;
+  }
+}
