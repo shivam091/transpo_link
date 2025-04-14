@@ -49,6 +49,9 @@
     overflow-wrap: break-word;
     text-overflow: ellipsis;
     color: var(--bs-body-color);
+    input[type='checkbox'] {
+      margin-top: 0;
+    }
   }
   .table-cell.cell-narrow {
     flex: 0 1 65px;
