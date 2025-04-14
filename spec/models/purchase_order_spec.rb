@@ -153,52 +153,6 @@ RSpec.describe PurchaseOrder, type: :model do
       end
     end
 
-    describe "#update_replenishment!" do
-      let(:source_unit) { create(:dozen_unit) }
-      let(:target_unit) { create(:item_unit) }
-      let(:warehouse) { create(:warehouse, name: "Test warehouse", unit: source_unit) }
-      let(:product) { create(:product, name: "Test product", unit: source_unit) }
-      let(:supplier) { warehouse.suppliers.first }
-      let(:manager) { warehouse.managers.first }
-
-      let!(:inventory) { create(:inventory, warehouse:, product:, unit: target_unit) }
-      let!(:unit_conversion) { create(:dozen_item_conversion, source_unit:, target_unit:) }
-
-      let!(:purchase_order) do
-        create(:purchase_order, :pending, warehouse:, manager:, supplier:).tap do |po|
-          create(:purchase_order_item, purchase_order: po, product:, unit: source_unit, quantity: 10)
-        end
-      end
-
-      context "when inventory and unit conversion exists" do
-        it "increments quantity_pending_from_supplier correctly" do
-          expect {
-            purchase_order.send(:update_replenishment!)
-          }.to change { inventory.replenishment.reload.quantity_pending_from_supplier }.by(120)
-        end
-      end
-
-      context "when inventory is missing" do
-        before { inventory.destroy }
-
-        it "raises MissingInventoryError" do
-          expect {
-            purchase_order.send(:update_replenishment!)
-          }.to raise_error(PurchaseOrders::MissingInventoryError, 'Inventory is missing for the product "Test product" in the warehouse "Test warehouse".')
-        end
-      end
-
-      context "when unit conversion is missing" do
-        before { UnitConversion.destroy_all }
-
-        it "raises UnitConversionError" do
-          expect {
-            purchase_order.send(:update_replenishment!)
-          }.to raise_error(PurchaseOrders::UnitConversionError, 'Cannot convert from "Dozen" to "Item". Please ensure a valid unit conversion exists.')
-        end
-      end
-    end
-
     describe "#reject_purchase_order_item?" do
       let!(:purchase_order_item) { create(:purchase_order_item, purchase_order:) }
 

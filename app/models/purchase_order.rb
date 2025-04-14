@@ -42,7 +42,7 @@ class PurchaseOrder < ApplicationRecord
       transitions from: :pending, to: :approved
 
       after do
-        update_replenishment!
+        replenish_inventory!
       end
     end
 
@@ -109,17 +109,7 @@ class PurchaseOrder < ApplicationRecord
     ].all?(&:blank?)
   end
 
-  def update_replenishment!
-    purchase_order_items.each do |item|
-      product = item.product
-      inventory = warehouse.inventories.for_product(product)
-      raise PurchaseOrders::MissingInventoryError.new(warehouse, product) if inventory.nil?
-
-      source_unit, target_unit = item.unit, inventory.unit
-      quantity = UnitConversion.convert(source_unit, target_unit, item.quantity)
-      raise PurchaseOrders::UnitConversionError.new(source_unit, target_unit) if quantity.nil?
-
-      inventory.replenishment.increment!(:quantity_pending_from_supplier, quantity)
-    end
+  def replenish_inventory!
+    Inventories::ReplenishmentService.(self)
   end
 end
