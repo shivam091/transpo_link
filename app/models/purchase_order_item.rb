@@ -49,9 +49,11 @@ class PurchaseOrderItem < ApplicationRecord
 
   validate :unit_is_in_product_unit_category
 
-  belongs_to :purchase_order, inverse_of: :purchase_order_items
-  belongs_to :product, inverse_of: :purchase_order_items
-  belongs_to :unit, inverse_of: :purchase_order_items
+  with_options inverse_of: :purchase_order_items do |a|
+    a.belongs_to :purchase_order
+    a.belongs_to :product
+    a.belongs_to :unit
+  end
 
   before_validation :set_unit_cost_and_currency
 

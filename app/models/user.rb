@@ -35,21 +35,26 @@ class User < ApplicationRecord
             reduce: true,
             if: :password_required?
 
-  has_one :user_detail, inverse_of: :user, dependent: :destroy, autosave: true
-  has_one :user_preference, inverse_of: :user, dependent: :destroy, autosave: true
+  with_options inverse_of: :user do |a|
+    a.has_one :user_detail, dependent: :destroy, autosave: true
+    a.has_one :user_preference, dependent: :destroy, autosave: true
+
+    a.has_many :request_logs, dependent: :nullify
+    a.has_many :legal_identifiers, dependent: :destroy
+    a.has_many :inventory_audit_logs, dependent: :nullify
+    a.has_many :feedbacks, dependent: :nullify
+  end
+
+  with_options dependent: :restrict_with_exception do |a|
+    a.has_many :purchase_orders, inverse_of: :manager
+    a.has_many :supplied_purchase_orders, inverse_of: :supplier, class_name: "PurchaseOrder"
+    a.has_many :warehouse_managers, inverse_of: :manager, foreign_key: :manager_id
+    a.has_many :warehouse_suppliers, inverse_of: :supplier, foreign_key: :supplier_id
+  end
+
   has_one :address, as: :addressable, inverse_of: :addressable, dependent: :destroy
 
-  has_many :request_logs, inverse_of: :user, dependent: :nullify
-  has_many :legal_identifiers, inverse_of: :user, dependent: :destroy
-  has_many :inventory_audit_logs, inverse_of: :user, dependent: :nullify
-  has_many :feedbacks, inverse_of: :user, dependent: :nullify
-  has_many :purchase_orders, inverse_of: :manager, dependent: :restrict_with_exception
-  has_many :supplied_purchase_orders, inverse_of: :supplier, class_name: "PurchaseOrder", dependent: :restrict_with_exception
-
-  has_many :warehouse_managers, inverse_of: :manager, foreign_key: :manager_id, dependent: :restrict_with_exception
   has_many :managed_warehouses, through: :warehouse_managers, inverse_of: :managers, source: :warehouse
-
-  has_many :warehouse_suppliers, inverse_of: :supplier, foreign_key: :supplier_id, dependent: :restrict_with_exception
   has_many :supplied_warehouses, through: :warehouse_suppliers, inverse_of: :suppliers, source: :warehouse
 
   belongs_to :role, inverse_of: :users

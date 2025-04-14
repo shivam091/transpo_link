@@ -3,6 +3,8 @@
 # -*- warn_indent: true -*-
 
 class WarehouseSupplier < ApplicationRecord
-  belongs_to :warehouse, inverse_of: :warehouse_suppliers, touch: true
-  belongs_to :supplier, inverse_of: :warehouse_suppliers, class_name: "User"
+  with_options inverse_of: :warehouse_suppliers do |a|
+    a.belongs_to :warehouse, touch: true
+    a.belongs_to :supplier, class_name: "User"
+  end
 end
