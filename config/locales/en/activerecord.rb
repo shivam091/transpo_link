@@ -73,7 +73,12 @@
           preferred_time_zone: "Preferred time zone",
           preferred_currency: "Preferred currency",
           preferred_color_scheme: "Preferred color scheme",
+          preferred_date_format: "Preferred date format",
+          preferred_time_format: "Preferred time format",
+          preferred_datetime_format: "Preferred datetime format",
+          first_day_of_week: "First day of week",
           are_notifications_enabled: "Are notifications enabled",
+          enable_keyboard_shortcuts: "Enable keyboard shortcuts",
         },
         address: {
           address1: "Flat, house no., building, company, apartment, P.O. box, c/o",

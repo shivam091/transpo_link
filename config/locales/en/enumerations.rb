@@ -11,6 +11,11 @@
           light: "Light",
           dark: "Dark"
         },
+        first_day_of_weeks: {
+          sunday: "Sunday",
+          monday: "Monday",
+          saturday: "Saturday"
+        },
       },
       legal_identifier: {
         tax_identifier_types: {
