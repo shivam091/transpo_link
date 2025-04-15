@@ -47,6 +47,8 @@ class Product < ApplicationRecord
             presence: true,
             reduce: true
 
+  validates_associated :product_prices
+
   with_options inverse_of: :product do |a|
     a.has_many :inventories, dependent: :destroy
     a.has_many :product_prices, dependent: :destroy

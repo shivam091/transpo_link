@@ -318,6 +318,13 @@
             attributes: {
             },
           },
+          product_price: {
+            attributes: {
+              warehouse_id: {
+                unit_category_mismatch: "is incompatible with this product due to a capacity unit mismatch"
+              }
+            },
+          },
           unit: {
             attributes: {
               symbol: {
