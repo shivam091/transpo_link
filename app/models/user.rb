@@ -75,7 +75,12 @@ class User < ApplicationRecord
            :preferred_time_zone, :preferred_time_zone=,
            :preferred_color_scheme, :preferred_color_scheme=,
            :preferred_currency, :preferred_currency=,
+           :preferred_date_format, :preferred_date_format=,
+           :preferred_time_format, :preferred_time_format=,
+           :preferred_datetime_format, :preferred_datetime_format=,
+           :first_day_of_week, :first_day_of_week=,
            :are_notifications_enabled, :are_notifications_enabled=,
+           :enable_keyboard_shortcuts, :enable_keyboard_shortcuts=,
            to: :user_preference
 
   accepts_nested_attributes_for :user_detail, update_only: true

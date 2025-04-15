@@ -127,7 +127,12 @@ RSpec.describe User, type: :model do
     it { is_expected.to delegate_method(:preferred_time_zone).to(:user_preference) }
     it { is_expected.to delegate_method(:preferred_color_scheme).to(:user_preference) }
     it { is_expected.to delegate_method(:preferred_currency).to(:user_preference) }
+    it { is_expected.to delegate_method(:preferred_date_format).to(:user_preference) }
+    it { is_expected.to delegate_method(:preferred_time_format).to(:user_preference) }
+    it { is_expected.to delegate_method(:preferred_datetime_format).to(:user_preference) }
+    it { is_expected.to delegate_method(:first_day_of_week).to(:user_preference) }
     it { is_expected.to delegate_method(:are_notifications_enabled).to(:user_preference) }
+    it { is_expected.to delegate_method(:enable_keyboard_shortcuts).to(:user_preference) }
   end
 
   include_examples "apply default scope on created_at:desc"
