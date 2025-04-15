@@ -61,6 +61,7 @@ class Product < ApplicationRecord
   end
 
   has_many :feedbacks, as: :reviewable, inverse_of: :reviewable, dependent: :nullify
+  has_many :warehouses, through: :inventories, inverse_of: :products
 
   delegate :name, to: :product_category, prefix: true
   delegate :symbol, :category, to: :unit, prefix: true

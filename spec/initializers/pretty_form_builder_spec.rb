@@ -330,10 +330,10 @@ RSpec.describe PrettyFormBuilder, type: :helper do
 
     before do
       # Mocking Unit.select_options
-      allow(Unit).to receive(:select_options).and_return({
+      allow(Unit).to receive(:select_options) { {
         "weight" => [kilogramme_unit, gramme_unit],
         "volume" => [litre_unit, millilitre_unit]
-      })
+      } }
     end
 
     context "when category is provided" do

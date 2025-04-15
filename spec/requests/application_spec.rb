@@ -23,7 +23,7 @@ RSpec.describe "Application", type: :request do
         it "signs out the user and redirects to login with an alert message" do
           buyer.toggle!(:is_banned)
           buyer.reload
-          
+
           get root_path
 
           expect(flash[:alert]).to eq("Your account is suspended. If you believe your account was suspended by mistake, please communicate with administrator for further assistance.")

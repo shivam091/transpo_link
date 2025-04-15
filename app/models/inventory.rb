@@ -55,15 +55,31 @@ class Inventory < ApplicationRecord
     a.belongs_to :unit
   end
 
+  after_create :create_stock, :create_replenishment
+
   delegate :quantity_in_hand, :quantity_pending_to_buyer, to: :stock
   delegate :quantity_pending_from_supplier, to: :replenishment
   delegate :symbol, to: :unit, prefix: true
+
+  class << self
+    def for_product(product)
+      find_by(arel_table[:product_id].eq(product.id))
+    end
+  end
 
   def key_associations
     [product, warehouse]
   end
 
   private
+
+  def create_stock
+    Stock.create!(inventory: self)
+  end
+
+  def create_replenishment
+    Replenishment.create!(inventory: self)
+  end
 
   def inventory_unit_matches_product_unit_category
     return unless product.present? && unit.present?

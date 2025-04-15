@@ -88,6 +88,8 @@ RSpec.describe Product, type: :model do
 
   describe "associations" do
     it { is_expected.to have_many(:inventories).inverse_of(:product).dependent(:destroy) }
+    it { is_expected.to have_many(:warehouses).through(:inventories).inverse_of(:products) }
+
     it { is_expected.to have_many(:product_prices).inverse_of(:product).dependent(:destroy) }
     it { is_expected.to have_many(:feedbacks).inverse_of(:reviewable).dependent(:nullify) }
     it { is_expected.to have_many(:purchase_order_items).inverse_of(:product).dependent(:restrict_with_exception) }
