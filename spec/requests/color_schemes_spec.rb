@@ -9,10 +9,10 @@ require "spec_helper"
 RSpec.describe "ColorSchemes", type: :request do
   include_context "sign in as buyer"
 
-  describe "PATCH /color_scheme" do
+  describe "PUT|PATCH /color_scheme" do
     let(:headers) { {"ACCEPT" => "application/json", "CONTENT_TYPE" => "application/json"} }
 
-    context "with valid color scheme" do
+    context "when valid color scheme" do
       it "updates the user's color scheme and returns success JSON" do
         patch color_scheme_path, params: {color_scheme: "dark"}.to_json, headers: headers
 
@@ -26,7 +26,7 @@ RSpec.describe "ColorSchemes", type: :request do
       end
     end
 
-    context "with invalid color scheme" do
+    context "when invalid color scheme" do
       it "returns an unprocessable_entity error" do
         patch color_scheme_path, params: {color_scheme: "rainbow"}.to_json, headers: headers
 

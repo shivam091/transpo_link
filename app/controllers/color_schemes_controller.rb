@@ -3,6 +3,8 @@
 # -*- warn_indent: true -*-
 
 class ColorSchemesController < ApplicationController
+
+  # PUT|PATCH /color-scheme
   def update
     color_scheme = params[:color_scheme]
 
