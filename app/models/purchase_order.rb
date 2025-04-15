@@ -3,7 +3,12 @@
 # -*- warn_indent: true -*-
 
 class PurchaseOrder < ApplicationRecord
-  include AASM, HasReferenceCode, Sanitizable, NullifyIfBlank
+  include AASM, HasReferenceCode, Sanitizable, NullifyIfBlank, Pageable, Navigable
+
+  LISTING_ATTRIBUTES = %i[
+    reference_code warehouse_id manager_id supplier_id order_date expected_delivery_date
+    status
+  ].freeze
 
   enum :status, {
     draft: "draft",
@@ -25,16 +30,16 @@ class PurchaseOrder < ApplicationRecord
     state :draft, initial: true
     state :pending, :approved, :cancelled, :rejected, :partially_delivered, :fully_delivered
 
-    event :pending do
+    event :cancel do
+      transitions from: [:draft, :pending], to: :cancelled
+    end
+
+    event :submit do
       transitions from: :draft, to: :pending
     end
 
     event :approve do
       transitions from: :pending, to: :approved
-    end
-
-    event :cancel do
-      transitions from: :pending, to: :cancelled
     end
 
     event :reject do
@@ -68,6 +73,8 @@ class PurchaseOrder < ApplicationRecord
             allow_blank: true,
             reduce: true
 
+  validates_associated :purchase_order_items
+
   has_many :purchase_order_items, inverse_of: :purchase_order, dependent: :destroy
 
   belongs_to :warehouse, inverse_of: :purchase_orders
@@ -76,14 +83,25 @@ class PurchaseOrder < ApplicationRecord
 
   accepts_nested_attributes_for :purchase_order_items, allow_destroy: true, reject_if: :reject_purchase_order_item?
 
+  class << self
+    def accessible(user)
+      user.purchase_orders
+    end
+  end
+
+  def key_associations
+    [warehouse, manager, supplier]
+  end
+
   private
 
   def reject_purchase_order_item?(attributes)
     [
       attributes[:purchase_order_id],
       attributes[:product_id],
-      attributes[:uom],
-      attributes[:currency]
-    ].all?(&:blank?) && attributes[:quantity].zero?
+      attributes[:unit_id],
+      attributes[:currency],
+      attributes[:quantity]
+    ].all?(&:blank?)
   end
 end

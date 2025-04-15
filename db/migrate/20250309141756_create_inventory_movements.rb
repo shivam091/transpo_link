@@ -18,7 +18,15 @@ class CreateInventoryMovements < ActiveRecord::Migration[8.0]
                    index: {using: :btree}
       t.decimal :quantity, precision: 12, scale: 2, default: 0.0 # +ve for incoming, -ve for outgoing
       t.enum :movement_type, enum_type: :movement_types
-      t.string :inventory_unit # Ensures correct unit tracking
+      t.references :unit,
+                   type: :uuid,
+                   foreign_key: {
+                     to_table: :units,
+                     name: :fk_inventory_movements_unit_id_on_units,
+                     on_delete: :restrict
+                   },
+                   null: false,
+                   index: {using: :btree} # Ensures correct unit tracking
       t.decimal :unit_cost, precision: 12, scale: 2 # Cost per unit at the time of movement
       t.decimal :total_cost, precision: 12, scale: 2 # Total cost of the movement
       t.string :currency
@@ -38,8 +46,6 @@ class CreateInventoryMovements < ActiveRecord::Migration[8.0]
 
       t.check_constraint "movement_type IS NOT NULL", name: :check_inventory_movements_movement_type_presence
       t.check_constraint "movement_type IN (#{enum_values('movement_types')})", name: :check_inventory_movements_movement_type_in_enum_values
-
-      t.check_constraint "inventory_unit IS NOT NULL AND inventory_unit <> ''", name: :check_inventory_movements_inventory_unit_presence
 
       t.check_constraint "unit_cost IS NOT NULL", name: :check_inventory_movements_unit_cost_presence
       t.check_constraint "unit_cost > 0.0", name: :check_inventory_movements_unit_cost_positive

@@ -7,9 +7,6 @@ class ProductPrice < ApplicationRecord
 
   LISTING_ATTRIBUTES = %i[warehouse_id min_quantity unit_price].freeze
 
-  attribute :min_quantity, default: 1.0
-  attribute :unit_price, default: 0.0
-
   validates :min_quantity,
             presence: true,
             numericality: {greater_than: 0.0},
@@ -22,7 +19,7 @@ class ProductPrice < ApplicationRecord
   belongs_to :product, inverse_of: :product_prices, touch: true
   belongs_to :warehouse, inverse_of: :product_prices, optional: true
 
-  delegate :name, to: :warehouse, prefix: true
+  delegate :name, to: :warehouse, prefix: true, allow_nil: true
 
   default_scope { order_created_desc }
 end

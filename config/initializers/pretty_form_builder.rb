@@ -61,7 +61,15 @@ class PrettyFormBuilder < ActionView::Helpers::FormBuilder
   def measurement_unit_select(attribute, options = {}, html_options = {})
     category = options[:category]
     selected_value = options.fetch(:selected, @object&.send(attribute))
-    units = TranspoLink::MeasurementUnits.select_options(category)
+
+    units = Unit.select_options(category).map do |category, units|
+      [
+        ::I18n.t(category, scope: "measurement_units.categories"),
+        units.map do |unit|
+          [::I18n.t(unit.symbol, scope: "measurement_units.sub_categories"), unit.id]
+        end
+      ]
+    end.to_h
 
     select_options = if category
       @template.options_for_select(units.values.flatten(1), selected_value)

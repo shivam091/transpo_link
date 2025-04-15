@@ -1,4 +1,4 @@
-= render_if_exists("shared/inline_navigations") do
+= safe_render.partial("shared/inline_navigations") do
   %ul.nav.nav-pills.flex-row
     %li.nav-item
       = link_to t(".all"), users_path, class: class_names("nav-link", "active": params[:status].nil?)

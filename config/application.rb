@@ -14,7 +14,10 @@ module TranspoLink
   class Application < Rails::Application
     config.load_defaults 8.0
 
-    config.autoload_paths += %W(#{config.root}/lib)
+    config.autoload_paths += %W(
+      #{config.root}/lib
+      #{config.root}/app/errors
+    )
 
     config.encoding = "utf-8"
 

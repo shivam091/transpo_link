@@ -2,26 +2,25 @@
 .card.card-primary.border.border-primary
   .card-header
     .d-flex.justify-content-between.align-items-center
-      = render_if_exists("tax_rates/nav_tabs")
+      = safe_render.partial("tax_rates/nav_tabs")
       = link_to new_tax_rate_path, class: "btn btn-primary" do
-        = external_svg_tag("svgs/plus.svg")
+        = sprite_icon("plus")
         = button_text(:new)
   .card-body
     .table-responsive
-      %table.table.table-striped.table-borderless
-        %thead.border
-          %tr.table-active
-            %th{width: "3%", scope: "col"}#
-            - TaxRate::LISTING_ATTRIBUTES.each do |attribute|
-              %th{scope: "col"}
-                = TaxRate.human_attribute_name(attribute)
-            %th{width: "3%", scope: "col"}
-              = t("shared.actions")
-        %tbody.border
+      .table-container
+        .table-header
+          .table-cell.cell-narrow #
+          - TaxRate::LISTING_ATTRIBUTES.each do |attribute|
+            .table-cell
+              = TaxRate.human_attribute_name(attribute)
+          .table-cell.cell-narrow
+            = t("shared.actions")
+        .table-body
           - if @tax_rates&.each.with_index(1) do |tax_rate, index|
-            = render_if_exists("tax_rates/tax_rate", locals: {tax_rate:, index:})
+            = safe_render.partial("tax_rates/tax_rate", tax_rate:, index:)
           - end.empty?
-            = render_if_exists("shared/no_records", locals: {resource: TaxRate})
+            = safe_render.partial("shared/no_records", resource: TaxRate)
   - if @pagination_metadata.needs_pagination?
     .card-footer
       = render_pagination(@pagination_metadata)

@@ -5,15 +5,15 @@
 class PurchaseOrderItem < ApplicationRecord
   include AASM, ActsAsMoney
 
+  LISTING_ATTRIBUTES = %i[product_id quantity unit_cost total_cost status].freeze
+
   enum :status, {
     pending: "pending",
     delivered: "delivered",
     cancelled: "cancelled"
   }
 
-  attribute :quantity, default: 0.0
   attribute :received_quantity, default: 0.0
-  attribute :unit_cost, default: 0.0
   attribute :status, :enum, default: statuses[:pending]
 
   aasm column: :status, enum: true, requires_lock: true do
@@ -41,14 +41,39 @@ class PurchaseOrderItem < ApplicationRecord
             presence: true,
             numericality: {greater_than_or_equal_to: 0.0},
             reduce: true
-  validates :uom,
-            presence: true,
-            reduce: true
+  validates :unit_id, presence: true, reduce: true
   validates :status,
             presence: true,
             inclusion: {in: statuses.values, message: :inclusion},
             reduce: true
 
+  validate :unit_is_in_product_unit_category
+
   belongs_to :purchase_order, inverse_of: :purchase_order_items
   belongs_to :product, inverse_of: :purchase_order_items
+  belongs_to :unit, inverse_of: :purchase_order_items
+
+  before_validation :set_unit_cost_and_currency
+
+  delegate :symbol, to: :unit, prefix: true
+
+  private
+
+  def unit_is_in_product_unit_category
+    return unless product.present? && unit.present?
+
+    allowed_units = Unit.for_category(product.unit_category).map(&:symbol)
+
+    if allowed_units.blank? || !allowed_units.include?(unit_symbol)
+      errors.add(:unit_id, :incompatible_unit_category)
+    end
+  end
+
+  def set_unit_cost_and_currency
+    return unless will_save_change_to_product_id?
+
+    if product.present?
+      assign_attributes(unit_cost: product.cost_price, currency: product.currency)
+    end
+  end
 end

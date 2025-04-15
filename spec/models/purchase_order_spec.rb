@@ -7,7 +7,7 @@
 require "spec_helper"
 
 RSpec.describe PurchaseOrder, type: :model do
-  subject { create(:purchase_order) }
+  subject { build_stubbed(:purchase_order) }
 
   describe "valid factory" do
     it { is_expected.to have_a_valid_factory(:purchase_order) }
@@ -45,11 +45,17 @@ RSpec.describe PurchaseOrder, type: :model do
     it { is_expected.to have_check_constraint(:check_purchase_orders_status_presence).with_expression("status IS NOT NULL") }
   end
 
+  describe "constants" do
+    it { is_expected.to have_constant(:LISTING_ATTRIBUTES) }
+  end
+
   describe "included modules" do
     it { is_expected.to include_module(AASM) }
     it { is_expected.to include_module(HasReferenceCode) }
     it { is_expected.to include_module(Sanitizable) }
     it { is_expected.to include_module(NullifyIfBlank) }
+    it { is_expected.to include_module(Pageable) }
+    it { is_expected.to include_module(Navigable) }
   end
 
   describe "enum" do
@@ -59,7 +65,7 @@ RSpec.describe PurchaseOrder, type: :model do
   describe "default values" do
     let(:purchase_order) { described_class.new }
 
-    it "should set 'draft' as default value for #status" do
+    it "should set draft as default value for #status" do
       expect(purchase_order.status).to eq("draft")
     end
   end
@@ -77,9 +83,10 @@ RSpec.describe PurchaseOrder, type: :model do
 
   describe "state machines" do
     it { is_expected.to have_state(:draft) }
-    it { is_expected.to transition_from(:draft).to(:pending).on_event(:pending) }
-    it { is_expected.to transition_from(:pending).to(:approved).on_event(:approve) }
+    it { is_expected.to transition_from(:draft).to(:cancelled).on_event(:cancel) }
     it { is_expected.to transition_from(:pending).to(:cancelled).on_event(:cancel) }
+    it { is_expected.to transition_from(:draft).to(:pending).on_event(:submit) }
+    it { is_expected.to transition_from(:pending).to(:approved).on_event(:approve) }
     it { is_expected.to transition_from(:pending).to(:rejected).on_event(:reject) }
     it { is_expected.to transition_from(:approved).to(:partially_delivered).on_event(:partially_deliver) }
     it { is_expected.to transition_from(:approved).to(:fully_delivered).on_event(:fully_deliver) }
@@ -129,23 +136,37 @@ RSpec.describe PurchaseOrder, type: :model do
     end
   end
 
+  include_examples "apply default scope on created_at:desc"
+
   describe "instance methods" do
     let!(:purchase_order) { create(:purchase_order) }
 
+    describe "#key_associations" do
+      it "returns array of key associations" do
+        expect(purchase_order.key_associations).to eq(
+          [
+            purchase_order.warehouse,
+            purchase_order.manager,
+            purchase_order.supplier
+          ]
+        )
+      end
+    end
+
     describe "#reject_purchase_order_item?" do
-      let!(:purchase_order_item) { create(:purchase_order_item, purchase_order: purchase_order) }
+      let!(:purchase_order_item) { create(:purchase_order_item, purchase_order:) }
 
       context "when creating purchase order items" do
         context "when valid attributes are provided" do
-          let!(:product) { create(:product) }
+          let!(:another_product) { create(:product) }
 
           it "creates a purchase order item" do
             expect {
                 purchase_order.update(purchase_order_items_attributes: {
                   0 => {
-                    product_id: product.id,
+                    product_id: another_product.id,
                     quantity: 92,
-                    uom: "mg",
+                    unit_id: another_product.unit.id,
                     unit_cost: 100,
                     currency: "INR"
                   }
@@ -160,7 +181,7 @@ RSpec.describe PurchaseOrder, type: :model do
               purchase_order.update(purchase_order_items_attributes: {
                 0 => {
                   quantity: 0.0,
-                  uom: "",
+                  unit_id: "",
                   unit_cost: "",
                   currency: ""
                 }
@@ -189,6 +210,16 @@ RSpec.describe PurchaseOrder, type: :model do
             purchase_order.update(purchase_order_items_attributes: {id: purchase_order_item.id, _destroy: true})
           }.to change(PurchaseOrderItem, :count).by(-1)
         end
+      end
+    end
+  end
+
+  describe "class methods" do
+    describe ".accessible" do
+      let!(:purchase_order) { create(:purchase_order) }
+
+      it "returns list of accessible purchase orders" do
+        expect(described_class.accessible(purchase_order.manager)).to include(purchase_order)
       end
     end
   end

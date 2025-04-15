@@ -7,6 +7,8 @@
 require "spec_helper"
 
 RSpec.describe Warehouses::CreateService, type: :service do
+  let(:unit) { create(:kilogramme_unit) }
+
   let!(:manager) { create(:manager) }
   let!(:supplier) { create(:supplier) }
 
@@ -14,7 +16,13 @@ RSpec.describe Warehouses::CreateService, type: :service do
 
   describe ".call" do
     context "when provided attributes are valid" do
-      let(:warehouse_attributes) { attributes_for(:warehouse).merge(manager_ids: [manager.id], supplier_ids: [supplier.id]) }
+      let(:warehouse_attributes) do
+        attributes_for(:warehouse).merge(
+          manager_ids: [manager.id],
+          supplier_ids: [supplier.id],
+          unit_id: unit.id
+        )
+      end
 
       include_examples "creates a record", Warehouse
       include_examples "returns a success response"

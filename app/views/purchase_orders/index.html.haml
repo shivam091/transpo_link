@@ -1,0 +1,25 @@
+= title(t(".title"))
+.card.card-primary.border.border-primary
+  .card-header
+    .d-flex.justify-content-end.align-items-center
+      = link_to new_purchase_order_path, class: "btn btn-primary" do
+        = sprite_icon("plus")
+        = button_text(:new)
+  .card-body
+    .table-responsive
+      .table-container
+        .table-header
+          .table-cell.cell-narrow #
+          - PurchaseOrder::LISTING_ATTRIBUTES.each do |attribute|
+            .table-cell
+              = PurchaseOrder.human_attribute_name(attribute)
+          .table-cell.cell-narrow
+            = t("shared.actions")
+        .table-body{data: {controller: "lazy-turbo-frame", lazy_turbo_frame_hidden_class: "d-none"}}
+          - if @purchase_orders&.each.with_index(1) do |purchase_order, index|
+            = safe_render.partial("purchase_orders/purchase_order", purchase_order:, index:)
+          - end.empty?
+            = safe_render.partial("shared/no_records", resource: PurchaseOrder)
+  - if @pagination_metadata.needs_pagination?
+    .card-footer
+      = render_pagination(@pagination_metadata)

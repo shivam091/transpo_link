@@ -3,18 +3,6 @@
 # -*- warn_indent: true -*-
 
 module ApplicationHelper
-  def render_if_exists(partial, locals: {}, &block)
-    render(partial, locals, &block) if partial_exists?(partial)
-  end
-
-  def partial_exists?(partial)
-    lookup_context.exists?(partial, [], true)
-  end
-
-  def template_exists?(template)
-    lookup_context.exists?(template, [], false)
-  end
-
   def copyright_year
     copyright_start_year, copyright_end_year = 2025, Date.current.year
 
@@ -69,8 +57,8 @@ module ApplicationHelper
 
   def secret_reveal_button
     tag.button(type: :button, class: "btn-secret-reveal", data: {action: "click->secret-reveal#toggle"}) do
-      concat(external_svg_tag("svgs/eye-visible.svg", data: {secret_reveal_target: "icon"}))
-      concat(external_svg_tag("svgs/eye-hidden.svg", class: "d-none", data: {secret_reveal_target: "icon"}))
+      concat(sprite_icon("eye-visible", data: {secret_reveal_target: "icon"}))
+      concat(sprite_icon("eye-hidden", class: "d-none", data: {secret_reveal_target: "icon"}))
     end
   end
 

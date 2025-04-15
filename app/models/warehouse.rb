@@ -34,23 +34,20 @@ class Warehouse < ApplicationRecord
             reduce: true
   validates :total_capacity,
             presence: true,
-            numericality: {greater_than: 0, less_than: 10**10},
+            numericality: {greater_than: 0.0, less_than: 100_000_000_000.0},
             reduce: true
-  validates :capacity_unit,
-            presence: true,
-            inclusion: {in: TranspoLink::MeasurementUnits.all_units.map(&:to_s)},
-            reduce: true
+  validates :unit_id, presence: true, reduce: true
   validates :latitude,
             numericality: {
-              greater_than_or_equal_to: -90,
-              less_than_or_equal_to: 90
+              greater_than_or_equal_to: -90.0,
+              less_than_or_equal_to: 90.0
             },
             allow_nil: true,
             reduce: true
   validates :longitude,
             numericality: {
-              greater_than_or_equal_to: -180,
-              less_than_or_equal_to: 180
+              greater_than_or_equal_to: -180.0,
+              less_than_or_equal_to: 180.0
             },
             allow_nil: true,
             reduce: true
@@ -68,6 +65,10 @@ class Warehouse < ApplicationRecord
   has_many :product_prices, inverse_of: :warehouse, dependent: :restrict_with_exception
   has_many :inventories, inverse_of: :warehouse, dependent: :restrict_with_exception
   has_many :purchase_orders, inverse_of: :warehouse, dependent: :restrict_with_exception
+
+  belongs_to :unit, inverse_of: :warehouses
+
+  delegate :symbol, :category, to: :unit, prefix: true
 
   accepts_nested_attributes_for :address, update_only: true
 

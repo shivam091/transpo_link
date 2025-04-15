@@ -1,11 +1,11 @@
 = pretty_form_with model: @user, url: preference_path, class: "row g-3" do |form|
   = form_errors(@user)
   = form.fields_for :user_preference, include_id: false do |preference_form|
-    = render_if_exists("preferences/preference_form", locals: {form: preference_form})
+    = safe_render.partial("preferences/preference_form", form: preference_form)
   .actions
     = button_tag type: :submit, class: "btn btn-primary" do
-      = external_svg_tag("svgs/floppy.svg")
+      = sprite_icon("floppy")
       = button_text(:update)
     = link_to preference_path, class: "btn btn-secondary" do
-      = external_svg_tag("svgs/times.svg")
+      = sprite_icon("times")
       = button_text(:cancel)

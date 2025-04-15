@@ -9,27 +9,26 @@
           .widget-help
             = t(".your_legal_identifiers_help_text")
         = link_to new_legal_identifier_path, class: "btn btn-primary", data: {turbo_frame: :remote_modal} do
-          = external_svg_tag("svgs/plus.svg")
+          = sprite_icon("plus")
           = button_text(:new)
       .widget-body
-        = render_if_exists("legal_identifiers/help_texts")
+        = safe_render.partial("legal_identifiers/help_texts")
         %hr
-        = render_if_exists("legal_identifiers/nav_tabs")
+        = safe_render.partial("legal_identifiers/nav_tabs")
         .table-responsive
-          %table.table.table-striped.table-borderless
-            %thead.border
-              %tr.table-active
-                %th{width: "3%", scope: "col"}#
-                - LegalIdentifier::LISTING_ATTRIBUTES.each do |attribute|
-                  %th{scope: "col"}
-                    = LegalIdentifier.human_attribute_name(attribute)
-                %th{width: "3%", scope: "col"}
-                  = t("shared.actions")
-            %tbody.border
+          .table-container
+            .table-header
+              .table-cell.cell-narrow #
+              - LegalIdentifier::LISTING_ATTRIBUTES.each do |attribute|
+                .table-cell
+                  = LegalIdentifier.human_attribute_name(attribute)
+              .table-cell.cell-narrow
+                = t("shared.actions")
+            .table-body
               - if @legal_identifiers&.each.with_index(1) do |legal_identifier, index|
-                = render_if_exists("legal_identifiers/legal_identifier", locals: {legal_identifier:, index:})
+                = safe_render.partial("legal_identifiers/legal_identifier", legal_identifier:, index:)
               - end.empty?
-                = render_if_exists("shared/no_records", locals: {resource: LegalIdentifier})
+                = safe_render.partial("shared/no_records", resource: LegalIdentifier)
       - if @pagination_metadata.total_pages > 1
         .widget-footer
           = render_pagination(@pagination_metadata)

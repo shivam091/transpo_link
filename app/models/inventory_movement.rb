@@ -18,4 +18,5 @@ class InventoryMovement < ApplicationRecord
 
   belongs_to :inventory, inverse_of: :inventory_movements
   belongs_to :source, polymorphic: true, optional: true
+  belongs_to :unit, inverse_of: :inventory_movements
 end

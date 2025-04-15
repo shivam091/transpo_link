@@ -17,12 +17,12 @@
         .widget-title
           = t(".basic_n_contact_details")
       .widget-body
-        = render_if_exists("users/basic_n_contact_details", locals: {user: @user})
+        = safe_render.partial("users/basic_n_contact_details", user: @user)
     .widget
       .widget-header
         .widget-title
           = t(".additional_details")
       .widget-body
-        = render_if_exists("users/additional_details", locals: {user: @user})
+        = safe_render.partial("users/additional_details", user: @user)
   .card-footer
-    = render_if_exists("shared/navigable_links", locals: {record: @user})
+    = safe_render.partial("shared/navigable_links", resource: @user)

@@ -19,12 +19,12 @@
         .widget-title
           = t(".basic_details")
       .widget-body
-        = render_if_exists("request_logs/basic_details", locals: {request_log: @request_log})
+        = safe_render.partial("request_logs/basic_details", request_log: @request_log)
     .widget
       .widget-header
         .widget-title
           = t(".advanced_details")
       .widget-body
-        = render_if_exists("request_logs/advanced_details", locals: {request_log: @request_log})
+        = safe_render.partial("request_logs/advanced_details", request_log: @request_log)
   .card-footer
-    = render_if_exists("shared/navigable_links", locals: {record: @request_log})
+    = safe_render.partial("shared/navigable_links", resource: @request_log)

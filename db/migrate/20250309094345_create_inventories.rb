@@ -27,7 +27,15 @@ class CreateInventories < ActiveRecord::Migration[8.0]
                    null: false,
                    index: {using: :btree}
       t.enum :tracking_method, enum_type: :tracking_methods
-      t.string :inventory_unit
+      t.references :unit,
+                   type: :uuid,
+                   foreign_key: {
+                     to_table: :units,
+                     name: :fk_inventories_unit_id_on_units,
+                     on_delete: :restrict
+                   },
+                   null: false,
+                   index: {using: :btree}
       t.decimal :average_cost_price, precision: 12, scale: 2, default: 0.0 # Average Cost Price = Σ (Batch Cost Price × Batch Quantity) / Σ Batch Quantity
       t.string :currency
       t.decimal :low_stock_threshold, precision: 12, scale: 2, default: 0.0
@@ -42,8 +50,6 @@ class CreateInventories < ActiveRecord::Migration[8.0]
 
       t.check_constraint "low_stock_threshold IS NOT NULL", name: :check_inventories_low_stock_threshold_presence
       t.check_constraint "low_stock_threshold > 0.0", name: :check_inventories_low_stock_threshold_positive
-
-      t.check_constraint "inventory_unit IS NOT NULL AND inventory_unit <> ''", name: :check_inventories_inventory_unit_presence
 
       t.check_constraint "tracking_method IS NOT NULL", name: :check_inventories_tracking_method_presence
       t.check_constraint "tracking_method IN (#{enum_values('tracking_methods')})", name: :check_inventories_tracking_method_in_enum_values

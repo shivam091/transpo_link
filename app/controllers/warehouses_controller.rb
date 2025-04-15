@@ -96,7 +96,7 @@ class WarehousesController < ApplicationController
       :contact_number,
       :description,
       :total_capacity,
-      :capacity_unit,
+      :unit_id,
       :latitude,
       :longitude,
       :is_active,

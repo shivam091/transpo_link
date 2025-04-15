@@ -7,7 +7,7 @@ FactoryBot.define do
     association :inventory
     quantity { Faker::Number.between(from: 1, to: 100) }
     movement_type { InventoryMovement.movement_types[:restock] }
-    inventory_unit { TranspoLink::MeasurementUnits.units_for(:weight).sample }
+    association :unit, factory: :dozen_unit
     unit_cost { Faker::Commerce.price(range: 2.0..500.0)  }
     total_cost { quantity * unit_cost.to_f }
     currency { Faker::Currency.code }

@@ -8,6 +8,7 @@ require "spec_helper"
 
 RSpec.describe Inventories::UpdateService, type: :service do
   let!(:inventory) { create(:inventory) }
+
   let(:inventory_attributes) { {tracking_method: "fifo"} }
 
   subject(:service_response) { described_class.(inventory, inventory_attributes) }

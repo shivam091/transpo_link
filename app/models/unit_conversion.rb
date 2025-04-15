@@ -5,18 +5,61 @@
 class UnitConversion < ApplicationRecord
   include Sortable
 
-  LISTING_ATTRIBUTES = %i[from_unit to_unit conversion_rate].freeze
+  LISTING_ATTRIBUTES = %i[source_unit_id target_unit_id multiplier].freeze
 
-  validates :from_unit, :to_unit,
+  validates :source_unit_id,
             presence: true,
-            inclusion: {in: TranspoLink::MeasurementUnits.all_units.map(&:to_s)},
+            uniqueness: {scope: :target_unit_id, message: :uniqueness},
             reduce: true
-  validates :conversion_rate,
+  validates :target_unit_id, presence: true, reduce: true
+  validates :multiplier,
             presence: true,
             numericality: {greater_than: 0.0},
             reduce: true
 
-  belongs_to :product, inverse_of: :unit_conversions, touch: true
+  validate :units_must_be_different
+  validate :units_must_have_same_category
+
+  with_options class_name: "Unit" do |a|
+    a.belongs_to :source_unit, foreign_key: :source_unit_id, inverse_of: :source_conversions
+    a.belongs_to :target_unit, foreign_key: :target_unit_id, inverse_of: :target_conversions
+  end
 
   default_scope { order_created_desc }
+
+  delegate :symbol, :category, to: :source_unit, prefix: true
+  delegate :symbol, :category, to: :target_unit, prefix: true
+
+  class << self
+    def convert(source_unit, target_unit, quantity)
+      return quantity if source_unit == target_unit
+
+      unit_conversion = find_by(
+        arel_table[:source_unit_id].eq(source_unit.id)
+          .and(arel_table[:target_unit_id].eq(target_unit.id))
+      )
+
+      return nil unless unit_conversion # Return nil if no conversion exists
+
+      quantity * unit_conversion.multiplier
+    end
+  end
+
+  private
+
+  def units_must_be_different
+    return if source_unit_id.blank? || target_unit_id.blank?
+
+    if source_unit_id == target_unit_id
+      errors.add(:target_unit_id, :same_as_source_unit, message: "must be different from source unit")
+    end
+  end
+
+  def units_must_have_same_category
+    return if source_unit.blank? || target_unit.blank?
+
+    if source_unit_category != target_unit_category
+      errors.add(:target_unit_id, :category_mismatch, message: "must belong to the same category as source unit")
+    end
+  end
 end

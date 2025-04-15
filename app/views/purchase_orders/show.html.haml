@@ -1,0 +1,32 @@
+= title(@purchase_order.reference_code)
+.card.card-primary.border.border-primary
+  .card-body
+    .widget
+      .widget-header.d-flex.align-items-center.justify-content-between
+        .d-block
+          .widget-title
+            = @purchase_order.reference_code
+          .widget-help
+            %span.middle-dot-divider
+              = PurchaseOrder.human_attribute_name(:order_date)
+              = time_ago_with_tooltip(@purchase_order.order_date)
+            %span.middle-dot-divider
+              = PurchaseOrder.human_attribute_name(:updated_at)
+              = time_ago_with_tooltip(@purchase_order.updated_at)
+        = link_to edit_purchase_order_path(@purchase_order), class: "btn btn-secondary" do
+          = sprite_icon("pencil")
+          = button_text(:edit)
+    .widget
+      .widget-header
+        .widget-title
+          = t(".basic_details")
+      .widget-body
+        = safe_render.partial("purchase_orders/basic_details", purchase_order: @purchase_order)
+    .widget
+      .widget-header
+        .widget-title
+          = t(".purchase_order_items")
+      .widget-body
+        = safe_render.template("purchase_order_items/index")
+  .card-footer
+    = safe_render.partial("shared/navigable_links", resource: @purchase_order)

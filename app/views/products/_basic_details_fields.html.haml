@@ -29,8 +29,8 @@
   = form.label :min_stock_threshold, class: "form-label required"
   = form.number_field :min_stock_threshold, step: 1
 .col-sm-12.col-md-6.col-lg-3
-  = form.label :capacity_unit, class: "form-label required"
-  = form.measurement_unit_select :capacity_unit, {include_blank: t(".select_capacity_unit")}, {}
+  = form.label :unit_id, class: "form-label required"
+  = form.measurement_unit_select :unit_id, {include_blank: t(".select_capacity_unit")}, {}
 .col-12
   = form.label :is_active, class: "form-check-label mb-2"
   .form-check

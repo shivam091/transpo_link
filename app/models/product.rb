@@ -10,8 +10,7 @@ class Product < ApplicationRecord
     reference_code name sku barcode cost_price product_category_id
   ].freeze
 
-  attribute :min_stock_threshold, default: 0.0
-  attribute :cost_price, default: 0.0
+  attribute :min_stock_threshold, default: 10.0
 
   nullify_if_blank :description, :barcode
 
@@ -39,10 +38,7 @@ class Product < ApplicationRecord
             presence: true,
             numericality: {greater_than: 0.0},
             reduce: true
-  validates :capacity_unit,
-            presence: true,
-            inclusion: {in: TranspoLink::MeasurementUnits.all_units.map(&:to_s)},
-            reduce: true
+  validates :unit_id, presence: true, reduce: true
   validates :cost_price,
             presence: true,
             numericality: {greater_than: 0.0},
@@ -53,16 +49,16 @@ class Product < ApplicationRecord
 
   has_many :inventories, inverse_of: :product, dependent: :destroy
   has_many :product_prices, inverse_of: :product, dependent: :destroy
-  has_many :unit_conversions, inverse_of: :product, dependent: :destroy
   has_many :feedbacks, as: :reviewable, inverse_of: :reviewable, dependent: :nullify
   has_many :purchase_order_items, inverse_of: :product, dependent: :restrict_with_exception
 
   belongs_to :product_category, counter_cache: true, inverse_of: :products
+  belongs_to :unit, inverse_of: :products
 
   delegate :name, to: :product_category, prefix: true
+  delegate :symbol, :category, to: :unit, prefix: true
 
   with_options allow_destroy: true do |n|
-    n.accepts_nested_attributes_for :unit_conversions, reject_if: :reject_unit_conversion?
     n.accepts_nested_attributes_for :product_prices, reject_if: :reject_product_price?
   end
 
@@ -74,16 +70,9 @@ class Product < ApplicationRecord
 
   private
 
-  def reject_unit_conversion?(attributes)
-    [
-      attributes[:from_unit],
-      attributes[:to_unit],
-      attributes[:conversion_rate]
-    ].all?(&:blank?)
-  end
-
   def reject_product_price?(attributes)
     [
+      attributes[:warehouse_id],
       attributes[:min_quantity],
       attributes[:unit_price],
       attributes[:currency]

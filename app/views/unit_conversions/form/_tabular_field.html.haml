@@ -1,0 +1,14 @@
+.table-row.unit-conversion-form-wrapper{data: {new_record: form.object.new_record?}}
+  .table-cell.cell-narrow
+    = (form.index + 1) if form.object.persisted?
+    = form.hidden_field :id, value: form.object.id
+    = form.hidden_field :_destroy
+  .table-cell.flex-column
+    = form.measurement_unit_select :from_unit, {include_blank: t(".select_source_unit")}, {}
+  .table-cell.flex-column
+    = form.measurement_unit_select :to_unit, {include_blank: t(".select_target_unit")}, {}
+  .table-cell.flex-column
+    = form.number_field :conversion_rate, step: 0.0001
+  .table-cell.cell-narrow
+    = button_tag type: :button, class: "btn btn-sm btn-danger", data: {action: "click->nested-forms#removeAssociation"} do
+      = sprite_icon("trash")

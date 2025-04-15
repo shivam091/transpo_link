@@ -21,6 +21,6 @@ module ModalsHelper
   def render_modal(options = {}, &block)
     options.reverse_merge!(DEFAULT_MODAL_OPTIONS)
     options[:size_class] ||= MODAL_SIZE_CLASSES[(options.delete(:size) || :md)]
-    render_if_exists("shared/remote_modal", locals: options, &block)
+    safe_render.partial("shared/remote_modal", options, &block)
   end
 end

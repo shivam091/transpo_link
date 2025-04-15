@@ -77,7 +77,7 @@ class InventoriesController < ApplicationController
       :product_id,
       :warehouse_id,
       :tracking_method,
-      :inventory_unit,
+      :unit_id,
       :average_cost_price,
       :currency,
       :low_stock_threshold,

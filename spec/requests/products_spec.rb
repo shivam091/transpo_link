@@ -7,12 +7,16 @@
 require "spec_helper"
 
 RSpec.describe "Products", type: :request do
-  let(:product_category) { create(:product_category) }
-
   let!(:active_product) { create(:product, :active) }
   let!(:inactive_product) { create(:product) }
 
-  let(:valid_attributes) { attributes_for(:product, name: "Product", product_category_id: product_category.id) }
+  let(:valid_attributes) do
+    attributes_for(:product,
+      name: "Product",
+      product_category_id: active_product.product_category.id,
+      unit_id: active_product.unit.id
+    )
+  end
   let(:invalid_attributes) { attributes_for(:product, name: "") }
 
   include_context "sign in as admin"
@@ -90,7 +94,7 @@ RSpec.describe "Products", type: :request do
         expect {
           put product_path(active_product), params: {product: valid_attributes}, as: :turbo_stream
         }.to change { active_product.reload.name }.to("Product")
-        
+
         expect(response).to redirect_to(products_path)
         expect(flash[:notice]).to eq("Product was successfully updated.")
         expect(response).to have_http_status(:see_other)
@@ -102,7 +106,7 @@ RSpec.describe "Products", type: :request do
         expect {
           put product_path(active_product), params: {product: invalid_attributes}, as: :turbo_stream
         }.to not_change { active_product.reload.name }
-        
+
         expect(flash[:alert]).to eq("Product could not be updated.")
         expect(response.media_type).to eq(Mime[:turbo_stream])
         expect(response.body).to include("<turbo-stream action=\"update\" target=\"edit_product_form_frame\">")

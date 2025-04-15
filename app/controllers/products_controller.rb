@@ -96,18 +96,11 @@ class ProductsController < ApplicationController
       :description,
       :barcode,
       :min_stock_threshold,
-      :capacity_unit,
+      :unit_id,
       :currency,
       :cost_price,
       :product_category_id,
       :is_active,
-      unit_conversions_attributes: [
-        :id,
-        :_destroy,
-        :from_unit,
-        :to_unit,
-        :conversion_rate
-      ],
       product_prices_attributes: [
         :id,
         :_destroy,

@@ -19,7 +19,7 @@ RSpec.describe Inventory, type: :model do
     it { is_expected.to have_db_column(:product_id).of_type(:uuid).with_options(null: false) }
     it { is_expected.to have_db_column(:warehouse_id).of_type(:uuid).with_options(null: false) }
     it { is_expected.to have_db_column(:tracking_method).of_type(:enum) }
-    it { is_expected.to have_db_column(:inventory_unit).of_type(:string) }
+    it { is_expected.to have_db_column(:unit_id).of_type(:uuid).with_options(null: false) }
     it { is_expected.to have_db_column(:average_cost_price).of_type(:decimal).with_options(precision: 12, scale: 2, default: 0.0) }
     it { is_expected.to have_db_column(:currency).of_type(:string) }
     it { is_expected.to have_db_column(:low_stock_threshold).of_type(:decimal).with_options(precision: 12, scale: 2, default: 0.0) }
@@ -27,17 +27,18 @@ RSpec.describe Inventory, type: :model do
     it { is_expected.to have_db_column(:updated_at).of_type(:timestamptz).with_options(null: false) }
 
     it { is_expected.to have_db_index(:reference_code).unique }
-    it { is_expected.to have_db_index([:product_id, :warehouse_id]).unique }
     it { is_expected.to have_db_index(:product_id) }
+    it { is_expected.to have_db_index(:unit_id) }
     it { is_expected.to have_db_index(:warehouse_id) }
+    it { is_expected.to have_db_index([:product_id, :warehouse_id]).unique }
 
     it { is_expected.to have_foreign_key(:product_id).with_name(:fk_inventories_product_id_on_products).on_delete(:cascade) }
     it { is_expected.to have_foreign_key(:warehouse_id).with_name(:fk_inventories_warehouse_id_on_warehouses).on_delete(:restrict) }
+    it { is_expected.to have_foreign_key(:unit_id).with_name(:fk_inventories_unit_id_on_units).on_delete(:restrict) }
 
     it { is_expected.to have_check_constraint(:check_inventories_average_cost_price_non_negative).with_expression("average_cost_price >= 0.0") }
     it { is_expected.to have_check_constraint(:check_inventories_average_cost_price_presence).with_expression("average_cost_price IS NOT NULL") }
     it { is_expected.to have_check_constraint(:check_inventories_currency_presence).with_expression("currency IS NOT NULL AND currency::text <> ''::text") }
-    it { is_expected.to have_check_constraint(:check_inventories_inventory_unit_presence).with_expression("inventory_unit IS NOT NULL AND inventory_unit::text <> ''::text") }
     it { is_expected.to have_check_constraint(:check_inventories_low_stock_threshold_positive).with_expression("low_stock_threshold > 0.0") }
     it { is_expected.to have_check_constraint(:check_inventories_low_stock_threshold_presence).with_expression("low_stock_threshold IS NOT NULL") }
     it { is_expected.to have_check_constraint(:check_inventories_tracking_method_presence).with_expression("tracking_method IS NOT NULL") }
@@ -82,6 +83,7 @@ RSpec.describe Inventory, type: :model do
 
     it { is_expected.to belong_to(:warehouse).inverse_of(:inventories) }
     it { is_expected.to belong_to(:product).inverse_of(:inventories).touch }
+    it { is_expected.to belong_to(:unit).inverse_of(:inventories) }
   end
 
   describe "validations" do
@@ -94,8 +96,8 @@ RSpec.describe Inventory, type: :model do
       it { is_expected.to validate_uniqueness_of(:product_id).scoped_to(:warehouse_id).with_message("already has inventory for the selected warehouse").ignoring_case_sensitivity }
     end
 
-    describe "#inventory_unit" do
-      it { is_expected.to validate_presence_of(:inventory_unit) }
+    describe "#unit_id" do
+      it { is_expected.to validate_presence_of(:unit_id) }
     end
 
     describe "#tracking_method" do
@@ -118,6 +120,7 @@ RSpec.describe Inventory, type: :model do
     it { is_expected.to delegate_method(:quantity_in_hand).to(:stock) }
     it { is_expected.to delegate_method(:quantity_pending_to_buyer).to(:stock) }
     it { is_expected.to delegate_method(:quantity_pending_from_supplier).to(:replenishment) }
+    it { is_expected.to delegate_method(:symbol).to(:unit).with_prefix }
   end
 
   include_examples "apply default scope on created_at:desc"
@@ -131,38 +134,75 @@ RSpec.describe Inventory, type: :model do
       end
     end
 
-    describe "#inventory_unit_is_in_valid_category" do
-      let(:product) { create(:product, capacity_unit: "kg") }
-      let(:valid_unit) { "g" }
-      let(:invalid_unit) { "l" }
+    describe "#inventory_unit_matches_product_unit_category" do
+      let!(:product) { create(:product) }
 
-      context "when inventory unit is in the valid category" do
-        let!(:inventory) { build(:inventory, product: product, inventory_unit: valid_unit) }
+      let(:invalid_unit) { build_stubbed(:kilometre_unit) }
+
+      context "when the unit is in the valid category" do
+        let!(:inventory) { build(:inventory, product:, unit: product.unit) }
 
         it "does not add validation errors" do
           inventory.validate
 
-          expect(inventory.errors[:inventory_unit]).to be_blank
+          expect(inventory.errors[:unit_id]).to be_blank
         end
       end
 
-      context "when inventory unit is not in the valid category" do
-        let!(:inventory) { build(:inventory, product: product, inventory_unit: invalid_unit) }
+      context "when the unit is not in the valid category" do
+        let!(:inventory) { build(:inventory, product:, unit: invalid_unit) }
 
-        it "adds an error on inventory_unit" do
+        it "adds an error on unit_id" do
           inventory.validate
 
-          expect(inventory.errors[:inventory_unit]).to include("is not valid for the selected product")
+          expect(inventory.errors[:unit_id]).to include("is incompatible for the selected product")
         end
       end
 
       context "when product is not present" do
-        let!(:inventory) { build(:inventory, product: nil, inventory_unit: valid_unit) }
+        let!(:inventory) { build(:inventory, product: nil) }
+
+        it "skips validation when product is nil" do
+          inventory.validate
+
+          expect(inventory.errors[:unit_id]).to be_blank
+        end
+      end
+    end
+
+    describe "#product_unit_category_matches_warehouse_capacity" do
+      let!(:product) { create(:product) }
+      let!(:warehouse) { create(:warehouse) }
+
+      context "when the product unit matches warehouse capacity unit category" do
+        let!(:inventory) { build(:inventory, warehouse:, product:) }
 
         it "does not add validation errors" do
           inventory.validate
 
-          expect(inventory.errors[:inventory_unit]).to be_blank
+          expect(inventory.errors[:product_id]).to be_blank
+        end
+      end
+
+      context "when the product unit does not match warehouse capacity unit category" do
+        let!(:litre_unit) { create(:litre_unit) }
+        let!(:warehouse) { create(:warehouse, unit: litre_unit) }
+        let!(:inventory) { build(:inventory, warehouse:, product:) }
+
+        it "adds an error on unit_id" do
+          inventory.validate
+
+          expect(inventory.errors[:product_id]).to include("is incompatible for the selected warehouse")
+        end
+      end
+
+      context "when warehouse is not present" do
+        let!(:inventory) { build(:inventory, warehouse: nil, product:) }
+
+        it "skips validation when warehouse is nil" do
+          inventory.validate
+
+          expect(inventory.errors[:product_id]).to be_blank
         end
       end
     end

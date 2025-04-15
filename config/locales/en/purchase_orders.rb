@@ -1,0 +1,41 @@
+# -*- encoding: utf-8 -*-
+# -*- frozen_string_literal: true -*-
+# -*- warn_indent: true -*-
+
+{
+  en: {
+    purchase_orders: {
+      breadcrumb: "Purchase orders",
+      index: {
+        title: "Purchase orders",
+      },
+      purchase_order: {
+        cancel_confirmation_text: "Are you sure you want to cancel the purchase order ‘%{reference_code}’? This cannot be undone.",
+        submit_confirmation_text: "Are you sure you want to submit the purchase order ‘%{reference_code}’ to supplier ‘%{supplier_name}’? This cannot be undone.",
+        approve_confirmation_text: "Are you sure you want to approve the purchase order ‘%{reference_code}’? This cannot be undone.",
+        reject_confirmation_text: "Are you sure you want to reject the purchase order ‘%{reference_code}’? This cannot be undone.",
+        delete_confirmation_text: "Are you sure you want to delete the purchase order ‘%{reference_code}’? This cannot be undone.",
+      },
+      new: {
+        breadcrumb: "New",
+        title: "New purchase order",
+      },
+      edit: {
+        breadcrumb: "Edit %{reference_code}",
+        title: "Edit %{reference_code}",
+      },
+      form: {
+        basic_details: "Basic details",
+        purchase_order_items: "Purchase order items",
+      },
+      basic_details_fields: {
+        select_warehouse: "Select warehouse",
+        select_supplier: "Select supplier",
+      },
+      show: {
+        basic_details: "Basic details",
+        purchase_order_items: "Purchase order items",
+      },
+    }
+  }
+}

@@ -1,0 +1,64 @@
+- warehouse, manager, supplier = purchase_order.key_associations
+.table-row
+  .table-cell.cell-narrow
+    = @pagination_metadata.offset + index
+  .table-cell
+    = link_to purchase_order.reference_code, purchase_order_path(purchase_order)
+  .table-cell
+    = link_to warehouse.name, warehouse_path(warehouse), target: :_blank
+  .table-cell
+    = link_to manager.full_name, user_path(manager), target: :_blank
+  .table-cell
+    = link_to supplier.full_name, user_path(supplier), target: :_blank
+  .table-cell
+    = purchase_order.order_date.to_date.to_fs(:long)
+  .table-cell
+    = purchase_order.expected_delivery_date&.to_fs(:long) || "-"
+  .table-cell
+    = enum_l(purchase_order, :status)
+  .table-cell.cell-narrow
+    = link_to purchase_order_purchase_order_items_path(purchase_order),
+      data: {turbo_frame: dom_id(purchase_order, :items), action: "lazy-turbo-frame#toggle"} do
+      = sprite_icon("fold-down", data: {lazy_turbo_frame_target: "icon"})
+      = sprite_icon("fold-up", class: "d-none", data: {lazy_turbo_frame_target: "icon"})
+    = link_to "javascript:void(0)", class: "text-reset", data: {bs_toggle: "dropdown"}, aria: {expanded: false} do
+      = sprite_icon("ellipsis-vertical")
+    %ul.dropdown-menu
+      - if purchase_order.may_cancel?
+        %li
+          = link_to cancel_purchase_order_path(purchase_order), class: "dropdown-item",
+            data: {turbo_confirm: t(".cancel_confirmation_text", reference_code: purchase_order.reference_code), turbo_method: :patch} do
+            = sprite_icon("times")
+            = button_text(:cancel)
+      - if purchase_order.may_submit?
+        %li
+          = link_to submit_purchase_order_path(purchase_order), class: "dropdown-item",
+            data: {turbo_confirm: t(".submit_confirmation_text", reference_code: purchase_order.reference_code, supplier_name: supplier.full_name), turbo_method: :patch} do
+            = sprite_icon("check")
+            = button_text(:submit)
+      - if purchase_order.may_approve?
+        %li
+          = link_to approve_purchase_order_path(purchase_order), class: "dropdown-item",
+            data: {turbo_confirm: t(".approve_confirmation_text", reference_code: purchase_order.reference_code), turbo_method: :patch} do
+            = sprite_icon("check")
+            = button_text(:approve)
+      - if purchase_order.may_reject?
+        %li
+          = link_to reject_purchase_order_path(purchase_order), class: "dropdown-item",
+            data: {turbo_confirm: t(".reject_confirmation_text", reference_code: purchase_order.reference_code), turbo_method: :patch} do
+            = sprite_icon("times")
+            = button_text(:reject)
+      %li
+        = link_to purchase_order_path(purchase_order), class: "dropdown-item" do
+          = sprite_icon("arrow-right")
+          = button_text(:view_details)
+      %li
+        = link_to edit_purchase_order_path(purchase_order), class: "dropdown-item" do
+          = sprite_icon("pencil")
+          = button_text(:edit)
+      %li
+        = link_to purchase_order_path(purchase_order), class: "dropdown-item",
+          data: {turbo_confirm: t(".delete_confirmation_text", reference_code: purchase_order.reference_code), turbo_method: :delete} do
+          = sprite_icon("trash")
+          = button_text(:delete)
+= turbo_frame_tag dom_id(purchase_order, :items)

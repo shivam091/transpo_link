@@ -1,0 +1,24 @@
+%div{data: {controller: "nested-forms", nested_forms_wrapper_selector_value: ".purchase-order-item-form-wrapper"}}
+  .col-12.text-end.mb-2
+    = button_tag type: :button, class: "btn btn-secondary", data: {action: "click->nested-forms#addAssociation"} do
+      = sprite_icon("plus")
+      = button_text(:add)
+  .table-responsive
+    .table-container
+      .table-header
+        .table-cell.cell-narrow #
+        .table-cell.required{scope: "col"}
+          = PurchaseOrderItem.human_attribute_name(:product_id)
+        .table-cell.required{scope: "col"}
+          = PurchaseOrderItem.human_attribute_name(:quantity)
+        .table-cell.required{scope: "col"}
+          = PurchaseOrderItem.human_attribute_name(:unit_id)
+        .table-cell.cell-narrow
+          = t("shared.actions")
+      .table-body
+        %template{data: {nested_forms_target: "template"}}
+          = form.fields_for :purchase_order_items, form.object.purchase_order_items.build, child_index: "NEW_RECORD" do |purchase_order_item_form|
+            = safe_render.partial("purchase_order_items/form/tabular_field", form: purchase_order_item_form)
+        = form.fields_for :purchase_order_items do |purchase_order_item_form|
+          = safe_render.partial("purchase_order_items/form/tabular_field", form: purchase_order_item_form)
+        .table-row.d-none{data: {nested_forms_target: "target"}}

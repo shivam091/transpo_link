@@ -127,6 +127,36 @@
           error: "We encountered a problem updating inventory. Please try again."
         },
       },
+      purchase_orders: {
+        create: {
+          success: "Purchase order has been successfully created.",
+          error: "We encountered a problem creating purchase order. Please try again.",
+        },
+        update: {
+          success: "Purchase order has been successfully updated.",
+          error: "We encountered a problem updating purchase order. Please try again."
+        },
+        destroy: {
+          success: "Purchase order has been successfully deleted.",
+          error: "We encountered a problem deleting purchase order. Please try again."
+        },
+        cancel: {
+          success: "Purchase order has been successfully cancelled.",
+          error: "We encountered a problem cancelling purchase order. Please try again."
+        },
+        submit: {
+          success: "Purchase order has been successfully submitted to the supplier for approval.",
+          error: "We encountered a problem submitting purchase order. Please try again."
+        },
+        approve: {
+          success: "Purchase order has been successfully approved.",
+          error: "We encountered a problem approving purchase order. Please try again.",
+        },
+        reject: {
+          success: "Purchase order has been successfully rejected.",
+          error: "We encountered a problem rejecting purchase order. Please try again.",
+        },
+      },
     }
   }
 }
