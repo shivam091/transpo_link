@@ -40,16 +40,20 @@ class Inventory < ApplicationRecord
   validate :inventory_unit_matches_product_unit_category
   validate :product_unit_category_matches_warehouse_capacity
 
-  has_one :stock, inverse_of: :inventory, dependent: :destroy
-  has_one :replenishment, inverse_of: :inventory, dependent: :destroy
+  with_options inverse_of: :inventory, dependent: :destroy do |a|
+    a.has_one :stock
+    a.has_one :replenishment
 
-  has_many :inventory_movements, inverse_of: :inventory, dependent: :destroy
-  has_many :inventory_audit_logs, inverse_of: :inventory, dependent: :destroy
-  has_many :inventory_batches, inverse_of: :inventory, dependent: :destroy
+    a.has_many :inventory_movements
+    a.has_many :inventory_audit_logs
+    a.has_many :inventory_batches
+  end
 
-  belongs_to :warehouse, inverse_of: :inventories
-  belongs_to :product, inverse_of: :inventories, touch: true
-  belongs_to :unit, inverse_of: :inventories
+  with_options inverse_of: :inventories do |a|
+    a.belongs_to :warehouse
+    a.belongs_to :product, touch: true
+    a.belongs_to :unit
+  end
 
   after_create :create_stock, :create_replenishment
 

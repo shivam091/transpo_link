@@ -122,28 +122,63 @@ RSpec.describe DateTimeHelper, type: :helper do
   end
 
   describe "#time_ago_with_tooltip" do
-    let(:time) { Time.zone.now - 5.minutes }
-
-    it "returns a time tag with default attributes" do
-      result = helper.time_ago_with_tooltip(time)
-
-      expect(result).to include("class=\"js-timeago\"")
-      expect(result).to include("title=\"#{time.to_fs(:long)}\"")
-      expect(result).to include("datetime=\"#{time.utc.iso8601}\"")
-      expect(result).to include("data-controller=\"tooltip\"")
-      expect(result).to include("data-bs-placement=\"top\"")
+    around do |example|
+      Time.use_zone("UTC") { example.run }
     end
 
-    it "includes js-short-timeago class when short_format is true" do
-      expect(helper.time_ago_with_tooltip(time, short_format: true)).to include("class=\"js-short-timeago\"")
+    def element(**arguments)
+      @time = Time.zone.parse("2015-07-02 08:23")
+      html = helper.time_ago_with_tooltip(@time, **arguments)
+
+      Loofah.fragment(html).at("time")
     end
 
-    it "appends custom HTML classes" do
-      expect(helper.time_ago_with_tooltip(time, html_class: "custom-class")).to include("class=\"js-timeago custom-class\"")
+    it "returns a time element" do
+      expect(element.name).to eq("time")
     end
 
-    it "sets tooltip placement correctly" do
-      expect(helper.time_ago_with_tooltip(time, placement: "bottom")).to include("data-bs-placement=\"bottom\"")
+    it "includes the time_ago display text" do
+      expect(element.text).to eq(time_ago(@time))
+    end
+
+    it "has a datetime attribute" do
+      expect(element["datetime"]).to eq("2015-07-02T08:23:00Z")
+    end
+
+    it "uses bs_title for tooltip content" do
+      expect(element["data-bs-title"]).to eq(@time.to_fs(:long))
+    end
+
+    it "defaults to js-timeago class" do
+      expect(element["class"]).to eq("js-timeago")
+    end
+
+    it "accepts a custom html_class" do
+      expect(element(html_class: "custom").attr("class")).to eq("js-timeago custom")
+    end
+
+    it "uses default placement top" do
+      expect(element["data-bs-placement"]).to eq("top")
+    end
+
+    it "accepts a custom tooltip placement" do
+      expect(element(placement: "bottom")["data-bs-placement"]).to eq("bottom")
+    end
+
+    it "adds controller=tooltip for Stimulus" do
+      expect(element["data-controller"]).to eq("tooltip")
+    end
+
+    it "adds short timeago class if short_format is true" do
+      expect(element(short_format: true)["class"]).to eq("js-short-timeago")
+    end
+
+    it "returns nil if time is nil" do
+      expect(helper.time_ago_with_tooltip(nil)).to be_nil
+    end
+
+    it "handles Date input without error" do
+      expect { helper.time_ago_with_tooltip(Date.new(2020, 1, 1)) }.not_to raise_error
     end
   end
 end
