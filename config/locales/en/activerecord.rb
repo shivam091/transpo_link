@@ -382,6 +382,7 @@
             attributes: {
               product_id: {
                 uniqueness: "has already been added",
+                unit_category_mismatch: "is incompatible with the selected warehouse due to unit category mismatch",
               },
               status: {
                 inclusion: "'%{value}' is not a valid status for purchase order item",

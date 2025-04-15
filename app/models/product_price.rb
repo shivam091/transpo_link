@@ -32,7 +32,7 @@ class ProductPrice < ApplicationRecord
   def warehouse_unit_is_in_product_unit_category
     return unless warehouse.present? && product.present?
 
-    allowed_units = Unit.for_category(product.unit_category).map(&:symbol)
+    allowed_units = Unit.for_category(product.unit_category).symbols
 
     if allowed_units.blank? || !allowed_units.include?(warehouse.unit_symbol)
       errors.add(:warehouse_id, :unit_category_mismatch)
