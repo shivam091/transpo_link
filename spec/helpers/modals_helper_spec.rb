@@ -18,7 +18,7 @@ RSpec.describe ModalsHelper, type: :helper do
     let(:renderer) { instance_double(SafeRenderHelper::SafeRenderer) }
 
     before do
-      allow(helper).to receive(:safe_render).and_return(renderer)
+      allow(helper).to receive(:safe_render) { renderer }
       allow(renderer).to receive(:partial)
     end
 
