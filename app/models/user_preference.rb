@@ -13,7 +13,7 @@ class UserPreference < ApplicationRecord
 
   attribute :preferred_color_scheme, :enum, default: preferred_color_schemes[:auto]
   attribute :preferred_locale, default: I18n.default_locale
-  attribute :preferred_time_zone, default: Time.zone.tzinfo.name
+  attribute :preferred_time_zone, default: Time.zone.name
   attribute :preferred_currency, default: Money.default_currency.iso_code
   attribute :are_notifications_enabled, default: true
 
