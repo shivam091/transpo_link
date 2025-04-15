@@ -64,7 +64,7 @@ class PurchaseOrderItem < ApplicationRecord
   def unit_is_in_product_unit_category
     return unless product.present? && unit.present?
 
-    allowed_units = Unit.for_category(product.unit_category).map(&:symbol)
+    allowed_units = Unit.for_category(product.unit_category).symbols
 
     if allowed_units.blank? || !allowed_units.include?(unit_symbol)
       errors.add(:unit_id, :incompatible_unit_category)

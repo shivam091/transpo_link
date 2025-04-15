@@ -181,7 +181,7 @@ RSpec.describe PurchaseOrderItem, type: :model do
       let(:invalid_unit) { build_stubbed(:kilometre_unit) }
 
       context "when the unit is in the valid category" do
-        let!(:purchase_order_item) { build(:inventory, product:, unit:) }
+        let!(:purchase_order_item) { build(:purchase_order_item, product:, unit:) }
 
         it "does not add validation errors" do
           purchase_order_item.validate
@@ -191,7 +191,7 @@ RSpec.describe PurchaseOrderItem, type: :model do
       end
 
       context "when the unit is not in the valid category" do
-        let!(:purchase_order_item) { build(:inventory, product:, unit: invalid_unit) }
+        let!(:purchase_order_item) { build(:purchase_order_item, product:, unit: invalid_unit) }
 
         it "adds an error on unit_id" do
           purchase_order_item.validate
@@ -201,7 +201,7 @@ RSpec.describe PurchaseOrderItem, type: :model do
       end
 
       context "when product is not present" do
-        let!(:purchase_order_item) { build(:inventory, product: nil, unit:) }
+        let!(:purchase_order_item) { build(:purchase_order_item, product: nil, unit:) }
 
         it "does not add validation errors" do
           purchase_order_item.validate

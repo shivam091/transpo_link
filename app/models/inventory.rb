@@ -68,7 +68,7 @@ class Inventory < ApplicationRecord
   def inventory_unit_matches_product_unit_category
     return unless product.present? && unit.present?
 
-    allowed_units = Unit.for_category(product.unit_category).map(&:symbol)
+    allowed_units = Unit.for_category(product.unit_category).symbols
 
     if allowed_units.blank? || !allowed_units.include?(unit_symbol)
       errors.add(:unit_id, :incompatible_unit_category)
@@ -78,7 +78,7 @@ class Inventory < ApplicationRecord
   def product_unit_category_matches_warehouse_capacity
     return unless warehouse.present? && product.present?
 
-    allowed_units = Unit.for_category(warehouse.unit_category).map(&:symbol)
+    allowed_units = Unit.for_category(warehouse.unit_category).symbols
 
     if allowed_units.blank? || !allowed_units.include?(product.unit_symbol)
       errors.add(:product_id, :incompatible_unit_category)
