@@ -4,7 +4,7 @@
 
 module ColorSchemesHelper
   COLOR_SCHEME_ICONS = {
-    auto: "system",
+    auto: "device-desktop",
     light: "sun",
     dark: "moon"
   }.with_indifferent_access.tap { |hash| hash.default = hash.fetch(:auto) }.freeze

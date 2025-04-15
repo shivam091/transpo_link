@@ -10,14 +10,14 @@ RSpec.describe ColorSchemesHelper, type: :helper do
   it { is_expected.to have_constant(:COLOR_SCHEME_ICONS) }
 
   describe "#default" do
-    it "returns default icon 'system'" do
-      expect(ColorSchemesHelper::COLOR_SCHEME_ICONS.default).to eq("system")
+    it "returns default icon 'device-desktop'" do
+      expect(ColorSchemesHelper::COLOR_SCHEME_ICONS.default).to eq("device-desktop")
     end
   end
 
   describe "#color_scheme_icon_for" do
-    it "returns 'system' for :auto" do
-      expect(helper.color_scheme_icon_for(:auto)).to eq("system")
+    it "returns 'device-desktop' for :auto" do
+      expect(helper.color_scheme_icon_for(:auto)).to eq("device-desktop")
     end
 
     it "returns 'sun' for :light" do
@@ -28,8 +28,8 @@ RSpec.describe ColorSchemesHelper, type: :helper do
       expect(helper.color_scheme_icon_for(:dark)).to eq("moon")
     end
 
-    it "returns 'system' for string 'auto'" do
-      expect(helper.color_scheme_icon_for("auto")).to eq("system")
+    it "returns 'device-desktop' for string 'auto'" do
+      expect(helper.color_scheme_icon_for("auto")).to eq("device-desktop")
     end
 
     it "returns 'sun' for string 'light'" do
@@ -40,10 +40,10 @@ RSpec.describe ColorSchemesHelper, type: :helper do
       expect(helper.color_scheme_icon_for("dark")).to eq("moon")
     end
 
-    it "returns default icon 'system' for invalid key" do
-      expect(helper.color_scheme_icon_for(:unknown)).to eq("system")
-      expect(helper.color_scheme_icon_for("unexpected")).to eq("system")
-      expect(helper.color_scheme_icon_for(nil)).to eq("system")
+    it "returns default icon 'device-desktop' for invalid key" do
+      expect(helper.color_scheme_icon_for(:unknown)).to eq("device-desktop")
+      expect(helper.color_scheme_icon_for("unexpected")).to eq("device-desktop")
+      expect(helper.color_scheme_icon_for(nil)).to eq("device-desktop")
     end
   end
 end
