@@ -19,8 +19,9 @@ class ApplicationController < ActionController::Base
   end
   rescue_from ApplicationError, with: :handle_application_error
 
-  before_action :authenticate_user!, :set_main_breadcrumb
-  before_action :check_if_banned, if: :user_signed_in?
+  prepend_before_action :authenticate_user!
+  before_action :set_main_breadcrumb
+  before_action :check_if_banned, :update_last_activity_at, if: :user_signed_in?
 
   around_action :with_locale, :with_time_zone
 
@@ -61,5 +62,9 @@ class ApplicationController < ActionController::Base
     flash[:alert] = exception.message
 
     redirect_back fallback_location: root_path
+  end
+
+  def update_last_activity_at
+    current_user.update_last_activity_at
   end
 end

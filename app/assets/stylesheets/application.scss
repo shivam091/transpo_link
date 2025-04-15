@@ -7,6 +7,7 @@
 @import "alerts";
 @import "buttons";
 @import "cards";
+@import "details";
 @import "form_elements";
 @import "modals";
 @import "widgets";
@@ -80,6 +81,9 @@ p {
   word-spacing: normal;
   text-align: justify;
   margin-bottom: 0.5rem;
+}
+hr {
+  margin: 0.5rem 0;
 }
 .subheader {
   font-weight: 600;

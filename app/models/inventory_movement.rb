@@ -16,7 +16,9 @@ class InventoryMovement < ApplicationRecord
 
   has_many :inventory_audit_logs, inverse_of: :inventory_movement, dependent: :destroy
 
-  belongs_to :inventory, inverse_of: :inventory_movements
-  belongs_to :source, polymorphic: true, optional: true
-  belongs_to :unit, inverse_of: :inventory_movements
+  with_options inverse_of: :inventory_movements do |a|
+    a.belongs_to :inventory
+    a.belongs_to :source, polymorphic: true, optional: true
+    a.belongs_to :unit
+  end
 end

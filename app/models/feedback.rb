@@ -25,8 +25,10 @@ class Feedback < ApplicationRecord
 
   validate :rating_in_valid_steps
 
-  belongs_to :user, inverse_of: :feedbacks
-  belongs_to :reviewable, inverse_of: :feedbacks, polymorphic: true
+  with_options inverse_of: :feedbacks do |a|
+    a.belongs_to :user
+    a.belongs_to :reviewable, polymorphic: true
+  end
 
   scope :unread, -> { where(arel_table[:is_unread].eq(true)) }
   scope :read, -> { where(arel_table[:is_unread].eq(false)) }

@@ -47,20 +47,23 @@ class Product < ApplicationRecord
             presence: true,
             reduce: true
 
-  has_many :inventories, inverse_of: :product, dependent: :destroy
-  has_many :product_prices, inverse_of: :product, dependent: :destroy
-  has_many :feedbacks, as: :reviewable, inverse_of: :reviewable, dependent: :nullify
-  has_many :purchase_order_items, inverse_of: :product, dependent: :restrict_with_exception
+  with_options inverse_of: :product do |a|
+    a.has_many :inventories, dependent: :destroy
+    a.has_many :product_prices, dependent: :destroy
+    a.has_many :purchase_order_items, dependent: :restrict_with_exception
+  end
 
-  belongs_to :product_category, counter_cache: true, inverse_of: :products
-  belongs_to :unit, inverse_of: :products
+  with_options inverse_of: :products do |a|
+    a.belongs_to :product_category, counter_cache: true
+    a.belongs_to :unit
+  end
+
+  has_many :feedbacks, as: :reviewable, inverse_of: :reviewable, dependent: :nullify
 
   delegate :name, to: :product_category, prefix: true
   delegate :symbol, :category, to: :unit, prefix: true
 
-  with_options allow_destroy: true do |n|
-    n.accepts_nested_attributes_for :product_prices, reject_if: :reject_product_price?
-  end
+  accepts_nested_attributes_for :product_prices, reject_if: :reject_product_price?, allow_destroy: true
 
   class << self
     def select_options

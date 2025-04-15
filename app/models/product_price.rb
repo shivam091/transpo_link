@@ -16,8 +16,10 @@ class ProductPrice < ApplicationRecord
             numericality: {greater_than: 0.0},
             reduce: true
 
-  belongs_to :product, inverse_of: :product_prices, touch: true
-  belongs_to :warehouse, inverse_of: :product_prices, optional: true
+  with_options inverse_of: :product_prices do |a|
+    a.belongs_to :product, touch: true
+    a.belongs_to :warehouse, optional: true
+  end
 
   delegate :name, to: :warehouse, prefix: true, allow_nil: true
 

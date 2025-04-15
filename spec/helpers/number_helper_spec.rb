@@ -8,6 +8,20 @@ require "spec_helper"
 
 RSpec.describe NumberHelper, type: :helper do
   describe "#number_to_angle" do
+    let(:default_options) do
+      {
+        precision: nil,
+        strip_insignificant_zeros: true,
+        delimiter: ",",
+        separator: ".",
+        format: "%{n}°",
+      }
+    end
+
+    before do
+      allow(I18n).to receive(:t).with("number.angle", default: {}) { default_options }
+    end
+
     it "handles zero correctly" do
       expect(helper.number_to_angle(0)).to eq("0°")
     end

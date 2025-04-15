@@ -28,13 +28,13 @@ FactoryBot.define do
       status { LegalIdentifier.statuses[:rejected] }
     end
 
-    LegalIdentifier.tax_identifier_types.values.each do |tax_identifier_type|
+    LegalIdentifier.tax_identifier_types.each_key do |tax_identifier_type|
       trait "ti_#{tax_identifier_type}" do
         tax_identifier_type { tax_identifier_type }
       end
     end
 
-    LegalIdentifier.business_identifier_types.values.each do |business_identifier_type|
+    LegalIdentifier.business_identifier_types.each_key do |business_identifier_type|
       trait "bi_#{business_identifier_type}" do
         business_identifier_type { business_identifier_type }
       end

@@ -10,7 +10,7 @@ FactoryBot.define do
     quantity { Faker::Number.between(from: 1, to: 100) }
     unit { find_or_create_unit("item") }
 
-    PurchaseOrderItem.statuses.keys.each do |status|
+    PurchaseOrderItem.statuses.each_key do |status|
       trait status do
         status { PurchaseOrderItem.statuses[status] }
       end
