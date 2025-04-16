@@ -4,7 +4,7 @@
     = safe_render.partial("feedbacks/nav_tabs")
   .card-body
     .table-wrapper
-      .table-container
+      .table-container{data: {controller: "column-width-sync"}}
         .table-header
           .table-cell.cell-narrow #
           - Feedback::LISTING_ATTRIBUTES.each do |attribute|

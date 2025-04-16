@@ -9,7 +9,7 @@
   .card-body{data: {controller: "checkbox-selection"}}
     .mb-2{data: {checkbox_selection_target: "selectedCount", label_template: t("shared.selected", count: "%{count}")}}
     .table-wrapper
-      .table-container
+      .table-container{data: {controller: "column-width-sync"}}
         .table-header
           .table-cell.cell-narrow #
           - if @warehouses.size > 0

@@ -2,7 +2,7 @@
 .card.card-primary.border.border-primary
   .card-body
     .table-wrapper
-      .table-container
+      .table-container{data: {controller: "column-width-sync"}}
         .table-header
           .table-cell.cell-narrow #
           - Role::LISTING_ATTRIBUTES.each do |attribute|

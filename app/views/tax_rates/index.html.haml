@@ -8,7 +8,7 @@
         = button_text(:new)
   .card-body
     .table-wrapper
-      .table-container
+      .table-container{data: {controller: "column-width-sync"}}
         .table-header
           .table-cell.cell-narrow #
           - TaxRate::LISTING_ATTRIBUTES.each do |attribute|

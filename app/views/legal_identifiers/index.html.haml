@@ -15,7 +15,7 @@
         = safe_render.partial("legal_identifiers/help_texts")
         = safe_render.partial("legal_identifiers/nav_tabs")
         .table-wrapper
-          .table-container
+          .table-container{data: {controller: "column-width-sync"}}
             .table-header
               .table-cell.cell-narrow #
               - LegalIdentifier::LISTING_ATTRIBUTES.each do |attribute|
