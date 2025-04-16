@@ -1,20 +1,33 @@
-.table-responsive {
-  overflow-y: hidden;
-}
-.table-container {
-  display: flex;
-  flex-direction: column;
+.table-wrapper {
   width: 100%;
-  min-width: 1200px;
-  border: 1px solid var(--bs-border-color);
-  border-radius: 6px;
-  font-size: 14px;
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  scroll-padding: 1rem;
+  &::-webkit-scrollbar {
+    height: 8px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+  }
   .table-container {
-    border-radius: 0;
-    margin: 0.5rem auto;
-    min-width: 0;
-    width: 99%;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    // min-width: max-content;
+    border: 1px solid var(--bs-border-color);
+    border-radius: 6px;
+    font-size: 14px;
+    overflow: hidden;
+    .table-container {
+      border-radius: 0;
+      margin: 0.5rem auto;
+      min-width: 0;
+      width: 99%;
+    }
   }
   .table-header {
     display: flex;
@@ -22,7 +35,8 @@
     font-weight: bold;
     letter-spacing: 1px;
     border-bottom: 1px solid var(--bs-border-color);
-    padding: .75rem .75rem;
+    padding: 0.75rem;
+    min-width: max-content;
   }
   .table-body {
     display: flex;
@@ -31,7 +45,8 @@
   .table-row {
     display: flex;
     border-top: 1px solid var(--bs-light-border-subtle);
-    padding: .75rem .75rem;
+    padding: 0.75rem;
+    min-width: max-content;
     &:first-of-type {
       border-top: none;
     }
@@ -42,19 +57,25 @@
   }
   .table-cell {
     display: flex;
-    flex: 1 0 120px;
+    flex: 1 0 150px;
     align-items: center;
     box-sizing: border-box;
     padding: 0 0.5rem;
-    overflow-wrap: break-word;
+    white-space: nowrap;
     text-overflow: ellipsis;
+    overflow: hidden;
     color: var(--bs-body-color);
+    scroll-snap-align: start;
     input[type='checkbox'] {
-      margin-top: 0;
+      margin-top: 0.1rem;
+    }
+    &.cell-narrow {
+      flex: 0 1 65px;
     }
   }
-  .table-cell.cell-narrow {
-    flex: 0 1 65px;
-    min-width: 65px;
+}
+@media (max-width: 992px) {
+  .table-cell.optional {
+    display: none;
   }
 }
