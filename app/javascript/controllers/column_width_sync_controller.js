@@ -41,8 +41,8 @@ export default class ColumnWidthSyncController extends Controller {
     });
 
     // Optionally set container min-width based on total
-    const totalWidth = maxWidths.reduce((sum, w) => sum + w, 0);
-    this.element.style.minWidth = `${totalWidth}px`;
+    // const totalWidth = maxWidths.reduce((sum, w) => sum + w, 0);
+    // this.element.style.minWidth = `${totalWidth}px`;
   }
 
   setCellWidth(cell, width) {

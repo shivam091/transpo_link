@@ -5,18 +5,11 @@
   scroll-behavior: smooth;
   scroll-snap-type: x mandatory;
   scroll-padding: 1rem;
-  &::-webkit-scrollbar {
-    height: 8px;
-  }
-  &::-webkit-scrollbar-thumb {
-    background: rgba(0, 0, 0, 0.2);
-    border-radius: 4px;
-  }
   .table-container {
     display: flex;
     flex-direction: column;
-    width: 100%;
-    // min-width: max-content;
+    // width: 100%;
+    min-width: max-content;
     border: 1px solid var(--bs-border-color);
     border-radius: 6px;
     font-size: 14px;
