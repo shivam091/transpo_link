@@ -55,9 +55,17 @@ class Inventory < ApplicationRecord
     a.belongs_to :unit
   end
 
+  after_create :create_stock, :create_replenishment
+
   delegate :quantity_in_hand, :quantity_pending_to_buyer, to: :stock
   delegate :quantity_pending_from_supplier, to: :replenishment
   delegate :symbol, to: :unit, prefix: true
+
+  class << self
+    def for_product(product)
+      find_by(arel_table[:product_id].eq(product.id))
+    end
+  end
 
   def key_associations
     [product, warehouse]
@@ -65,10 +73,18 @@ class Inventory < ApplicationRecord
 
   private
 
+  def create_stock
+    Stock.create!(inventory: self)
+  end
+
+  def create_replenishment
+    Replenishment.create!(inventory: self)
+  end
+
   def inventory_unit_matches_product_unit_category
     return unless product.present? && unit.present?
 
-    allowed_units = Unit.for_category(product.unit_category).map(&:symbol)
+    allowed_units = Unit.for_category(product.unit_category).symbols
 
     if allowed_units.blank? || !allowed_units.include?(unit_symbol)
       errors.add(:unit_id, :incompatible_unit_category)
@@ -78,7 +94,7 @@ class Inventory < ApplicationRecord
   def product_unit_category_matches_warehouse_capacity
     return unless warehouse.present? && product.present?
 
-    allowed_units = Unit.for_category(warehouse.unit_category).map(&:symbol)
+    allowed_units = Unit.for_category(warehouse.unit_category).symbols
 
     if allowed_units.blank? || !allowed_units.include?(product.unit_symbol)
       errors.add(:product_id, :incompatible_unit_category)

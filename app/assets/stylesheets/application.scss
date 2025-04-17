@@ -55,6 +55,9 @@ svg:not(:root) {
 .middle-dot-divider {
   @include middle-dot-divider;
 }
+.turbo-progress-bar {
+  background: var(--bs-primary);
+}
 #current-date-time {
   display: flex;
   align-items: center;
@@ -71,7 +74,7 @@ svg:not(:root) {
   gap: 0.25rem;
 }
 .translation_missing {
-  color: rgba(var(--bs-danger-rgb),1);
+  color: rgba(var(--bs-danger-rgb), 1);
 }
 :focus {
   box-shadow: none !important;

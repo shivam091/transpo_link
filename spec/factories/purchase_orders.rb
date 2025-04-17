@@ -13,7 +13,7 @@ FactoryBot.define do
     notes { Faker::Lorem.paragraph(sentence_count: 3) }
     status { PurchaseOrder.statuses[:draft] }
 
-    PurchaseOrder.statuses.keys.each do |status|
+    PurchaseOrder.statuses.each_key do |status|
       trait status do
         status { PurchaseOrder.statuses[status] }
       end

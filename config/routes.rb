@@ -88,7 +88,11 @@ Rails.application.routes.draw do
       patch :reject
     end
 
-    resources :purchase_order_items, path: "purchase-order-items", only: :index
+    resources :purchase_order_items, path: "purchase-order-items", except: :show do
+      member do
+        patch :cancel
+      end
+    end
   end
 
   root to: "dashboards#show"

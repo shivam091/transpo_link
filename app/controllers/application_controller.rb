@@ -3,7 +3,7 @@
 # -*- warn_indent: true -*-
 
 class ApplicationController < ActionController::Base
-  include Breadcrumbs, FlashMessages
+  include TurboStreamHelpers, Breadcrumbs, FlashMessages
 
   protect_from_forgery with: :exception, prepend: true
 

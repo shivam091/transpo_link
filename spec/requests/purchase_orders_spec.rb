@@ -143,7 +143,7 @@ RSpec.describe "PurchaseOrders", type: :request do
 
     context "when cancellation fails" do
       it "does not cancel the purchase order and redirects with an error message" do
-        allow(PurchaseOrders::CancelService).to receive(:call).and_return(ServiceResponse.error)
+        allow(PurchaseOrders::CancelService).to receive(:call) { ServiceResponse.error }
 
         patch cancel_purchase_order_path(purchase_order)
 
@@ -167,7 +167,7 @@ RSpec.describe "PurchaseOrders", type: :request do
 
     context "when submission fails" do
       it "does not submit the purchase order and redirects with an error message" do
-        allow(PurchaseOrders::SubmitService).to receive(:call).and_return(ServiceResponse.error)
+        allow(PurchaseOrders::SubmitService).to receive(:call) { ServiceResponse.error }
 
         patch submit_purchase_order_path(purchase_order)
 
@@ -179,9 +179,20 @@ RSpec.describe "PurchaseOrders", type: :request do
   end
 
   describe "PATCH /purchase-orders/:id/approve" do
-    let!(:purchase_order) { create(:purchase_order, :pending, manager:) }
+    let(:warehouse) { create(:warehouse, name: "Test warehouse") }
+    let(:product) { create(:product, name: "Test product") }
+    let(:unit) { product.unit }
+    let(:supplier) { warehouse.suppliers.first }
 
-    context "when approval is successful" do
+    let!(:purchase_order) do
+      create(:purchase_order, :pending, warehouse:, manager:, supplier:).tap do |po|
+        create(:purchase_order_item, purchase_order: po, product:, unit:, quantity: 10)
+      end
+    end
+
+    context "when inventory exists and unit conversion is successful" do
+      before { create(:inventory, warehouse:, product:, unit:) }
+
       it "approves the purchase order and redirects" do
         patch approve_purchase_order_path(purchase_order)
 
@@ -191,9 +202,34 @@ RSpec.describe "PurchaseOrders", type: :request do
       end
     end
 
+    context "when inventory is missing" do
+      it "does not approve the purchase order and redirects with a missing inventory error" do
+        patch approve_purchase_order_path(purchase_order)
+
+        expect(response).to redirect_to(root_path)
+        expect(flash[:alert]).to eq('Inventory is missing for the product "Test product" in the warehouse "Test warehouse".')
+        expect(response).to have_http_status(:found)
+      end
+    end
+
+    context "when unit conversion fails" do
+      before do
+        create(:inventory, warehouse:, product:, unit:)
+        allow(UnitConversion).to receive(:convert) { nil }
+      end
+
+      it "does not approve the purchase order and redirects with an unit conversion error" do
+        patch approve_purchase_order_path(purchase_order)
+
+        expect(response).to redirect_to(root_path)
+        expect(flash[:alert]).to eq('Cannot convert from "Item" to "Item". Please ensure a valid unit conversion exists.')
+        expect(response).to have_http_status(:found)
+      end
+    end
+
     context "when approval fails" do
       it "does not approve the purchase order and redirects with an error message" do
-        allow(PurchaseOrders::ApproveService).to receive(:call).and_return(ServiceResponse.error)
+        allow(PurchaseOrders::ApproveService).to receive(:call) { ServiceResponse.error }
 
         patch approve_purchase_order_path(purchase_order)
 
@@ -219,7 +255,7 @@ RSpec.describe "PurchaseOrders", type: :request do
 
     context "when rejection fails" do
       it "does not reject the purchase order and redirects with an error message" do
-        allow(PurchaseOrders::RejectService).to receive(:call).and_return(ServiceResponse.error)
+        allow(PurchaseOrders::RejectService).to receive(:call) { ServiceResponse.error }
 
         patch reject_purchase_order_path(purchase_order)
 

@@ -75,7 +75,7 @@ namespace :transpo_link do
       unit_records = {}
 
       UNITS_AND_CONVERSIONS.each do |category, units|
-        units.keys.each do |symbol|
+        units.each_key do |symbol|
           unit = Unit.safe_find_or_create_by(symbol: symbol.to_s, category: category.to_s) do |u|
             puts "↳ Unit --> [#{symbol}] added to category [#{category}]."
           end

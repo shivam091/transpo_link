@@ -48,5 +48,23 @@
               = Inventory.human_attribute_name(:average_cost_price)
             .widget-row-body
               = number_to_currency(@inventory.average_cost_price, unit: @inventory.currency.symbol)
+        .widget-row
+          .widget-row-content
+            .widget-row-title
+              = Stock.human_attribute_name(:quantity_in_hand)
+            .widget-row-body
+              = number_to_measurement_unit(@inventory.quantity_in_hand, @inventory.unit_symbol)
+        .widget-row
+          .widget-row-content
+            .widget-row-title
+              = Stock.human_attribute_name(:quantity_pending_to_buyer)
+            .widget-row-body
+              = number_to_measurement_unit(@inventory.quantity_pending_to_buyer, @inventory.unit_symbol)
+        .widget-row
+          .widget-row-content
+            .widget-row-title
+              = Replenishment.human_attribute_name(:quantity_pending_from_supplier)
+            .widget-row-body
+              = number_to_measurement_unit(@inventory.quantity_pending_from_supplier, @inventory.unit_symbol)
   .card-footer
     = safe_render.partial("shared/navigable_links", resource: @inventory)
