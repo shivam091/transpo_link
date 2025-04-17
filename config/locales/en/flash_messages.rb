@@ -162,6 +162,10 @@
           success: "Purchase order item has been successfully added.",
           error: "We encountered a problem creating the purchase order item. Please try again."
         },
+        update: {
+          success: "Purchase order item has been successfully updated.",
+          error: "We encountered a problem updating the purchase order item. Please try again."
+        },
       }
     }
   }

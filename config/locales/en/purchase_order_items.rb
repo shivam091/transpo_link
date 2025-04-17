@@ -8,6 +8,9 @@
       new: {
         title: "New purchase order item",
       },
+      edit: {
+        title: "Edit purchase order item",
+      },
       form: {
         tabular_view: {
         },
