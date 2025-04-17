@@ -157,6 +157,24 @@
           error: "We encountered a problem rejecting purchase order. Please try again.",
         },
       },
+      purchase_order_items: {
+        create: {
+          success: "Purchase order item has been successfully added.",
+          error: "We encountered a problem creating the purchase order item. Please try again."
+        },
+        update: {
+          success: "Purchase order item has been successfully updated.",
+          error: "We encountered a problem updating the purchase order item. Please try again."
+        },
+        destroy: {
+          success: "Purchase order item has been successfully deleted.",
+          error: "We encountered a problem deleting the purchase order item. Please try again."
+        },
+        cancel: {
+          success: "Purchase order item has been successfully cancelled.",
+          error: "We encountered a problem cancelling the purchase order item. Please try again."
+        },
+      }
     }
   }
 }

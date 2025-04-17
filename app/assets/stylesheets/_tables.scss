@@ -52,9 +52,9 @@
     input[type='checkbox'] {
       margin-top: 0;
     }
-  }
-  .table-cell.cell-narrow {
-    flex: 0 1 65px;
-    min-width: 65px;
+    &.cell-narrow {
+      flex: 0 1 65px;
+      min-width: 65px;
+    }
   }
 }
