@@ -34,10 +34,15 @@ RSpec.describe Unit, type: :model do
 
   describe "included modules" do
     it { is_expected.to include_module(Sanitizable) }
+    it { is_expected.to include_module(Pageable) }
   end
 
   describe "sanitized attributes" do
     it { is_expected.to sanitize_attribute(:symbol) }
+  end
+
+  describe "constants" do
+    it { is_expected.to have_constant(:LISTING_ATTRIBUTES) }
   end
 
   describe "associations" do

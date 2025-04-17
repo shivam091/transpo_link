@@ -12,3 +12,24 @@
     = number_to_currency(purchase_order_item.total_cost, unit: purchase_order_item.currency.symbol)
   .table-cell
     = enum_l(purchase_order_item, :status)
+  .table-cell.cell-narrow
+    = link_to "javascript:void(0)", class: "text-reset", data: {bs_toggle: "dropdown"}, aria: {expanded: false} do
+      = sprite_icon("ellipsis-vertical")
+    %ul.dropdown-menu
+      - if @purchase_order.draft? || @purchase_order.pending?
+        %li
+          = link_to edit_purchase_order_purchase_order_item_path(@purchase_order, purchase_order_item), class: "dropdown-item",
+            data: {turbo_frame: :remote_modal} do
+            = sprite_icon("pencil")
+            = button_text(:edit)
+        %li
+          = link_to purchase_order_purchase_order_item_path(@purchase_order, purchase_order_item), class: "dropdown-item",
+            data: {turbo_confirm: t(".delete_confirmation_text", product: product.name), turbo_method: :delete} do
+            = sprite_icon("trash")
+            = button_text(:delete)
+        - if purchase_order_item.pending?
+          %li
+            = link_to cancel_purchase_order_purchase_order_item_path(@purchase_order, purchase_order_item), class: "dropdown-item",
+              data: {turbo_confirm: t(".cancel_confirmation_text", product: product.name), turbo_method: :patch} do
+              = sprite_icon("times")
+              = button_text(:cancel)
