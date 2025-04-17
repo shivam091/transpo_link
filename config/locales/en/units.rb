@@ -4,12 +4,12 @@
 
 {
   en: {
-    unit_conversions: {
-      breadcrumb: "Unit conversions",
+    units: {
+      breadcrumb: "Units",
       index: {
-        title: "Unit conversions",
+        title: "Units",
       },
-      unit_conversion: {
+      unit: {
       },
     },
   }

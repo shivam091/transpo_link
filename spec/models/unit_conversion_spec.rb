@@ -37,7 +37,7 @@ RSpec.describe UnitConversion, type: :model do
   end
 
   describe "included modules" do
-    it { is_expected.to include_module(Sortable) }
+    it { is_expected.to include_module(Pageable) }
   end
 
   describe "associations" do
@@ -66,7 +66,14 @@ RSpec.describe UnitConversion, type: :model do
     it { is_expected.to delegate_method(:symbol).to(:target_unit).with_prefix }
   end
 
-  include_examples "apply default scope on created_at:desc"
+  describe "default scope" do
+    let(:sql) { UnitConversion.all.to_sql }
+
+    it "includes join on source_unit and orders by symbol ASC" do
+      expect(sql).to match(/ORDER BY \"units\".\"symbol\" ASC/i)
+      expect(sql).to include("JOIN")
+    end
+  end
 
   describe "class methods" do
     describe ".convert" do

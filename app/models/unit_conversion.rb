@@ -3,7 +3,7 @@
 # -*- warn_indent: true -*-
 
 class UnitConversion < ApplicationRecord
-  include Sortable
+  include Pageable
 
   LISTING_ATTRIBUTES = %i[source_unit_id target_unit_id multiplier].freeze
 
@@ -25,7 +25,13 @@ class UnitConversion < ApplicationRecord
     a.belongs_to :target_unit, foreign_key: :target_unit_id, inverse_of: :target_conversions
   end
 
-  default_scope { order_created_desc }
+  default_scope do
+    unit_arel = Unit.arel_table
+    join = arel_table.join(unit_arel)
+      .on(arel_table[:source_unit_id].eq(unit_arel[:id]))
+      .join_sources
+    joins(join).order(unit_arel[:symbol].asc)
+  end
 
   delegate :symbol, :category, to: :source_unit, prefix: true
   delegate :symbol, :category, to: :target_unit, prefix: true

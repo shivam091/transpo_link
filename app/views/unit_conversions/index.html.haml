@@ -1,12 +1,18 @@
-.table-responsive
-  .table-container
-    .table-header
-      .table-cell.cell-narrow #
-      - UnitConversion::LISTING_ATTRIBUTES.each do |attribute|
-        .table-cell
-          = UnitConversion.human_attribute_name(attribute)
-    .table-body
-      - if @product.unit_conversions&.each.with_index(1) do |unit_conversion, index|
-        = safe_render.partial("unit_conversions/unit_conversion", unit_conversion:, index:)
-      - end.empty?
-        = safe_render.partial("shared/no_records", resource: UnitConversion)
+= title(t(".title"))
+.card.card-primary.border.border-primary
+  .card-body
+    .table-wrapper
+      .table-container
+        .table-header
+          .table-cell.cell-narrow #
+          - UnitConversion::LISTING_ATTRIBUTES.each do |attribute|
+            .table-cell
+              = UnitConversion.human_attribute_name(attribute)
+        .table-body
+          - if @unit_conversions&.each.with_index(1) do |unit_conversion, index|
+            = safe_render.partial("unit_conversions/unit_conversion", unit_conversion:, index:)
+          - end.empty?
+            = safe_render.partial("shared/no_records", resource: UnitConversion)
+  - if @pagination_metadata.needs_pagination?
+    .card-footer
+      = render_pagination(@pagination_metadata)
