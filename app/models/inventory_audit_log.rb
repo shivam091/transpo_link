@@ -3,7 +3,9 @@
 # -*- warn_indent: true -*-
 
 class InventoryAuditLog < ApplicationRecord
-  belongs_to :inventory, inverse_of: :inventory_audit_logs
-  belongs_to :inventory_movement, inverse_of: :inventory_audit_logs, optional: true
-  belongs_to :user, inverse_of: :inventory_audit_logs
+  with_options inverse_of: :inventory_audit_logs do |a|
+    a.belongs_to :inventory
+    a.belongs_to :inventory_movement, optional: true
+    a.belongs_to :user
+  end
 end

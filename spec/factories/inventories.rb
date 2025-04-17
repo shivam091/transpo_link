@@ -6,7 +6,7 @@ FactoryBot.define do
   factory :inventory do
     association :product
     association :warehouse
-    association :unit, factory: :dozen_unit
+    unit { find_or_create_unit("item") }
     currency { Faker::Currency.code }
     low_stock_threshold { 10 }
 

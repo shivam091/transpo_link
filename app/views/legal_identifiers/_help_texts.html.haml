@@ -1,9 +1,13 @@
-%p
-  = t(".main")
-%ul
-  - t(".items").each do |item|
-    %li
-      = item
-%p
-  = sprite_icon("bulb")
-  = t(".tip")
+%details.mb-2
+  %summary
+    .d-flex.justify-content-between.align-items-center
+      = t(".main")
+      = sprite_icon("unfold", class: "summary-open", height: 16, width: 16, aria: {hidden: true}, data: {view_component: true})
+      = sprite_icon("fold", class: "summary-close", height: 16, width: 16, aria: {hidden: true}, data: {view_component: true})
+  %ul
+    - t(".items").each do |item|
+      %li
+        = item
+  %p
+    = sprite_icon("bulb")
+    = t(".tip")

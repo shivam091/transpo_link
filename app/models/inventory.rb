@@ -37,22 +37,35 @@ class Inventory < ApplicationRecord
             numericality: {greater_than_or_equal_to: 0.0},
             reduce: true
 
-  validate :unit_is_in_valid_category
+  validate :inventory_unit_matches_product_unit_category
+  validate :product_unit_category_matches_warehouse_capacity
 
-  has_one :stock, inverse_of: :inventory, dependent: :destroy
-  has_one :replenishment, inverse_of: :inventory, dependent: :destroy
+  with_options inverse_of: :inventory, dependent: :destroy do |a|
+    a.has_one :stock
+    a.has_one :replenishment
 
-  has_many :inventory_movements, inverse_of: :inventory, dependent: :destroy
-  has_many :inventory_audit_logs, inverse_of: :inventory, dependent: :destroy
-  has_many :inventory_batches, inverse_of: :inventory, dependent: :destroy
+    a.has_many :inventory_movements
+    a.has_many :inventory_audit_logs
+    a.has_many :inventory_batches
+  end
 
-  belongs_to :warehouse, inverse_of: :inventories
-  belongs_to :product, inverse_of: :inventories, touch: true
-  belongs_to :unit, inverse_of: :inventories
+  with_options inverse_of: :inventories do |a|
+    a.belongs_to :warehouse
+    a.belongs_to :product, touch: true
+    a.belongs_to :unit
+  end
+
+  after_create :create_stock, :create_replenishment
 
   delegate :quantity_in_hand, :quantity_pending_to_buyer, to: :stock
   delegate :quantity_pending_from_supplier, to: :replenishment
   delegate :symbol, to: :unit, prefix: true
+
+  class << self
+    def for_product(product)
+      find_by(arel_table[:product_id].eq(product.id))
+    end
+  end
 
   def key_associations
     [product, warehouse]
@@ -60,13 +73,31 @@ class Inventory < ApplicationRecord
 
   private
 
-  def unit_is_in_valid_category
+  def create_stock
+    Stock.create!(inventory: self)
+  end
+
+  def create_replenishment
+    Replenishment.create!(inventory: self)
+  end
+
+  def inventory_unit_matches_product_unit_category
     return unless product.present? && unit.present?
 
-    allowed_units = Unit.for_category(product.unit_category).map(&:symbol)
+    allowed_units = Unit.for_category(product.unit_category).symbols
 
     if allowed_units.blank? || !allowed_units.include?(unit_symbol)
-      errors.add(:unit_id, :inclusion)
+      errors.add(:unit_id, :incompatible_unit_category)
+    end
+  end
+
+  def product_unit_category_matches_warehouse_capacity
+    return unless warehouse.present? && product.present?
+
+    allowed_units = Unit.for_category(warehouse.unit_category).symbols
+
+    if allowed_units.blank? || !allowed_units.include?(product.unit_symbol)
+      errors.add(:product_id, :incompatible_unit_category)
     end
   end
 end

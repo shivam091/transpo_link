@@ -80,13 +80,9 @@ RSpec.describe Navigable do
   end
 
   describe "changing ordering dynamically" do
-    before do
-      NavigableModel.ordering_direction = :desc
-    end
+    before { NavigableModel.ordering_direction = :desc }
 
-    after do
-      NavigableModel.ordering_direction = :asc # Reset to default
-    end
+    after { NavigableModel.ordering_direction = :asc } # Reset to default
 
     it "returns records in descending order when ordering direction is reversed" do
       expect(NavigableModel.default_navigable_scope.to_sql).to include("ORDER BY \"navigable_models\".\"position\" DESC")

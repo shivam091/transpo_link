@@ -83,11 +83,11 @@ RSpec.describe Unit, type: :model do
   end
 
   describe "class methods" do
-    describe ".select_options" do
-      let!(:item_unit) { create(:item_unit) }
-      let!(:dozen_unit) { create(:dozen_unit) }
-      let!(:kilogramme_unit)  { create(:kilogramme_unit) }
+    let!(:item_unit) { create(:item_unit) }
+    let!(:dozen_unit) { create(:dozen_unit) }
+    let!(:kilogramme_unit) { create(:kilogramme_unit) }
 
+    describe ".select_options" do
       context "when category is provided" do
         let(:result) { described_class.select_options("count") }
 
@@ -107,6 +107,12 @@ RSpec.describe Unit, type: :model do
           expect(result["count"]).to match_array([item_unit, dozen_unit])
           expect(result["weight"]).to match_array([kilogramme_unit])
         end
+      end
+    end
+
+    describe ".symbols" do
+      it "returns array of symbols" do
+        expect(described_class.symbols).to match_array(["dz", "item", "kg"])
       end
     end
   end

@@ -7,8 +7,7 @@
 require "spec_helper"
 
 RSpec.describe Feedback, type: :model do
-  let(:unit) { create(:acre_unit) }
-  let(:reviewable) { create(:product, unit:) }
+  let(:reviewable) { create(:product) }
 
   subject { create(:feedback, reviewable:) }
 
@@ -84,8 +83,8 @@ RSpec.describe Feedback, type: :model do
   end
 
   describe "scopes" do
-    let!(:unread_feedback) { create(:feedback, reviewable:) }
-    let!(:read_feedback) { create(:feedback, :read, reviewable:) }
+    let!(:unread_feedback) { create(:feedback) }
+    let!(:read_feedback) { create(:feedback, :read) }
 
     describe ".unread" do
       it "returns only unread feedbacks" do
@@ -108,10 +107,10 @@ RSpec.describe Feedback, type: :model do
     let!(:user1) { create(:buyer) }
     let!(:user2) { create(:buyer) }
 
-    let!(:feedback1) { create(:feedback, user: user1, reviewable:, rating: 7.0, is_unread: true) }
-    let!(:feedback2) { create(:feedback, user: user2, reviewable:, rating: 9.5, is_unread: false) }
-    let!(:feedback3) { create(:feedback, user: user1, reviewable:, rating: 6.0, is_unread: true) }
-    let!(:feedback4) { create(:feedback, user: user2, reviewable:, rating: 8.0, is_unread: false) }
+    let!(:feedback1) { create(:feedback, user: user1, rating: 7.0, is_unread: true, reviewable:) }
+    let!(:feedback2) { create(:feedback, user: user2, rating: 9.5, is_unread: false, reviewable:) }
+    let!(:feedback3) { create(:feedback, user: user1, rating: 6.0, is_unread: true, reviewable:) }
+    let!(:feedback4) { create(:feedback, user: user2, rating: 8.0, is_unread: false, reviewable:) }
 
     describe ".accessible" do
       it "returns list of accessible feedbacks" do

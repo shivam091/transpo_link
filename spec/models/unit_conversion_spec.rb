@@ -75,6 +75,39 @@ RSpec.describe UnitConversion, type: :model do
     end
   end
 
+  describe "class methods" do
+    describe ".convert" do
+      let(:source_unit) { create(:kilogramme_unit) }
+      let(:target_unit) { create(:gramme_unit) }
+
+      context "when source and target units are the same" do
+        let(:result) { described_class.convert(source_unit, source_unit, 2) }
+
+        it "returns the same quantity" do
+          expect(result).to eq(2)
+        end
+      end
+
+      context "when conversion exists" do
+        let!(:conversion) { create(:kilogramme_gramme_conversion, source_unit:, target_unit:) }
+
+        let(:result) { described_class.convert(source_unit, target_unit, 2) }
+
+        it "returns the converted quantity" do
+          expect(result).to eq(2000.0)
+        end
+      end
+
+      context "when conversion does not exist" do
+        let(:result) { described_class.convert(source_unit, target_unit, 2) }
+
+        it "returns nil" do
+          expect(result).to be_nil
+        end
+      end
+    end
+  end
+
   describe "instance methods" do
     let(:source_unit) { build_stubbed(:kilogramme_unit) } # weight
     let(:target_unit) { build_stubbed(:metre_unit) }      # length

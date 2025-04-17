@@ -17,9 +17,11 @@ class ApplicationController < ActionController::Base
 
     redirect_to new_user_session_path
   end
+  rescue_from ApplicationError, with: :handle_application_error
 
-  before_action :authenticate_user!, :set_main_breadcrumb
-  before_action :check_if_banned, if: :user_signed_in?
+  prepend_before_action :authenticate_user!
+  before_action :set_main_breadcrumb
+  before_action :check_if_banned, :update_last_activity_at, if: :user_signed_in?
 
   around_action :with_locale, :with_time_zone
 
@@ -53,5 +55,16 @@ class ApplicationController < ActionController::Base
 
       redirect_to new_user_session_path
     end
+  end
+
+  def handle_application_error(exception)
+    Rails.logger.warn("[ApplicationError] #{exception.class}: #{exception.message}")
+    flash[:alert] = exception.message
+
+    redirect_back fallback_location: root_path
+  end
+
+  def update_last_activity_at
+    current_user.update_last_activity_at
   end
 end

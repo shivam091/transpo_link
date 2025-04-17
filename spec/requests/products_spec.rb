@@ -7,13 +7,16 @@
 require "spec_helper"
 
 RSpec.describe "Products", type: :request do
-  let(:product_category) { create(:product_category) }
-  let(:unit) { create(:acre_unit) }
+  let!(:active_product) { create(:product, :active) }
+  let!(:inactive_product) { create(:product) }
 
-  let!(:active_product) { create(:product, :active, unit:) }
-  let!(:inactive_product) { create(:product, unit:) }
-
-  let(:valid_attributes) { attributes_for(:product, name: "Product", product_category_id: product_category.id, unit_id: unit.id) }
+  let(:valid_attributes) do
+    attributes_for(:product,
+      name: "Product",
+      product_category_id: active_product.product_category.id,
+      unit_id: active_product.unit.id
+    )
+  end
   let(:invalid_attributes) { attributes_for(:product, name: "") }
 
   include_context "sign in as admin"

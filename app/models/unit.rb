@@ -48,5 +48,9 @@ class Unit < ApplicationRecord
 
       target_units.group_by(&:category)
     end
+
+    def symbols
+      all.map(&:symbol)
+    end
   end
 end

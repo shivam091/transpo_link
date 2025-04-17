@@ -19,7 +19,7 @@ FactoryBot.define do
     business_category { TaxRate.business_categories[:b2c] }
   end
 
-  TaxRate.tax_identifier_types.values.each do |tax_identifier_type|
+  TaxRate.tax_identifier_types.each_key do |tax_identifier_type|
     trait "ti_#{tax_identifier_type}" do
       tax_identifier_type { tax_identifier_type }
     end

@@ -56,19 +56,23 @@ class Warehouse < ApplicationRecord
 
   has_one :address, as: :addressable, inverse_of: :addressable, dependent: :destroy
 
+  with_options inverse_of: :warehouse, dependent: :restrict_with_exception do |a|
+    a.has_many :product_prices
+    a.has_many :inventories
+    a.has_many :purchase_orders
+  end
+
   has_many :warehouse_managers, inverse_of: :warehouse, dependent: :destroy
   has_many :managers, through: :warehouse_managers, inverse_of: :managed_warehouses, source: :manager
 
   has_many :warehouse_suppliers, inverse_of: :warehouse, dependent: :destroy
   has_many :suppliers, through: :warehouse_suppliers, inverse_of: :supplied_warehouses, source: :supplier
 
-  has_many :product_prices, inverse_of: :warehouse, dependent: :restrict_with_exception
-  has_many :inventories, inverse_of: :warehouse, dependent: :restrict_with_exception
-  has_many :purchase_orders, inverse_of: :warehouse, dependent: :restrict_with_exception
+  has_many :products, through: :inventories, inverse_of: :warehouses
 
   belongs_to :unit, inverse_of: :warehouses
 
-  delegate :symbol, to: :unit, prefix: true
+  delegate :symbol, :category, to: :unit, prefix: true
 
   accepts_nested_attributes_for :address, update_only: true
 

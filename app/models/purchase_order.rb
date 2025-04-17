@@ -40,6 +40,10 @@ class PurchaseOrder < ApplicationRecord
 
     event :approve do
       transitions from: :pending, to: :approved
+
+      after do
+        replenish_inventory!
+      end
     end
 
     event :reject do
@@ -73,6 +77,8 @@ class PurchaseOrder < ApplicationRecord
             allow_blank: true,
             reduce: true
 
+  validates_associated :purchase_order_items
+
   has_many :purchase_order_items, inverse_of: :purchase_order, dependent: :destroy
 
   belongs_to :warehouse, inverse_of: :purchase_orders
@@ -101,5 +107,9 @@ class PurchaseOrder < ApplicationRecord
       attributes[:currency],
       attributes[:quantity]
     ].all?(&:blank?)
+  end
+
+  def replenish_inventory!
+    Inventories::ReplenishmentService.(self)
   end
 end

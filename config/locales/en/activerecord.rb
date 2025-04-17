@@ -347,10 +347,11 @@
             attributes: {
               product_id: {
                 uniqueness: "already has inventory for the selected warehouse",
+                incompatible_unit_category: "is incompatible for the selected warehouse"
               },
               unit_id: {
-                inclusion: "is not valid for the selected product"
-              }
+                incompatible_unit_category: "is incompatible for the selected product"
+              },
             }
           },
           inventory_batch: {
@@ -377,6 +378,9 @@
               },
               status: {
                 inclusion: "'%{value}' is not a valid status for purchase order item",
+              },
+              unit_id: {
+                incompatible_unit_category: "is incompatible for the selected product"
               },
             }
           },

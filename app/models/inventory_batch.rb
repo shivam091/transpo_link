@@ -31,6 +31,8 @@ class InventoryBatch < ApplicationRecord
             reduce: true
   validates :unit_id, presence: true, reduce: true
 
-  belongs_to :inventory, inverse_of: :inventory_batches, touch: true
-  belongs_to :unit, inverse_of: :inventory_batches
+  with_options inverse_of: :inventory_batches do |a|
+    a.belongs_to :inventory, touch: true
+    a.belongs_to :unit
+  end
 end

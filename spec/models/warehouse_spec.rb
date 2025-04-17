@@ -7,9 +7,7 @@
 require "spec_helper"
 
 RSpec.describe Warehouse, type: :model do
-  let(:unit) { create(:item_unit) }
-
-  subject { build(:warehouse, unit:) }
+  subject { build(:warehouse) }
 
   describe "valid factory" do
     it { is_expected.to have_a_valid_factory(:warehouse) }
@@ -86,8 +84,10 @@ RSpec.describe Warehouse, type: :model do
     it { is_expected.to have_many(:warehouse_suppliers).inverse_of(:warehouse).dependent(:destroy) }
     it { is_expected.to have_many(:suppliers).through(:warehouse_suppliers).inverse_of(:supplied_warehouses).source(:supplier) }
 
-    it { is_expected.to have_many(:product_prices).inverse_of(:warehouse).dependent(:restrict_with_exception) }
     it { is_expected.to have_many(:inventories).inverse_of(:warehouse).dependent(:restrict_with_exception) }
+    it { is_expected.to have_many(:products).through(:inventories).inverse_of(:warehouses) }
+
+    it { is_expected.to have_many(:product_prices).inverse_of(:warehouse).dependent(:restrict_with_exception) }
     it { is_expected.to have_many(:purchase_orders).inverse_of(:warehouse).dependent(:restrict_with_exception) }
 
     it { is_expected.to belong_to(:unit).inverse_of(:warehouses) }
@@ -95,6 +95,7 @@ RSpec.describe Warehouse, type: :model do
 
   describe "delegates" do
     it { is_expected.to delegate_method(:symbol).to(:unit).with_prefix }
+    it { is_expected.to delegate_method(:category).to(:unit).with_prefix }
   end
 
   include_examples "apply default scope on created_at:desc"
