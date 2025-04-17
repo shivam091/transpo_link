@@ -61,6 +61,27 @@ class PurchaseOrderItemsController < ApplicationController
       end
     end
   end
+
+  # PATCH /purchase-orders/:purchase_order_id/purchase-order-items/:id/cancel
+  def cancel
+    response = PurchaseOrderItems::CancelService.(@purchase_order_item)
+    @purchase_order_item = response.payload[:purchase_order_item]
+
+    respond_to do |format|
+      format.turbo_stream do
+        if response.success?
+          set_flash_message(:info, :success, immediate: true)
+
+          render turbo_stream: [refresh_items_frame, render_flash], status: :ok
+        else
+          set_flash_message(:alert, :error, immediate: true)
+
+          render turbo_stream: render_flash, status: :unprocessable_entity
+        end
+      end
+    end
+  end
+
   private
 
   def find_purchase_order
