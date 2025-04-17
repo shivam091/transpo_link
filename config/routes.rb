@@ -3,11 +3,11 @@
 # -*- warn_indent: true -*-
 
 Rails.application.routes.draw do
+  get "up" => "rails/health#show", as: :rails_health_check
+
   favicon_redirect = redirect do |_params, _request|
     ActionController::Base.helpers.asset_url(TranspoLink::Favicon.main)
   end
-
-  get "up" => "rails/health#show", as: :rails_health_check
   get "favicon.png", to: favicon_redirect, as: :favicon_png
   get "favicon.ico", to: favicon_redirect, as: :favicon_ico
 
@@ -93,6 +93,8 @@ Rails.application.routes.draw do
       end
     end
   end
+  resources :units, only: :index
+  resources :unit_conversions, path: "unit-conversions", only: :index
 
   root to: "dashboards#show"
 end
