@@ -56,6 +56,7 @@ RSpec.describe PurchaseOrderItem, type: :model do
   describe "included modules" do
     it { is_expected.to include_module(AASM) }
     it { is_expected.to include_module(ActsAsMoney) }
+    it { is_expected.to include_module(Sortable) }
   end
 
   describe "enum" do
@@ -75,7 +76,7 @@ RSpec.describe PurchaseOrderItem, type: :model do
   end
 
   describe "associations" do
-    it { is_expected.to belong_to(:purchase_order).inverse_of(:purchase_order_items) }
+    it { is_expected.to belong_to(:purchase_order).inverse_of(:purchase_order_items).touch }
     it { is_expected.to belong_to(:product).inverse_of(:purchase_order_items) }
     it { is_expected.to belong_to(:unit).inverse_of(:purchase_order_items) }
   end
@@ -93,6 +94,8 @@ RSpec.describe PurchaseOrderItem, type: :model do
   describe "delegates" do
     it { is_expected.to delegate_method(:symbol).to(:unit).with_prefix }
   end
+
+  include_examples "apply default scope on created_at:desc"
 
   describe "validations" do
     describe "#product_id" do
