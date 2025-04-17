@@ -7,6 +7,7 @@
     purchase_order_items: {
       purchase_order_item: {
         cancel_confirmation_text: "Are you sure you want to cancel the item (%{product}) from the purchase order? This action cannot be undone.",
+        delete_confirmation_text: "This action will permanently delete the item (%{product}) from the purchase order. Are you sure you want to continue?"
       },
       new: {
         title: "New purchase order item",
