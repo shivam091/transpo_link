@@ -1,3 +1,9 @@
+- if @purchase_order.draft? || @purchase_order.pending?
+  .d-flex.justify-content-end.align-items-center.m-2
+    = link_to new_purchase_order_purchase_order_item_path(@purchase_order), class: "btn btn-primary",
+      data: {turbo_frame: :remote_modal} do
+      = sprite_icon("plus")
+      = button_text(:new)
 .table-container
   .table-header
     .table-cell.cell-narrow #

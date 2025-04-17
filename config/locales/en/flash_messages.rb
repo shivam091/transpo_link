@@ -157,6 +157,12 @@
           error: "We encountered a problem rejecting purchase order. Please try again.",
         },
       },
+      purchase_order_items: {
+        create: {
+          success: "Purchase order item has been successfully added.",
+          error: "We encountered a problem creating the purchase order item. Please try again."
+        },
+      }
     }
   }
 }
