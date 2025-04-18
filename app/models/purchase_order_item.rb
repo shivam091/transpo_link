@@ -3,7 +3,7 @@
 # -*- warn_indent: true -*-
 
 class PurchaseOrderItem < ApplicationRecord
-  include AASM, ActsAsMoney
+  include AASM, ActsAsMoney, Sortable
 
   LISTING_ATTRIBUTES = %i[product_id quantity unit_cost total_cost status].freeze
 
@@ -50,7 +50,7 @@ class PurchaseOrderItem < ApplicationRecord
   validate :unit_is_in_product_unit_category
 
   with_options inverse_of: :purchase_order_items do |a|
-    a.belongs_to :purchase_order
+    a.belongs_to :purchase_order, touch: true
     a.belongs_to :product
     a.belongs_to :unit
   end
@@ -59,12 +59,14 @@ class PurchaseOrderItem < ApplicationRecord
 
   delegate :symbol, to: :unit, prefix: true
 
+  default_scope -> { order_created_desc }
+
   private
 
   def unit_is_in_product_unit_category
     return unless product.present? && unit.present?
 
-    allowed_units = Unit.for_category(product.unit_category).map(&:symbol)
+    allowed_units = Unit.for_category(product.unit_category).symbols
 
     if allowed_units.blank? || !allowed_units.include?(unit_symbol)
       errors.add(:unit_id, :incompatible_unit_category)

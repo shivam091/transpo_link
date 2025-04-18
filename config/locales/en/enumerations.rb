@@ -166,6 +166,15 @@
           cancelled: "Cancelled",
         },
       },
+      unit: {
+        categories: {
+          count: "Count",
+          length: "Length",
+          weight: "Weight",
+          area: "Area",
+          volume: "Volume"
+        }
+      }
     }
   }
 }

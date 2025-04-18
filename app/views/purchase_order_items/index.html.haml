@@ -1,11 +1,20 @@
-.table-container
-  .table-header
-    .table-cell.cell-narrow #
-    - PurchaseOrderItem::LISTING_ATTRIBUTES.each do |attribute|
-      .table-cell
-        = PurchaseOrderItem.human_attribute_name(attribute)
-  .table-body
-    - if @purchase_order.purchase_order_items&.each.with_index(1) do |purchase_order_item, index|
-      = safe_render.partial("purchase_order_items/purchase_order_item", purchase_order_item:, index:)
-    - end.empty?
-      = safe_render.partial("shared/no_records", resource: PurchaseOrderItem)
+- if @purchase_order.draft? || @purchase_order.pending?
+  .d-flex.justify-content-end.align-items-center.mb-2
+    = link_to new_purchase_order_purchase_order_item_path(@purchase_order), class: "btn btn-primary",
+      data: {turbo_frame: :remote_modal} do
+      = sprite_icon("plus")
+      = button_text(:new)
+.table-wrapper
+  .table-container
+    .table-header
+      .table-cell.cell-narrow #
+      - PurchaseOrderItem::LISTING_ATTRIBUTES.each do |attribute|
+        .table-cell
+          = PurchaseOrderItem.human_attribute_name(attribute)
+      .table-cell.cell-narrow
+        = t("shared.actions")
+    .table-body
+      - if @purchase_order.purchase_order_items&.each.with_index(1) do |purchase_order_item, index|
+        = safe_render.partial("purchase_order_items/purchase_order_item", purchase_order_item:, index:)
+      - end.empty?
+        = safe_render.partial("shared/no_records", resource: PurchaseOrderItem)

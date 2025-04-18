@@ -56,6 +56,7 @@ RSpec.describe PurchaseOrderItem, type: :model do
   describe "included modules" do
     it { is_expected.to include_module(AASM) }
     it { is_expected.to include_module(ActsAsMoney) }
+    it { is_expected.to include_module(Sortable) }
   end
 
   describe "enum" do
@@ -75,7 +76,7 @@ RSpec.describe PurchaseOrderItem, type: :model do
   end
 
   describe "associations" do
-    it { is_expected.to belong_to(:purchase_order).inverse_of(:purchase_order_items) }
+    it { is_expected.to belong_to(:purchase_order).inverse_of(:purchase_order_items).touch }
     it { is_expected.to belong_to(:product).inverse_of(:purchase_order_items) }
     it { is_expected.to belong_to(:unit).inverse_of(:purchase_order_items) }
   end
@@ -93,6 +94,8 @@ RSpec.describe PurchaseOrderItem, type: :model do
   describe "delegates" do
     it { is_expected.to delegate_method(:symbol).to(:unit).with_prefix }
   end
+
+  include_examples "apply default scope on created_at:desc"
 
   describe "validations" do
     describe "#product_id" do
@@ -181,7 +184,7 @@ RSpec.describe PurchaseOrderItem, type: :model do
       let(:invalid_unit) { build_stubbed(:kilometre_unit) }
 
       context "when the unit is in the valid category" do
-        let!(:purchase_order_item) { build(:inventory, product:, unit:) }
+        let!(:purchase_order_item) { build(:purchase_order_item, product:, unit:) }
 
         it "does not add validation errors" do
           purchase_order_item.validate
@@ -191,7 +194,7 @@ RSpec.describe PurchaseOrderItem, type: :model do
       end
 
       context "when the unit is not in the valid category" do
-        let!(:purchase_order_item) { build(:inventory, product:, unit: invalid_unit) }
+        let!(:purchase_order_item) { build(:purchase_order_item, product:, unit: invalid_unit) }
 
         it "adds an error on unit_id" do
           purchase_order_item.validate
@@ -201,7 +204,7 @@ RSpec.describe PurchaseOrderItem, type: :model do
       end
 
       context "when product is not present" do
-        let!(:purchase_order_item) { build(:inventory, product: nil, unit:) }
+        let!(:purchase_order_item) { build(:purchase_order_item, product: nil, unit:) }
 
         it "does not add validation errors" do
           purchase_order_item.validate

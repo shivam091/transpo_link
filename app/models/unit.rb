@@ -3,7 +3,9 @@
 # -*- warn_indent: true -*-
 
 class Unit < ApplicationRecord
-  include Sanitizable
+  include Pageable, Sanitizable
+
+  LISTING_ATTRIBUTES = %i[symbol category].freeze
 
   enum :category, {
     count: "count",
@@ -45,6 +47,10 @@ class Unit < ApplicationRecord
       target_units = category ? for_category(category) : all
 
       target_units.group_by(&:category)
+    end
+
+    def symbols
+      all.map(&:symbol)
     end
   end
 end
