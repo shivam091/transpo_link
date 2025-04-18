@@ -93,6 +93,7 @@ RSpec.configure do |config|
   config.include TestHelpers
   config.include ControllerAssignsHelper
   config.include MigrationHelpers
+  config.include DateTimeHelperSupport, type: :helper
 
   config.around do |example|
     ActiveRecord::Base.transaction do
