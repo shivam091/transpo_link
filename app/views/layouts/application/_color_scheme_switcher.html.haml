@@ -1,0 +1,11 @@
+.d-inline-block.middle-dot-divider.dropdown{data: {controller: "color-scheme", color_scheme_url_value: color_scheme_url, color_scheme_current_color_scheme_value: current_user.preferred_color_scheme}}
+  = link_to "javascript:void(0)", class: "top-menu-link", title: t(".change_color_scheme"),
+    aria: {expanded: false}, data: {bs_toggle: "dropdown"} do
+    = sprite_icon(color_scheme_icon_for(current_user.preferred_color_scheme), class: "color-scheme-icon", data: {color_scheme_target: "colorSchemeIcon"})
+  %ul.dropdown-menu
+    - UserPreference.preferred_color_schemes.each_key do |color_scheme|
+      %li
+        = link_to "javascript:void(0)", class: class_names("dropdown-item", "dropdown-item-checked": current_user.preferred_color_scheme == color_scheme),
+          data: {action: "click->color-scheme#switch", color_scheme_target: "colorSchemeItem", color_scheme: color_scheme} do
+          = sprite_icon(color_scheme_icon_for(color_scheme))
+          = enum_i18n(UserPreference, :preferred_color_schemes, color_scheme)

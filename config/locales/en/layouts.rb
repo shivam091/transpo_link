@@ -16,7 +16,6 @@
       },
       application: {
         top_menu: {
-          change_color_scheme: "Change color scheme",
           switch_screen_mode: "Switch screen mode",
           notifications: "Notifications",
           change_language: "Change language",
@@ -62,6 +61,9 @@
           contact: "Contact",
           support: "Support",
           about: "About",
+        },
+        color_scheme_switcher: {
+          change_color_scheme: "Change color scheme",
         },
       },
     }
