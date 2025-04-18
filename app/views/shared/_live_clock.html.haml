@@ -1,9 +1,9 @@
-#current-date-time{data: {controller: "live-clock", live_clock_user_time_zone_value: Time.zone.tzinfo.name}}
+#current-date-time{data: {controller: "live-clock", live_clock_user_time_zone_value: Time.zone.tzinfo.name, live_clock_date_format_value: current_user.preferred_date_format, live_clock_time_format_value: current_user.preferred_time_format}}
   .date.middle-dot-divider
     = sprite_icon("calendar")
     %span{data: {live_clock_target: "date"}}
-      = Date.current.strftime("%a, %B %-d, %Y")
+      = prettify_date(Date.current, convert_timezone: true)
   .time.middle-dot-divider
     = sprite_icon("clock")
     %span{data: {live_clock_target: "time"}}
-      = Time.zone.now.strftime("%T")
+      = prettify_time(Time.current, convert_timezone: true)
