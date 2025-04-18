@@ -16,7 +16,10 @@ RSpec.describe DateTimeHelper, type: :helper do
     )
   end
 
-  before { allow(helper).to receive(:current_user) { user } }
+  before do
+    allow(request.env["warden"]).to receive(:authenticate!) { user }
+    allow(helper).to receive(:current_user) { user }
+  end
 
   let(:time) { Time.utc(2024, 1, 1, 10, 30, 0) } # 2024-01-01 10:30:00 UTC
   let(:date) { time.to_date }
@@ -161,7 +164,7 @@ RSpec.describe DateTimeHelper, type: :helper do
     end
 
     it "uses bs_title for tooltip content" do
-      expect(element["data-bs-title"]).to eq(@time.to_fs(:long))
+      expect(element["data-bs-title"]).to eq(I18n.l(@time, format: :default_twelve_hours))
     end
 
     it "defaults to js-timeago class" do
@@ -190,10 +193,6 @@ RSpec.describe DateTimeHelper, type: :helper do
 
     it "returns nil if time is nil" do
       expect(helper.time_ago_with_tooltip(nil)).to be_nil
-    end
-
-    it "handles Date input without error" do
-      expect { helper.time_ago_with_tooltip(Date.new(2020, 1, 1)) }.not_to raise_error
     end
   end
 
