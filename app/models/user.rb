@@ -159,6 +159,23 @@ class User < ApplicationRecord
     role.eql?(role_name)
   end
 
+  # Returns the current day according to the user's time zone
+  def today
+    time_to_date(Time.current)
+  end
+
+  # Returns the day of the given time according to the user's time zone
+  def time_to_date(time)
+    convert_time_to_user_timezone(time).to_date
+  end
+
+  # Converts time to the user's preferred time zone
+  def convert_time_to_user_timezone(time)
+    return time unless time.is_a?(Time) || time.is_a?(DateTime) || time.is_a?(ActiveSupport::TimeWithZone)
+
+    preferred_time_zone ? time.in_time_zone(preferred_time_zone) : time.in_time_zone
+  end
+
   private
 
   def update_password_updated_at
