@@ -14,6 +14,21 @@
     {include_blank: t(".select_currency")}
   = help_text(t(".preferred_currency_help_text"))
 .col-sm-12.col-md-6.col-lg-4
+  = form.label :preferred_date_format, class: "form-label required"
+  = form.select :preferred_date_format, options_for_select(TranspoLink::DateTime.date_format_select_options, form.object.preferred_date_format),
+    {include_blank: t(".select_preferred_date_format")}
+  = help_text(t(".preferred_date_format_help_text"))
+.col-sm-12.col-md-6.col-lg-4
+  = form.label :preferred_time_format, class: "form-label required"
+  = form.select :preferred_time_format, options_for_select(TranspoLink::DateTime.time_format_select_options, form.object.preferred_time_format),
+    {include_blank: t(".select_preferred_time_format")}
+  = help_text(t(".preferred_time_format_help_text"))
+.col-sm-12.col-md-6.col-lg-4
+  = form.label :preferred_datetime_format, class: "form-label required"
+  = form.select :preferred_datetime_format, options_for_select(TranspoLink::DateTime.date_time_format_select_options, form.object.preferred_datetime_format),
+    {include_blank: t(".select_preferred_datetime_format")}
+  = help_text(t(".preferred_datetime_format_help_text"))
+.col-sm-12.col-md-6.col-lg-4
   = form.label :preferred_color_scheme, class: "form-label required"
   .col
     - enum_options_for_select(UserPreference, :preferred_color_schemes).each do |label, color_scheme|
@@ -26,3 +41,14 @@
   = form.label :are_notifications_enabled, class: "form-check-label required mb-2"
   .form-switch.mt-1
     = form.check_box :are_notifications_enabled, checked: form.object.are_notifications_enabled?
+  = help_text(t(".are_notifications_enabled_help_text"))
+.col-sm-12.col-md-6.col-lg-4
+  = form.label :enable_keyboard_shortcuts, class: "form-check-label required mb-2"
+  .form-switch.mt-1
+    = form.check_box :enable_keyboard_shortcuts, checked: form.object.enable_keyboard_shortcuts?
+  = help_text(t(".enable_keyboard_shortcuts_help_text"))
+.col-sm-12.col-md-6.col-lg-4
+  = form.label :first_day_of_week, class: "form-label required"
+  = form.select :first_day_of_week, options_for_select(enum_options_for_select(UserPreference, :first_day_of_weeks), form.object.first_day_of_week),
+    {include_blank: t(".select_first_day_of_week")}
+  = help_text(t(".first_day_of_week_help_text"))

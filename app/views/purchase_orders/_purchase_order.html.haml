@@ -11,9 +11,9 @@
   .table-cell
     = link_to supplier.full_name, user_path(supplier), target: :_blank
   .table-cell
-    = purchase_order.order_date.to_date.to_fs(:long)
+    = prettify_datetime(purchase_order.order_date)
   .table-cell
-    = purchase_order.expected_delivery_date&.to_fs(:long) || "-"
+    = prettify_date(purchase_order.expected_delivery_date) || "-"
   .table-cell
     = enum_l(purchase_order, :status)
   .table-cell.cell-narrow

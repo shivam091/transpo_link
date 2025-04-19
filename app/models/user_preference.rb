@@ -10,12 +10,22 @@ class UserPreference < ApplicationRecord
     dark: "dark",
     light: "light"
   }
+  enum :first_day_of_week, {
+    sunday: "sunday",
+    monday: "monday",
+    saturday: "saturday"
+  }
 
   attribute :preferred_color_scheme, :enum, default: preferred_color_schemes[:auto]
   attribute :preferred_locale, default: I18n.default_locale
-  attribute :preferred_time_zone, default: Time.zone.tzinfo.name
+  attribute :preferred_time_zone, default: Time.zone.name
   attribute :preferred_currency, default: Money.default_currency.iso_code
+  attribute :preferred_date_format, default: "long"
+  attribute :preferred_time_format, default: "twenty_four_hours_long"
+  attribute :preferred_datetime_format, default: "long_with_seconds"
+  attribute :first_day_of_week, default: first_day_of_weeks[:sunday]
   attribute :are_notifications_enabled, default: true
+  attribute :enable_keyboard_shortcuts, default: true
 
   validates :user_id,
             presence: true,

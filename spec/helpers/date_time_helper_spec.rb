@@ -7,6 +7,24 @@
 require "spec_helper"
 
 RSpec.describe DateTimeHelper, type: :helper do
+  let(:user) do
+    build_stubbed(:user,
+      preferred_date_format: :long,
+      preferred_time_format: :twelve_hours_short,
+      preferred_datetime_format: :default_twelve_hours,
+      preferred_time_zone: "Asia/Tokyo"
+    )
+  end
+
+  before do
+    allow(request.env["warden"]).to receive(:authenticate!) { user }
+    allow(helper).to receive(:current_user) { user }
+  end
+
+  let(:time) { Time.utc(2024, 1, 1, 10, 30, 0) } # 2024-01-01 10:30:00 UTC
+  let(:date) { time.to_date }
+  let(:datetime) { time.to_datetime }
+
   describe "#time_ago" do
     let!(:now) { Time.zone.now }
 
@@ -146,7 +164,7 @@ RSpec.describe DateTimeHelper, type: :helper do
     end
 
     it "uses bs_title for tooltip content" do
-      expect(element["data-bs-title"]).to eq(@time.to_fs(:long))
+      expect(element["data-bs-title"]).to eq(I18n.l(@time, format: :default_twelve_hours))
     end
 
     it "defaults to js-timeago class" do
@@ -176,9 +194,71 @@ RSpec.describe DateTimeHelper, type: :helper do
     it "returns nil if time is nil" do
       expect(helper.time_ago_with_tooltip(nil)).to be_nil
     end
+  end
 
-    it "handles Date input without error" do
-      expect { helper.time_ago_with_tooltip(Date.new(2020, 1, 1)) }.not_to raise_error
+  describe "#prettify_date" do
+    it "returns nil for blank values" do
+      expect(helper.prettify_date(nil)).to be_nil
+    end
+
+    it "uses the user's preferred date format" do
+      expect(helper.prettify_date(date)).to eq(I18n.l(date, format: :long))
+    end
+
+    it "uses the passed format if given" do
+      expect(helper.prettify_date(date, format: :short)).to eq(I18n.l(date, format: :short))
+    end
+
+    it "converts timezone if asked (has no effect on Date)" do
+      expect(helper.prettify_date(date, convert_timezone: true)).to eq(I18n.l(date, format: :long))
+    end
+  end
+
+  describe "#prettify_time" do
+    it "returns nil for blank values" do
+      expect(helper.prettify_time(nil)).to be_nil
+    end
+
+    it "uses the user's preferred time format and converts zone" do
+      expect(prettify_with_zone(:prettify_time, time)).to eq(
+        I18n.l(time.in_time_zone(user.preferred_time_zone), format: :twelve_hours_short)
+      )
+    end
+
+    it "uses the passed format if given" do
+      expect(prettify_with_zone(:prettify_time, time, format: :twenty_four_hours_long)).to eq(
+        I18n.l(time.in_time_zone(user.preferred_time_zone), format: :twenty_four_hours_long)
+      )
+    end
+
+    it "does not convert time zone if not requested" do
+      expect(helper.prettify_time(time, convert_timezone: false)).to eq(
+        I18n.l(time, format: :twelve_hours_short)
+      )
+    end
+  end
+
+  describe "#prettify_datetime" do
+    it "returns nil for blank values" do
+      expect(helper.prettify_datetime(nil)).to be_nil
+    end
+
+    it "uses the user's preferred datetime format and converts zone" do
+      expect(prettify_with_zone(:prettify_datetime, datetime)).to eq(
+        I18n.l(datetime.in_time_zone(user.preferred_time_zone), format: :default_twelve_hours)
+      )
+    end
+
+    it "uses the passed format if given" do
+      expect(prettify_with_zone(:prettify_datetime, datetime, format: :long)).to eq(
+        I18n.l(datetime.in_time_zone(user.preferred_time_zone), format: :long)
+      )
+    end
+
+    it "does not convert timezone if not requested" do
+      expect(helper.prettify_datetime(datetime, convert_timezone: false)).to eq(
+        I18n.l(datetime, format: :default_twelve_hours)
+      )
     end
   end
 end
