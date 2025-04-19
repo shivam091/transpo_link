@@ -9,7 +9,8 @@
   .table-cell
     = link_to warehouse.name, warehouse_path(warehouse), target: :_blank
   .table-cell
-    = enum_l(inventory, :tracking_method)
+    = safe_render.partial("shared/badge", color: TranspoLink::ColorMapper.new(:tracking_method).for(inventory.tracking_method)) do
+      = enum_l(inventory, :tracking_method)
   .table-cell
     = number_to_measurement_unit(inventory.low_stock_threshold, inventory.unit_symbol)
   .table-cell

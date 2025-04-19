@@ -18,6 +18,8 @@
 #   <% end %>
 #
 module HelpTextsHelper
+  include TranspoLink::HtmlTagsUtils
+
   ##
   # Renders a help text element using the specified HTML tag (default: :small).
   # Accepts either a direct string or a block for more complex content.
@@ -48,9 +50,10 @@ module HelpTextsHelper
   # @param help_tag [Symbol] The HTML tag to use (default: :small).
   # @return [String, nil] A tag-safe HTML string or nil if help_text is blank.
   #
-  def build_help_text(help_text, help_tag = :small)
+  def build_help_text(help_text, options = {})
     return unless help_text.present?
 
+    help_tag = resolve_html_tag((options[:tag] || :small))
     tag.send(help_tag, help_text, class: "form-text text-muted")
   end
 end

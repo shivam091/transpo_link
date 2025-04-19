@@ -15,7 +15,8 @@
   .table-cell
     = prettify_date(purchase_order.expected_delivery_date) || "-"
   .table-cell
-    = enum_l(purchase_order, :status)
+    = safe_render.partial("shared/badge", color: TranspoLink::ColorMapper.new(:status).for(purchase_order.status)) do
+      = enum_l(purchase_order, :status)
   .table-cell.cell-narrow
     = link_to purchase_order_purchase_order_items_path(purchase_order),
       data: {turbo_frame: dom_id(purchase_order, :items), action: "lazy-turbo-frame#toggle"} do

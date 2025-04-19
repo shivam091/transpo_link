@@ -7,7 +7,7 @@ class LegalIdentifier < ApplicationRecord
 
   LISTING_ATTRIBUTES = %i[
     country entity_type tax_identifier_type tax_identifier
-    business_identifier_type business_identifier
+    business_identifier_type business_identifier status
   ].freeze
 
   enum :entity_type, {

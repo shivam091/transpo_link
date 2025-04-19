@@ -8,6 +8,7 @@ module TranspoLink
 
     STRONG_PASSWORD_REGEX = /\A^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,20}$\z/.freeze
     EMAIL_REGEX = /\A[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,10}\z/.freeze
+    HEX_COLOR_CODE_REGEX = /^#([A-Fa-f0-9]{3,4}|[A-Fa-f0-9]{6}|[A-Fa-f0-9]{8})$/i.freeze
 
     TAX_IDENTIFIER_PATTERNS = {
       vat: {

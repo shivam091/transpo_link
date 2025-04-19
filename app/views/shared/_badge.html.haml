@@ -1,0 +1,5 @@
+- shape ||= :rounded
+- color ||= TranspoLink::Color.of("#FFFFFFFF")
+- html_class ||= ""
+
+= badge_tag yield, {shape: shape, color: color}, {class: html_class}
