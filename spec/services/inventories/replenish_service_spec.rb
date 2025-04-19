@@ -2,11 +2,11 @@
 # -*- frozen_string_literal: true -*-
 # -*- warn_indent: true -*-
 
-# spec/services/inventories/replenishment_service_spec.rb
+# spec/services/inventories/replenish_service_spec.rb
 
 require "spec_helper"
 
-RSpec.describe Inventories::ReplenishmentService, type: :service do
+RSpec.describe Inventories::ReplenishService, type: :service do
   let(:source_unit) { create(:dozen_unit) }
   let(:target_unit) { create(:item_unit) }
   let(:warehouse) { create(:warehouse, name: "Test warehouse", unit: source_unit) }

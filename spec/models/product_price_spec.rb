@@ -67,4 +67,43 @@ RSpec.describe ProductPrice, type: :model do
   end
 
   include_examples "apply default scope on created_at:desc"
+
+  describe "instance methods" do
+    describe "#warehouse_unit_is_in_product_unit_category" do
+      let!(:product) { create(:product) }
+      let!(:warehouse) { create(:warehouse) }
+
+      context "when the product unit matches warehouse capacity unit category" do
+        let(:product_price) { build(:product_price, warehouse:, product:) }
+
+        it "does not add validation errors" do
+          product_price.validate
+
+          expect(product_price.errors[:warehouse_id]).to be_blank
+        end
+      end
+
+      context "when the product unit does not match warehouse capacity unit category" do
+        let!(:litre_unit) { create(:litre_unit) }
+        let!(:warehouse) { create(:warehouse, unit: litre_unit) }
+        let(:product_price) { build(:product_price, warehouse:, product:) }
+
+        it "adds an error on unit_id" do
+          product_price.validate
+
+          expect(product_price.errors[:warehouse_id]).to include("is incompatible with this product due to a capacity unit mismatch")
+        end
+      end
+
+      context "when warehouse is not present" do
+        let(:product_price) { build(:product_price, warehouse: nil, product:) }
+
+        it "skips validation when warehouse is nil" do
+          product_price.validate
+
+          expect(product_price.errors[:warehouse_id]).to be_blank
+        end
+      end
+    end
+  end
 end

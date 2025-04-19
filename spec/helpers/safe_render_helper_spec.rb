@@ -140,7 +140,7 @@ RSpec.describe SafeRenderHelper::SafeRenderer do
       end
     end
 
-    describe "lookup_context fallback to view_context (real classes)" do
+    context "lookup_context fallback to view_context (controller classes)" do
       let(:controller_context) do
         double("Controller").tap do |controller|
           allow(controller).to receive(:view_context) { view_context }
