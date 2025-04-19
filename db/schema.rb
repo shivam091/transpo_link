@@ -459,14 +459,23 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_01_084516) do
     t.string "preferred_time_zone"
     t.string "preferred_currency"
     t.enum "preferred_color_scheme", enum_type: "color_schemes"
+    t.string "preferred_date_format"
+    t.string "preferred_time_format"
+    t.string "preferred_datetime_format"
+    t.string "first_day_of_week"
     t.boolean "are_notifications_enabled"
+    t.boolean "enable_keyboard_shortcuts"
     t.timestamptz "created_at", null: false
     t.timestamptz "updated_at", null: false
     t.index ["user_id"], name: "index_user_preferences_on_user_id", unique: true
+    t.check_constraint "first_day_of_week IS NOT NULL", name: "check_user_preferences_first_day_of_week_presence"
     t.check_constraint "preferred_color_scheme = ANY (ARRAY['auto'::color_schemes, 'dark'::color_schemes, 'light'::color_schemes])", name: "check_user_preferences_preferred_color_scheme_in_enum_values"
     t.check_constraint "preferred_color_scheme IS NOT NULL", name: "check_user_preferences_preferred_color_scheme_presence"
     t.check_constraint "preferred_currency IS NOT NULL AND preferred_currency::text <> ''::text", name: "check_user_preferences_preferred_currency_presence"
+    t.check_constraint "preferred_date_format IS NOT NULL", name: "check_user_preferences_preferred_date_format_presence"
+    t.check_constraint "preferred_datetime_format IS NOT NULL", name: "check_user_preferences_preferred_datetime_format_presence"
     t.check_constraint "preferred_locale IS NOT NULL AND preferred_locale::text <> ''::text", name: "check_user_preferences_preferred_locale_presence"
+    t.check_constraint "preferred_time_format IS NOT NULL", name: "check_user_preferences_preferred_time_format_presence"
     t.check_constraint "preferred_time_zone IS NOT NULL AND preferred_time_zone::text <> ''::text", name: "check_user_preferences_preferred_time_zone_presence"
   end
 

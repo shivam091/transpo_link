@@ -13,9 +13,9 @@
   .table-cell
     = number_to_percentage(tax_rate.rate, precision: 2)
   .table-cell
-    = tax_rate.valid_from.to_fs(:long)
+    = prettify_date(tax_rate.valid_from)
   .table-cell
-    = tax_rate.valid_to&.to_fs(:long) || "-"
+    = prettify_date(tax_rate.valid_to) || "-"
   .table-cell.cell-narrow
     = link_to "javascript:void(0)", class: "text-reset", data: {bs_toggle: "dropdown"}, aria: {expanded: false} do
       = sprite_icon("ellipsis-vertical")

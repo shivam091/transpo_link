@@ -11,11 +11,7 @@
   .table-cell
     = IPAddr.new(request_log.remote_address, Socket::AF_INET) rescue ""
   .table-cell
-    = prettify_seconds(request_log.elapsed_time)
-  .table-cell
     = request_log.status
-  .table-cell
-    = number_to_human_size(request_log.response_size)
   .table-cell
     = time_ago_with_tooltip(request_log.created_at)
   .table-cell

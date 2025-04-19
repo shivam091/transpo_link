@@ -46,6 +46,7 @@ Rails.application.routes.draw do
 
   resource :profile, only: [:show, :edit, :update]
   resource :preference, only: [:show, :edit, :update]
+  resource :color_scheme, path: "color-scheme", only: :update
   resource :locale, only: [:edit, :update]
 
   resources :states, only: :index

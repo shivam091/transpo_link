@@ -140,7 +140,7 @@ RSpec.describe Inventory, type: :model do
       let(:invalid_unit) { build_stubbed(:kilometre_unit) }
 
       context "when the unit is in the valid category" do
-        let!(:inventory) { build(:inventory, product:, unit: product.unit) }
+        let(:inventory) { build(:inventory, product:, unit: product.unit) }
 
         it "does not add validation errors" do
           inventory.validate
@@ -150,7 +150,7 @@ RSpec.describe Inventory, type: :model do
       end
 
       context "when the unit is not in the valid category" do
-        let!(:inventory) { build(:inventory, product:, unit: invalid_unit) }
+        let(:inventory) { build(:inventory, product:, unit: invalid_unit) }
 
         it "adds an error on unit_id" do
           inventory.validate
@@ -160,7 +160,7 @@ RSpec.describe Inventory, type: :model do
       end
 
       context "when product is not present" do
-        let!(:inventory) { build(:inventory, product: nil) }
+        let(:inventory) { build(:inventory, product: nil) }
 
         it "skips validation when product is nil" do
           inventory.validate
@@ -175,7 +175,7 @@ RSpec.describe Inventory, type: :model do
       let!(:warehouse) { create(:warehouse) }
 
       context "when the product unit matches warehouse capacity unit category" do
-        let!(:inventory) { build(:inventory, warehouse:, product:) }
+        let(:inventory) { build(:inventory, warehouse:, product:) }
 
         it "does not add validation errors" do
           inventory.validate
@@ -187,7 +187,7 @@ RSpec.describe Inventory, type: :model do
       context "when the product unit does not match warehouse capacity unit category" do
         let!(:litre_unit) { create(:litre_unit) }
         let!(:warehouse) { create(:warehouse, unit: litre_unit) }
-        let!(:inventory) { build(:inventory, warehouse:, product:) }
+        let(:inventory) { build(:inventory, warehouse:, product:) }
 
         it "adds an error on unit_id" do
           inventory.validate
@@ -197,7 +197,7 @@ RSpec.describe Inventory, type: :model do
       end
 
       context "when warehouse is not present" do
-        let!(:inventory) { build(:inventory, warehouse: nil, product:) }
+        let(:inventory) { build(:inventory, warehouse: nil, product:) }
 
         it "skips validation when warehouse is nil" do
           inventory.validate

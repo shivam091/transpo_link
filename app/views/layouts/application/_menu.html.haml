@@ -16,11 +16,12 @@
       = link_to legal_identifiers_path, class: "dropdown-item" do
         = sprite_icon("check-alt")
         = t(".your_legal_identifiers")
-    %li.dropdown-divider
-    %li
-      = link_to "javascript:void(0)", class: "dropdown-item" do
-        = sprite_icon("keyboard")
-        = t(".keyboard_shortcuts")
+    - if current_user.enable_keyboard_shortcuts
+      %li.dropdown-divider
+      %li
+        = link_to "javascript:void(0)", class: "dropdown-item" do
+          = sprite_icon("keyboard")
+          = t(".keyboard_shortcuts")
     %li.dropdown-divider
     %li
       = link_to destroy_user_session_path, class: "dropdown-item", data: {turbo_method: :delete} do

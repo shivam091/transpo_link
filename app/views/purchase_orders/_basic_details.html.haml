@@ -28,19 +28,19 @@
     .widget-row-title
       = PurchaseOrder.human_attribute_name(:order_date)
     .widget-row-body
-      = purchase_order.order_date.to_date.to_fs(:long)
+      = prettify_datetime(purchase_order.order_date)
 .widget-row
   .widget-row-content
     .widget-row-title
       = PurchaseOrder.human_attribute_name(:expected_delivery_date)
     .widget-row-body
-      = purchase_order.expected_delivery_date&.to_fs(:long) || "-"
+      = prettify_date(purchase_order.expected_delivery_date) || "-"
 .widget-row
   .widget-row-content
     .widget-row-title
       = PurchaseOrder.human_attribute_name(:actual_delivery_date)
     .widget-row-body
-      = purchase_order.actual_delivery_date&.to_fs(:long) || "-"
+      = prettify_date(purchase_order.actual_delivery_date) || "-"
 .widget-row
   .widget-row-content
     .widget-row-title

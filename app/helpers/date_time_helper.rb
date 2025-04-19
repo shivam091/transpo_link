@@ -54,9 +54,40 @@ module DateTimeHelper
       datetime: time.to_time.getutc.iso8601,
       data: {
         controller: "tooltip",
-        bs_title: time.to_fs(:long),
+        bs_title: prettify_datetime(time),
         bs_placement: options[:placement]
       }
     )
+  end
+
+  def prettify_date(value, **options)
+    prettify_datetime_type(:date, value, **options)
+  end
+
+  def prettify_time(value, **options)
+    prettify_datetime_type(:time, value, **options)
+  end
+
+  def prettify_datetime(value, **options)
+    prettify_datetime_type(:datetime, value, **options)
+  end
+
+  private
+
+  def prettify_datetime_type(type, value, **options)
+    return if value.blank?
+
+    format = options.delete(:format) || preferred_format(type)
+    value = current_user.convert_time_to_user_timezone(value) if options.delete(:convert_timezone)
+
+    l(value, **options.merge(format: format))
+  end
+
+  def preferred_format(type)
+    case type
+    when :date then current_user&.preferred_date_format&.to_sym || :default
+    when :time then current_user&.preferred_time_format&.to_sym || :default
+    when :datetime then current_user&.preferred_datetime_format&.to_sym || :default
+    end
   end
 end

@@ -12,6 +12,38 @@
       "no": "No",
       nil: "Nothing",
     },
+    date: {
+      formats: {
+        default: "%Y-%m-%d",
+        short: "%d %b",
+        long: "%B %d, %Y",
+        long_with_day: "%a, %B %d, %Y",
+        long_with_hyphen: "%F",
+        year_and_month: "%Y-%m",
+      },
+    },
+    time: {
+      formats: {
+        twelve_hours_long: "%I:%M:%S %p",
+        twelve_hours_short: "%I:%M %p",
+        twenty_four_hours_short: "%H:%M",
+        twenty_four_hours_long: "%T",
+        default_twelve_hours: "%d %b %Y, %I:%M %p",
+        default_twenty_four_hours: "%d %b %Y, %H:%M",
+        short: "%d %b %H:%M",
+        short_with_seconds: "%d %b %H:%M:%S",
+        long: "%B %d, %Y %H:%M",
+        long_with_seconds: "%B %d, %Y %H:%M:%S",
+        twelve_hours_long_with_gmt_zone: "%B %d, %Y %I:%M:%S %p GMT%z",
+        twenty_four_hours_long_with_gmt_zone: "%B %d, %Y %H:%M:%S GMT%z",
+        twelve_hours_default_with_gmt_zone: "%d %b %Y, %I:%M:%S %p GMT%z",
+        twenty_four_hours_default_with_gmt_zone: "%d %b %Y, %H:%M:%S GMT%z",
+        twelve_hours_long_with_local_zone: "%B %d, %Y %I:%M:%S %p %Z",
+        twenty_four_hours_long_with_local_zone: "%B %d, %Y %H:%M:%S %Z",
+        twelve_hours_default_with_local_zone: "%d %b %Y, %I:%M:%S %p %Z",
+        twenty_four_hours_default_with_local_zone: "%d %b %Y, %H:%M:%S %Z"
+      },
+    },
     datetime: {
       time_ago: {
         about_x_seconds_ago: {
