@@ -110,6 +110,6 @@ class PurchaseOrder < ApplicationRecord
   end
 
   def replenish_inventory!
-    Inventories::ReplenishmentService.(self)
+    Inventories::ReplenishService.(self)
   end
 end
