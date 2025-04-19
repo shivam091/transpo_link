@@ -6,7 +6,8 @@
   .table-cell
     = enum_l(tax_rate, :tax_identifier_type)
   .table-cell
-    = enum_l(tax_rate, :tax_type)
+    = safe_render.partial("shared/badge", color: TranspoLink::ColorMapper.new(:tax_type).for(tax_rate.tax_type)) do
+      = enum_l(tax_rate, :tax_type)
   .table-cell
     = enum_l(tax_rate, :business_category)
   .table-cell

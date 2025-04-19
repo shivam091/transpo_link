@@ -11,7 +11,8 @@
   .table-cell
     = number_to_currency(purchase_order_item.total_cost, unit: purchase_order_item.currency.symbol)
   .table-cell
-    = enum_l(purchase_order_item, :status)
+    = safe_render.partial("shared/badge", color: TranspoLink::ColorMapper.new(:status).for(purchase_order_item.status)) do
+      = enum_l(purchase_order_item, :status)
   .table-cell.cell-narrow
     = link_to "javascript:void(0)", class: "text-reset", data: {bs_toggle: "dropdown"}, aria: {expanded: false} do
       = sprite_icon("ellipsis-vertical")

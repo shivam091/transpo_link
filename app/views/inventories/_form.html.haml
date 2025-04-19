@@ -23,7 +23,7 @@
     = form.select :currency, options_for_select(TranspoLink::Currency.select_options, form.object.currency),
       {include_blank: t(".select_currency")}
   .col-sm-12.col-md-6.col-lg-4
-    = form.label :low_stock_threshold, class: "form-label"
+    = form.label :low_stock_threshold, class: "form-label required"
     = form.number_field :low_stock_threshold, step: 0.01
   .actions
     = button_tag type: :submit, class: "btn btn-primary" do

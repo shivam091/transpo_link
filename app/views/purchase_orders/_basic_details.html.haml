@@ -46,7 +46,8 @@
     .widget-row-title
       = PurchaseOrder.human_attribute_name(:status)
     .widget-row-body
-      = enum_l(purchase_order, :status)
+      = safe_render.partial("shared/badge", color: TranspoLink::ColorMapper.new(:status).for(purchase_order.status)) do
+        = enum_l(purchase_order, :status)
 .widget-row
   .widget-row-content
     .widget-row-title
