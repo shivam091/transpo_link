@@ -8,6 +8,6 @@
 TranspoLink::Application.config.active_record.default_timezone = :utc
 
 # Set time zone of the application server
-Time.zone = "Asia/Kolkata"
+Time.zone = "Mumbai"
 Time.zone_default = Time.zone
 TranspoLink::Application.config.time_zone = Time.zone

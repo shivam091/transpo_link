@@ -9,7 +9,7 @@ require "spec_helper"
 RSpec.describe TranspoLink::TimeZone do
   describe ".formatted_time_zone" do
     it "returns formatted time zone string" do
-      expect(described_class.formatted_time_zone("Asia/Kolkata")).to eq("(GMT +05:30) Asia/Kolkata")
+      expect(described_class.formatted_time_zone("Mumbai")).to eq("(GMT +05:30) Mumbai")
     end
 
     it "returns the nil if the time zone is invalid" do
@@ -25,16 +25,16 @@ RSpec.describe TranspoLink::TimeZone do
 
   describe ".select_options" do
     it "returns a collection of formatted time zones" do
-      expect(described_class.select_options).to include(["(GMT +05:30) Mumbai", "Asia/Kolkata"])
+      expect(described_class.select_options).to include(["(GMT +05:30) Mumbai", "Mumbai"])
     end
   end
 
   describe ".with_user_time_zone" do
-    let(:user) { double("User", preferred_time_zone: "Asia/Kolkata") }
+    let(:user) { double("User", preferred_time_zone: "Mumbai") }
 
     it "executes the block within the user's preferred time zone" do
       described_class.with_user_time_zone(user) do
-        expect(Time.zone.name).to eq("Asia/Kolkata")
+        expect(Time.zone.name).to eq("Mumbai")
       end
     end
 

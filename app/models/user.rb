@@ -75,7 +75,12 @@ class User < ApplicationRecord
            :preferred_time_zone, :preferred_time_zone=,
            :preferred_color_scheme, :preferred_color_scheme=,
            :preferred_currency, :preferred_currency=,
+           :preferred_date_format, :preferred_date_format=,
+           :preferred_time_format, :preferred_time_format=,
+           :preferred_datetime_format, :preferred_datetime_format=,
+           :first_day_of_week, :first_day_of_week=,
            :are_notifications_enabled, :are_notifications_enabled=,
+           :enable_keyboard_shortcuts, :enable_keyboard_shortcuts=,
            to: :user_preference
 
   accepts_nested_attributes_for :user_detail, update_only: true
@@ -152,6 +157,23 @@ class User < ApplicationRecord
 
   def has_role?(role)
     role.eql?(role_name)
+  end
+
+  # Returns the current day according to the user's time zone
+  def today
+    time_to_date(Time.current)
+  end
+
+  # Returns the day of the given time according to the user's time zone
+  def time_to_date(time)
+    convert_time_to_user_timezone(time).to_date
+  end
+
+  # Converts time to the user's preferred time zone
+  def convert_time_to_user_timezone(time)
+    return time unless time.is_a?(Time) || time.is_a?(DateTime) || time.is_a?(ActiveSupport::TimeWithZone)
+
+    preferred_time_zone ? time.in_time_zone(preferred_time_zone) : time.in_time_zone
   end
 
   private

@@ -127,7 +127,12 @@ RSpec.describe User, type: :model do
     it { is_expected.to delegate_method(:preferred_time_zone).to(:user_preference) }
     it { is_expected.to delegate_method(:preferred_color_scheme).to(:user_preference) }
     it { is_expected.to delegate_method(:preferred_currency).to(:user_preference) }
+    it { is_expected.to delegate_method(:preferred_date_format).to(:user_preference) }
+    it { is_expected.to delegate_method(:preferred_time_format).to(:user_preference) }
+    it { is_expected.to delegate_method(:preferred_datetime_format).to(:user_preference) }
+    it { is_expected.to delegate_method(:first_day_of_week).to(:user_preference) }
     it { is_expected.to delegate_method(:are_notifications_enabled).to(:user_preference) }
+    it { is_expected.to delegate_method(:enable_keyboard_shortcuts).to(:user_preference) }
   end
 
   include_examples "apply default scope on created_at:desc"
@@ -405,6 +410,65 @@ RSpec.describe User, type: :model do
 
       it { expect(manager.manager?).to be_truthy }
       it { expect(manager.supplier?).to be_falsy }
+    end
+
+    describe "#today" do
+      context "when preferred time zone is set" do
+        let(:user) { build_stubbed(:user, preferred_time_zone: "Asia/Kolkata") }
+
+        it "returns today's date in the user's time zone" do
+          travel_to Time.utc(2025, 4, 17, 22, 0, 0) do
+            expect(user.today).to eq(Time.now.in_time_zone("Asia/Kolkata").to_date)
+          end
+        end
+      end
+
+      context "when preferred time zone is not set" do
+        let(:user) { build_stubbed(:user, preferred_time_zone: nil) }
+
+        it "falls back to system date" do
+          expect(user.today).to eq(Date.today)
+        end
+      end
+    end
+
+    describe "#time_to_date" do
+      let(:time_zone) { "America/New_York" }
+      let(:time) { Time.utc(2025, 4, 17, 22, 0, 0) }
+      let(:user) { build_stubbed(:user, preferred_time_zone: time_zone) }
+
+      it "converts time to user zone and returns date" do
+        expect(user.time_to_date(time)).to eq(time.in_time_zone(time_zone).to_date)
+      end
+    end
+
+    describe "#convert_time_to_user_timezone" do
+      let(:time_zone) { "Europe/Berlin" }
+      let(:time) { Time.utc(2025, 4, 17, 22, 0, 0) }
+
+      context "when preferred time zone is set" do
+        let(:user) { build_stubbed(:user, preferred_time_zone: time_zone) }
+
+        it "returns time in user's time zone" do
+          expect(user.convert_time_to_user_timezone(time)).to eq(time.in_time_zone(time_zone))
+        end
+      end
+
+      context "when preferred time zone is not set" do
+        let(:user) { build_stubbed(:user, preferred_time_zone: nil) }
+
+        it "returns time in app time zone if no user time zone" do
+          expect(user.convert_time_to_user_timezone(time)).to eq(time.in_time_zone)
+        end
+      end
+
+      context "when value does not respond to in_time_zone" do
+        let(:user) { build_stubbed(:user, preferred_time_zone: "Asia/Tokyo") }
+
+        it "returns original value" do
+          expect(user.convert_time_to_user_timezone("invalid")).to eq("invalid")
+        end
+      end
     end
   end
 end

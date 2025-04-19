@@ -19,7 +19,7 @@ module TranspoLink
 
     def select_options
       ActiveSupport::TimeZone.all.map do |tz|
-        [formatted_time_zone(tz.name), tz.tzinfo.name]
+        [formatted_time_zone(tz.name), tz.name]
       end
     end
 
