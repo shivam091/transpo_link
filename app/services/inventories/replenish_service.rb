@@ -2,7 +2,7 @@
 # -*- frozen_string_literal: true -*-
 # -*- warn_indent: true -*-
 
-class Inventories::ReplenishmentService < ApplicationService
+class Inventories::ReplenishService < ApplicationService
   def initialize(purchase_order)
     @purchase_order = purchase_order
   end
