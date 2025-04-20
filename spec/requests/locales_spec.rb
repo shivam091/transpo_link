@@ -14,7 +14,7 @@ RSpec.describe "Locales", type: :request do
 
   describe "GET /locale/edit" do
     it "renders locale edit page" do
-      get edit_locale_path
+      get edit_locale_path, as: :turbo_stream
 
       expect(response).to have_http_status(:ok)
       expect(response.body).to include("<turbo-frame id=\"edit_locale_form_frame\" target=\"_top\">")

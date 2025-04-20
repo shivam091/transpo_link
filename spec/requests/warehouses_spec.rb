@@ -127,7 +127,7 @@ RSpec.describe "Warehouses", type: :request do
   describe "DELETE /warehouse/:id" do
     context "when valid id" do
       it "deletes the warehouse and redirects" do
-        delete warehouse_path(active_warehouse)
+        delete warehouse_path(active_warehouse), as: :turbo_stream
 
         expect(response).to redirect_to(warehouses_path)
         expect(flash[:info]).to eq("Warehouse was successfully deleted.")
@@ -139,7 +139,7 @@ RSpec.describe "Warehouses", type: :request do
       it "does not delete the warehouse and redirects with an error message" do
         allow(Warehouses::DestroyService).to receive(:call) { ServiceResponse.error }
 
-        delete warehouse_path(active_warehouse)
+        delete warehouse_path(active_warehouse), as: :turbo_stream
 
         expect(response).to redirect_to(warehouses_path)
         expect(flash[:alert]).to eq("Warehouse could not be deleted.")

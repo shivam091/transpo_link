@@ -78,7 +78,7 @@ RSpec.describe "Feedbacks", type: :request do
     context "when unread feedback" do
       it "marks feedback as read and redirects" do
         expect {
-          put mark_as_read_feedback_path(unread_feedback), headers: {"HTTP_REFERER" => root_path}
+          put mark_as_read_feedback_path(unread_feedback), headers: {"HTTP_REFERER" => root_path}, as: :turbo_stream
         }.to change { unread_feedback.reload.is_unread? }.to be_falsy
 
         expect(response).to redirect_to(root_path)
@@ -90,7 +90,7 @@ RSpec.describe "Feedbacks", type: :request do
     context "when read feedback" do
       it "does not mark feedback as read and redirects with an error message" do
         expect {
-          put mark_as_read_feedback_path(read_feedback), headers: {"HTTP_REFERER" => root_path}
+          put mark_as_read_feedback_path(read_feedback), headers: {"HTTP_REFERER" => root_path}, as: :turbo_stream
         }.to not_change { unread_feedback.reload.is_unread? }
 
         expect(response).to redirect_to(root_path)

@@ -123,7 +123,7 @@ RSpec.describe "TaxRates", type: :request do
   describe "DELETE /tax-rates/:id" do
     context "when valid id" do
       it "deletes the tax rate and redirects" do
-        delete tax_rate_path(active_tax_rate)
+        delete tax_rate_path(active_tax_rate), as: :turbo_stream
 
         expect(response).to redirect_to(tax_rates_path)
         expect(flash[:info]).to eq("Tax rate was successfully deleted.")
@@ -135,7 +135,7 @@ RSpec.describe "TaxRates", type: :request do
       it "does not delete the tax rate and redirects with an error message" do
         allow(TaxRates::DestroyService).to receive(:call) { ServiceResponse.error }
 
-        delete tax_rate_path(active_tax_rate)
+        delete tax_rate_path(active_tax_rate), as: :turbo_stream
 
         expect(response).to redirect_to(tax_rates_path)
         expect(flash[:alert]).to eq("Tax rate could not be deleted.")

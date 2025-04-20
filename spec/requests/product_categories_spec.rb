@@ -110,7 +110,7 @@ RSpec.describe "ProductCategories", type: :request do
   describe "DELETE /product-categories/:id" do
     context "when valid id" do
       it "deletes the product category and redirects" do
-        delete product_category_path(active_product_category)
+        delete product_category_path(active_product_category), as: :turbo_stream
 
         expect(response).to redirect_to(product_categories_path)
         expect(flash[:info]).to eq("Product category was successfully deleted.")
@@ -122,7 +122,7 @@ RSpec.describe "ProductCategories", type: :request do
       it "does not delete the product category and redirects with an error message" do
         allow(ProductCategories::DestroyService).to receive(:call) { ServiceResponse.error }
 
-        delete product_category_path(active_product_category)
+        delete product_category_path(active_product_category), as: :turbo_stream
 
         expect(response).to redirect_to(product_categories_path)
         expect(flash[:alert]).to eq("Product category could not be deleted.")

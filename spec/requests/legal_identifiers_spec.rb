@@ -129,7 +129,7 @@ RSpec.describe "LegalIdentifiers", type: :request do
   describe "DELETE /legal-identifiers/:id" do
     context "when valid id" do
       it "deletes the legal identifier and redirects" do
-        delete legal_identifier_path(unapproved_legal_identifier)
+        delete legal_identifier_path(unapproved_legal_identifier), as: :turbo_stream
 
         expect(response).to redirect_to(legal_identifiers_path)
         expect(flash[:info]).to eq("Legal identifier was successfully deleted.")
@@ -141,7 +141,7 @@ RSpec.describe "LegalIdentifiers", type: :request do
       it "does not delete the legal identifier and redirects with an error message" do
         allow(LegalIdentifiers::DestroyService).to receive(:call) { ServiceResponse.error }
 
-        delete legal_identifier_path(unapproved_legal_identifier)
+        delete legal_identifier_path(unapproved_legal_identifier), as: :turbo_stream
 
         expect(response).to redirect_to(legal_identifiers_path)
         expect(flash[:alert]).to eq("Legal identifier could not be deleted.")
@@ -153,7 +153,7 @@ RSpec.describe "LegalIdentifiers", type: :request do
   describe "PATCH /legal-identifiers/:id/approve" do
     context "when approve succeeds" do
       it "approves the legal identifier and redirects" do
-        patch approve_legal_identifier_path(unapproved_legal_identifier)
+        patch approve_legal_identifier_path(unapproved_legal_identifier), as: :turbo_stream
 
         expect(response).to redirect_to(legal_identifiers_path)
         expect(flash[:info]).to eq("Legal identifier was successfully approved.")
@@ -165,7 +165,7 @@ RSpec.describe "LegalIdentifiers", type: :request do
       it "does not approve the legal identifier and redirects with an error message" do
         allow(LegalIdentifiers::ApproveService).to receive(:call) { ServiceResponse.error }
 
-        patch approve_legal_identifier_path(unapproved_legal_identifier)
+        patch approve_legal_identifier_path(unapproved_legal_identifier), as: :turbo_stream
 
         expect(response).to redirect_to(legal_identifiers_path)
         expect(flash[:alert]).to eq("Legal identifier could not be approved.")
@@ -177,7 +177,7 @@ RSpec.describe "LegalIdentifiers", type: :request do
   describe "PATCH /legal-identifiers/:id/reject" do
     context "when reject succeeds" do
       it "rejects the legal identifier and redirects" do
-        patch reject_legal_identifier_path(unapproved_legal_identifier)
+        patch reject_legal_identifier_path(unapproved_legal_identifier), as: :turbo_stream
 
         expect(response).to redirect_to(legal_identifiers_path)
         expect(flash[:info]).to eq("Legal identifier was successfully rejected.")
@@ -189,7 +189,7 @@ RSpec.describe "LegalIdentifiers", type: :request do
       it "does not reject the legal identifier and redirects with an error message" do
         allow(LegalIdentifiers::RejectService).to receive(:call) { ServiceResponse.error }
 
-        patch reject_legal_identifier_path(unapproved_legal_identifier)
+        patch reject_legal_identifier_path(unapproved_legal_identifier), as: :turbo_stream
 
         expect(response).to redirect_to(legal_identifiers_path)
         expect(flash[:alert]).to eq("Legal identifier could not be rejected.")

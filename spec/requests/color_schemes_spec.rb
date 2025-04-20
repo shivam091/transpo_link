@@ -10,11 +10,9 @@ RSpec.describe "ColorSchemes", type: :request do
   include_context "sign in as buyer"
 
   describe "PUT|PATCH /color_scheme" do
-    let(:headers) { {"ACCEPT" => "application/json", "CONTENT_TYPE" => "application/json"} }
-
     context "when valid color scheme" do
       it "updates the user's color scheme and returns success JSON" do
-        patch color_scheme_path, params: {color_scheme: "dark"}.to_json, headers: headers
+        patch color_scheme_path, params: {color_scheme: "dark"}, as: :json
 
         expect(response).to have_http_status(:ok)
         expect(buyer.reload.user_preference.preferred_color_scheme).to eq("dark")
@@ -25,7 +23,7 @@ RSpec.describe "ColorSchemes", type: :request do
 
     context "when invalid color scheme" do
       it "returns an unprocessable_entity error" do
-        patch color_scheme_path, params: {color_scheme: "rainbow"}.to_json, headers: headers
+        patch color_scheme_path, params: {color_scheme: "rainbow"}, as: :json
 
         expect(response).to have_http_status(:unprocessable_entity)
         expect(parsed_response_body["error"]).to eq("Invalid color scheme")
@@ -38,7 +36,7 @@ RSpec.describe "ColorSchemes", type: :request do
       end
 
       it "returns an error message" do
-        patch color_scheme_path, params: {color_scheme: "light"}.to_json, headers: headers
+        patch color_scheme_path, params: {color_scheme: "light"}, as: :json
 
         expect(response).to have_http_status(:unprocessable_entity)
         expect(parsed_response_body["error"]).to eq("Failed to update the color scheme")
