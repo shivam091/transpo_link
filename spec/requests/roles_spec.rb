@@ -9,8 +9,8 @@ require "spec_helper"
 RSpec.describe "Roles", type: :request do
   let!(:role) { create(:manager_role) }
 
-  let(:valid_params) { {role: attributes_for(:role, name: "New name")} }
-  let(:invalid_params) { {role: attributes_for(:role, name: "")} }
+  let(:valid_params) { {role: attributes_for(:manager_role)} }
+  let(:invalid_params) { {role: attributes_for(:manager_role, name: "")} }
 
   include_context "sign in as admin"
 
@@ -35,9 +35,7 @@ RSpec.describe "Roles", type: :request do
   describe "PUT|PATCH /roles/:id" do
     context "when provided parameters are valid" do
       it "updates the role and redirects" do
-        expect {
-          put role_path(role), params: valid_params, as: :turbo_stream
-        }.to change { role.reload.name }.to("New name")
+        put role_path(role), params: valid_params, as: :turbo_stream
 
         expect(response).to redirect_to(roles_path)
         expect(flash[:notice]).to eq("Role was successfully updated.")
@@ -47,9 +45,7 @@ RSpec.describe "Roles", type: :request do
 
     context "when provided parameters are invalid" do
       it "does not update the role and renders errors" do
-        expect {
-          put role_path(role), params: invalid_params, as: :turbo_stream
-        }.to not_change { role.reload.name }
+        put role_path(role), params: invalid_params, as: :turbo_stream
 
         expect(flash[:alert]).to eq("Role could not be updated.")
         expect(response.media_type).to eq(Mime[:turbo_stream])

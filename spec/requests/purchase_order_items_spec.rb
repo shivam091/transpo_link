@@ -18,7 +18,6 @@ RSpec.describe "PurchaseOrderItems", type: :request do
     {
       purchase_order_item: attributes_for(:purchase_order_item,
         product_id: product.id,
-        quantity: 10,
         unit_id: unit.id
       )
     }

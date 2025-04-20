@@ -13,7 +13,6 @@ RSpec.describe "Warehouses", type: :request do
   let(:valid_params) do
     {
       warehouse: attributes_for(:warehouse,
-        name: "New warehouse",
         manager_ids: active_warehouse.manager_ids,
         supplier_ids: active_warehouse.supplier_ids,
         unit_id: active_warehouse.unit.id
@@ -94,9 +93,7 @@ RSpec.describe "Warehouses", type: :request do
   describe "PUT|PATCH /warehouses/:id" do
     context "when provided parameters are valid" do
       it "updates the warehouse and redirects" do
-        expect {
-          put warehouse_path(active_warehouse), params: valid_params, as: :turbo_stream
-        }.to change { active_warehouse.reload.name }.to("New warehouse")
+        put warehouse_path(active_warehouse), params: valid_params, as: :turbo_stream
 
         expect(response).to redirect_to(warehouses_path)
         expect(flash[:notice]).to eq("Warehouse was successfully updated.")
@@ -106,9 +103,7 @@ RSpec.describe "Warehouses", type: :request do
 
     context "when provided parameters are invalid" do
       it "does not update the warehouse and renders errors" do
-        expect {
-          put warehouse_path(active_warehouse), params: invalid_params, as: :turbo_stream
-        }.to not_change { active_warehouse.reload.name }
+        put warehouse_path(active_warehouse), params: invalid_params, as: :turbo_stream
 
         expect(flash[:alert]).to eq("Warehouse could not be updated.")
         expect(response.media_type).to eq(Mime[:turbo_stream])

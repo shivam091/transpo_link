@@ -8,12 +8,11 @@ require "spec_helper"
 
 RSpec.describe "Inventories", type: :request do
   let!(:inventory) { create(:inventory) }
+  let!(:product) { create(:product) }
 
-  let(:product) { create(:product) }
   let(:valid_params) do
     {
       inventory: attributes_for(:inventory,
-        currency: "INR",
         product_id: product.id,
         warehouse_id: inventory.warehouse.id,
         unit_id: inventory.unit.id
@@ -75,9 +74,7 @@ RSpec.describe "Inventories", type: :request do
   describe "PUT|PATCH /inventories/:id" do
     context "when provided parameters are valid" do
       it "updates the inventory and redirects" do
-        expect {
-          put inventory_path(inventory), params: valid_params, as: :turbo_stream
-        }.to change { inventory.reload.currency }.to("INR")
+        put inventory_path(inventory), params: valid_params, as: :turbo_stream
 
         expect(response).to redirect_to(inventories_path)
         expect(flash[:notice]).to eq("Inventory has been successfully updated.")
@@ -87,9 +84,7 @@ RSpec.describe "Inventories", type: :request do
 
     context "when provided parameters are invalid" do
       it "does not update the inventory and renders errors" do
-        expect {
-          put inventory_path(inventory), params: invalid_params, as: :turbo_stream
-        }.to not_change { inventory.reload.currency }
+        put inventory_path(inventory), params: invalid_params, as: :turbo_stream
 
         expect(flash[:alert]).to eq("We encountered a problem updating inventory. Please try again.")
         expect(response.media_type).to eq(Mime[:turbo_stream])

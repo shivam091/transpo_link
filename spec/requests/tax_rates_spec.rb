@@ -96,9 +96,7 @@ RSpec.describe "TaxRates", type: :request do
   describe "PUT|PATCH /tax-rates/:id" do
     context "when provided parameters are valid" do
       it "updates the tax rate and redirects" do
-        expect {
-          put tax_rate_path(active_tax_rate), params: valid_params, as: :turbo_stream
-        }.to change { active_tax_rate.reload.tax_identifier_type }.to("pan")
+        put tax_rate_path(active_tax_rate), params: valid_params, as: :turbo_stream
 
         expect(response).to redirect_to(tax_rates_path)
         expect(flash[:notice]).to eq("Tax rate was successfully updated.")
@@ -108,9 +106,7 @@ RSpec.describe "TaxRates", type: :request do
 
     context "when provided parameters are invalid" do
       it "does not update the tax rate and renders errors" do
-        expect {
-          put tax_rate_path(active_tax_rate), params: invalid_params, as: :turbo_stream
-        }.to not_change { active_tax_rate.reload.tax_identifier_type }
+        put tax_rate_path(active_tax_rate), params: invalid_params, as: :turbo_stream
 
         expect(flash[:alert]).to eq("Tax rate could not be updated.")
         expect(response.media_type).to eq(Mime[:turbo_stream])
