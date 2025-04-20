@@ -7,7 +7,7 @@
 require "spec_helper"
 require_migration!
 
-RSpec.describe CreateWarehouseReferenceCodeSequence do
+RSpec.describe CreateWarehouseReferenceCodeSequence, type: :migration do
   let(:sequence_name) { "warehouse_reference_code_seq" }
 
   describe ".up" do

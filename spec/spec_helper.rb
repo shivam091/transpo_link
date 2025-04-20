@@ -92,8 +92,9 @@ RSpec.configure do |config|
   # Include support classes and modules.
   config.include RailsHelpers
   config.include TestHelpers
-  config.include ControllerAssignsHelper
-  config.include MigrationHelpers
+  config.include ActiveRecordHelpers
+  config.include ControllerAssignsHelper, type: :request
+  config.include MigrationHelpers, type: :migration
   config.include DateTimeHelperSupport, type: :helper
 
   config.around do |example|
