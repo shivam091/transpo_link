@@ -12,7 +12,7 @@ RSpec.describe Inventories::UpdateService, type: :service do
   subject(:service_response) { described_class.(inventory, inventory_attributes) }
 
   describe ".call" do
-    context "when update is successful" do
+    context "when provided attributes are valid" do
       let(:inventory_attributes) { {tracking_method: "fifo"} }
 
       it "updates the inventory" do
@@ -22,7 +22,7 @@ RSpec.describe Inventories::UpdateService, type: :service do
       include_examples "returns a success response"
     end
 
-    context "when update fails" do
+    context "when provided attributes are invalid" do
       let(:inventory_attributes) { {tracking_method: ""} }
 
       it "does not update the inventory" do

@@ -144,7 +144,7 @@ RSpec.describe "PurchaseOrderItems", type: :request do
       end
     end
 
-    context "when cancellation fails" do
+    context "when cancellation is unsuccessful" do
       it "does not cancel the purchase order item and render errors" do
         allow(PurchaseOrderItems::CancelService).to receive(:call) { ServiceResponse.error }
 

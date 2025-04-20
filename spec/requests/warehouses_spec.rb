@@ -123,7 +123,7 @@ RSpec.describe "Warehouses", type: :request do
   end
 
   describe "DELETE /warehouse/:id" do
-    context "when valid id" do
+    context "when deletion is successful" do
       it "deletes the warehouse and redirects" do
         delete warehouse_path(active_warehouse), as: :turbo_stream
 
@@ -133,7 +133,7 @@ RSpec.describe "Warehouses", type: :request do
       end
     end
 
-    context "when delete fails" do
+    context "when deletion is unsuccessful" do
       it "does not delete the warehouse and redirects with an error message" do
         allow(Warehouses::DestroyService).to receive(:call) { ServiceResponse.error }
 

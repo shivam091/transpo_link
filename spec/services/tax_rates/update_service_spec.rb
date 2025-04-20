@@ -12,7 +12,7 @@ RSpec.describe TaxRates::UpdateService, type: :service do
   subject(:service_response) { described_class.(tax_rate, tax_rate_attributes) }
 
   describe ".call" do
-    context "when update is successful" do
+    context "when provided attributes are valid" do
       let(:tax_rate_attributes) { {tax_identifier_type: "pan"} }
 
       it "updates the tax rate" do
@@ -22,7 +22,7 @@ RSpec.describe TaxRates::UpdateService, type: :service do
       include_examples "returns a success response"
     end
 
-    context "when update fails" do
+    context "when provided attributes are invalid" do
       let(:tax_rate_attributes) { {tax_identifier_type: ""} }
 
       it "does not update the tax rate" do

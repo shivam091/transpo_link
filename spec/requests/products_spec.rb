@@ -122,7 +122,7 @@ RSpec.describe "Products", type: :request do
   end
 
   describe "DELETE /products/:id" do
-    context "when valid id" do
+    context "when deletion is successful" do
       it "deletes the product and redirects" do
         delete product_path(active_product), as: :turbo_stream
 
@@ -132,7 +132,7 @@ RSpec.describe "Products", type: :request do
       end
     end
 
-    context "when delete fails" do
+    context "when deletion is unsuccessful" do
       it "does not delete the product and redirects with an error message" do
         allow(Products::DestroyService).to receive(:call) { ServiceResponse.error }
 

@@ -20,7 +20,7 @@ RSpec.describe PurchaseOrders::ApproveService, type: :service do
       include_examples "returns a success response"
     end
 
-    context "when approval fails" do
+    context "when approval is unsuccessful" do
       before { allow(purchase_order).to receive(:approve!) { false } }
 
       it "does not change the status" do

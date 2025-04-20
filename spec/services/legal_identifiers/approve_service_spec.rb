@@ -12,7 +12,7 @@ RSpec.describe LegalIdentifiers::ApproveService, type: :service do
   subject(:service_response) { described_class.(legal_identifier) }
 
   describe ".call" do
-    context "when approve is successful" do
+    context "when approval is successful" do
       it "approves the legal identifier" do
         expect { service_response }.to change { legal_identifier.reload.status }.to("approved")
       end
@@ -20,7 +20,7 @@ RSpec.describe LegalIdentifiers::ApproveService, type: :service do
       include_examples "returns a success response"
     end
 
-    context "when approve fails" do
+    context "when approval is unsuccessful" do
       before { allow(legal_identifier).to receive(:approve!) { false } }
 
       it "does not approve the legal identifier" do

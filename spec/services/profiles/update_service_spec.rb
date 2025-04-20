@@ -12,7 +12,7 @@ RSpec.describe Profiles::UpdateService, type: :service do
   subject(:service_response) { described_class.(user, profile_attributes) }
 
   describe ".call" do
-    context "when update is successful" do
+    context "when provided attributes are valid" do
       let(:profile_attributes) { {user_detail_attributes: {first_name: "First"}} }
 
       it "updates the user profile" do
@@ -22,7 +22,7 @@ RSpec.describe Profiles::UpdateService, type: :service do
       include_examples "returns a success response"
     end
 
-    context "when update fails" do
+    context "when provided attributes are invalid" do
       let(:profile_attributes) { {user_detail_attributes: {first_name: ""}} }
 
       it "does not update the user profile" do

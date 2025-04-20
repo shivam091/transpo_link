@@ -20,7 +20,7 @@ RSpec.describe PurchaseOrderItems::CancelService, type: :service do
       include_examples "returns a success response"
     end
 
-    context "when cancellation fails" do
+    context "when cancellation is unsuccessful" do
       before { allow(purchase_order_item).to receive(:cancel!) { false } }
 
       it "does not change the status" do

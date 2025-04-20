@@ -12,7 +12,7 @@ RSpec.describe LegalIdentifiers::RejectService, type: :service do
   subject(:service_response) { described_class.(legal_identifier) }
 
   describe ".call" do
-    context "when reject is successful" do
+    context "when rejection is successful" do
       it "rejects the legal identifier" do
         expect { service_response }.to change { legal_identifier.reload.status }.to("rejected")
       end
@@ -20,7 +20,7 @@ RSpec.describe LegalIdentifiers::RejectService, type: :service do
       include_examples "returns a success response"
     end
 
-    context "when reject fails" do
+    context "when rejection is unsuccessful" do
       before { allow(legal_identifier).to receive(:reject!) { false } }
 
       it "does not reject the legal identifier" do

@@ -12,7 +12,7 @@ RSpec.describe Products::UpdateService, type: :service do
   subject(:service_response) { described_class.(product, product_attributes) }
 
   describe ".call" do
-    context "when update is successful" do
+    context "when provided attributes are valid" do
       let(:product_attributes) { {name: "New product"} }
 
       it "updates the product" do
@@ -22,7 +22,7 @@ RSpec.describe Products::UpdateService, type: :service do
       include_examples "returns a success response"
     end
 
-    context "when update fails" do
+    context "when provided attributes are invalid" do
       let(:product_attributes) { {name: ""} }
 
       it "does not update the product" do

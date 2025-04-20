@@ -104,7 +104,7 @@ RSpec.describe "ProductCategories", type: :request do
   end
 
   describe "DELETE /product-categories/:id" do
-    context "when valid id" do
+    context "when deletion is successful" do
       it "deletes the product category and redirects" do
         delete product_category_path(active_product_category), as: :turbo_stream
 
@@ -114,7 +114,7 @@ RSpec.describe "ProductCategories", type: :request do
       end
     end
 
-    context "when delete fails" do
+    context "when deletion is unsuccessful" do
       it "does not delete the product category and redirects with an error message" do
         allow(ProductCategories::DestroyService).to receive(:call) { ServiceResponse.error }
 

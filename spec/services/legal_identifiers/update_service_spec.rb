@@ -12,7 +12,7 @@ RSpec.describe LegalIdentifiers::UpdateService, type: :service do
   subject(:service_response) { described_class.(legal_identifier, legal_identifier_attributes) }
 
   describe ".call" do
-    context "when update is successful" do
+    context "when provided attributes are valid" do
       let(:legal_identifier_attributes) { {tax_identifier: "32AAHHS1234A2Z4"} }
 
       it "updates the legal identifier" do
@@ -22,7 +22,7 @@ RSpec.describe LegalIdentifiers::UpdateService, type: :service do
       include_examples "returns a success response"
     end
 
-    context "when update fails" do
+    context "when provided attributes are invalid" do
       let(:legal_identifier_attributes) { {tax_identifier: ""} }
 
       it "does not update the legal identifier" do

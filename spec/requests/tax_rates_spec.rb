@@ -117,7 +117,7 @@ RSpec.describe "TaxRates", type: :request do
   end
 
   describe "DELETE /tax-rates/:id" do
-    context "when valid id" do
+    context "when deletion is successful" do
       it "deletes the tax rate and redirects" do
         delete tax_rate_path(active_tax_rate), as: :turbo_stream
 
@@ -127,7 +127,7 @@ RSpec.describe "TaxRates", type: :request do
       end
     end
 
-    context "when delete fails" do
+    context "when deletion is unsuccessful" do
       it "does not delete the tax rate and redirects with an error message" do
         allow(TaxRates::DestroyService).to receive(:call) { ServiceResponse.error }
 

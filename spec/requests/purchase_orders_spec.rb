@@ -103,7 +103,7 @@ RSpec.describe "PurchaseOrders", type: :request do
   end
 
   describe "DELETE /purchase-orders/:id" do
-    context "when valid id" do
+    context "when deletion is successful" do
       it "deletes the purchase order and redirects" do
         delete purchase_order_path(purchase_order), as: :turbo_stream
 
@@ -113,7 +113,7 @@ RSpec.describe "PurchaseOrders", type: :request do
       end
     end
 
-    context "when delete fails" do
+    context "when deletion is unsuccessful" do
       it "does not delete the purchase order and redirects with an error message" do
         allow(PurchaseOrders::DestroyService).to receive(:call) { ServiceResponse.error }
 
@@ -137,7 +137,7 @@ RSpec.describe "PurchaseOrders", type: :request do
       end
     end
 
-    context "when cancellation fails" do
+    context "when cancellation is unsuccessful" do
       it "does not cancel the purchase order and redirects with an error message" do
         allow(PurchaseOrders::CancelService).to receive(:call) { ServiceResponse.error }
 
@@ -161,7 +161,7 @@ RSpec.describe "PurchaseOrders", type: :request do
       end
     end
 
-    context "when submission fails" do
+    context "when submission is unsuccessful" do
       it "does not submit the purchase order and redirects with an error message" do
         allow(PurchaseOrders::SubmitService).to receive(:call) { ServiceResponse.error }
 
@@ -223,7 +223,7 @@ RSpec.describe "PurchaseOrders", type: :request do
       end
     end
 
-    context "when approval fails" do
+    context "when approval is unsuccessful" do
       it "does not approve the purchase order and redirects with an error message" do
         allow(PurchaseOrders::ApproveService).to receive(:call) { ServiceResponse.error }
 
@@ -249,7 +249,7 @@ RSpec.describe "PurchaseOrders", type: :request do
       end
     end
 
-    context "when rejection fails" do
+    context "when rejection is unsuccessful" do
       it "does not reject the purchase order and redirects with an error message" do
         allow(PurchaseOrders::RejectService).to receive(:call) { ServiceResponse.error }
 

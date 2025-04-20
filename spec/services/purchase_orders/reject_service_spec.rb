@@ -20,7 +20,7 @@ RSpec.describe PurchaseOrders::RejectService, type: :service do
       include_examples "returns a success response"
     end
 
-    context "when rejection fails" do
+    context "when rejection is unsuccessful" do
       before { allow(purchase_order).to receive(:reject!) { false } }
 
       it "does not change the status" do

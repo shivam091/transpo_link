@@ -128,7 +128,7 @@ RSpec.describe "LegalIdentifiers", type: :request do
   end
 
   describe "DELETE /legal-identifiers/:id" do
-    context "when valid id" do
+    context "when deletion is successful" do
       it "deletes the legal identifier and redirects" do
         delete legal_identifier_path(unapproved_legal_identifier), as: :turbo_stream
 
@@ -138,7 +138,7 @@ RSpec.describe "LegalIdentifiers", type: :request do
       end
     end
 
-    context "when delete fails" do
+    context "when deletion is unsuccessful" do
       it "does not delete the legal identifier and redirects with an error message" do
         allow(LegalIdentifiers::DestroyService).to receive(:call) { ServiceResponse.error }
 
@@ -152,7 +152,7 @@ RSpec.describe "LegalIdentifiers", type: :request do
   end
 
   describe "PATCH /legal-identifiers/:id/approve" do
-    context "when approve succeeds" do
+    context "when approval is successful" do
       it "approves the legal identifier and redirects" do
         patch approve_legal_identifier_path(unapproved_legal_identifier), as: :turbo_stream
 
@@ -162,7 +162,7 @@ RSpec.describe "LegalIdentifiers", type: :request do
       end
     end
 
-    context "when approve fails" do
+    context "when approval is unsuccessful" do
       it "does not approve the legal identifier and redirects with an error message" do
         allow(LegalIdentifiers::ApproveService).to receive(:call) { ServiceResponse.error }
 
@@ -176,7 +176,7 @@ RSpec.describe "LegalIdentifiers", type: :request do
   end
 
   describe "PATCH /legal-identifiers/:id/reject" do
-    context "when reject succeeds" do
+    context "when rejection is successful" do
       it "rejects the legal identifier and redirects" do
         patch reject_legal_identifier_path(unapproved_legal_identifier), as: :turbo_stream
 
@@ -186,7 +186,7 @@ RSpec.describe "LegalIdentifiers", type: :request do
       end
     end
 
-    context "when reject fails" do
+    context "when rejection is unsuccessful" do
       it "does not reject the legal identifier and redirects with an error message" do
         allow(LegalIdentifiers::RejectService).to receive(:call) { ServiceResponse.error }
 

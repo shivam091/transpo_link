@@ -12,7 +12,7 @@ RSpec.describe PurchaseOrders::UpdateService, type: :service do
   subject(:service_response) { described_class.(purchase_order, purchase_order_attributes) }
 
   describe ".call" do
-    context "when update is successful" do
+    context "when provided attributes are valid" do
       let(:purchase_order_attributes) { {status: "pending"} }
 
       it "updates the purchase order" do
@@ -22,7 +22,7 @@ RSpec.describe PurchaseOrders::UpdateService, type: :service do
       include_examples "returns a success response"
     end
 
-    context "when update fails" do
+    context "when provided attributes are invalid" do
       let(:purchase_order_attributes) { {status: ""} }
 
       it "does not update the purchase order" do

@@ -12,7 +12,7 @@ RSpec.describe Warehouses::UpdateService, type: :service do
   subject(:service_response) { described_class.(warehouse, warehouse_attributes) }
 
   describe ".call" do
-    context "when update is successful" do
+    context "when provided attributes are valid" do
       let(:warehouse_attributes) { {name: "New warehouse"} }
 
       it "updates the warehouse" do
@@ -22,7 +22,7 @@ RSpec.describe Warehouses::UpdateService, type: :service do
       include_examples "returns a success response"
     end
 
-    context "when update fails" do
+    context "when provided attributes are invalid" do
       let(:warehouse_attributes) { {name: ""} }
 
       it "does not update the warehouse" do

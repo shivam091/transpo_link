@@ -12,7 +12,7 @@ RSpec.describe Preferences::UpdateService, type: :service do
   subject(:service_response) { described_class.(user, preference_attributes) }
 
   describe ".call" do
-    context "when update is successful" do
+    context "when provided attributes are valid" do
       let(:preference_attributes) { {user_preference_attributes: {preferred_currency: "GBP"}} }
 
       it "updates the user preferences" do
@@ -22,7 +22,7 @@ RSpec.describe Preferences::UpdateService, type: :service do
       include_examples "returns a success response"
     end
 
-    context "when update fails" do
+    context "when provided attributes are invalid" do
       let(:preference_attributes) { {user_preference_attributes: {preferred_currency: ""}} }
 
       it "does not update the user preferences" do

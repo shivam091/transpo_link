@@ -14,7 +14,7 @@ RSpec.describe Locales::UpdateService, type: :service do
   after { I18n.locale = :en }
 
   describe ".call" do
-    context "when update is successful" do
+    context "when provided attributes are valid" do
       let(:preference_attributes) { {user_preference_attributes: {preferred_locale: "es"}} }
 
       it "updates the language" do
@@ -24,7 +24,7 @@ RSpec.describe Locales::UpdateService, type: :service do
       include_examples "returns a success response"
     end
 
-    context "when update fails" do
+    context "when provided attributes are invalid" do
       let(:preference_attributes) { {user_preference_attributes: {preferred_locale: ""}} }
 
       it "does not update the language" do

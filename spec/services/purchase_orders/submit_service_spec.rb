@@ -20,7 +20,7 @@ RSpec.describe PurchaseOrders::SubmitService, type: :service do
       include_examples "returns a success response"
     end
 
-    context "when submission fails" do
+    context "when submission is unsuccessful" do
       before { allow(purchase_order).to receive(:submit!) { false } }
 
       it "does not change the status" do
