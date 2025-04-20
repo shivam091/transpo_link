@@ -9,12 +9,12 @@ require "spec_helper"
 RSpec.describe Inventories::UpdateService, type: :service do
   let!(:inventory) { create(:inventory) }
 
-  let(:inventory_attributes) { {tracking_method: "fifo"} }
-
   subject(:service_response) { described_class.(inventory, inventory_attributes) }
 
   describe ".call" do
     context "when update is successful" do
+      let(:inventory_attributes) { {tracking_method: "fifo"} }
+
       it "updates the inventory" do
         expect { service_response }.to change { inventory.reload.tracking_method }.to("fifo")
       end
@@ -23,7 +23,7 @@ RSpec.describe Inventories::UpdateService, type: :service do
     end
 
     context "when update fails" do
-      before { allow(inventory).to receive(:update) { false } }
+      let(:inventory_attributes) { {tracking_method: ""} }
 
       it "does not update the inventory" do
         expect { service_response }.to not_change { inventory.reload.tracking_method }

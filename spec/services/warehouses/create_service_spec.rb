@@ -29,7 +29,9 @@ RSpec.describe Warehouses::CreateService, type: :service do
     end
 
     context "when provided attributes are invalid" do
-      let(:warehouse_attributes) { attributes_for(:warehouse, name: "") }
+      let(:warehouse_attributes) do
+        attributes_for(:warehouse, manager_ids: nil, supplier_ids: nil, unit_id: nil)
+      end
 
       include_examples "does not change record count", Warehouse
       include_examples "returns an error response"

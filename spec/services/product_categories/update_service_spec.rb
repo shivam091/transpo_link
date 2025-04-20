@@ -8,12 +8,13 @@ require "spec_helper"
 
 RSpec.describe ProductCategories::UpdateService, type: :service do
   let!(:product_category) { create(:product_category) }
-  let(:product_category_attributes) { {name: "New product category"} }
 
   subject(:service_response) { described_class.(product_category, product_category_attributes) }
 
   describe ".call" do
     context "when update is successful" do
+      let(:product_category_attributes) { {name: "New product category"} }
+
       it "updates the product category" do
         expect { service_response }.to change { product_category.reload.name }.to("New product category")
       end
@@ -22,7 +23,7 @@ RSpec.describe ProductCategories::UpdateService, type: :service do
     end
 
     context "when update fails" do
-      before { allow(product_category).to receive(:update) { false } }
+      let(:product_category_attributes) { {name: ""} }
 
       it "does not update the product category" do
         expect { service_response }.to not_change { product_category.reload.name }

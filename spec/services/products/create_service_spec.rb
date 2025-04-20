@@ -27,7 +27,9 @@ RSpec.describe Products::CreateService, type: :service do
     end
 
     context "when provided attributes are invalid" do
-      let(:product_attributes) { {name: ""} }
+      let(:product_attributes) do
+        attributes_for(:product, product_category_id: nil, unit_id: nil)
+      end
 
       include_examples "does not change record count", Product
       include_examples "returns an error response"

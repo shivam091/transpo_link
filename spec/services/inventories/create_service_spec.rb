@@ -27,7 +27,13 @@ RSpec.describe Inventories::CreateService, type: :service do
     end
 
     context "when provided attributes are invalid" do
-      let(:inventory_attributes) { {product_id: ""} }
+      let(:inventory_attributes) do
+        attributes_for(:inventory,
+          product_id: nil,
+          warehouse_id: nil,
+          unit_id: nil
+        )
+      end
 
       include_examples "does not change record count", Inventory
       include_examples "returns an error response"
