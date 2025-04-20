@@ -31,9 +31,7 @@ RSpec.describe "ColorSchemes", type: :request do
     end
 
     context "when update fails" do
-      before do
-        allow_any_instance_of(UserPreference).to receive(:update!) { false }
-      end
+      before { allow_any_instance_of(UserPreference).to receive(:update!) { false } }
 
       it "returns an error message" do
         patch color_scheme_path, params: {color_scheme: "light"}, as: :json

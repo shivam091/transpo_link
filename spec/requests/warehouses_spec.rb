@@ -11,13 +11,16 @@ RSpec.describe "Warehouses", type: :request do
   let!(:inactive_warehouse) { create(:warehouse) }
 
   let(:valid_params) do
-    attributes_for(:warehouse, name: "New warehouse").merge(
-      manager_ids: active_warehouse.manager_ids,
-      supplier_ids: active_warehouse.supplier_ids,
-      unit_id: active_warehouse.unit.id
-    )
+    {
+      warehouse: attributes_for(:warehouse,
+        name: "New warehouse",
+        manager_ids: active_warehouse.manager_ids,
+        supplier_ids: active_warehouse.supplier_ids,
+        unit_id: active_warehouse.unit.id
+      )
+    }
   end
-  let(:invalid_params) { attributes_for(:warehouse, name: "") }
+  let(:invalid_params) { {warehouse: attributes_for(:warehouse, name: "")} }
 
   include_context "sign in as admin"
 
@@ -59,7 +62,7 @@ RSpec.describe "Warehouses", type: :request do
   describe "POST /warehouses" do
     context "when provided parameters are valid" do
       it "creates the warehouse and redirects" do
-        post warehouses_path, params: {warehouse: valid_params}, as: :turbo_stream
+        post warehouses_path, params: valid_params, as: :turbo_stream
 
         expect(flash[:notice]).to eq("Warehouse was successfully created.")
         expect(response).to redirect_to(warehouses_path)
@@ -69,7 +72,7 @@ RSpec.describe "Warehouses", type: :request do
 
     context "when provided parameters are invalid" do
       it "does not create the warehouse and renders errors" do
-        post warehouses_path, params: {warehouse: invalid_params}, as: :turbo_stream
+        post warehouses_path, params: invalid_params, as: :turbo_stream
 
         expect(flash[:alert]).to eq("Warehouse could not be created.")
         expect(response.media_type).to eq(Mime[:turbo_stream])
@@ -92,7 +95,7 @@ RSpec.describe "Warehouses", type: :request do
     context "when provided parameters are valid" do
       it "updates the warehouse and redirects" do
         expect {
-          put warehouse_path(active_warehouse), params: {warehouse: valid_params}, as: :turbo_stream
+          put warehouse_path(active_warehouse), params: valid_params, as: :turbo_stream
         }.to change { active_warehouse.reload.name }.to("New warehouse")
 
         expect(response).to redirect_to(warehouses_path)
@@ -104,7 +107,7 @@ RSpec.describe "Warehouses", type: :request do
     context "when provided parameters are invalid" do
       it "does not update the warehouse and renders errors" do
         expect {
-          put warehouse_path(active_warehouse), params: {warehouse: invalid_params}, as: :turbo_stream
+          put warehouse_path(active_warehouse), params: invalid_params, as: :turbo_stream
         }.to not_change { active_warehouse.reload.name }
 
         expect(flash[:alert]).to eq("Warehouse could not be updated.")

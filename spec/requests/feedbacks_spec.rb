@@ -11,8 +11,8 @@ RSpec.describe "Feedbacks", type: :request do
   let!(:read_feedback) { create(:feedback, :read) }
 
   let(:reviewable) { unread_feedback.reviewable }
-  let(:valid_params) { attributes_for(:feedback, rating: 0.5) }
-  let(:invalid_params) { attributes_for(:feedback, rating: nil) }
+  let(:valid_params) { {feedback: attributes_for(:feedback, rating: 0.5)} }
+  let(:invalid_params) { {feedback: attributes_for(:feedback, rating: nil)} }
 
   include_context "sign in as admin"
 
@@ -54,7 +54,7 @@ RSpec.describe "Feedbacks", type: :request do
   describe "POST /feedbacks" do
     context "when provided parameters are valid" do
       it "creates the feedback and redirects" do
-        post product_feedbacks_path(reviewable), params: {feedback: valid_params}, headers: {"HTTP_REFERER" => root_path}, as: :turbo_stream
+        post product_feedbacks_path(reviewable), params: valid_params, headers: {"HTTP_REFERER" => root_path}, as: :turbo_stream
 
         expect(response).to redirect_to(root_path)
         expect(flash[:notice]).to eq("Your feedback helps us improve. Thanks for being a part of our community!")
@@ -64,7 +64,7 @@ RSpec.describe "Feedbacks", type: :request do
 
     context "when provided parameters are invalid" do
       it "does not create the feedback and renders errors" do
-        post product_feedbacks_path(reviewable), params: {feedback: invalid_params}, as: :turbo_stream
+        post product_feedbacks_path(reviewable), params: invalid_params, as: :turbo_stream
 
         expect(flash[:alert]).to eq("We encountered a problem submitting your feedback. Please try again.")
         expect(response.media_type).to eq(Mime[:turbo_stream])

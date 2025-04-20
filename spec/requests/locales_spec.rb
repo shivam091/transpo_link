@@ -7,8 +7,24 @@
 require "spec_helper"
 
 RSpec.describe "Locales", type: :request do
-  let(:valid_params) { {preferred_locale: "es"} }
-  let(:invalid_params) { {preferred_locale: ""} }
+  let(:valid_params) do
+    {
+      user: {
+        user_preference_attributes: attributes_for(:user_preference,
+          preferred_locale: "es"
+        )
+      }
+    }
+  end
+  let(:invalid_params) do
+    {
+      user: {
+        user_preference_attributes: attributes_for(:user_preference,
+          preferred_locale: ""
+        )
+      }
+    }
+  end
 
   include_context "sign in as admin"
 
@@ -27,9 +43,7 @@ RSpec.describe "Locales", type: :request do
     context "when provided parameters are valid" do
       it "updates the locale and redirects" do
         expect {
-          put locale_path, params: {
-            user: {user_preference_attributes: valid_params}
-          }, headers: {"HTTP_REFERER" => root_path}, as: :turbo_stream
+          put locale_path, params: valid_params, headers: {"HTTP_REFERER" => root_path}, as: :turbo_stream
         }.to change { admin.reload.preferred_locale }.to("es")
 
         expect(response).to redirect_to(root_path)
@@ -42,7 +56,7 @@ RSpec.describe "Locales", type: :request do
     context "when provided parameters are invalid" do
       it "does not update the locale and renders errors" do
         expect {
-          put locale_path, params: {user: {user_preference_attributes: invalid_params}}, as: :turbo_stream
+          put locale_path, params: invalid_params, as: :turbo_stream
         }.to not_change { admin.reload.preferred_locale }
 
         expect(flash[:alert]).to be_present

@@ -12,15 +12,16 @@ RSpec.describe "PurchaseOrders", type: :request do
   let!(:purchase_order) { create(:purchase_order, manager:) }
 
   let(:valid_params) do
-    attributes_for(
-      :purchase_order,
-      warehouse_id: purchase_order.warehouse.id,
-      manager_id: manager.id,
-      supplier_id: purchase_order.supplier.id,
-      notes: "Test notes"
-    )
+    {
+      purchase_order: attributes_for(:purchase_order,
+        warehouse_id: purchase_order.warehouse.id,
+        manager_id: manager.id,
+        supplier_id: purchase_order.supplier.id,
+        notes: "Test notes"
+      )
+    }
   end
-  let(:invalid_params) { {warehouse_id: nil, manager_id: nil, supplier_id: nil} }
+  let(:invalid_params) { {purchase_order: {warehouse_id: nil, manager_id: nil, supplier_id: nil}} }
 
   describe "GET /purchase-orders" do
     it "renders list of all purchase orders with pagination" do
@@ -41,7 +42,7 @@ RSpec.describe "PurchaseOrders", type: :request do
   describe "POST /purchase-orders" do
     context "when provided parameters are valid" do
       it "creates the purchase order and redirects" do
-        post purchase_orders_path, params: {purchase_order: valid_params}, as: :turbo_stream
+        post purchase_orders_path, params: valid_params, as: :turbo_stream
 
         expect(response).to redirect_to(purchase_orders_path)
         expect(flash[:notice]).to eq("Purchase order has been successfully created.")
@@ -51,7 +52,7 @@ RSpec.describe "PurchaseOrders", type: :request do
 
     context "when provided parameters are invalid" do
       it "does not create the purchase order and renders errors" do
-        post purchase_orders_path, params: {purchase_order: invalid_params}, as: :turbo_stream
+        post purchase_orders_path, params: invalid_params, as: :turbo_stream
 
         expect(flash[:alert]).to eq("We encountered a problem creating purchase order. Please try again.")
         expect(response.media_type).to eq(Mime[:turbo_stream])
@@ -74,7 +75,7 @@ RSpec.describe "PurchaseOrders", type: :request do
     context "when provided parameters are valid" do
       it "updates the purchase order and redirects" do
         expect {
-          put purchase_order_path(purchase_order), params: {purchase_order: valid_params}, as: :turbo_stream
+          put purchase_order_path(purchase_order), params: valid_params, as: :turbo_stream
         }.to change { purchase_order.reload.notes }.to("Test notes")
 
         expect(response).to redirect_to(purchase_orders_path)
@@ -86,7 +87,7 @@ RSpec.describe "PurchaseOrders", type: :request do
     context "when provided parameters are invalid" do
       it "does not update the purchase order and renders errors" do
         expect {
-          put purchase_order_path(purchase_order), params: {purchase_order: invalid_params}, as: :turbo_stream
+          put purchase_order_path(purchase_order), params: invalid_params, as: :turbo_stream
         }.to not_change { purchase_order.reload.notes }
 
         expect(flash[:alert]).to eq("We encountered a problem updating purchase order. Please try again.")

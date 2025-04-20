@@ -14,8 +14,16 @@ RSpec.describe "PurchaseOrderItems", type: :request do
   let!(:po_item1) { create(:purchase_order_item, purchase_order:) }
   let!(:po_item2) { create(:purchase_order_item, purchase_order:) }
 
-  let(:valid_params) { {purchase_order_item: {product_id: product.id, quantity: 10, unit_id: unit.id}} }
-  let(:invalid_params) { {purchase_order_item: {quantity: nil}} }
+  let(:valid_params) do
+    {
+      purchase_order_item: attributes_for(:purchase_order_item,
+        product_id: product.id,
+        quantity: 10,
+        unit_id: unit.id
+      )
+    }
+  end
+  let(:invalid_params) { {purchase_order_item: attributes_for(:purchase_order_item, quantity: nil)} }
 
   include_context "sign in as manager"
 

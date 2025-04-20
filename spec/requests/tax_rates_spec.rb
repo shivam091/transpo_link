@@ -10,8 +10,8 @@ RSpec.describe "TaxRates", type: :request do
   let!(:active_tax_rate) { create(:tax_rate, valid_to: Date.current + 1.day) }
   let!(:future_tax_rate) { create(:tax_rate, valid_from: (Date.current + 1.week)) }
 
-  let(:valid_params) { attributes_for(:tax_rate, tax_identifier_type: "pan") }
-  let(:invalid_params) { attributes_for(:tax_rate, tax_identifier_type: "") }
+  let(:valid_params) { {tax_rate: attributes_for(:tax_rate, tax_identifier_type: "pan")} }
+  let(:invalid_params) { {tax_rate: attributes_for(:tax_rate, tax_identifier_type: "")} }
 
   include_context "sign in as admin"
 
@@ -64,7 +64,7 @@ RSpec.describe "TaxRates", type: :request do
   describe "POST /tax-rates" do
     context "when provided parameters are valid" do
       it "creates the tax rate and redirects" do
-        post tax_rates_path, params: {tax_rate: valid_params}, as: :turbo_stream
+        post tax_rates_path, params: valid_params, as: :turbo_stream
 
         expect(response).to redirect_to(tax_rates_path)
         expect(flash[:notice]).to eq("Tax rate was successfully created.")
@@ -74,7 +74,7 @@ RSpec.describe "TaxRates", type: :request do
 
     context "when provided parameters are invalid" do
       it "does not create the tax rate and renders errors" do
-        post tax_rates_path, params: {tax_rate: invalid_params}, as: :turbo_stream
+        post tax_rates_path, params: invalid_params, as: :turbo_stream
 
         expect(flash[:alert]).to eq("Tax rate could not be created.")
         expect(response.media_type).to eq(Mime[:turbo_stream])
@@ -97,7 +97,7 @@ RSpec.describe "TaxRates", type: :request do
     context "when provided parameters are valid" do
       it "updates the tax rate and redirects" do
         expect {
-          put tax_rate_path(active_tax_rate), params: {tax_rate: valid_params}, as: :turbo_stream
+          put tax_rate_path(active_tax_rate), params: valid_params, as: :turbo_stream
         }.to change { active_tax_rate.reload.tax_identifier_type }.to("pan")
 
         expect(response).to redirect_to(tax_rates_path)
@@ -109,7 +109,7 @@ RSpec.describe "TaxRates", type: :request do
     context "when provided parameters are invalid" do
       it "does not update the tax rate and renders errors" do
         expect {
-          put tax_rate_path(active_tax_rate), params: {tax_rate: invalid_params}, as: :turbo_stream
+          put tax_rate_path(active_tax_rate), params: invalid_params, as: :turbo_stream
         }.to not_change { active_tax_rate.reload.tax_identifier_type }
 
         expect(flash[:alert]).to eq("Tax rate could not be updated.")

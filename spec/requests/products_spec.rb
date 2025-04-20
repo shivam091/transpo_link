@@ -11,13 +11,15 @@ RSpec.describe "Products", type: :request do
   let!(:inactive_product) { create(:product) }
 
   let(:valid_params) do
-    attributes_for(:product,
-      name: "Product",
-      product_category_id: active_product.product_category.id,
-      unit_id: active_product.unit.id
-    )
+    {
+      product: attributes_for(:product,
+        name: "Product",
+        product_category_id: active_product.product_category.id,
+        unit_id: active_product.unit.id
+      )
+    }
   end
-  let(:invalid_params) { attributes_for(:product, name: "") }
+  let(:invalid_params) { {product: attributes_for(:product, name: "")} }
 
   include_context "sign in as admin"
 
@@ -59,7 +61,7 @@ RSpec.describe "Products", type: :request do
   describe "POST /products" do
     context "when provided parameters are valid" do
       it "creates the product and redirects" do
-        post products_path, params: {product: valid_params}, as: :turbo_stream
+        post products_path, params: valid_params, as: :turbo_stream
 
         expect(response).to redirect_to(products_path)
         expect(flash[:notice]).to eq("Product was successfully created.")
@@ -69,7 +71,7 @@ RSpec.describe "Products", type: :request do
 
     context "when provided parameters are invalid" do
       it "does not create the product and renders errors" do
-        post products_path, params: {product: invalid_params}, as: :turbo_stream
+        post products_path, params: invalid_params, as: :turbo_stream
 
         expect(flash[:alert]).to eq("Product could not be created.")
         expect(response.media_type).to eq(Mime[:turbo_stream])
@@ -92,7 +94,7 @@ RSpec.describe "Products", type: :request do
     context "when provided parameters are valid" do
       it "updates the product and redirects" do
         expect {
-          put product_path(active_product), params: {product: valid_params}, as: :turbo_stream
+          put product_path(active_product), params: valid_params, as: :turbo_stream
         }.to change { active_product.reload.name }.to("Product")
 
         expect(response).to redirect_to(products_path)
@@ -104,7 +106,7 @@ RSpec.describe "Products", type: :request do
     context "when provided parameters are invalid" do
       it "does not update the product and renders errors" do
         expect {
-          put product_path(active_product), params: {product: invalid_params}, as: :turbo_stream
+          put product_path(active_product), params: invalid_params, as: :turbo_stream
         }.to not_change { active_product.reload.name }
 
         expect(flash[:alert]).to eq("Product could not be updated.")
