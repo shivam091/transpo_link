@@ -17,7 +17,7 @@ RSpec.describe Warehouses::CreateService, type: :service do
   describe ".call" do
     context "when provided attributes are valid" do
       let(:warehouse_attributes) do
-        attributes_for(:warehouse).merge(
+        attributes_for(:warehouse,
           manager_ids: [manager.id],
           supplier_ids: [supplier.id],
           unit_id: unit.id

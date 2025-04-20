@@ -14,7 +14,7 @@ RSpec.describe PurchaseOrders::RejectService, type: :service do
   describe ".call" do
     context "when rejection is successful" do
       it "transitions the purchase order to rejected" do
-        expect { service_response }.to change { purchase_order.reload.rejected? }.from(false).to(true)
+        expect { service_response }.to change { purchase_order.reload.status }.to("rejected")
       end
 
       include_examples "returns a success response"

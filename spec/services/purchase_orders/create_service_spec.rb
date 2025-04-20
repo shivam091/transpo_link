@@ -17,7 +17,7 @@ RSpec.describe PurchaseOrders::CreateService, type: :service do
   describe ".call" do
     context "when provided attributes are valid" do
       let(:purchase_order_attributes) {
-        attributes_for(:purchase_order).merge(
+        attributes_for(:purchase_order,
           warehouse_id: warehouse.id,
           manager_id: manager.id,
           supplier_id: supplier.id

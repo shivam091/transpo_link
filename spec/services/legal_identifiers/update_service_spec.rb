@@ -8,6 +8,7 @@ require "spec_helper"
 
 RSpec.describe LegalIdentifiers::UpdateService, type: :service do
   let!(:legal_identifier) { create(:legal_identifier) }
+
   let(:legal_identifier_attributes) { {tax_identifier: "32AAHHS1234A2Z4"} }
 
   subject(:service_response) { described_class.(legal_identifier, legal_identifier_attributes) }

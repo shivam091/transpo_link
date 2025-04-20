@@ -15,7 +15,6 @@ RSpec.describe LegalIdentifiers::RejectService, type: :service do
     context "when reject is successful" do
       it "rejects the legal identifier" do
         expect { service_response }.to change { legal_identifier.reload.status }.to("rejected")
-        expect(legal_identifier.rejected?).to be_truthy
       end
 
       include_examples "returns a success response"
@@ -26,7 +25,6 @@ RSpec.describe LegalIdentifiers::RejectService, type: :service do
 
       it "does not reject the legal identifier" do
         expect { service_response }.to not_change { legal_identifier.reload.status }
-        expect(legal_identifier.rejected?).to be_falsy
       end
 
       include_examples "returns an error response"
