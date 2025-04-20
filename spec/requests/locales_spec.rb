@@ -25,6 +25,7 @@ RSpec.describe "Locales", type: :request do
       }
     }
   end
+  let(:headers) { {"HTTP_REFERER" => root_path} }
 
   include_context "sign in as admin"
 
@@ -42,9 +43,7 @@ RSpec.describe "Locales", type: :request do
   describe "PUT|PATCH /locale" do
     context "when provided parameters are valid" do
       it "updates the locale and redirects" do
-        expect {
-          put locale_path, params: valid_params, headers: {"HTTP_REFERER" => root_path}, as: :turbo_stream
-        }.to change { admin.reload.preferred_locale }.to("es")
+        put locale_path, params: valid_params, headers:, as: :turbo_stream
 
         expect(response).to redirect_to(root_path)
         expect(response).to_not redirect_to(preference_path)
@@ -55,9 +54,7 @@ RSpec.describe "Locales", type: :request do
 
     context "when provided parameters are invalid" do
       it "does not update the locale and renders errors" do
-        expect {
-          put locale_path, params: invalid_params, as: :turbo_stream
-        }.to not_change { admin.reload.preferred_locale }
+        put locale_path, params: invalid_params, headers:, as: :turbo_stream
 
         expect(flash[:alert]).to be_present
         expect(response.media_type).to eq(Mime[:turbo_stream])

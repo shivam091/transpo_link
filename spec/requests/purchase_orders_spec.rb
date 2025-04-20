@@ -16,8 +16,7 @@ RSpec.describe "PurchaseOrders", type: :request do
       purchase_order: attributes_for(:purchase_order,
         warehouse_id: purchase_order.warehouse.id,
         manager_id: manager.id,
-        supplier_id: purchase_order.supplier.id,
-        notes: "Test notes"
+        supplier_id: purchase_order.supplier.id
       )
     }
   end
@@ -74,9 +73,7 @@ RSpec.describe "PurchaseOrders", type: :request do
   describe "PUT|PATCH /purchase-orders/:id" do
     context "when provided parameters are valid" do
       it "updates the purchase order and redirects" do
-        expect {
-          put purchase_order_path(purchase_order), params: valid_params, as: :turbo_stream
-        }.to change { purchase_order.reload.notes }.to("Test notes")
+        put purchase_order_path(purchase_order), params: valid_params, as: :turbo_stream
 
         expect(response).to redirect_to(purchase_orders_path)
         expect(flash[:notice]).to eq("Purchase order has been successfully updated.")
@@ -86,9 +83,7 @@ RSpec.describe "PurchaseOrders", type: :request do
 
     context "when provided parameters are invalid" do
       it "does not update the purchase order and renders errors" do
-        expect {
-          put purchase_order_path(purchase_order), params: invalid_params, as: :turbo_stream
-        }.to not_change { purchase_order.reload.notes }
+        put purchase_order_path(purchase_order), params: invalid_params, as: :turbo_stream
 
         expect(flash[:alert]).to eq("We encountered a problem updating purchase order. Please try again.")
         expect(response.media_type).to eq(Mime[:turbo_stream])

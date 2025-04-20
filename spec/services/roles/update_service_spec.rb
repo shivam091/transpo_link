@@ -8,6 +8,7 @@ require "spec_helper"
 
 RSpec.describe Roles::UpdateService, type: :service do
   let!(:role) { create(:admin_role) }
+
   let(:role_attributes) { {is_active: "true"} }
 
   subject(:service_response) { described_class.(role, role_attributes) }

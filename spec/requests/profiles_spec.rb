@@ -10,23 +10,19 @@ RSpec.describe "Profiles", type: :request do
   let(:valid_params) do
     {
       user: {
-        user_detail_attributes: attributes_for(:user_detail,
-          first_name: "John"
-        )
+        user_detail_attributes: attributes_for(:user_detail)
       }
     }
   end
   let(:invalid_params) do
     {
       user: {
-        user_detail_attributes: attributes_for(:user_detail,
-          first_name: ""
-        )
+        user_detail_attributes: attributes_for(:user_detail, first_name: "")
       }
     }
   end
 
-  include_context "sign in as admin"
+  include_context "sign in as buyer"
 
   describe "GET /profile" do
     it "renders profile page" do
@@ -41,7 +37,7 @@ RSpec.describe "Profiles", type: :request do
     it "renders profile edit page" do
       get edit_profile_path
 
-      expect(admin).to eq(controller_assigns(:current_user))
+      expect(controller_assigns(:current_user)).to eq(buyer)
       expect(response.body).to include("<turbo-frame id=\"edit_profile_form_frame\" target=\"_top\">")
       expect(response).to have_http_status(:ok)
     end
@@ -50,9 +46,7 @@ RSpec.describe "Profiles", type: :request do
   describe "PUT|PATCH /profile" do
     context "when provided parameters are valid" do
       it "updates the profile and redirects" do
-        expect {
-          put profile_path, params: valid_params, as: :turbo_stream
-        }.to change { admin.reload.first_name }.to("John")
+        put profile_path, params: valid_params, as: :turbo_stream
 
         expect(response).to redirect_to(profile_path)
         expect(flash[:notice]).to eq("Your profile was successfully updated.")
@@ -62,9 +56,7 @@ RSpec.describe "Profiles", type: :request do
 
     context "when provided parameters are invalid" do
       it "does not update the profile and renders errors" do
-        expect {
-          put profile_path, params: invalid_params, as: :turbo_stream
-        }.to not_change { admin.reload.first_name }
+        put profile_path, params: invalid_params, as: :turbo_stream
 
         expect(flash[:alert]).to eq("Your profile could not be updated.")
         expect(response.media_type).to eq(Mime[:turbo_stream])

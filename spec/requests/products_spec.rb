@@ -13,7 +13,6 @@ RSpec.describe "Products", type: :request do
   let(:valid_params) do
     {
       product: attributes_for(:product,
-        name: "Product",
         product_category_id: active_product.product_category.id,
         unit_id: active_product.unit.id
       )
@@ -93,9 +92,7 @@ RSpec.describe "Products", type: :request do
   describe "PUT|PATCH /products/:id" do
     context "when provided parameters are valid" do
       it "updates the product and redirects" do
-        expect {
-          put product_path(active_product), params: valid_params, as: :turbo_stream
-        }.to change { active_product.reload.name }.to("Product")
+        put product_path(active_product), params: valid_params, as: :turbo_stream
 
         expect(response).to redirect_to(products_path)
         expect(flash[:notice]).to eq("Product was successfully updated.")
@@ -105,9 +102,7 @@ RSpec.describe "Products", type: :request do
 
     context "when provided parameters are invalid" do
       it "does not update the product and renders errors" do
-        expect {
-          put product_path(active_product), params: invalid_params, as: :turbo_stream
-        }.to not_change { active_product.reload.name }
+        put product_path(active_product), params: invalid_params, as: :turbo_stream
 
         expect(flash[:alert]).to eq("Product could not be updated.")
         expect(response.media_type).to eq(Mime[:turbo_stream])

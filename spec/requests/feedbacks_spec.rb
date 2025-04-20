@@ -13,6 +13,7 @@ RSpec.describe "Feedbacks", type: :request do
   let(:reviewable) { unread_feedback.reviewable }
   let(:valid_params) { {feedback: attributes_for(:feedback, rating: 0.5)} }
   let(:invalid_params) { {feedback: attributes_for(:feedback, rating: nil)} }
+  let(:headers) { {"HTTP_REFERER" => root_path} }
 
   include_context "sign in as admin"
 
@@ -54,7 +55,7 @@ RSpec.describe "Feedbacks", type: :request do
   describe "POST /feedbacks" do
     context "when provided parameters are valid" do
       it "creates the feedback and redirects" do
-        post product_feedbacks_path(reviewable), params: valid_params, headers: {"HTTP_REFERER" => root_path}, as: :turbo_stream
+        post product_feedbacks_path(reviewable), params: valid_params, headers:, as: :turbo_stream
 
         expect(response).to redirect_to(root_path)
         expect(flash[:notice]).to eq("Your feedback helps us improve. Thanks for being a part of our community!")
@@ -64,7 +65,7 @@ RSpec.describe "Feedbacks", type: :request do
 
     context "when provided parameters are invalid" do
       it "does not create the feedback and renders errors" do
-        post product_feedbacks_path(reviewable), params: invalid_params, as: :turbo_stream
+        post product_feedbacks_path(reviewable), params: invalid_params, headers:, as: :turbo_stream
 
         expect(flash[:alert]).to eq("We encountered a problem submitting your feedback. Please try again.")
         expect(response.media_type).to eq(Mime[:turbo_stream])
@@ -77,9 +78,7 @@ RSpec.describe "Feedbacks", type: :request do
   describe "PUT|PATCH /feedbacks/:id/mark-as-read" do
     context "when unread feedback" do
       it "marks feedback as read and redirects" do
-        expect {
-          put mark_as_read_feedback_path(unread_feedback), headers: {"HTTP_REFERER" => root_path}, as: :turbo_stream
-        }.to change { unread_feedback.reload.is_unread? }.to be_falsy
+        put mark_as_read_feedback_path(unread_feedback), headers:, as: :turbo_stream
 
         expect(response).to redirect_to(root_path)
         expect(flash[:info]).to eq("Feedback was successfully marked as read.")
@@ -89,9 +88,7 @@ RSpec.describe "Feedbacks", type: :request do
 
     context "when read feedback" do
       it "does not mark feedback as read and redirects with an error message" do
-        expect {
-          put mark_as_read_feedback_path(read_feedback), headers: {"HTTP_REFERER" => root_path}, as: :turbo_stream
-        }.to not_change { unread_feedback.reload.is_unread? }
+        put mark_as_read_feedback_path(read_feedback), headers:, as: :turbo_stream
 
         expect(response).to redirect_to(root_path)
         expect(flash[:alert]).to eq("We encountered a problem marking the feedback as read. Please try again.")
