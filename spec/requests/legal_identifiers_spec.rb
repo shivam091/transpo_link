@@ -11,8 +11,8 @@ RSpec.describe "LegalIdentifiers", type: :request do
 
   let!(:unapproved_legal_identifier) { create(:legal_identifier, user: buyer) }
 
-  let(:valid_attributes) { attributes_for(:legal_identifier, tax_identifier: "29AACCB3455A1Z9").merge(user_id: buyer.id) }
-  let(:invalid_attributes) { attributes_for(:legal_identifier, tax_identifier: "") }
+  let(:valid_params) { attributes_for(:legal_identifier, tax_identifier: "29AACCB3455A1Z9").merge(user_id: buyer.id) }
+  let(:invalid_params) { attributes_for(:legal_identifier, tax_identifier: "") }
 
   include_context "sign in as buyer"
 
@@ -68,9 +68,9 @@ RSpec.describe "LegalIdentifiers", type: :request do
   end
 
   describe "POST /legal-identifiers" do
-    context "when provided attributes are valid" do
+    context "when provided parameters are valid" do
       it "creates the legal identifier and redirects" do
-        post legal_identifiers_path, params: {legal_identifier: valid_attributes}, as: :turbo_stream
+        post legal_identifiers_path, params: {legal_identifier: valid_params}, as: :turbo_stream
 
         expect(response).to redirect_to(legal_identifiers_path)
         expect(flash[:notice]).to eq("Legal identifier was successfully added.")
@@ -78,9 +78,9 @@ RSpec.describe "LegalIdentifiers", type: :request do
       end
     end
 
-    context "when provided attributes are invalid" do
+    context "when provided parameters are invalid" do
       it "does not create the legal identifier and renders errors" do
-        post legal_identifiers_path, params: {legal_identifier: invalid_attributes}, as: :turbo_stream
+        post legal_identifiers_path, params: {legal_identifier: invalid_params}, as: :turbo_stream
 
         expect(flash[:alert]).to eq("Legal identifier could not be added.")
         expect(response.media_type).to eq(Mime[:turbo_stream])
@@ -100,10 +100,10 @@ RSpec.describe "LegalIdentifiers", type: :request do
   end
 
   describe "PUT|PATCH /legal-identifiers/:id" do
-    context "when provided attributes are valid" do
+    context "when provided parameters are valid" do
       it "updates the legal identifier and redirects" do
         expect {
-          put legal_identifier_path(unapproved_legal_identifier), params: {legal_identifier: valid_attributes}, as: :turbo_stream
+          put legal_identifier_path(unapproved_legal_identifier), params: {legal_identifier: valid_params}, as: :turbo_stream
         }.to change { unapproved_legal_identifier.reload.tax_identifier }.to("29AACCB3455A1Z9")
 
         expect(response).to redirect_to(legal_identifiers_path)
@@ -112,10 +112,10 @@ RSpec.describe "LegalIdentifiers", type: :request do
       end
     end
 
-    context "when provided attributes are invalid" do
+    context "when provided parameters are invalid" do
       it "does not update the legal identifier and renders errors" do
         expect {
-          put legal_identifier_path(unapproved_legal_identifier), params: {legal_identifier: invalid_attributes}, as: :turbo_stream
+          put legal_identifier_path(unapproved_legal_identifier), params: {legal_identifier: invalid_params}, as: :turbo_stream
         }.to not_change { unapproved_legal_identifier.reload.tax_identifier }
 
         expect(flash[:alert]).to eq("Legal identifier could not be updated.")

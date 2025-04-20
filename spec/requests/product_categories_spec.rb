@@ -8,8 +8,8 @@ RSpec.describe "ProductCategories", type: :request do
   let!(:active_product_category) { create(:product_category, :active) }
   let!(:inactive_product_category) { create(:product_category) }
 
-  let(:valid_attributes) { attributes_for(:product_category, name: "New product category") }
-  let(:invalid_attributes) { attributes_for(:product_category, name: "") }
+  let(:valid_params) { attributes_for(:product_category, name: "New product category") }
+  let(:invalid_params) { attributes_for(:product_category, name: "") }
 
   include_context "sign in as admin"
 
@@ -49,9 +49,9 @@ RSpec.describe "ProductCategories", type: :request do
   end
 
   describe "POST /product-categories" do
-    context "when provided attributes are valid" do
+    context "when provided parameters are valid" do
       it "creates the product category and redirects" do
-        post product_categories_path, params: {product_category: valid_attributes}, as: :turbo_stream
+        post product_categories_path, params: {product_category: valid_params}, as: :turbo_stream
 
         expect(response).to redirect_to(product_categories_path)
         expect(flash[:notice]).to eq("Product category was successfully created.")
@@ -59,9 +59,9 @@ RSpec.describe "ProductCategories", type: :request do
       end
     end
 
-    context "when provided attributes are invalid" do
+    context "when provided parameters are invalid" do
       it "does not create the product category and renders errors" do
-        post product_categories_path, params: {product_category: invalid_attributes}, as: :turbo_stream
+        post product_categories_path, params: {product_category: invalid_params}, as: :turbo_stream
 
         expect(flash[:alert]).to eq("Product category could not be created.")
         expect(response.media_type).to eq(Mime[:turbo_stream])
@@ -81,10 +81,10 @@ RSpec.describe "ProductCategories", type: :request do
   end
 
   describe "PUT|PATCH /product-categories/:id" do
-    context "when provided attributes are valid" do
+    context "when provided parameters are valid" do
       it "updates the product category and redirects" do
         expect {
-          put product_category_path(active_product_category), params: {product_category: valid_attributes}, as: :turbo_stream
+          put product_category_path(active_product_category), params: {product_category: valid_params}, as: :turbo_stream
         }.to change { active_product_category.reload.name }.to("New product category")
 
         expect(response).to redirect_to(product_categories_path)
@@ -93,10 +93,10 @@ RSpec.describe "ProductCategories", type: :request do
       end
     end
 
-    context "when provided attributes are invalid" do
+    context "when provided parameters are invalid" do
       it "does not update the product category and renders errors" do
         expect {
-          put product_category_path(active_product_category), params: {product_category: invalid_attributes}, as: :turbo_stream
+          put product_category_path(active_product_category), params: {product_category: invalid_params}, as: :turbo_stream
         }.to not_change { active_product_category.reload.name }
 
         expect(flash[:alert]).to eq("Product category could not be updated.")

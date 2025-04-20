@@ -7,8 +7,8 @@
 require "spec_helper"
 
 RSpec.describe "Profiles", type: :request do
-  let(:valid_attributes) { {first_name: "John"} }
-  let(:invalid_attributes) { {first_name: ""} }
+  let(:valid_params) { {first_name: "John"} }
+  let(:invalid_params) { {first_name: ""} }
 
   include_context "sign in as admin"
 
@@ -32,10 +32,10 @@ RSpec.describe "Profiles", type: :request do
   end
 
   describe "PUT|PATCH /profile" do
-    context "when provided attributes are valid" do
+    context "when provided parameters are valid" do
       it "updates the profile and redirects" do
         expect {
-          put profile_path, params: {user: {user_detail_attributes: valid_attributes}}, as: :turbo_stream
+          put profile_path, params: {user: {user_detail_attributes: valid_params}}, as: :turbo_stream
         }.to change { admin.reload.first_name }.to("John")
 
         expect(response).to redirect_to(profile_path)
@@ -44,10 +44,10 @@ RSpec.describe "Profiles", type: :request do
       end
     end
 
-    context "when provided attributes are invalid" do
+    context "when provided parameters are invalid" do
       it "does not update the profile and renders errors" do
         expect {
-          put profile_path, params: {user: {user_detail_attributes: invalid_attributes}}, as: :turbo_stream
+          put profile_path, params: {user: {user_detail_attributes: invalid_params}}, as: :turbo_stream
         }.to not_change { admin.reload.first_name }
 
         expect(flash[:alert]).to eq("Your profile could not be updated.")

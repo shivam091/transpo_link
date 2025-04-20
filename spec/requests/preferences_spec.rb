@@ -7,8 +7,8 @@
 require "spec_helper"
 
 RSpec.describe "Preferences", type: :request do
-  let(:valid_attributes) { {preferred_currency: "GBP"} }
-  let(:invalid_attributes) { {preferred_currency: ""} }
+  let(:valid_params) { {preferred_currency: "GBP"} }
+  let(:invalid_params) { {preferred_currency: ""} }
 
   include_context "sign in as admin"
 
@@ -32,10 +32,10 @@ RSpec.describe "Preferences", type: :request do
   end
 
   describe "PUT|PATCH /preference" do
-    context "when provided attributes are valid" do
+    context "when provided parameters are valid" do
       it "updates the preference and redirects" do
         expect {
-          put preference_path, params: {user: {user_preference_attributes: valid_attributes}}, as: :turbo_stream
+          put preference_path, params: {user: {user_preference_attributes: valid_params}}, as: :turbo_stream
         }.to change { admin.reload.preferred_currency }.to("GBP")
 
         expect(response).to redirect_to(preference_path)
@@ -44,10 +44,10 @@ RSpec.describe "Preferences", type: :request do
       end
     end
 
-    context "when provided attributes are invalid" do
+    context "when provided parameters are invalid" do
       it "does not update the preference and renders errors" do
         expect {
-          put preference_path, params: {user: {user_preference_attributes: invalid_attributes}}, as: :turbo_stream
+          put preference_path, params: {user: {user_preference_attributes: invalid_params}}, as: :turbo_stream
         }.to not_change { admin.reload.preferred_currency }
 
         expect(flash[:alert]).to eq("Your preferences could not be updated.")
