@@ -94,6 +94,7 @@ RSpec.configure do |config|
   config.include TestHelpers
   config.include ActiveRecordHelpers
   config.include ControllerAssignsHelper, type: :request
+  config.include JsonResponseHelper, type: :request
   config.include MigrationHelpers, type: :migration
   config.include DateTimeHelperSupport, type: :helper
 

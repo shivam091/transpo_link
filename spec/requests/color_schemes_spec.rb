@@ -17,12 +17,9 @@ RSpec.describe "ColorSchemes", type: :request do
         patch color_scheme_path, params: {color_scheme: "dark"}.to_json, headers: headers
 
         expect(response).to have_http_status(:ok)
-
-        json = JSON.parse(response.body)
-        expect(json["preferred_color_scheme"]).to eq("dark")
-        expect(json["icon"]).to eq("moon") # assuming "dark" => "moon" in helper
-
         expect(buyer.reload.user_preference.preferred_color_scheme).to eq("dark")
+        expect(parsed_response_body["preferred_color_scheme"]).to eq("dark")
+        expect(parsed_response_body["icon"]).to eq("moon")
       end
     end
 
@@ -31,9 +28,7 @@ RSpec.describe "ColorSchemes", type: :request do
         patch color_scheme_path, params: {color_scheme: "rainbow"}.to_json, headers: headers
 
         expect(response).to have_http_status(:unprocessable_entity)
-
-        json = JSON.parse(response.body)
-        expect(json["error"]).to eq("Invalid color scheme")
+        expect(parsed_response_body["error"]).to eq("Invalid color scheme")
       end
     end
 
@@ -46,9 +41,7 @@ RSpec.describe "ColorSchemes", type: :request do
         patch color_scheme_path, params: {color_scheme: "light"}.to_json, headers: headers
 
         expect(response).to have_http_status(:unprocessable_entity)
-
-        json = JSON.parse(response.body)
-        expect(json["error"]).to eq("Failed to update the color scheme")
+        expect(parsed_response_body["error"]).to eq("Failed to update the color scheme")
       end
     end
   end
