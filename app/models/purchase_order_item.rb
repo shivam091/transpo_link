@@ -46,9 +46,8 @@ class PurchaseOrderItem < ApplicationRecord
             inclusion: {in: statuses.values, message: :inclusion},
             reduce: true
 
-  validate :unit_is_in_product_unit_category
-
-  validates_with PurchaseOrders::NoDuplicateProductValidator,
+  validates_with UnitIsInProductUnitCategoryValidator,
+                 PurchaseOrders::NoDuplicateProductValidator,
                  PurchaseOrderItems::ProductUnitIsInWarehouseUnitCategoryValidator
 
   with_options inverse_of: :purchase_order_items do |a|
@@ -64,16 +63,6 @@ class PurchaseOrderItem < ApplicationRecord
   default_scope -> { order_created_desc }
 
   private
-
-  def unit_is_in_product_unit_category
-    return unless product && unit
-
-    allowed_units = Unit.for_category(product.unit_category).symbols
-
-    if allowed_units.blank? || !allowed_units.include?(unit_symbol)
-      errors.add(:unit_id, :incompatible_unit_category)
-    end
-  end
 
   def set_unit_cost_and_currency
     return unless will_save_change_to_product_id?
