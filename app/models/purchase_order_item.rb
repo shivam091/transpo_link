@@ -46,10 +46,10 @@ class PurchaseOrderItem < ApplicationRecord
             inclusion: {in: statuses.values, message: :inclusion},
             reduce: true
 
-  validate :product_unit_is_in_warehouse_unit_category,
-           :unit_is_in_product_unit_category
+  validate :unit_is_in_product_unit_category
 
-  validates_with PurchaseOrders::NoDuplicateProductValidator
+  validates_with PurchaseOrders::NoDuplicateProductValidator,
+                 PurchaseOrderItems::ProductUnitIsInWarehouseUnitCategoryValidator
 
   with_options inverse_of: :purchase_order_items do |a|
     a.belongs_to :purchase_order, touch: true
@@ -72,16 +72,6 @@ class PurchaseOrderItem < ApplicationRecord
 
     if allowed_units.blank? || !allowed_units.include?(unit_symbol)
       errors.add(:unit_id, :incompatible_unit_category)
-    end
-  end
-
-  def product_unit_is_in_warehouse_unit_category
-    return unless purchase_order&.warehouse && product
-
-    allowed_symbols = Unit.for_category(purchase_order.warehouse.unit_category).symbols
-
-    unless allowed_symbols.include?(product.unit_symbol)
-      errors.add(:product_id, :unit_category_mismatch)
     end
   end
 
