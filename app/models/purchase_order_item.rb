@@ -31,7 +31,6 @@ class PurchaseOrderItem < ApplicationRecord
 
   validates :product_id,
             presence: true,
-            uniqueness: {scope: :purchase_order_id, message: :uniqueness},
             reduce: true
   validates :quantity, :unit_cost,
             presence: true,
@@ -49,6 +48,8 @@ class PurchaseOrderItem < ApplicationRecord
 
   validate :product_unit_is_in_warehouse_unit_category,
            :unit_is_in_product_unit_category
+
+  validates_with PurchaseOrders::NoDuplicateProductValidator
 
   with_options inverse_of: :purchase_order_items do |a|
     a.belongs_to :purchase_order, touch: true

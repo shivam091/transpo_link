@@ -386,8 +386,8 @@
           purchase_order_item: {
             attributes: {
               product_id: {
-                uniqueness: "has already been added",
                 unit_category_mismatch: "is incompatible with the selected warehouse due to unit category mismatch",
+                duplicate_in_order: "has already been added to this purchase order",
               },
               status: {
                 inclusion: "'%{value}' is not a valid status for purchase order item",
