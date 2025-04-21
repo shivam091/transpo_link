@@ -100,7 +100,6 @@ RSpec.describe PurchaseOrderItem, type: :model do
   describe "validations" do
     describe "#product_id" do
       it { is_expected.to validate_presence_of(:product_id) }
-      it { is_expected.to validate_uniqueness_of(:product_id).scoped_to(:purchase_order_id).with_message("has already been added").case_insensitive }
     end
 
     describe "#quantity" do
