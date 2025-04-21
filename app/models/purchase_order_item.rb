@@ -47,8 +47,9 @@ class PurchaseOrderItem < ApplicationRecord
             inclusion: {in: statuses.values, message: :inclusion},
             reduce: true
 
-  validate :product_unit_is_in_warehouse_unit_category,
-           :unit_is_in_product_unit_category
+  validate :product_unit_is_in_warehouse_unit_category
+
+  validates_with UnitIsInProductUnitCategoryValidator
 
   with_options inverse_of: :purchase_order_items do |a|
     a.belongs_to :purchase_order, touch: true
@@ -63,16 +64,6 @@ class PurchaseOrderItem < ApplicationRecord
   default_scope -> { order_created_desc }
 
   private
-
-  def unit_is_in_product_unit_category
-    return unless product && unit
-
-    allowed_units = Unit.for_category(product.unit_category).symbols
-
-    if allowed_units.blank? || !allowed_units.include?(unit_symbol)
-      errors.add(:unit_id, :incompatible_unit_category)
-    end
-  end
 
   def product_unit_is_in_warehouse_unit_category
     return unless purchase_order&.warehouse && product
