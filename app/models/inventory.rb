@@ -83,11 +83,11 @@ class Inventory < ApplicationRecord
   end
 
   def product_unit_category_matches_warehouse_capacity
-    return unless warehouse.present? && product.present?
+    return unless warehouse && product
 
     allowed_units = Unit.for_category(warehouse.unit_category).symbols
 
-    if allowed_units.blank? || !allowed_units.include?(product.unit_symbol)
+    if allowed_units.blank? || allowed_units.exclude?(product.unit_symbol)
       errors.add(:product_id, :incompatible_unit_category)
     end
   end

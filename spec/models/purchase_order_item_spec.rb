@@ -177,12 +177,12 @@ RSpec.describe PurchaseOrderItem, type: :model do
     end
 
     describe "#product_unit_is_in_warehouse_unit_category" do
-      let(:warehouse) { create(:warehouse) }
-
       let!(:product) { create(:product) }
-      let!(:purchase_order) { create(:purchase_order, warehouse:) }
 
-      context "when the unit is in the valid category" do
+      context "when the unit is in a valid category" do
+        let!(:warehouse) { create(:warehouse) }
+        let!(:purchase_order) { create(:purchase_order, warehouse:) }
+
         let(:purchase_order_item) { build(:purchase_order_item, purchase_order:, product:) }
 
         it "does not add validation errors" do
@@ -192,7 +192,7 @@ RSpec.describe PurchaseOrderItem, type: :model do
         end
       end
 
-      context "when the unit is not in the valid category" do
+      context "when the unit is not in a valid category" do
         let!(:warehouse) { create(:warehouse, unit: create(:litre_unit)) }
         let!(:purchase_order) { create(:purchase_order, warehouse:) }
 

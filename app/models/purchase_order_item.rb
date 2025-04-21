@@ -66,11 +66,11 @@ class PurchaseOrderItem < ApplicationRecord
   private
 
   def product_unit_is_in_warehouse_unit_category
-    return unless purchase_order&.warehouse && product
+    return unless (warehouse = purchase_order&.warehouse) && product
 
-    allowed_symbols = Unit.for_category(purchase_order.warehouse.unit_category).symbols
+    allowed_units = Unit.for_category(warehouse.unit_category).symbols
 
-    unless allowed_symbols.include?(product.unit_symbol)
+    if allowed_units.blank? || allowed_units.exclude?(product.unit_symbol)
       errors.add(:product_id, :unit_category_mismatch)
     end
   end
@@ -78,7 +78,7 @@ class PurchaseOrderItem < ApplicationRecord
   def set_unit_cost_and_currency
     return unless will_save_change_to_product_id?
 
-    if product.present?
+    if product
       assign_attributes(unit_cost: product.cost_price, currency: product.currency)
     end
   end
