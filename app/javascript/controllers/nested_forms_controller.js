@@ -18,7 +18,7 @@ export default class NestedFormsController extends Controller {
     if (!wrapper) return;
 
     // If it's a new record, we remove it entirely
-    if (wrapper.dataset.newRecord === "true") {
+    if ("newRecord" in wrapper.dataset) {
       wrapper.remove();
     } else {
       // If it's an existing record, hide it and mark it for destruction
