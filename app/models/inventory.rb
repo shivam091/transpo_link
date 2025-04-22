@@ -74,7 +74,7 @@ class Inventory < ApplicationRecord
   private
 
   def create_stock
-    Stock.create!(inventory: self)
+    Stocks::CreateService.(self)
   end
 
   def create_replenishment

@@ -23,6 +23,7 @@ RSpec.describe Inventories::CreateService, type: :service do
       end
 
       include_examples "creates a record", Inventory
+      include_examples "creates a record", Stock
       include_examples "returns a success response"
     end
 
@@ -30,6 +31,7 @@ RSpec.describe Inventories::CreateService, type: :service do
       let(:inventory_attributes) { {product_id: ""} }
 
       include_examples "does not change record count", Inventory
+      include_examples "does not change record count", Stock
       include_examples "returns an error response"
     end
   end
