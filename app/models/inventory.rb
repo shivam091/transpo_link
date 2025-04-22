@@ -78,7 +78,7 @@ class Inventory < ApplicationRecord
   end
 
   def create_replenishment
-    Replenishment.create!(inventory: self)
+    Replenishments::CreateService.(self)
   end
 
   def inventory_unit_matches_product_unit_category

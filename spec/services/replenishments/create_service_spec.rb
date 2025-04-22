@@ -2,20 +2,20 @@
 # -*- frozen_string_literal: true -*-
 # -*- warn_indent: true -*-
 
-# spec/services/stocks/create_service_spec.rb
+# spec/services/replenishments/create_service_spec.rb
 
 require "spec_helper"
 
-RSpec.describe Stocks::CreateService, type: :service do
+RSpec.describe Replenishments::CreateService, type: :service do
   subject(:service_response) { described_class.(inventory) }
 
-  before { allow_any_instance_of(Inventory).to receive(:create_stock) }
+  before { allow_any_instance_of(Inventory).to receive(:create_replenishment) }
 
   describe ".call" do
     context "with a valid inventory" do
       let(:inventory) { create(:inventory) }
 
-      include_examples "creates a record", Stock
+      include_examples "creates a record", Replenishment
     end
 
     context "with an invalid inventory (nil)" do
