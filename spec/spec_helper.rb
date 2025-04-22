@@ -98,6 +98,9 @@ RSpec.configure do |config|
   config.include MigrationHelpers, type: :migration
   config.include DateTimeHelperSupport, type: :helper
 
+  # Extend support classes and modules.
+  config.extend ControllerMacros, type: :request
+
   config.around do |example|
     ActiveRecord::Base.transaction do
       example.run
