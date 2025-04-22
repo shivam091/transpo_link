@@ -53,7 +53,7 @@ RSpec.shared_examples "a unique product in collection validator" do
   context "when there are two child records with the same product" do
     let!(:existing_child_record) { create_child(parent => parent_record, product:, unit:) }
 
-    it "adds a validation error to the second child_record" do
+    it "adds a validation error to the second child record" do
       expect(child_record).to be_invalid
       expect(child_record.errors[:product_id]).to include(/has already been added/)
     end
