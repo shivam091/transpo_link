@@ -4,8 +4,7 @@
     = t(".password_assistance")
   %p
     =t (".password_reset_note")
-= pretty_form_with model: resource, as: resource_name, url: password_path(resource_name),
-  data: {turbo: false} do |form|
+= pretty_form_with model: resource, as: resource_name, url: password_path(resource_name) do |form|
   = form_errors(resource)
   .col-12
     .form-floating

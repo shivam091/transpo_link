@@ -22,10 +22,11 @@ export default class ColorSchemeController extends Controller {
     });
 
     if (response.ok) {
-      const {preferred_color_scheme, icon} = await response.json;
-      this.updateUI(preferred_color_scheme, icon);
+      const {color_scheme, icon} = await response.json;
+      this.updateUI(color_scheme, icon);
     } else {
-      console.warn("Failed to update color scheme");
+      const {error} = await response.json;
+      console.error(error);
     }
   }
 

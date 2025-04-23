@@ -21,7 +21,7 @@ RSpec.describe Feedbacks::CreateService, type: :service do
     end
 
     context "when provided attributes are invalid" do
-      let(:feedback_attributes) { {rating: ""} }
+      let(:feedback_attributes) { attributes_for(:feedback, rating: "") }
 
       include_examples "does not change record count", Feedback
       include_examples "returns an error response"

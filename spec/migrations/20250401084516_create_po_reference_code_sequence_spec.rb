@@ -7,7 +7,7 @@
 require "spec_helper"
 require_migration!
 
-RSpec.describe CreatePoReferenceCodeSequence do
+RSpec.describe CreatePoReferenceCodeSequence, type: :migration do
   let(:sequence_name) { "po_reference_code_seq" }
 
   describe ".up" do

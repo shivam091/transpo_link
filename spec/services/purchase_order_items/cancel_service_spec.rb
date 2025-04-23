@@ -14,13 +14,13 @@ RSpec.describe PurchaseOrderItems::CancelService, type: :service do
   describe ".call" do
     context "when cancellation is successful" do
       it "transitions the purchase order item to cancelled" do
-        expect { service_response }.to change { purchase_order_item.reload.cancelled? }.from(false).to(true)
+        expect { service_response }.to change { purchase_order_item.reload.status }.to("cancelled")
       end
 
       include_examples "returns a success response"
     end
 
-    context "when cancellation fails" do
+    context "when cancellation is unsuccessful" do
       before { allow(purchase_order_item).to receive(:cancel!) { false } }
 
       it "does not change the status" do
