@@ -62,7 +62,7 @@ class UnitConversion < ApplicationRecord
   end
 
   def units_must_have_same_category
-    return if source_unit.blank? || target_unit.blank?
+    return unless source_unit && target_unit
 
     if source_unit_category != target_unit_category
       errors.add(:target_unit_id, :category_mismatch, message: "must belong to the same category as source unit")
