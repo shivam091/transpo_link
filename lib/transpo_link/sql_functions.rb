@@ -23,6 +23,28 @@ module TranspoLink
       end
     end
 
+    def sum(value, column_alias = nil)
+      if column_alias
+        aliased_sql_function("SUM", [value], column_alias)
+      else
+        sql_function("SUM", [value])
+      end
+    end
+
+    def mul(left, right)
+      Arel::Nodes::Multiplication.new(left, right)
+    end
+
+    def sum_mul(left, right, column_alias = nil)
+      expression = sum(mul(left, right))
+
+      if column_alias
+        alias_as_column(expression, column_alias)
+      else
+        expression
+      end
+    end
+
     private
 
     def aliased_sql_function(name, args, column_alias)
