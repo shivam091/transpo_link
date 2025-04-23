@@ -20,7 +20,7 @@ RSpec.describe Feedbacks::MarkAsReadService, type: :service do
       include_examples "returns a success response"
     end
 
-    context "when mark as read fails" do
+    context "when mark as read is unsuccessful" do
       before { allow(feedback).to receive(:mark_as_read!) { false } }
 
       it "does not mark feedback as read" do

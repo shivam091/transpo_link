@@ -7,7 +7,7 @@
 require "spec_helper"
 require_migration!
 
-RSpec.describe EnableUuid do
+RSpec.describe EnableUuid, type: :migration do
   let(:extension_name) { "pgcrypto" }
 
   describe ".up" do

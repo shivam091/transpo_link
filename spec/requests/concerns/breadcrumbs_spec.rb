@@ -7,33 +7,26 @@
 require "spec_helper"
 
 RSpec.describe "Breadcrumbs", type: :request do
-  let!(:controller_name) { "AnonymousController" }
-  let!(:controller_class) do
-    Class.new(ActionController::Base) do
-      include Breadcrumbs
+  with_mock_controller(ActionController::Base, name: "Anonymous") do
+    include Breadcrumbs
 
-      add_breadcrumb :anonymous, :anonymous_path
+    add_breadcrumb :anonymous, :anonymous_path
 
-      def test_breadcrumbs
-        add_breadcrumb t("breadcrumbs.home"), "/"
-        add_breadcrumb -> { "Dynamic Page" }, -> { "/dynamic-url" }
+    def test_breadcrumbs
+      add_breadcrumb t("breadcrumbs.home"), "/"
+      add_breadcrumb -> { "Dynamic Page" }, -> { "/dynamic-url" }
 
-        render plain: "OK"
-      end
+      render plain: "OK"
+    end
 
-      private
+    private
 
-      def anonymous
-        "Anonymous method"
-      end
+    def anonymous
+      "Anonymous method"
     end
   end
 
   before do
-    stub_const(controller_name, controller_class)
-    controller_class.define_singleton_method(:controller_name) { "anonymous" }
-    controller_class.define_singleton_method(:controller_path) { "anonymous" }
-
     Rails.application.routes.draw do
       get "/anonymous", to: "anonymous#test_breadcrumbs"
     end
@@ -76,11 +69,11 @@ RSpec.describe "Breadcrumbs", type: :request do
     end
 
     before do
-      allow_any_instance_of(controller_class).to receive(:breadcrumbs) { dummy_breadcrumbs }
+      allow(@controller).to receive(:breadcrumbs) { dummy_breadcrumbs }
     end
 
     it "renders the correct breadcrumb structure" do
-      rendered_html = controller_class.new.view_context.render_breadcrumbs
+      rendered_html = @controller.view_context.render_breadcrumbs
 
       expect(rendered_html).to include("<nav aria-label=\"Breadcrumb\">")
       expect(rendered_html).to include("<ol class=\"breadcrumb\">")

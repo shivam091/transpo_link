@@ -14,13 +14,13 @@ RSpec.describe PurchaseOrders::ApproveService, type: :service do
   describe ".call" do
     context "when approval is successful" do
       it "transitions the purchase order to approved" do
-        expect { service_response }.to change { purchase_order.reload.approved? }.from(false).to(true)
+        expect { service_response }.to change { purchase_order.reload.status }.to("approved")
       end
 
       include_examples "returns a success response"
     end
 
-    context "when approval fails" do
+    context "when approval is unsuccessful" do
       before { allow(purchase_order).to receive(:approve!) { false } }
 
       it "does not change the status" do
