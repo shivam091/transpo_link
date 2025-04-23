@@ -19,7 +19,7 @@ class Inventories::ReplenishService < ApplicationService
     purchase_order.purchase_order_items.each do |item|
       warehouse, product = purchase_order.warehouse, item.product
       inventory = warehouse.inventories.for_product(product)
-      raise_missing_inventory!(warehouse, product) if inventory.nil?
+      raise_missing_inventory_error!(warehouse, product) if inventory.nil?
 
       source_unit, target_unit = item.unit, inventory.unit
       quantity = UnitConversion.convert(source_unit, target_unit, item.quantity)
@@ -29,7 +29,7 @@ class Inventories::ReplenishService < ApplicationService
     end
   end
 
-  def raise_missing_inventory!(warehouse, product)
+  def raise_missing_inventory_error!(warehouse, product)
     raise PurchaseOrders::MissingInventoryError.new(warehouse, product)
   end
 
