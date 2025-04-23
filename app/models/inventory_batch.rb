@@ -35,4 +35,12 @@ class InventoryBatch < ApplicationRecord
     a.belongs_to :inventory, touch: true
     a.belongs_to :unit
   end
+
+  after_save :update_inventory_average_cost_price
+
+  private
+
+  def update_inventory_average_cost_price
+    Inventories::UpdateAverageCostPriceService.(inventory)
+  end
 end
