@@ -17,7 +17,7 @@ RSpec.describe DateTimeHelper, type: :helper do
   end
 
   before do
-    allow(request.env["warden"]).to receive(:authenticate!) { user }
+    allow_any_instance_of(Warden::Proxy).to receive(:authenticate!) { user }
     allow(helper).to receive(:current_user) { user }
   end
 
