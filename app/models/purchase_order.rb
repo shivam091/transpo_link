@@ -56,6 +56,8 @@ class PurchaseOrder < ApplicationRecord
 
     event :fully_deliver do
       transitions from: [:approved, :partially_delivered], to: :fully_delivered
+
+      after :deliver_purchase_order_items!
     end
   end
 
@@ -116,6 +118,12 @@ class PurchaseOrder < ApplicationRecord
   def cancel_purchase_order_items!
     purchase_order_items.each do |purchase_order_item|
       PurchaseOrderItems::CancelService.(purchase_order_item)
+    end
+  end
+
+  def deliver_purchase_order_items!
+    purchase_order_items.each do |purchase_order_item|
+      PurchaseOrderItems::DeliverService.(purchase_order_item)
     end
   end
 end
