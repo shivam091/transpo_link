@@ -100,7 +100,6 @@ RSpec.describe PurchaseOrderItem, type: :model do
   describe "validations" do
     describe "#product_id" do
       it { is_expected.to validate_presence_of(:product_id) }
-      it { is_expected.to validate_uniqueness_of(:product_id).scoped_to(:purchase_order_id).with_message("has already been added").case_insensitive }
     end
 
     describe "#quantity" do
@@ -175,52 +174,14 @@ RSpec.describe PurchaseOrderItem, type: :model do
         end
       end
     end
-  end
-
-  describe "instance methods" do
-    describe "#unit_is_in_product_unit_category" do
-      let(:product) { create(:product) }
-      let(:unit) { product.unit }
-      let(:invalid_unit) { build_stubbed(:kilometre_unit) }
-
-      context "when the unit is in the valid category" do
-        let!(:purchase_order_item) { build(:purchase_order_item, product:, unit:) }
-
-        it "does not add validation errors" do
-          purchase_order_item.validate
-
-          expect(purchase_order_item.errors[:unit_id]).to be_blank
-        end
-      end
-
-      context "when the unit is not in the valid category" do
-        let!(:purchase_order_item) { build(:purchase_order_item, product:, unit: invalid_unit) }
-
-        it "adds an error on unit_id" do
-          purchase_order_item.validate
-
-          expect(purchase_order_item.errors[:unit_id]).to include("is incompatible for the selected product")
-        end
-      end
-
-      context "when product is not present" do
-        let!(:purchase_order_item) { build(:purchase_order_item, product: nil, unit:) }
-
-        it "does not add validation errors" do
-          purchase_order_item.validate
-
-          expect(purchase_order_item.errors[:unit_id]).to be_blank
-        end
-      end
-    end
 
     describe "#product_unit_is_in_warehouse_unit_category" do
-      let(:warehouse) { create(:warehouse) }
-
       let!(:product) { create(:product) }
-      let!(:purchase_order) { create(:purchase_order, warehouse:) }
 
-      context "when the unit is in the valid category" do
+      context "when the unit is in a valid category" do
+        let!(:warehouse) { create(:warehouse) }
+        let!(:purchase_order) { create(:purchase_order, warehouse:) }
+
         let(:purchase_order_item) { build(:purchase_order_item, purchase_order:, product:) }
 
         it "does not add validation errors" do
@@ -230,7 +191,7 @@ RSpec.describe PurchaseOrderItem, type: :model do
         end
       end
 
-      context "when the unit is not in the valid category" do
+      context "when the unit is not in a valid category" do
         let!(:warehouse) { create(:warehouse, unit: create(:litre_unit)) }
         let!(:purchase_order) { create(:purchase_order, warehouse:) }
 

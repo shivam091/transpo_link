@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus";
 
 export default class NestedFormsController extends Controller {
   static targets = ["target", "template"];
-  static values = { wrapperSelector: String };
+  static values = {wrapperSelector: {type: String, default: ".nested-form-wrapper"}};
 
   addAssociation(event) {
     const timestamp = Date.now().toString();
@@ -13,13 +13,15 @@ export default class NestedFormsController extends Controller {
   }
 
   removeAssociation(event) {
-    const wrapper = event.target.closest(this.wrapperSelectorValue || ".nested-form-wrapper");
+    const wrapper = event.target.closest(this.wrapperSelectorValue);
 
     if (!wrapper) return;
 
-    if (wrapper.dataset.newRecord === "true") {
+    // If it's a new record, we remove it entirely
+    if ("newRecord" in wrapper.dataset) {
       wrapper.remove();
     } else {
+      // If it's an existing record, hide it and mark it for destruction
       wrapper.hidden = true;
       const destroyInput = wrapper.querySelector("input[name*='_destroy']");
       if (destroyInput) destroyInput.value = "1";

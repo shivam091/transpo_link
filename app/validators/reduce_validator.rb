@@ -15,12 +15,9 @@
 #
 class ReduceValidator < ActiveModel::EachValidator
   def validate_each(record, attribute, value)
-    return until record.errors.messages.has_key?(attribute)
+    return unless (existing_errors = record.errors[attribute]).many?
 
-    first_error_message = record.errors[attribute].first
-    until record.errors[attribute].size <= 1
-      record.errors.delete(attribute)
-      record.errors.add(attribute, first_error_message)
-    end
+    record.errors.delete(attribute)
+    record.errors.add(attribute, existing_errors.first)
   end
 end
