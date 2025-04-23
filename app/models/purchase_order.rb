@@ -32,6 +32,8 @@ class PurchaseOrder < ApplicationRecord
 
     event :cancel do
       transitions from: [:draft, :pending], to: :cancelled
+
+      after :cancel_purchase_order_items!
     end
 
     event :submit do
@@ -41,9 +43,7 @@ class PurchaseOrder < ApplicationRecord
     event :approve do
       transitions from: :pending, to: :approved
 
-      after do
-        replenish_inventory!
-      end
+      after :replenish_inventory!
     end
 
     event :reject do
@@ -111,5 +111,11 @@ class PurchaseOrder < ApplicationRecord
 
   def replenish_inventory!
     Inventories::ReplenishService.(self)
+  end
+
+  def cancel_purchase_order_items!
+    purchase_order_items.each do |purchase_order_item|
+      PurchaseOrderItems::CancelService.(purchase_order_item)
+    end
   end
 end

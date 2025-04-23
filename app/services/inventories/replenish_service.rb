@@ -25,7 +25,7 @@ class Inventories::ReplenishService < ApplicationService
       quantity = UnitConversion.convert(source_unit, target_unit, item.quantity)
       raise_unit_conversion_error!(source_unit, target_unit) if quantity.nil?
 
-      inventory.replenishment.increment!(:quantity_pending_from_supplier, quantity)
+      Replenishments::UpdateService.(inventory, quantity, :increment)
     end
   end
 

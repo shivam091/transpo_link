@@ -74,11 +74,11 @@ class Inventory < ApplicationRecord
   private
 
   def create_stock
-    Stock.create!(inventory: self)
+    Stocks::CreateService.(self)
   end
 
   def create_replenishment
-    Replenishment.create!(inventory: self)
+    Replenishments::CreateService.(self)
   end
 
   def inventory_unit_matches_product_unit_category
