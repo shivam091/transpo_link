@@ -7,7 +7,7 @@
 require "spec_helper"
 require_migration!
 
-RSpec.describe CreateInventoryReferenceCodeSequence do
+RSpec.describe CreateInventoryReferenceCodeSequence, type: :migration do
   let(:sequence_name) { "inventory_reference_code_seq" }
 
   describe ".up" do

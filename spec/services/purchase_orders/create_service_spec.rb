@@ -16,20 +16,26 @@ RSpec.describe PurchaseOrders::CreateService, type: :service do
 
   describe ".call" do
     context "when provided attributes are valid" do
-      let(:purchase_order_attributes) {
-        attributes_for(:purchase_order).merge(
+      let(:purchase_order_attributes) do
+        attributes_for(:purchase_order,
           warehouse_id: warehouse.id,
           manager_id: manager.id,
           supplier_id: supplier.id
         )
-      }
+      end
 
       include_examples "creates a record", PurchaseOrder
       include_examples "returns a success response"
     end
 
     context "when provided attributes are invalid" do
-      let(:purchase_order_attributes) { {warehouse_id: nil, manager_id: nil, supplier_id: nil} }
+      let(:purchase_order_attributes) do
+        attributes_for(:purchase_order,
+          warehouse_id: nil,
+          manager_id: nil,
+          supplier_id: nil
+        )
+      end
 
       include_examples "does not change record count", PurchaseOrder
       include_examples "returns an error response"
