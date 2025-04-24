@@ -57,6 +57,7 @@ RSpec.describe InventoryBatch, type: :model do
   end
 
   describe "callbacks" do
+    it { is_expected.to have_callback(:before, :create, :convert_to_inventory_unit) }
     it { is_expected.to have_callback(:after, :save, :update_inventory_average_cost_price) }
   end
 
@@ -89,5 +90,49 @@ RSpec.describe InventoryBatch, type: :model do
   describe "associations" do
     it { is_expected.to belong_to(:inventory).inverse_of(:inventory_batches).touch }
     it { is_expected.to belong_to(:unit).inverse_of(:inventory_batches) }
+  end
+
+  describe "instance methods" do
+    describe "#convert_to_inventory_unit" do
+      let!(:target_unit) { create(:dozen_unit) }
+      let!(:source_unit) { create(:item_unit) }
+
+      let(:inventory) { create(:inventory, unit: target_unit) }
+
+      context "when source and target units are the same" do
+        let(:inventory_batch) { build(:inventory_batch, inventory:, unit: target_unit, quantity: 10) }
+
+        it "does not change quantity or unit" do
+          expect(UnitConversion).not_to receive(:convert)
+          inventory_batch.save!
+
+          expect(inventory_batch.quantity).to eq(10)
+          expect(inventory_batch.unit).to eq(target_unit)
+        end
+      end
+
+      context "when source and target units are different and conversion succeeds" do
+        let(:inventory_batch) { build(:inventory_batch, inventory:, unit: source_unit, quantity: 5) }
+
+        it "converts the quantity and sets unit to target unit" do
+          allow(UnitConversion).to receive(:convert).with(source_unit, target_unit, 5) { 10 }
+
+          inventory_batch.save!
+
+          expect(inventory_batch.quantity).to eq(10)
+          expect(inventory_batch.unit).to eq(target_unit)
+        end
+      end
+
+      context "when unit conversion fails" do
+        let(:inventory_batch) { build(:inventory_batch, inventory:, unit: source_unit, quantity: 5) }
+
+        it "raises an error" do
+          allow(UnitConversion).to receive(:convert).with(source_unit, target_unit, 5) { nil }
+
+          expect { inventory_batch.save! }.to raise_error(StandardError, "Invalid unit conversion")
+        end
+      end
+    end
   end
 end

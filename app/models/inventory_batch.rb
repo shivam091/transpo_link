@@ -36,9 +36,20 @@ class InventoryBatch < ApplicationRecord
     a.belongs_to :unit
   end
 
+  before_create :convert_to_inventory_unit
   after_save :update_inventory_average_cost_price
 
   private
+
+  def convert_to_inventory_unit
+    return if (target_unit = inventory.unit) == (source_unit = unit)
+
+    converted_quantity = UnitConversion.convert(source_unit, target_unit, quantity)
+    raise StandardError, "Invalid unit conversion" unless converted_quantity
+
+    self.quantity = converted_quantity
+    self.unit = target_unit # Store in default unit
+  end
 
   def update_inventory_average_cost_price
     Inventories::UpdateAverageCostPriceService.(inventory)
