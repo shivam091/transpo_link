@@ -211,7 +211,7 @@ RSpec.describe "PurchaseOrders", type: :request do
     context "when unit conversion fails" do
       before do
         create(:inventory, warehouse:, product:, unit:)
-        allow(UnitConversion).to receive(:convert) { nil }
+        allow(UnitConversion).to receive(:convert).and_raise(UnitConversionError.new(unit, unit))
       end
 
       it "does not approve the purchase order and redirects with an unit conversion error" do

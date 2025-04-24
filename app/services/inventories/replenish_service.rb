@@ -23,7 +23,6 @@ class Inventories::ReplenishService < ApplicationService
 
       source_unit, target_unit = item.unit, inventory.unit
       quantity = UnitConversion.convert(source_unit, target_unit, item.quantity)
-      raise_unit_conversion_error!(source_unit, target_unit) if quantity.nil?
 
       Replenishments::UpdateService.(inventory, quantity, :increment)
     end
@@ -31,9 +30,5 @@ class Inventories::ReplenishService < ApplicationService
 
   def raise_missing_inventory_error!(warehouse, product)
     raise PurchaseOrders::MissingInventoryError.new(warehouse, product)
-  end
-
-  def raise_unit_conversion_error!(source_unit, target_unit)
-    raise PurchaseOrders::UnitConversionError.new(source_unit, target_unit)
   end
 end

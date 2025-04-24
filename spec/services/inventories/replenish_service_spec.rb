@@ -49,7 +49,7 @@ RSpec.describe Inventories::ReplenishService, type: :service do
     it "raises UnitConversionError" do
       expect {
         service_response
-      }.to raise_error(PurchaseOrders::UnitConversionError, 'Cannot convert from "Dozen" to "Item". Please ensure a valid unit conversion exists.')
+      }.to raise_error(UnitConversionError, 'Cannot convert from "Dozen" to "Item". Please ensure a valid unit conversion exists.')
     end
   end
 end
