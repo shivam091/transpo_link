@@ -101,8 +101,10 @@ RSpec.describe UnitConversion, type: :model do
       context "when conversion does not exist" do
         let(:result) { described_class.convert(source_unit, target_unit, 2) }
 
-        it "returns nil" do
-          expect(result).to be_nil
+        it "raises UnitConversionError" do
+          expect {
+            result
+          }.to raise_error(UnitConversionError, /Please ensure a valid unit conversion exists./)
         end
       end
     end
