@@ -28,9 +28,15 @@
             data: {turbo_confirm: t(".delete_confirmation_text", product: product.name), turbo_method: :delete} do
             = sprite_icon("trash")
             = button_text(:delete)
-        - if purchase_order_item.pending?
+        - if purchase_order_item.may_cancel?
           %li
             = link_to cancel_purchase_order_purchase_order_item_path(@purchase_order, purchase_order_item), class: "dropdown-item",
               data: {turbo_confirm: t(".cancel_confirmation_text", product: product.name), turbo_method: :patch} do
               = sprite_icon("times")
               = button_text(:cancel)
+      - if (@purchase_order.approved? || @purchase_order.partially_delivered?) && purchase_order_item.pending?
+        %li
+          = link_to new_purchase_order_purchase_order_item_delivery_path(@purchase_order, purchase_order_item), class: "dropdown-item",
+            data: {turbo_frame: :remote_modal} do
+            = sprite_icon("check")
+            = button_text(:deliver)

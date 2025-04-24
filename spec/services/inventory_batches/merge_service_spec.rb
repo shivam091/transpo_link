@@ -12,12 +12,13 @@ RSpec.describe InventoryBatches::MergeService, type: :service do
       create(:dozen_item_conversion, source_unit: dozen_unit)
     end
   end
+
   let!(:inventory_batch) { create(:inventory_batch, quantity: 5, unit:) }
 
   subject(:service_response) { described_class.(inventory_batch, inventory_batch_attributes) }
 
   describe ".call" do
-    context "when provided attributes are valid" do
+    context "when unit conversion is valid" do
       let(:inventory_batch_attributes) do
         {
           quantity: 2,
@@ -25,23 +26,55 @@ RSpec.describe InventoryBatches::MergeService, type: :service do
         }
       end
 
-      it "increments the batch quantity" do
-        expect { service_response }.to change { inventory_batch.reload.quantity }.by(2)
+      it "increments the batch quantity by the converted amount" do
+        expect {
+          service_response
+        }.to change { inventory_batch.reload.quantity }.by(2)
       end
 
       include_examples "returns a success response"
     end
 
-    context "when provided attributes are invalid" do
-      let(:inventory_batch_attributes) { {quantity: 2, unit: nil} }
+    context "when unit conversion fails" do
+      let(:source_unit) { build_stubbed(:dozen_unit) }
+      let(:target_unit) { build_stubbed(:item_unit) }
 
-      before do
-        allow(UnitConversion).to receive(:convert) { nil }
-        allow(inventory_batch).to receive(:increment!) { false }
+      let(:inventory_batch_attributes) do
+        {
+          quantity: 2,
+          unit: source_unit
+        }
       end
 
-      it "does not increment the batch quantity" do
-        expect { service_response }.to not_change { inventory_batch.reload.quantity }
+      before do
+        allow(inventory_batch).to receive(:unit) { target_unit }
+        allow(UnitConversion).to receive(:convert).and_raise(UnitConversionError.new(source_unit, target_unit))
+      end
+
+      it "raises a UnitConversionError and does not update the quantity" do
+        expect {
+          service_response
+        }.to raise_error(UnitConversionError, /Please ensure a valid unit conversion exists./i)
+      end
+    end
+
+    context "when save fails after conversion" do
+      let(:inventory_batch_attributes) do
+        {
+          quantity: 2,
+          unit: inventory_batch.unit
+        }
+      end
+
+      before do
+        allow(UnitConversion).to receive(:convert) { 2 }
+        allow(inventory_batch).to receive(:save) { false }
+      end
+
+      it "does not change the batch quantity" do
+        expect {
+          service_response
+        }.to not_change { inventory_batch.reload.quantity }
       end
 
       include_examples "returns an error response"
