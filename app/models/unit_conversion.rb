@@ -45,7 +45,8 @@ class UnitConversion < ApplicationRecord
           .and(arel_table[:target_unit_id].eq(target_unit.id))
       )
 
-      raise UnitConversionError.new(source_unit, target_unit) unless unit_conversion # Return nil if no conversion exists
+      # raise error if no conversion exists
+      raise UnitConversionError.new(source_unit, target_unit) unless unit_conversion
 
       quantity * unit_conversion.multiplier
     end
