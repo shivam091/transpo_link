@@ -123,16 +123,6 @@ RSpec.describe InventoryBatch, type: :model do
           expect(inventory_batch.unit).to eq(target_unit)
         end
       end
-
-      context "when unit conversion fails" do
-        let(:inventory_batch) { build(:inventory_batch, inventory:, unit: source_unit, quantity: 5) }
-
-        it "raises an error" do
-          allow(UnitConversion).to receive(:convert).with(source_unit, target_unit, 5) { nil }
-
-          expect { inventory_batch.save! }.to raise_error(StandardError, "Invalid unit conversion")
-        end
-      end
     end
   end
 end

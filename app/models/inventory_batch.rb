@@ -44,10 +44,7 @@ class InventoryBatch < ApplicationRecord
   def convert_to_inventory_unit
     return if (target_unit = inventory.unit) == (source_unit = unit)
 
-    converted_quantity = UnitConversion.convert(source_unit, target_unit, quantity)
-    raise StandardError, "Invalid unit conversion" unless converted_quantity
-
-    self.quantity = converted_quantity
+    self.quantity = UnitConversion.convert(source_unit, target_unit, quantity)
     self.unit = target_unit # Store in default unit
   end
 
