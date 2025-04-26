@@ -2,6 +2,17 @@
 # -*- frozen_string_literal: true -*-
 # -*- warn_indent: true -*-
 
+# == Status Definitions
+#
+# pending: Default state when item is added to PO. Not yet processed.
+# ordered: Item has been included in an approved order.
+# partially_delivered: Some quantity of the item has been received.
+# delivered: Entire quantity of the item has been received.
+# backordered: Item is on backorder, waiting for vendor stock.
+# cancelled: Item was removed from the order or no longer needed.
+# returned: Item was received and later returned.
+# damaged: Item was received in poor condition and flagged.
+
 class PurchaseOrderItem < ApplicationRecord
   include AASM, ActsAsMoney, Sortable
 
@@ -9,8 +20,13 @@ class PurchaseOrderItem < ApplicationRecord
 
   enum :status, {
     pending: "pending",
+    ordered: "ordered",
+    partially_delivered: "partially_delivered",
     delivered: "delivered",
-    cancelled: "cancelled"
+    backordered: "backordered",
+    cancelled: "cancelled",
+    returned: "returned",
+    damaged: "damaged",
   }
 
   attribute :received_quantity, default: 0.0
@@ -18,14 +34,35 @@ class PurchaseOrderItem < ApplicationRecord
 
   aasm column: :status, enum: true, requires_lock: true do
     state :pending, initial: true
-    state :delivered, :cancelled
+    state :ordered, :partially_delivered, :delivered, :cancelled, :returned,
+          :damaged, :backordered
+
+    event :place_order do
+      transitions from: :pending, to: :ordered
+    end
 
     event :cancel do
-      transitions from: :pending, to: :cancelled
+      transitions from: [:pending, :ordered], to: :cancelled
+    end
+
+    event :partially_deliver do
+      transitions from: :pending, to: :partially_delivered
     end
 
     event :deliver do
       transitions from: :pending, to: :delivered
+    end
+
+    event :return_item do
+      transitions from: :delivered, to: :returned
+    end
+
+    event :mark_damaged do
+      transitions from: :delivered, to: :damaged
+    end
+
+    event :backorder do
+      transitions from: [:pending, :partially_delivered], to: :backordered
     end
   end
 

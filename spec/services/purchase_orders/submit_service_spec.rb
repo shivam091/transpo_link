@@ -13,8 +13,8 @@ RSpec.describe PurchaseOrders::SubmitService, type: :service do
 
   describe ".call" do
     context "when submission is successful" do
-      it "transitions the purchase order to pending" do
-        expect { service_response }.to change { purchase_order.reload.status }.to("pending")
+      it "transitions the purchase order to submitted" do
+        expect { service_response }.to change { purchase_order.reload.status }.to("submitted")
       end
 
       include_examples "returns a success response"
@@ -30,7 +30,7 @@ RSpec.describe PurchaseOrders::SubmitService, type: :service do
       include_examples "returns an error response"
     end
 
-    context "when purchase order is already submitted (pending)" do
+    context "when purchase order is already submitted" do
       before { purchase_order.submit! }
 
       it "does not allow re-submission" do

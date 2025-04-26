@@ -18,7 +18,7 @@ RSpec.describe Inventories::ReplenishService, type: :service do
   let!(:unit_conversion) { create(:dozen_item_conversion, source_unit:, target_unit:) }
 
   let!(:purchase_order) do
-    create(:purchase_order, :pending, warehouse:, manager:, supplier:).tap do |po|
+    create(:purchase_order, :submitted, warehouse:, manager:, supplier:).tap do |po|
       create(:purchase_order_item, purchase_order: po, product:, unit: source_unit, quantity: 10)
     end
   end
