@@ -7,16 +7,18 @@
 require "spec_helper"
 
 RSpec.describe PurchaseOrderItems::IncrementReceivedQuantityService, type: :service do
-  let!(:purchase_order_item) { create(:purchase_order_item, quantity: 5) }
+  let!(:purchase_order_item) { create(:purchase_order_item) }
 
-  subject(:service_response) { described_class.(purchase_order_item) }
+  let(:quantity) { 3 }
+
+  subject(:service_response) { described_class.(purchase_order_item, quantity) }
 
   describe ".call" do
     context "when incrementing is successful" do
       it "increments the received_quantity" do
         expect {
           service_response
-        }.to change { purchase_order_item.reload.received_quantity }.by(5)
+        }.to change { purchase_order_item.reload.received_quantity }.by(quantity)
       end
 
       include_examples "returns a success response"

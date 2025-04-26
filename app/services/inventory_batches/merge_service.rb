@@ -17,7 +17,7 @@ class InventoryBatches::MergeService < ApplicationService
   attr_reader :inventory_batch, :inventory_batch_attributes
 
   def merge_inventory_batch
-    quantity, source_unit = inventory_batch_attributes.values_at(:quantity, :unit)
+    quantity, source_unit = inventory_batch_attributes.values_at(:quantity, :unit_id)
 
     # Considered target unit as `inventory_batch.unit` because inventory unit is set
     # to batch at the time of creation via InventoryBatch#convert_to_inventory_unit.

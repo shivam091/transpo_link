@@ -47,10 +47,12 @@ class PurchaseOrderItem < ApplicationRecord
 
     event :partially_deliver do
       transitions from: :pending, to: :partially_delivered
+
+      before :update_received_quantity!
     end
 
     event :deliver do
-      transitions from: :pending, to: :delivered
+      transitions from: [:pending, :partially_delivered], to: :delivered
 
       before :update_received_quantity!
     end
@@ -113,6 +115,10 @@ class PurchaseOrderItem < ApplicationRecord
 
   default_scope -> { order_created_desc }
 
+  def remaining_quantity
+    quantity - received_quantity
+  end
+
   private
 
   def product_unit_is_in_warehouse_unit_category
@@ -133,7 +139,7 @@ class PurchaseOrderItem < ApplicationRecord
     end
   end
 
-  def update_received_quantity!
-    PurchaseOrderItems::IncrementReceivedQuantityService.(self)
+  def update_received_quantity!(by = 0)
+    PurchaseOrderItems::IncrementReceivedQuantityService.(self, by)
   end
 end

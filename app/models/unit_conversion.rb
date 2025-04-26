@@ -38,17 +38,21 @@ class UnitConversion < ApplicationRecord
 
   class << self
     def convert(source_unit, target_unit, quantity)
-      return quantity if source_unit == target_unit
+      source_unit = Unit.find_by(id: source_unit) unless source_unit.is_a?(Unit)
+      target_unit = Unit.find_by(id: target_unit) unless target_unit.is_a?(Unit)
 
-      unit_conversion = find_by(
-        arel_table[:source_unit_id].eq(source_unit.id)
-          .and(arel_table[:target_unit_id].eq(target_unit.id))
-      )
+      if source_unit != target_unit
+        unit_conversion = find_by(
+          arel_table[:source_unit_id].eq(source_unit.id)
+            .and(arel_table[:target_unit_id].eq(target_unit.id))
+        )
 
-      # raise error if no conversion exists
-      raise UnitConversionError.new(source_unit, target_unit) unless unit_conversion
+        raise UnitConversionError.new(source_unit, target_unit) unless unit_conversion
 
-      quantity * unit_conversion.multiplier
+        quantity = quantity * unit_conversion.multiplier
+      end
+
+      quantity.to_f
     end
   end
 

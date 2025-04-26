@@ -7,6 +7,7 @@
 require "spec_helper"
 
 RSpec.describe PurchaseOrderItem, type: :model do
+  let(:quantity) { 5 }
   subject(:purchase_order_item) { build(:purchase_order_item) }
 
   describe "valid factory" do
@@ -90,6 +91,7 @@ RSpec.describe PurchaseOrderItem, type: :model do
     it { is_expected.to transition_from(:ordered).to(:cancelled).on_event(:cancel) }
     it { is_expected.to transition_from(:pending).to(:partially_delivered).on_event(:partially_deliver) }
     it { is_expected.to transition_from(:pending).to(:delivered).on_event(:deliver) }
+    it { is_expected.to transition_from(:partially_delivered).to(:delivered).on_event(:deliver) }
     it { is_expected.to transition_from(:delivered).to(:returned).on_event(:return_item) }
     it { is_expected.to transition_from(:delivered).to(:damaged).on_event(:mark_damaged) }
     it { is_expected.to transition_from(:pending).to(:backordered).on_event(:backorder) }
@@ -101,9 +103,9 @@ RSpec.describe PurchaseOrderItem, type: :model do
       let(:purchase_order_item) { create(:purchase_order_item) }
 
       it "calls the IncrementReceivedQuantityService to update received_quantity" do
-        expect(PurchaseOrderItems::IncrementReceivedQuantityService).to receive(:call).with(purchase_order_item)
+        expect(PurchaseOrderItems::IncrementReceivedQuantityService).to receive(:call).with(purchase_order_item, quantity)
 
-        purchase_order_item.deliver!
+        purchase_order_item.deliver!(quantity)
 
         expect(purchase_order_item.status).to eq("delivered")
       end
@@ -118,7 +120,7 @@ RSpec.describe PurchaseOrderItem, type: :model do
         it "updates the received_quantity correctly" do
           initial_received_quantity = purchase_order_item.received_quantity
 
-          purchase_order_item.deliver!
+          purchase_order_item.deliver!(quantity)
 
           expect(purchase_order_item.received_quantity).to be > initial_received_quantity
         end
@@ -248,6 +250,32 @@ RSpec.describe PurchaseOrderItem, type: :model do
 
           expect(purchase_order_item.errors[:product_id]).to be_blank
         end
+      end
+    end
+
+    describe "#remaining_quantity" do
+      it "returns the difference between quantity and received_quantity" do
+        purchase_order_item = build(:purchase_order_item, quantity: 10.0, received_quantity: 4.0)
+
+        expect(purchase_order_item.remaining_quantity).to eq(6.0)
+      end
+
+      it "returns the full quantity when nothing has been received" do
+        purchase_order_item = build(:purchase_order_item, quantity: 5.0, received_quantity: 0.0)
+
+        expect(purchase_order_item.remaining_quantity).to eq(5.0)
+      end
+
+      it "returns zero when received_quantity equals quantity" do
+        purchase_order_item = build(:purchase_order_item, quantity: 7.5, received_quantity: 7.5)
+
+        expect(purchase_order_item.remaining_quantity).to eq(0.0)
+      end
+
+      it "returns negative when received_quantity exceeds quantity (should be rare, but defensive)" do
+        purchase_order_item = build(:purchase_order_item, quantity: 3.0, received_quantity: 4.0)
+
+        expect(purchase_order_item.remaining_quantity).to eq(-1.0)
       end
     end
   end

@@ -150,7 +150,7 @@ class PurchaseOrder < ApplicationRecord
 
   def deliver_purchase_order_items!
     purchase_order_items.each do |purchase_order_item|
-      PurchaseOrderItems::DeliverService.(purchase_order_item)
+      PurchaseOrderItems::DeliverService.(purchase_order_item, purchase_order_item.quantity)
     end
   end
 end

@@ -22,7 +22,7 @@ RSpec.describe InventoryBatches::MergeService, type: :service do
       let(:inventory_batch_attributes) do
         {
           quantity: 2,
-          unit: inventory_batch.unit
+          unit_id: inventory_batch.unit_id
         }
       end
 
@@ -42,7 +42,7 @@ RSpec.describe InventoryBatches::MergeService, type: :service do
       let(:inventory_batch_attributes) do
         {
           quantity: 2,
-          unit: source_unit
+          unit_id: source_unit.id
         }
       end
 
@@ -62,7 +62,7 @@ RSpec.describe InventoryBatches::MergeService, type: :service do
       let(:inventory_batch_attributes) do
         {
           quantity: 2,
-          unit: inventory_batch.unit
+          unit_id: inventory_batch.unit_id
         }
       end
 
