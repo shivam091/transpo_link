@@ -13,10 +13,10 @@ RSpec.describe PurchaseOrders::UpdateService, type: :service do
 
   describe ".call" do
     context "when provided attributes are valid" do
-      let(:purchase_order_attributes) { {status: "pending"} }
+      let(:purchase_order_attributes) { {status: "submitted"} }
 
       it "updates the purchase order" do
-        expect { service_response }.to change { purchase_order.reload.status }.to("pending")
+        expect { service_response }.to change { purchase_order.reload.status }.to("submitted")
       end
 
       include_examples "returns a success response"
