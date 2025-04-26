@@ -39,6 +39,17 @@ class InventoryBatch < ApplicationRecord
   before_create :convert_to_inventory_unit
   after_save :update_inventory_average_cost_price
 
+  scope :by_batch_number_and_expiry, ->(batch_number, expiry) do
+    where(
+      arel_table[:batch_number].eq(batch_number)
+        .and(arel_table[:expiration_date].eq(expiry))
+    )
+  end
+
+  def quantity_change
+    quantity - (quantity_previously_was || 0)
+  end
+
   private
 
   def convert_to_inventory_unit

@@ -7,7 +7,7 @@
 require "spec_helper"
 
 RSpec.describe InventoryBatch, type: :model do
-  subject { create(:inventory_batch) }
+  subject { build(:inventory_batch) }
 
   describe "valid factory" do
     it { is_expected.to have_a_valid_factory(:inventory_batch) }
@@ -63,6 +63,8 @@ RSpec.describe InventoryBatch, type: :model do
 
   describe "validations" do
     describe "#batch_number" do
+      let!(:inventory_batch) { create(:inventory_batch, batch_number: "ABC123") }
+
       it { is_expected.to validate_presence_of(:batch_number) }
       it { is_expected.to validate_length_of(:batch_number).is_at_most(55) }
       it { is_expected.to validate_uniqueness_of(:batch_number).scoped_to(:inventory_id).with_message("already exists for the selected inventory") }
@@ -92,6 +94,33 @@ RSpec.describe InventoryBatch, type: :model do
     it { is_expected.to belong_to(:unit).inverse_of(:inventory_batches) }
   end
 
+  describe "scopes" do
+    describe ".by_batch_number_and_expiry" do
+      let(:inventory) { create(:inventory) }
+
+      let!(:batch_with_expiry) { create(:inventory_batch, inventory:, batch_number: "B001", expiration_date: 1.year.from_now) }
+      let!(:batch_without_expiry) { create(:inventory_batch, inventory:, batch_number: "B002", expiration_date: nil) }
+
+      it "finds batch with matching batch_number and expiration_date" do
+        batch = described_class.by_batch_number_and_expiry("B001", 1.year.from_now).first
+
+        expect(batch).to eq(batch_with_expiry)
+      end
+
+      it "finds batch with nil expiration_date" do
+        batch = described_class.by_batch_number_and_expiry("B002", nil).first
+
+        expect(batch).to eq(batch_without_expiry)
+      end
+
+      it "returns nil if no batch matches the batch_number and expiration_date" do
+        batch = described_class.by_batch_number_and_expiry("B001", Date.tomorrow).first
+
+        expect(batch).to be_nil
+      end
+    end
+  end
+
   describe "instance methods" do
     describe "#convert_to_inventory_unit" do
       let!(:target_unit) { create(:dozen_unit) }
@@ -104,6 +133,7 @@ RSpec.describe InventoryBatch, type: :model do
 
         it "does not change quantity or unit" do
           expect(UnitConversion).not_to receive(:convert)
+
           inventory_batch.save!
 
           expect(inventory_batch.quantity).to eq(10)
@@ -121,6 +151,24 @@ RSpec.describe InventoryBatch, type: :model do
 
           expect(inventory_batch.quantity).to eq(10)
           expect(inventory_batch.unit).to eq(target_unit)
+        end
+      end
+    end
+
+    describe "#quantity_change" do
+      let!(:inventory_batch) { create(:inventory_batch, quantity: 10) }
+
+      context "when quantity has changed" do
+        it "returns the change in quantity" do
+          inventory_batch.update(quantity: 15)
+
+          expect(inventory_batch.quantity_change).to eq(5)
+        end
+      end
+
+      context "when quantity has not changed" do
+        it "returns original quantity" do
+          expect(inventory_batch.quantity_change).to eq(10)
         end
       end
     end

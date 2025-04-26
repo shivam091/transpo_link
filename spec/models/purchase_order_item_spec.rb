@@ -7,7 +7,7 @@
 require "spec_helper"
 
 RSpec.describe PurchaseOrderItem, type: :model do
-  subject { create(:purchase_order_item) }
+  subject(:purchase_order_item) { build(:purchase_order_item) }
 
   describe "valid factory" do
     it { is_expected.to have_a_valid_factory(:purchase_order_item) }
@@ -76,6 +76,8 @@ RSpec.describe PurchaseOrderItem, type: :model do
   end
 
   describe "associations" do
+    it { is_expected.to have_many(:restocks).inverse_of(:source).class_name("InventoryMovement") }
+
     it { is_expected.to belong_to(:purchase_order).inverse_of(:purchase_order_items).touch }
     it { is_expected.to belong_to(:product).inverse_of(:purchase_order_items) }
     it { is_expected.to belong_to(:unit).inverse_of(:purchase_order_items) }
@@ -87,47 +89,35 @@ RSpec.describe PurchaseOrderItem, type: :model do
     it { is_expected.to transition_from(:pending).to(:delivered).on_event(:deliver) }
   end
 
+  describe "AASM state transitions" do
+    describe "#deliver!" do
+      let(:purchase_order_item) { create(:purchase_order_item) }
+
+      it "calls the IncrementReceivedQuantityService to update received_quantity" do
+        expect(PurchaseOrderItems::IncrementReceivedQuantityService).to receive(:call).with(purchase_order_item)
+
+        purchase_order_item.deliver!
+
+        expect(purchase_order_item.status).to eq("delivered")
+      end
+    end
+  end
+
   describe "callbacks" do
     it { is_expected.to have_callback(:before, :validation, :set_unit_cost_and_currency) }
-  end
 
-  describe "delegates" do
-    it { is_expected.to delegate_method(:symbol).to(:unit).with_prefix }
-  end
+    describe "#update_received_quantity!" do
+      context "when the item is delivered" do
+        it "updates the received_quantity correctly" do
+          initial_received_quantity = purchase_order_item.received_quantity
 
-  include_examples "apply default scope on created_at:desc"
+          purchase_order_item.deliver!
 
-  describe "validations" do
-    describe "#product_id" do
-      it { is_expected.to validate_presence_of(:product_id) }
+          expect(purchase_order_item.received_quantity).to be > initial_received_quantity
+        end
+      end
     end
 
-    describe "#quantity" do
-      it { is_expected.to validate_presence_of(:quantity) }
-      it { is_expected.to validate_numericality_of(:quantity).is_greater_than(0.0) }
-    end
-
-    describe "#received_quantity" do
-      it { is_expected.to validate_presence_of(:received_quantity) }
-      it { is_expected.to validate_numericality_of(:received_quantity).is_greater_than_or_equal_to(0.0) }
-    end
-
-    describe "#unit_cost" do
-      it { is_expected.to validate_presence_of(:unit_cost) }
-      it { is_expected.to validate_numericality_of(:unit_cost).is_greater_than(0.0) }
-    end
-
-    describe "#unit_id" do
-      it { is_expected.to validate_presence_of(:unit_id) }
-    end
-
-    describe "#status" do
-      it { is_expected.to validate_presence_of(:status) }
-      # it { is_expected.to validate_inclusion_of(:status).in_array(described_class.statuses.values) }
-    end
-  end
-
-  describe "instance methods" do
     describe "#set_unit_cost_and_currency" do
       let!(:product) { create(:product, cost_price: 100.5, currency: "USD") }
       let!(:purchase_order) { create(:purchase_order) }
@@ -174,7 +164,46 @@ RSpec.describe PurchaseOrderItem, type: :model do
         end
       end
     end
+  end
 
+  describe "delegates" do
+    it { is_expected.to delegate_method(:symbol).to(:unit).with_prefix }
+    it { is_expected.to delegate_method(:name).to(:product).with_prefix }
+  end
+
+  include_examples "apply default scope on created_at:desc"
+
+  describe "validations" do
+    describe "#product_id" do
+      it { is_expected.to validate_presence_of(:product_id) }
+    end
+
+    describe "#quantity" do
+      it { is_expected.to validate_presence_of(:quantity) }
+      it { is_expected.to validate_numericality_of(:quantity).is_greater_than(0.0) }
+    end
+
+    describe "#received_quantity" do
+      it { is_expected.to validate_presence_of(:received_quantity) }
+      it { is_expected.to validate_numericality_of(:received_quantity).is_greater_than_or_equal_to(0.0) }
+    end
+
+    describe "#unit_cost" do
+      it { is_expected.to validate_presence_of(:unit_cost) }
+      it { is_expected.to validate_numericality_of(:unit_cost).is_greater_than(0.0) }
+    end
+
+    describe "#unit_id" do
+      it { is_expected.to validate_presence_of(:unit_id) }
+    end
+
+    describe "#status" do
+      it { is_expected.to validate_presence_of(:status) }
+      # it { is_expected.to validate_inclusion_of(:status).in_array(described_class.statuses.values) }
+    end
+  end
+
+  describe "instance methods" do
     describe "#product_unit_is_in_warehouse_unit_category" do
       let!(:product) { create(:product) }
 
