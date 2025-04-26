@@ -17,7 +17,7 @@
     = link_to "javascript:void(0)", class: "text-reset", data: {bs_toggle: "dropdown"}, aria: {expanded: false} do
       = sprite_icon("ellipsis-vertical")
     %ul.dropdown-menu
-      - if @purchase_order.draft? || @purchase_order.pending?
+      - if @purchase_order.draft? || @purchase_order.submitted?
         %li
           = link_to edit_purchase_order_purchase_order_item_path(@purchase_order, purchase_order_item), class: "dropdown-item",
             data: {turbo_frame: :remote_modal} do

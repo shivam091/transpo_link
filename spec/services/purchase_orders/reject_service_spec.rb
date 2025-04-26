@@ -7,7 +7,7 @@
 require "spec_helper"
 
 RSpec.describe PurchaseOrders::RejectService, type: :service do
-  let!(:purchase_order) { create(:purchase_order, :pending) }
+  let!(:purchase_order) { create(:purchase_order, :submitted) }
 
   subject(:service_response) { described_class.(purchase_order) }
 

@@ -181,7 +181,7 @@ RSpec.describe "PurchaseOrders", type: :request do
     let(:supplier) { warehouse.suppliers.first }
 
     let!(:purchase_order) do
-      create(:purchase_order, :pending, warehouse:, manager:, supplier:).tap do |po|
+      create(:purchase_order, :submitted, warehouse:, manager:, supplier:).tap do |po|
         create(:purchase_order_item, purchase_order: po, product:, unit:, quantity: 10)
       end
     end
@@ -237,7 +237,7 @@ RSpec.describe "PurchaseOrders", type: :request do
   end
 
   describe "PATCH /purchase-orders/:id/reject" do
-    let!(:purchase_order) { create(:purchase_order, :pending, manager:) }
+    let!(:purchase_order) { create(:purchase_order, :submitted, manager:) }
 
     context "when rejection is successful" do
       it "rejects the purchase order and redirects" do
