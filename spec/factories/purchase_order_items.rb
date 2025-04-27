@@ -10,7 +10,7 @@ FactoryBot.define do
     quantity { Faker::Number.between(from: 1, to: 100) }
     unit { find_or_create_unit("item") }
 
-    if ActiveRecord::Base.connection.data_source_exists?(:purchase_order_items)
+    if ActiveRecord::Base.connection&.data_source_exists?(:purchase_order_items)
       PurchaseOrderItem.statuses.each_key do |status|
         trait status do
           status { PurchaseOrderItem.statuses[status] }
