@@ -47,14 +47,10 @@ class PurchaseOrderItem < ApplicationRecord
 
     event :partially_deliver do
       transitions from: :pending, to: :partially_delivered
-
-      before :update_received_quantity!
     end
 
     event :deliver do
       transitions from: [:pending, :partially_delivered], to: :delivered
-
-      before :update_received_quantity!
     end
 
     event :return_item do
@@ -108,6 +104,9 @@ class PurchaseOrderItem < ApplicationRecord
 
   before_validation :set_unit_cost_and_currency
 
+  # After the status is updated, synchronize the parent PO status
+  after_save :synchronize_po_delivery_status!
+
   with_options prefix: true do |d|
     d.delegate :symbol, to: :unit
     d.delegate :name, to: :product
@@ -139,7 +138,9 @@ class PurchaseOrderItem < ApplicationRecord
     end
   end
 
-  def update_received_quantity!(by = 0)
-    PurchaseOrderItems::IncrementReceivedQuantityService.(self, by)
+  def synchronize_po_delivery_status!
+    purchase_order.lock!
+    purchase_order.synchronize_delivery_status!
+    purchase_order.save!
   end
 end

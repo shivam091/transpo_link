@@ -1,0 +1,47 @@
+= pretty_form_with model: @inventory_batch, url: purchase_order_purchase_order_item_delivery_path(@purchase_order, @purchase_order_item),
+  class: "row g-2" do |form|
+  .col-md-12.col-lg-6
+    %dl
+      %dt.mb-2
+        = PurchaseOrderItem.human_attribute_name(:product_id)
+      %dd
+        = @purchase_order_item.product_name
+  .col-md-12.col-lg-6
+    %dl
+      %dt.mb-2
+        = PurchaseOrderItem.human_attribute_name(:quantity)
+      %dd
+        = number_to_measurement_unit(@purchase_order_item.quantity, @purchase_order_item.unit_symbol)
+  .col-md-12.col-lg-6
+    %dl
+      %dt.mb-2
+        = PurchaseOrderItem.human_attribute_name(:unit_cost)
+      %dd
+        = number_to_currency(@purchase_order_item.unit_cost, unit: @purchase_order_item.currency.symbol)
+  .col-md-12.col-lg-6
+    %dl
+      %dt.mb-2
+        = PurchaseOrderItem.human_attribute_name(:total_cost)
+      %dd
+        = number_to_currency(@purchase_order_item.total_cost, unit: @purchase_order_item.currency.symbol)
+  .col-md-12.col-lg-6
+    = form.label :batch_number, class: "form-label required"
+    = form.text_field :batch_number
+  .col-md-12.col-lg-6
+    = form.label :expiration_date, class: "form-label"
+    = form.date_field :expiration_date
+  .col-md-12.col-lg-6
+    = form.label :quantity, class: "form-label required"
+    = form.number_field :quantity, value: (form.object.quantity || @purchase_order_item.remaining_quantity), step: 0.01
+    = help_text(t(".quantity_help_text"))
+  .col-md-12.col-lg-6
+    = form.label :unit_id, class: "form-label required"
+    = form.measurement_unit_select :unit_id, {selected: (form.object.unit_id || @purchase_order_item.unit_id), include_blank: t(".select_unit_of_measure")}, {}
+    = help_text(t(".unit_id_help_text"))
+  .modal-actions
+    = button_tag type: :submit, class: "btn btn-primary" do
+      = sprite_icon("check")
+      = button_text(:confirm_delivery)
+    = button_tag type: :button, class: "btn btn-secondary", data: {action: "click->remote-modal#hide"} do
+      = sprite_icon("times")
+      = button_text(:cancel)

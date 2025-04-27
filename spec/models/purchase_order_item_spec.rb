@@ -102,8 +102,8 @@ RSpec.describe PurchaseOrderItem, type: :model do
     describe "#deliver!" do
       let(:purchase_order_item) { create(:purchase_order_item) }
 
-      it "calls the IncrementReceivedQuantityService to update received_quantity" do
-        expect(PurchaseOrderItems::IncrementReceivedQuantityService).to receive(:call).with(purchase_order_item, quantity)
+      it "calls the UpdateReceivedQuantityService to update received_quantity" do
+        expect(PurchaseOrderItems::UpdateReceivedQuantityService).to receive(:call).with(purchase_order_item, quantity)
 
         purchase_order_item.deliver!(quantity)
 

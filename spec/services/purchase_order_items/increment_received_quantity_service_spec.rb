@@ -6,7 +6,7 @@
 
 require "spec_helper"
 
-RSpec.describe PurchaseOrderItems::IncrementReceivedQuantityService, type: :service do
+RSpec.describe PurchaseOrderItems::UpdateReceivedQuantityService, type: :service do
   let!(:purchase_order_item) { create(:purchase_order_item) }
 
   let(:quantity) { 3 }

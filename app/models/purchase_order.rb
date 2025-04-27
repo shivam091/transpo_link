@@ -126,6 +126,21 @@ class PurchaseOrder < ApplicationRecord
     [warehouse, manager, supplier]
   end
 
+  # Method to synchronize PO status based on PO Items' status
+  def synchronize_delivery_status!
+    # Check if all items are delivered
+    debugger
+    if purchase_order_items.all?(&:delivered?)
+      fully_deliver!
+    # Check if some items are delivered, others are pending
+    elsif purchase_order_items.any?(&:delivered?)
+      partially_deliver!
+    # Otherwise, PO is still in the pending state
+    else
+      update!(status: :pending)
+    end
+  end
+
   private
 
   def reject_purchase_order_item?(attributes)

@@ -19,11 +19,7 @@ class InventoryBatches::MergeService < ApplicationService
   def merge_inventory_batch
     quantity, source_unit = inventory_batch_attributes.values_at(:quantity, :unit_id)
 
-    # Considered target unit as `inventory_batch.unit` because inventory unit is set
-    # to batch at the time of creation via InventoryBatch#convert_to_inventory_unit.
-    inventory_batch.quantity += UnitConversion.convert(source_unit, inventory_batch.unit, quantity)
-
-    if inventory_batch.save
+    if inventory_batch.merge_with!(quantity:, source_unit:)
       ServiceResponse.success(payload: {inventory_batch:})
     else
       ServiceResponse.error(payload: {inventory_batch:})

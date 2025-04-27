@@ -41,6 +41,8 @@ class UnitConversion < ApplicationRecord
       source_unit = Unit.find_by(id: source_unit) unless source_unit.is_a?(Unit)
       target_unit = Unit.find_by(id: target_unit) unless target_unit.is_a?(Unit)
 
+      quantity = quantity.to_f
+
       if source_unit != target_unit
         unit_conversion = find_by(
           arel_table[:source_unit_id].eq(source_unit.id)
@@ -49,10 +51,10 @@ class UnitConversion < ApplicationRecord
 
         raise UnitConversionError.new(source_unit, target_unit) unless unit_conversion
 
-        quantity = quantity * unit_conversion.multiplier
+        quantity *= unit_conversion.multiplier
       end
 
-      quantity.to_f
+      quantity
     end
   end
 

@@ -181,6 +181,12 @@
           unprocessable_entity: "Failed to update the color scheme"
         }
       },
+      deliveries: {
+        create: {
+          success: "The purchase order item has been successfully marked as delivered.",
+          error: "We encountered a problem while marking the purchase order item as delivered. Please try again."
+        },
+      }
     }
   }
 }

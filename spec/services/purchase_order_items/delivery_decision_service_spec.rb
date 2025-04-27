@@ -6,7 +6,7 @@
 
 require "spec_helper"
 
-RSpec.describe PurchaseOrderItems::DeliveryDecisionService, type: :service do
+RSpec.describe PurchaseOrderItems::ProcessDeliveryService, type: :service do
   let!(:purchase_order_item) { create(:purchase_order_item, quantity: 5, received_quantity: 2) }
 
   subject(:service_response) { described_class.(purchase_order_item, received_quantity) }
@@ -19,7 +19,7 @@ RSpec.describe PurchaseOrderItems::DeliveryDecisionService, type: :service do
         # 2 + 3 = 5, equals ordered quantity, so it should call DeliverService
         expect(PurchaseOrderItems::DeliverService)
           .to receive(:call)
-          .with(purchase_order_item, purchase_order_item.quantity)
+          .with(purchase_order_item, received_quantity)
           .and_call_original
 
         service_response
