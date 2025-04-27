@@ -70,7 +70,7 @@ module ScaleEnforcer
     # @param [ActiveRecord::ConnectionAdapters::Column] column The column to check.
     # @return [Boolean] True if the column is of type :decimal, false otherwise.
     def decimal_column?(column)
-      column && column.type == :decimal
+      column&.type == :decimal
     end
   end
 
@@ -94,8 +94,8 @@ module ScaleEnforcer
       attribute, scale = config.values_at(:attribute, :scale)
       value = self[attribute]
 
-      # Skip if the value is nil or blank
-      next if value.nil? || value.to_s.strip.empty?
+      # Skip if value is blank or nil (ensuring BigDecimal handles the rounding correctly)
+      next if value.blank?
 
       # Round the value to the specified scale with ROUND_HALF_UP rounding mode
       self[attribute] = BigDecimal(value.to_s).round(scale, :half_up)

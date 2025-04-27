@@ -34,6 +34,11 @@ RSpec.describe ScaleEnforcer do
     it { expect(ScaleEnforcedModel).to have_callback(:before, :validation, :apply_scale) }
   end
 
+  describe "custom matchers" do
+    it { is_expected.to apply_scale_to(:price) }
+    it { is_expected.to apply_scale_to(:discount) }
+  end
+
   describe "#scale_attributes" do
     it "stores the correct scale for each attribute" do
       column = ScaleEnforcedModel.columns_hash["price"]
