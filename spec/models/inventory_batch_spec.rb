@@ -7,7 +7,7 @@
 require "spec_helper"
 
 RSpec.describe InventoryBatch, type: :model do
-  subject { create(:inventory_batch) }
+  subject { build(:inventory_batch) }
 
   describe "valid factory" do
     it { is_expected.to have_a_valid_factory(:inventory_batch) }
@@ -57,11 +57,47 @@ RSpec.describe InventoryBatch, type: :model do
   end
 
   describe "callbacks" do
+    it { is_expected.to have_callback(:before, :create, :convert_to_inventory_unit) }
     it { is_expected.to have_callback(:after, :save, :update_inventory_average_cost_price) }
+
+    describe "#convert_to_inventory_unit" do
+      let!(:target_unit) { create(:dozen_unit) }
+      let!(:source_unit) { create(:item_unit) }
+
+      let(:inventory) { create(:inventory, unit: target_unit) }
+
+      context "when source and target units are the same" do
+        let(:inventory_batch) { build(:inventory_batch, inventory:, unit: target_unit, quantity: 10) }
+
+        it "does not change quantity or unit" do
+          expect(UnitConversion).not_to receive(:convert)
+
+          inventory_batch.save!
+
+          expect(inventory_batch.quantity).to eq(10)
+          expect(inventory_batch.unit).to eq(target_unit)
+        end
+      end
+
+      context "when source and target units are different and conversion succeeds" do
+        let(:inventory_batch) { build(:inventory_batch, inventory:, unit: source_unit, quantity: 5) }
+
+        it "converts the quantity and sets unit to target unit" do
+          allow(UnitConversion).to receive(:convert).with(source_unit, target_unit, 5) { 10 }
+
+          inventory_batch.save!
+
+          expect(inventory_batch.quantity).to eq(10)
+          expect(inventory_batch.unit).to eq(target_unit)
+        end
+      end
+    end
   end
 
   describe "validations" do
     describe "#batch_number" do
+      let!(:inventory_batch) { create(:inventory_batch, batch_number: "B0001") }
+
       it { is_expected.to validate_presence_of(:batch_number) }
       it { is_expected.to validate_length_of(:batch_number).is_at_most(55) }
       it { is_expected.to validate_uniqueness_of(:batch_number).scoped_to(:inventory_id).with_message("already exists for the selected inventory") }

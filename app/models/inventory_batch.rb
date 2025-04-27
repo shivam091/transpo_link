@@ -36,11 +36,19 @@ class InventoryBatch < ApplicationRecord
     a.belongs_to :unit
   end
 
+  before_create :convert_to_inventory_unit
   after_save :update_inventory_average_cost_price
 
   private
 
   def update_inventory_average_cost_price
     Inventories::UpdateAverageCostPriceService.(inventory)
+  end
+
+  def convert_to_inventory_unit
+    return if (target_unit = inventory.unit) == (source_unit = unit)
+
+    self.quantity = UnitConversion.convert(source_unit, target_unit, quantity)
+    self.unit = target_unit # Store in default unit
   end
 end
