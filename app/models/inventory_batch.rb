@@ -3,11 +3,13 @@
 # -*- warn_indent: true -*-
 
 class InventoryBatch < ApplicationRecord
-  include ActsAsMoney, NullifyIfBlank, Sanitizable
+  include ActsAsMoney, NullifyIfBlank, Sanitizable, ScaleEnforcer
 
   nullify_if_blank :expiration_date
 
   sanitize_attributes :batch_number
+
+  scale_attributes :quantity, :cost_price
 
   validates :batch_number,
             presence: true,
