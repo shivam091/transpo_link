@@ -57,6 +57,7 @@ RSpec.describe PurchaseOrderItem, type: :model do
     it { is_expected.to include_module(AASM) }
     it { is_expected.to include_module(ActsAsMoney) }
     it { is_expected.to include_module(Sortable) }
+    it { is_expected.to include_module(ScaleEnforcer) }
   end
 
   describe "enum" do
@@ -73,6 +74,12 @@ RSpec.describe PurchaseOrderItem, type: :model do
     it "should set pending as default value for #status" do
       expect(purchase_order_item.status).to eq("pending")
     end
+  end
+
+  describe "scaled attributes" do
+    it { is_expected.to apply_scale_to(:quantity) }
+    it { is_expected.to apply_scale_to(:unit_cost) }
+    it { is_expected.to apply_scale_to(:received_quantity) }
   end
 
   describe "associations" do
@@ -111,17 +118,83 @@ RSpec.describe PurchaseOrderItem, type: :model do
 
     describe "#quantity" do
       it { is_expected.to validate_presence_of(:quantity) }
-      it { is_expected.to validate_numericality_of(:quantity).is_greater_than(0.0) }
+
+      context "when quantity is invalid" do
+        it "is invalid" do
+          subject.quantity = "abcd"
+
+          expect(subject).to be_invalid
+          expect(subject.errors[:quantity]).to include("must be greater than 0.0")
+        end
+      end
+
+      context "when quantity <= 0.0" do
+        it "is invalid" do
+          subject.quantity = 0.0
+
+          expect(subject).to be_invalid
+          expect(subject.errors[:quantity]).to include("must be greater than 0.0")
+        end
+      end
+
+      context "when quantity > 0.0" do
+        it "is valid" do
+          subject.quantity = 1.0
+
+          expect(subject).to be_valid
+        end
+      end
     end
 
     describe "#received_quantity" do
       it { is_expected.to validate_presence_of(:received_quantity) }
-      it { is_expected.to validate_numericality_of(:received_quantity).is_greater_than_or_equal_to(0.0) }
+
+      context "when received_quantity < 0.0" do
+        it "is invalid" do
+          subject.received_quantity = -0.5
+
+          expect(subject).to be_invalid
+          expect(subject.errors[:received_quantity]).to include("must be greater than or equal to 0.0")
+        end
+      end
+
+      context "when received_quantity >= 0.0" do
+        it "is valid" do
+          subject.received_quantity = 0.0
+
+          expect(subject).to be_valid
+        end
+      end
     end
 
     describe "#unit_cost" do
       it { is_expected.to validate_presence_of(:unit_cost) }
-      it { is_expected.to validate_numericality_of(:unit_cost).is_greater_than(0.0) }
+
+      context "when unit_cost is invalid" do
+        it "is invalid" do
+          subject.unit_cost = "abcd"
+
+          expect(subject).to be_invalid
+          expect(subject.errors[:unit_cost]).to include("must be greater than 0.0")
+        end
+      end
+
+      context "when unit_cost <= 0.0" do
+        it "is invalid" do
+          subject.unit_cost = 0.0
+
+          expect(subject).to be_invalid
+          expect(subject.errors[:unit_cost]).to include("must be greater than 0.0")
+        end
+      end
+
+      context "when unit_cost > 0.0" do
+        it "is valid" do
+          subject.unit_cost = 1.0
+
+          expect(subject).to be_valid
+        end
+      end
     end
 
     describe "#unit_id" do
