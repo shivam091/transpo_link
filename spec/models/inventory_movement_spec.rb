@@ -53,6 +53,16 @@ RSpec.describe InventoryMovement, type: :model do
     it { is_expected.to define_enum_for(:movement_type).backed_by_column_of_type(:enum) }
   end
 
+  describe "included modules" do
+    it { is_expected.to include_module(ScaleEnforcer) }
+  end
+
+  describe "scaled attributes" do
+    it { is_expected.to apply_scale_to(:quantity) }
+    it { is_expected.to apply_scale_to(:unit_cost) }
+    it { is_expected.to apply_scale_to(:total_cost) }
+  end
+
   describe "associations" do
     it { is_expected.to have_many(:inventory_audit_logs).inverse_of(:inventory_movement).dependent(:destroy) }
 
@@ -64,31 +74,104 @@ RSpec.describe InventoryMovement, type: :model do
   describe "validations" do
     describe "#quantity" do
       it { is_expected.to validate_presence_of(:quantity) }
-      it { is_expected.to validate_numericality_of(:quantity).is_other_than(0.0) }
+
+      context "when quantity is invalid" do
+        it "is invalid" do
+          subject.quantity = "abcd"
+
+          expect(subject).to be_invalid
+          expect(subject.errors[:quantity]).to include("must be other than 0.0")
+        end
+      end
+
+      context "when quantity <= 0.0" do
+        it "is invalid" do
+          subject.quantity = 0.0
+
+          expect(subject).to be_invalid
+          expect(subject.errors[:quantity]).to include("must be other than 0.0")
+        end
+      end
+
+      context "when quantity > 0.0" do
+        it "is valid" do
+          subject.quantity = 1.0
+
+          expect(subject).to be_valid
+        end
+      end
     end
 
     describe "#unit_cost" do
       it { is_expected.to validate_presence_of(:unit_cost) }
-      it { is_expected.to validate_numericality_of(:unit_cost).is_greater_than(0.0) }
+
+      context "when unit_cost is invalid" do
+        it "is invalid" do
+          subject.unit_cost = "abcd"
+
+          expect(subject).to be_invalid
+          expect(subject.errors[:unit_cost]).to include("must be greater than 0.0")
+        end
+      end
+
+      context "when unit_cost <= 0.0" do
+        it "is invalid" do
+          subject.unit_cost = 0.0
+
+          expect(subject).to be_invalid
+          expect(subject.errors[:unit_cost]).to include("must be greater than 0.0")
+        end
+      end
+
+      context "when unit_cost > 0.0" do
+        it "is valid" do
+          subject.unit_cost = 1.0
+
+          expect(subject).to be_valid
+        end
+      end
     end
 
     describe "#total_cost" do
       it { is_expected.to validate_presence_of(:total_cost) }
-      it { is_expected.to validate_numericality_of(:total_cost).is_greater_than_or_equal_to(:unit_cost) }
+
+      context "when total_cost < unit_cost" do
+        it "is invalid" do
+          subject.unit_cost = 10.0
+          subject.total_cost = 5.0
+
+          expect(subject).to be_invalid
+          expect(subject.errors[:total_cost]).to include("must be greater than or equal to 10.0")
+        end
+      end
+
+      context "when total_cost >= unit_cost" do
+        it "is valid" do
+          subject.unit_cost = 10.0
+          subject.total_cost = 12.0
+
+          expect(subject).to be_valid
+        end
+      end
     end
 
     describe "#movement_type" do
       it { is_expected.to validate_presence_of(:movement_type) }
-      it "allows valid movement_type values" do
-        described_class.movement_types.keys.each do |valid_type|
-          expect(build(:inventory_movement, movement_type: valid_type)).to be_valid
+
+      context "when movement_type is valid" do
+        it "is valid" do
+          described_class.movement_types.keys.each do |movement_type|
+            expect(build(:inventory_movement, movement_type:)).to be_valid
+          end
         end
       end
 
-      it "does not allow invalid movement_type values" do
-        expect {
-          build(:inventory_movement, movement_type: "invalid_type")
-        }.to raise_error(ArgumentError, /is not a valid movement_type/)
+      context "when movement_type is invalid" do
+        it "is invalid" do
+          expect {
+            build(:inventory_movement, movement_type: "invalid_type")
+          }.to raise_error(ArgumentError, /is not a valid movement_type/)
+        end
       end
     end
   end

@@ -38,6 +38,11 @@ RSpec.describe UnitConversion, type: :model do
 
   describe "included modules" do
     it { is_expected.to include_module(Pageable) }
+    it { is_expected.to include_module(ScaleEnforcer) }
+  end
+
+  describe "scaled attributes" do
+    it { is_expected.to apply_scale_to(:multiplier) }
   end
 
   describe "associations" do
@@ -57,7 +62,32 @@ RSpec.describe UnitConversion, type: :model do
 
     describe "#multiplier" do
       it { is_expected.to validate_presence_of(:multiplier) }
-      it { is_expected.to validate_numericality_of(:multiplier).is_greater_than(0.0) }
+
+      context "when multiplier is invalid" do
+        it "is invalid" do
+          subject.multiplier = "abcd"
+
+          expect(subject).to be_invalid
+          expect(subject.errors[:multiplier]).to include("must be greater than 0.0")
+        end
+      end
+
+      context "when multiplier <= 0.0" do
+        it "is invalid" do
+          subject.multiplier = 0.0
+
+          expect(subject).to be_invalid
+          expect(subject.errors[:multiplier]).to include("must be greater than 0.0")
+        end
+      end
+
+      context "when multiplier > 0.0" do
+        it "is valid" do
+          subject.multiplier = 1.0
+
+          expect(subject).to be_valid
+        end
+      end
     end
   end
 

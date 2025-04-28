@@ -70,6 +70,12 @@ RSpec.describe RequestLog, type: :model do
     it { is_expected.to include_module(Pageable) }
     it { is_expected.to include_module(Sortable) }
     it { is_expected.to include_module(Navigable) }
+    it { is_expected.to include_module(ScaleEnforcer) }
+  end
+
+  describe "scaled attributes" do
+    it { is_expected.to apply_scale_to(:cpu_usage) }
+    it { is_expected.to apply_scale_to(:elapsed_time) }
   end
 
   include_examples "apply default scope on created_at:desc"

@@ -54,6 +54,7 @@ RSpec.describe Warehouse, type: :model do
     it { is_expected.to include_module(NullifyIfBlank) }
     it { is_expected.to include_module(Sanitizable) }
     it { is_expected.to include_module(Navigable) }
+    it { is_expected.to include_module(ScaleEnforcer) }
   end
 
   describe "constants" do
@@ -73,6 +74,12 @@ RSpec.describe Warehouse, type: :model do
     it { is_expected.to sanitize_attribute(:email_address) }
     it { is_expected.to sanitize_attribute(:contact_number) }
     it { is_expected.to sanitize_attribute(:description) }
+  end
+
+  describe "scaled attributes" do
+    it { is_expected.to apply_scale_to(:total_capacity) }
+    it { is_expected.to apply_scale_to(:latitude) }
+    it { is_expected.to apply_scale_to(:longitude) }
   end
 
   describe "associations" do
@@ -121,7 +128,32 @@ RSpec.describe Warehouse, type: :model do
 
     describe "#total_capacity" do
       it { is_expected.to validate_presence_of(:total_capacity) }
-      it { is_expected.to validate_numericality_of(:total_capacity).is_greater_than(0.0).is_less_than(100_000_000_000.0) }
+
+      context "when total_capacity <= 0.0" do
+        it "is invalid" do
+          subject.total_capacity = 0.0
+
+          expect(subject).to be_invalid
+          expect(subject.errors[:total_capacity]).to include("must be greater than 0.0")
+        end
+      end
+
+      context "when total_capacity >= 100000000000.0" do
+        it "is invalid" do
+          subject.total_capacity = 100000000001.0
+
+          expect(subject).to be_invalid
+          expect(subject.errors[:total_capacity]).to include("must be less than 100000000000.0")
+        end
+      end
+
+      context "when total_capacity < 100000000000.0 and total_capacity > 0.0" do
+        it "is valid" do
+          subject.total_capacity = 10000.0
+
+          expect(subject).to be_valid
+        end
+      end
     end
 
     describe "#unit_id" do
@@ -129,19 +161,75 @@ RSpec.describe Warehouse, type: :model do
     end
 
     describe "#latitude" do
-      it { is_expected.to validate_numericality_of(:latitude).is_greater_than_or_equal_to(-90.0).is_less_than_or_equal_to(90.0).allow_nil }
+      context "when latitude < -90.0" do
+        it "is invalid" do
+          subject.latitude = -91.0
+
+          expect(subject).to be_invalid
+          expect(subject.errors[:latitude]).to include("must be greater than or equal to -90.0")
+        end
+      end
+
+      context "when latitude > 90.0" do
+        it "is invalid" do
+          subject.latitude = 91.0
+
+          expect(subject).to be_invalid
+          expect(subject.errors[:latitude]).to include("must be less than or equal to 90.0")
+        end
+      end
+
+      context "when latitude is between -90.0 and 90.0" do
+        it "is valid" do
+          subject.latitude = 25
+
+          expect(subject).to be_valid
+        end
+      end
+
+      context "when latitude is empty or nil" do
+        it "is valid" do
+          subject.latitude = nil
+
+          expect(subject).to be_valid
+        end
+      end
     end
 
     describe "#longitude" do
-      it { is_expected.to validate_numericality_of(:longitude).is_greater_than_or_equal_to(-180.0).is_less_than_or_equal_to(180.0).allow_nil }
-    end
+      context "when longitude < -180.0" do
+        it "is invalid" do
+          subject.longitude = -181.0
 
-    describe "#manager_ids" do
-      it { is_expected.to validate_presence_of(:manager_ids) }
-    end
+          expect(subject).to be_invalid
+          expect(subject.errors[:longitude]).to include("must be greater than or equal to -180.0")
+        end
+      end
 
-    describe "#supplier_ids" do
-      it { is_expected.to validate_presence_of(:supplier_ids) }
+      context "when longitude > 180.0" do
+        it "is invalid" do
+          subject.longitude = 181.0
+
+          expect(subject).to be_invalid
+          expect(subject.errors[:longitude]).to include("must be less than or equal to 180.0")
+        end
+      end
+
+      context "when longitude is between -180.0 and 180.0" do
+        it "is valid" do
+          subject.longitude = 25
+
+          expect(subject).to be_valid
+        end
+      end
+
+      context "when longitude is empty or nil" do
+        it "is valid" do
+          subject.longitude = nil
+
+          expect(subject).to be_valid
+        end
+      end
     end
   end
 

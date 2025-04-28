@@ -39,10 +39,16 @@ RSpec.describe ProductPrice, type: :model do
   describe "included modules" do
     it { is_expected.to include_module(Sortable) }
     it { is_expected.to include_module(ActsAsMoney) }
+    it { is_expected.to include_module(ScaleEnforcer) }
   end
 
   describe "constants" do
     it { is_expected.to have_constant(:LISTING_ATTRIBUTES) }
+  end
+
+  describe "scaled attributes" do
+    it { is_expected.to apply_scale_to(:min_quantity) }
+    it { is_expected.to apply_scale_to(:unit_price) }
   end
 
   describe "associations" do
@@ -57,12 +63,62 @@ RSpec.describe ProductPrice, type: :model do
   describe "validations" do
     describe "#min_quantity" do
       it { is_expected.to validate_presence_of(:min_quantity) }
-      it { is_expected.to validate_numericality_of(:min_quantity).is_greater_than(0.0) }
+
+      context "when min_quantity is invalid" do
+        it "is invalid" do
+          subject.min_quantity = "abcd"
+
+          expect(subject).to be_invalid
+          expect(subject.errors[:min_quantity]).to include("must be greater than 0.0")
+        end
+      end
+
+      context "when min_quantity <= 0.0" do
+        it "is invalid" do
+          subject.min_quantity = 0.0
+
+          expect(subject).to be_invalid
+          expect(subject.errors[:min_quantity]).to include("must be greater than 0.0")
+        end
+      end
+
+      context "when min_quantity > 0.0" do
+        it "is valid" do
+          subject.min_quantity = 1.0
+
+          expect(subject).to be_valid
+        end
+      end
     end
 
     describe "#unit_price" do
       it { is_expected.to validate_presence_of(:unit_price) }
-      it { is_expected.to validate_numericality_of(:unit_price).is_greater_than(0.0) }
+
+      context "when unit_price is invalid" do
+        it "is invalid" do
+          subject.unit_price = "abcd"
+
+          expect(subject).to be_invalid
+          expect(subject.errors[:unit_price]).to include("must be greater than 0.0")
+        end
+      end
+
+      context "when unit_price <= 0.0" do
+        it "is invalid" do
+          subject.unit_price = 0.0
+
+          expect(subject).to be_invalid
+          expect(subject.errors[:unit_price]).to include("must be greater than 0.0")
+        end
+      end
+
+      context "when unit_price > 0.0" do
+        it "is valid" do
+          subject.unit_price = 1.0
+
+          expect(subject).to be_valid
+        end
+      end
     end
   end
 

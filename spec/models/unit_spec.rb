@@ -59,7 +59,22 @@ RSpec.describe Unit, type: :model do
   describe "validations" do
     describe "#category" do
       it { is_expected.to validate_presence_of(:category) }
-      # it { is_expected.to validate_inclusion_of(:category).in_array(described_class.categories.keys) }
+
+      context "when category is valid" do
+        it "is valid" do
+          described_class.categories.keys.each do |category|
+            expect(build(:unit, category:)).to be_valid
+          end
+        end
+      end
+
+      context "when category is invalid" do
+        it "is invalid" do
+          expect {
+            build(:unit, category: "invalid_category")
+          }.to raise_error(ArgumentError, /is not a valid category/)
+        end
+      end
     end
 
     describe "#symbol" do
