@@ -3,9 +3,11 @@
 # -*- warn_indent: true -*-
 
 class UnitConversion < ApplicationRecord
-  include Pageable
+  include Pageable, ScaleEnforcer
 
   LISTING_ATTRIBUTES = %i[source_unit_id target_unit_id multiplier].freeze
+
+  scale_attributes :multiplier
 
   validates :source_unit_id,
             presence: true,

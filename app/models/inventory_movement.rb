@@ -3,6 +3,8 @@
 # -*- warn_indent: true -*-
 
 class InventoryMovement < ApplicationRecord
+  include ScaleEnforcer
+
   enum :movement_type, {
     restock: "restock",
     purchase: "purchase",
@@ -13,6 +15,8 @@ class InventoryMovement < ApplicationRecord
     adjustment: "adjustment",
     reservation: "reservation"
   }
+
+  scale_attributes :quantity, :unit_cost, :total_cost
 
   validates :quantity,
             presence: true,

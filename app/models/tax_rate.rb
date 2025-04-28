@@ -3,7 +3,7 @@
 # -*- warn_indent: true -*-
 
 class TaxRate < ApplicationRecord
-  include Pageable, Taxable, Sortable, NullifyIfBlank
+  include Pageable, Taxable, Sortable, NullifyIfBlank, ScaleEnforcer
 
   LISTING_ATTRIBUTES = %i[
     country tax_identifier_type tax_type business_category rate valid_from valid_to
@@ -24,6 +24,8 @@ class TaxRate < ApplicationRecord
 
   nullify_if_blank :valid_to
 
+  scale_attributes :rate
+
   validates :tax_identifier_type,
             uniqueness: {
               scope: [:country, :business_category, :tax_type, :valid_from],
@@ -41,8 +43,8 @@ class TaxRate < ApplicationRecord
   validates :rate,
             presence: true,
             numericality: {
-              greater_than_or_equal_to: 0,
-              less_than_or_equal_to: 100
+              greater_than_or_equal_to: 0.0,
+              less_than_or_equal_to: 100.0
             },
             reduce: true
   validates :valid_from,
