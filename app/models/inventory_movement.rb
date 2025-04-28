@@ -39,4 +39,11 @@ class InventoryMovement < ApplicationRecord
     a.belongs_to :source, polymorphic: true, optional: true
     a.belongs_to :unit
   end
+
+  after_create :create_inventory_audit_log
+  private
+
+  def create_inventory_audit_log
+    InventoryAuditLogs::CreateService.(inventory, self)
+  end
 end

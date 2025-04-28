@@ -7,7 +7,7 @@
 require "spec_helper"
 
 RSpec.describe InventoryMovement, type: :model do
-  subject { build(:inventory_movement) }
+  subject(:inventory_movement) { build(:inventory_movement) }
 
   describe "valid factory" do
     it { is_expected.to have_a_valid_factory(:inventory_movement) }
@@ -61,6 +61,10 @@ RSpec.describe InventoryMovement, type: :model do
     it { is_expected.to belong_to(:unit).inverse_of(:inventory_movements) }
   end
 
+  describe "callbacks" do
+    it { is_expected.to have_callback(:after, :create, :create_inventory_audit_log) }
+  end
+
   describe "validations" do
     describe "#quantity" do
       it { is_expected.to validate_presence_of(:quantity) }
@@ -89,6 +93,18 @@ RSpec.describe InventoryMovement, type: :model do
         expect {
           build(:inventory_movement, movement_type: "invalid_type")
         }.to raise_error(ArgumentError, /is not a valid movement_type/)
+      end
+    end
+  end
+
+  describe "instance methods" do
+    describe "#create_inventory_audit_log" do
+      let(:inventory) { create(:inventory) }
+
+      it "calls InventoryAuditLogs::CreateService after creation" do
+        expect(InventoryAuditLogs::CreateService).to receive(:call).with(instance_of(Inventory), an_instance_of(InventoryMovement))
+
+        create(:inventory_movement, inventory:, unit: inventory.unit)
       end
     end
   end
