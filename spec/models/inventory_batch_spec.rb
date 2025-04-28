@@ -59,6 +59,79 @@ RSpec.describe InventoryBatch, type: :model do
   describe "callbacks" do
     it { is_expected.to have_callback(:before, :create, :convert_to_inventory_unit) }
     it { is_expected.to have_callback(:after, :save, :update_inventory_average_cost_price) }
+  end
+
+  describe "validations" do
+    describe "#batch_number" do
+      let!(:inventory_batch) { create(:inventory_batch, batch_number: "ABC123") }
+
+      it { is_expected.to validate_presence_of(:batch_number) }
+      it { is_expected.to validate_length_of(:batch_number).is_at_most(55) }
+      it { is_expected.to validate_uniqueness_of(:batch_number).scoped_to(:inventory_id).with_message("already exists for the selected inventory") }
+    end
+
+    describe "#expiration_date" do
+      it { is_expected.to validate_comparison_of(:expiration_date).is_greater_than_or_equal_to(Date.current).with_message("must be today or a future date").allow_nil }
+    end
+
+    describe "#quantity" do
+      it { is_expected.to validate_presence_of(:quantity) }
+      it { is_expected.to validate_numericality_of(:quantity).is_greater_than(0.0) }
+    end
+
+    describe "#cost_price" do
+      it { is_expected.to validate_presence_of(:cost_price) }
+      it { is_expected.to validate_numericality_of(:cost_price).is_greater_than(0.0) }
+    end
+
+    describe "#unit_id" do
+      it { is_expected.to validate_presence_of(:unit_id) }
+    end
+  end
+
+  describe "associations" do
+    it { is_expected.to belong_to(:inventory).inverse_of(:inventory_batches).touch }
+    it { is_expected.to belong_to(:unit).inverse_of(:inventory_batches) }
+  end
+
+  describe "scopes" do
+    describe ".by_batch_number_and_expiry" do
+      let(:inventory) { create(:inventory) }
+
+      let!(:batch_with_expiry) { create(:inventory_batch, inventory:, batch_number: "B001", expiration_date: 1.year.from_now) }
+      let!(:batch_without_expiry) { create(:inventory_batch, inventory:, batch_number: "B002", expiration_date: nil) }
+
+      it "finds batch with matching batch_number and expiration_date" do
+        batch = described_class.by_batch_number_and_expiry("B001", 1.year.from_now).first
+
+        expect(batch).to eq(batch_with_expiry)
+      end
+
+      it "finds batch with nil expiration_date" do
+        batch = described_class.by_batch_number_and_expiry("B002", nil).first
+
+        expect(batch).to eq(batch_without_expiry)
+      end
+
+      it "returns nil if no batch matches the batch_number and expiration_date" do
+        batch = described_class.by_batch_number_and_expiry("B001", Date.tomorrow).first
+
+        expect(batch).to be_nil
+      end
+    end
+  end
+
+  describe "instance methods" do
+    describe "#update_inventory_average_cost_price" do
+      let(:inventory) { create(:inventory) }
+      let(:inventory_batch) { build(:inventory_batch, inventory:) }
+
+      it "calls Inventories::UpdateAverageCostPriceService with the inventory" do
+        expect(Inventories::UpdateAverageCostPriceService).to receive(:call).with(inventory)
+
+        inventory_batch.save! # triggers after_save callback
+      end
+    end
 
     describe "#convert_to_inventory_unit" do
       let!(:target_unit) { create(:dozen_unit) }
@@ -92,38 +165,67 @@ RSpec.describe InventoryBatch, type: :model do
         end
       end
     end
-  end
 
-  describe "validations" do
-    describe "#batch_number" do
-      let!(:inventory_batch) { create(:inventory_batch, batch_number: "B0001") }
+    describe "#quantity_change" do
+      let!(:inventory_batch) { create(:inventory_batch, quantity: 10) }
 
-      it { is_expected.to validate_presence_of(:batch_number) }
-      it { is_expected.to validate_length_of(:batch_number).is_at_most(55) }
-      it { is_expected.to validate_uniqueness_of(:batch_number).scoped_to(:inventory_id).with_message("already exists for the selected inventory") }
+      context "when quantity has changed" do
+        it "returns the change in quantity" do
+          inventory_batch.update(quantity: 15)
+
+          expect(inventory_batch.quantity_change).to eq(5)
+        end
+      end
+
+      context "when quantity has not changed" do
+        it "returns original quantity" do
+          expect(inventory_batch.quantity_change).to eq(10)
+        end
+      end
     end
 
-    describe "#expiration_date" do
-      it { is_expected.to validate_comparison_of(:expiration_date).is_greater_than_or_equal_to(Date.current).with_message("must be today or a future date").allow_nil }
-    end
+    describe "merge_with!" do
+      let(:unit) { create(:item_unit) }
+      let(:inventory) { create(:inventory, unit:) }
+      let(:inventory_batch) { create(:inventory_batch, inventory:, unit:, quantity: 10) }
 
-    describe "#quantity" do
-      it { is_expected.to validate_presence_of(:quantity) }
-      it { is_expected.to validate_numericality_of(:quantity).is_greater_than(0.0) }
-    end
+      context "when source_unit is not provided" do
+        it "adds quantity directly and saves the batch" do
+          expect {
+            inventory_batch.merge_with!(quantity: 5)
+          }.to change { inventory_batch.reload.quantity }.from(10).to(15)
+        end
+      end
 
-    describe "#cost_price" do
-      it { is_expected.to validate_presence_of(:cost_price) }
-      it { is_expected.to validate_numericality_of(:cost_price).is_greater_than(0.0) }
-    end
+      context "when source_unit is different from batch unit" do
+        let(:source_unit) { create(:dozen_unit) }
 
-    describe "#unit_id" do
-      it { is_expected.to validate_presence_of(:unit_id) }
-    end
-  end
+        it "converts quantity before adding and saves the batch" do
+          expect(UnitConversion).to receive(:convert).with(source_unit, unit, 2) { 24 }
 
-  describe "associations" do
-    it { is_expected.to belong_to(:inventory).inverse_of(:inventory_batches).touch }
-    it { is_expected.to belong_to(:unit).inverse_of(:inventory_batches) }
+          expect {
+            inventory_batch.merge_with!(quantity: 2, source_unit:)
+          }.to change { inventory_batch.reload.quantity }.from(10).to(34)
+        end
+      end
+
+      context "when source_unit is same as batch unit" do
+        it "adds quantity without conversion and saves the batch" do
+          expect(UnitConversion).not_to receive(:convert)
+
+          expect {
+            inventory_batch.merge_with!(quantity: 3, source_unit: unit)
+          }.to change { inventory_batch.reload.quantity }.from(10).to(13)
+        end
+      end
+
+      context "when quantity is missing" do
+        it "raises ArgumentError" do
+          expect {
+            inventory_batch.merge_with!({})
+          }.to raise_error(ArgumentError, "Quantity must be present")
+        end
+      end
+    end
   end
 end
