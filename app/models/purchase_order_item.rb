@@ -50,7 +50,7 @@ class PurchaseOrderItem < ApplicationRecord
     end
 
     event :deliver do
-      transitions from: :pending, to: :delivered
+      transitions from: [:pending, :partially_delivered], to: :delivered
     end
 
     event :return_item do
@@ -94,11 +94,26 @@ class PurchaseOrderItem < ApplicationRecord
     a.belongs_to :unit
   end
 
+  has_many :restocks,
+           -> {
+             where(InventoryMovement.arel_table[:movement_type].eq(InventoryMovement.movement_types[:restock]))
+           },
+           class_name: "InventoryMovement",
+           as: :source,
+           inverse_of: :source
+
   before_validation :set_unit_cost_and_currency
 
-  delegate :symbol, to: :unit, prefix: true
+  with_options prefix: true do |d|
+    d.delegate :symbol, to: :unit
+    d.delegate :name, to: :product
+  end
 
   default_scope -> { order_created_desc }
+
+  def remaining_quantity
+    quantity - received_quantity
+  end
 
   private
 

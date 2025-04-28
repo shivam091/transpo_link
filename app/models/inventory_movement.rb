@@ -40,8 +40,15 @@ class InventoryMovement < ApplicationRecord
     a.belongs_to :unit
   end
 
+  before_save :set_default_attributes
   after_create :create_inventory_audit_log
+
   private
+
+  def set_default_attributes
+    self.movement_date = Time.now.utc
+    self.metadata = {action: movement_type}
+  end
 
   def create_inventory_audit_log
     InventoryAuditLogs::CreateService.(inventory, self)

@@ -62,6 +62,7 @@ RSpec.describe InventoryMovement, type: :model do
   end
 
   describe "callbacks" do
+    it { is_expected.to have_callback(:before, :save, :set_default_attributes) }
     it { is_expected.to have_callback(:after, :create, :create_inventory_audit_log) }
   end
 
@@ -83,13 +84,14 @@ RSpec.describe InventoryMovement, type: :model do
 
     describe "#movement_type" do
       it { is_expected.to validate_presence_of(:movement_type) }
+
       it "allows valid movement_type values" do
         described_class.movement_types.keys.each do |valid_type|
           expect(build(:inventory_movement, movement_type: valid_type)).to be_valid
         end
       end
 
-      it "does not allow invalid movement_type values" do
+      it "raises error on invalid movement_type value" do
         expect {
           build(:inventory_movement, movement_type: "invalid_type")
         }.to raise_error(ArgumentError, /is not a valid movement_type/)
@@ -98,6 +100,22 @@ RSpec.describe InventoryMovement, type: :model do
   end
 
   describe "instance methods" do
+    describe "#set_default_attributes" do
+      let(:inventory) { create(:inventory) }
+      let(:inventory_movement) do
+        build(:inventory_movement, inventory:, unit: inventory.unit, source: inventory)
+      end
+
+      it "sets the movement_date and metadata before saving" do
+        freeze_time do
+          inventory_movement.save!
+
+          expect(inventory_movement.movement_date).to eq(Time.current.utc)
+          expect(inventory_movement.metadata).to eq({ "action" => "restock" })
+        end
+      end
+    end
+
     describe "#create_inventory_audit_log" do
       let(:inventory) { create(:inventory) }
 

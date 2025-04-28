@@ -7,7 +7,7 @@
 require "spec_helper"
 
 RSpec.describe PurchaseOrderItem, type: :model do
-  subject { create(:purchase_order_item) }
+  subject(:purchase_order_item) { build(:purchase_order_item) }
 
   describe "valid factory" do
     it { is_expected.to have_a_valid_factory(:purchase_order_item) }
@@ -76,6 +76,8 @@ RSpec.describe PurchaseOrderItem, type: :model do
   end
 
   describe "associations" do
+    it { is_expected.to have_many(:restocks).inverse_of(:source).class_name("InventoryMovement") }
+
     it { is_expected.to belong_to(:purchase_order).inverse_of(:purchase_order_items).touch }
     it { is_expected.to belong_to(:product).inverse_of(:purchase_order_items) }
     it { is_expected.to belong_to(:unit).inverse_of(:purchase_order_items) }
@@ -88,6 +90,7 @@ RSpec.describe PurchaseOrderItem, type: :model do
     it { is_expected.to transition_from(:ordered).to(:cancelled).on_event(:cancel) }
     it { is_expected.to transition_from(:pending).to(:partially_delivered).on_event(:partially_deliver) }
     it { is_expected.to transition_from(:pending).to(:delivered).on_event(:deliver) }
+    it { is_expected.to transition_from(:partially_delivered).to(:delivered).on_event(:deliver) }
     it { is_expected.to transition_from(:delivered).to(:returned).on_event(:return_item) }
     it { is_expected.to transition_from(:delivered).to(:damaged).on_event(:mark_damaged) }
     it { is_expected.to transition_from(:pending).to(:backordered).on_event(:backorder) }
@@ -100,6 +103,7 @@ RSpec.describe PurchaseOrderItem, type: :model do
 
   describe "delegates" do
     it { is_expected.to delegate_method(:symbol).to(:unit).with_prefix }
+    it { is_expected.to delegate_method(:name).to(:product).with_prefix }
   end
 
   include_examples "apply default scope on created_at:desc"
@@ -135,6 +139,72 @@ RSpec.describe PurchaseOrderItem, type: :model do
   end
 
   describe "instance methods" do
+    describe "#product_unit_is_in_warehouse_unit_category" do
+      let!(:product) { create(:product) }
+
+      context "when the unit is in a valid category" do
+        let!(:warehouse) { create(:warehouse) }
+        let!(:purchase_order) { create(:purchase_order, warehouse:) }
+
+        let(:purchase_order_item) { build(:purchase_order_item, purchase_order:, product:) }
+
+        it "does not add validation errors" do
+          purchase_order_item.validate
+
+          expect(purchase_order_item.errors[:product_id]).to be_blank
+        end
+      end
+
+      context "when the unit is not in a valid category" do
+        let!(:warehouse) { create(:warehouse, unit: create(:litre_unit)) }
+        let!(:purchase_order) { create(:purchase_order, warehouse:) }
+
+        let(:purchase_order_item) { build(:purchase_order_item, purchase_order:, product:) }
+
+        it "adds an error on unit_id" do
+          purchase_order_item.validate
+
+          expect(purchase_order_item.errors[:product_id]).to include("is incompatible with the selected warehouse due to unit category mismatch")
+        end
+      end
+
+      context "when product is not present" do
+        let(:purchase_order_item) { build(:purchase_order_item, purchase_order: nil, product:) }
+
+        it "does not add validation errors" do
+          purchase_order_item.validate
+
+          expect(purchase_order_item.errors[:product_id]).to be_blank
+        end
+      end
+    end
+
+    describe "#remaining_quantity" do
+      it "returns the difference between quantity and received_quantity" do
+        purchase_order_item = build(:purchase_order_item, quantity: 10.0, received_quantity: 4.0)
+
+        expect(purchase_order_item.remaining_quantity).to eq(6.0)
+      end
+
+      it "returns the full quantity when nothing has been received" do
+        purchase_order_item = build(:purchase_order_item, quantity: 5.0, received_quantity: 0.0)
+
+        expect(purchase_order_item.remaining_quantity).to eq(5.0)
+      end
+
+      it "returns zero when received_quantity equals quantity" do
+        purchase_order_item = build(:purchase_order_item, quantity: 7.5, received_quantity: 7.5)
+
+        expect(purchase_order_item.remaining_quantity).to eq(0.0)
+      end
+
+      it "returns negative when received_quantity exceeds quantity (should be rare, but defensive)" do
+        purchase_order_item = build(:purchase_order_item, quantity: 3.0, received_quantity: 4.0)
+
+        expect(purchase_order_item.remaining_quantity).to eq(-1.0)
+      end
+    end
+
     describe "#set_unit_cost_and_currency" do
       let!(:product) { create(:product, cost_price: 100.5, currency: "USD") }
       let!(:purchase_order) { create(:purchase_order) }
@@ -178,46 +248,6 @@ RSpec.describe PurchaseOrderItem, type: :model do
 
           expect(purchase_order_item.unit_cost).to be_nil
           expect(purchase_order_item.currency.iso_code).to eq("INR")
-        end
-      end
-    end
-
-    describe "#product_unit_is_in_warehouse_unit_category" do
-      let!(:product) { create(:product) }
-
-      context "when the unit is in a valid category" do
-        let!(:warehouse) { create(:warehouse) }
-        let!(:purchase_order) { create(:purchase_order, warehouse:) }
-
-        let(:purchase_order_item) { build(:purchase_order_item, purchase_order:, product:) }
-
-        it "does not add validation errors" do
-          purchase_order_item.validate
-
-          expect(purchase_order_item.errors[:product_id]).to be_blank
-        end
-      end
-
-      context "when the unit is not in a valid category" do
-        let!(:warehouse) { create(:warehouse, unit: create(:litre_unit)) }
-        let!(:purchase_order) { create(:purchase_order, warehouse:) }
-
-        let(:purchase_order_item) { build(:purchase_order_item, purchase_order:, product:) }
-
-        it "adds an error on unit_id" do
-          purchase_order_item.validate
-
-          expect(purchase_order_item.errors[:product_id]).to include("is incompatible with the selected warehouse due to unit category mismatch")
-        end
-      end
-
-      context "when product is not present" do
-        let(:purchase_order_item) { build(:purchase_order_item, purchase_order: nil, product:) }
-
-        it "does not add validation errors" do
-          purchase_order_item.validate
-
-          expect(purchase_order_item.errors[:product_id]).to be_blank
         end
       end
     end
