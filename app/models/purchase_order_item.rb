@@ -47,10 +47,14 @@ class PurchaseOrderItem < ApplicationRecord
 
     event :partially_deliver do
       transitions from: :pending, to: :partially_delivered
+
+      after :synchronize_po_delivery_status!
     end
 
     event :deliver do
       transitions from: [:pending, :partially_delivered], to: :delivered
+
+      after :synchronize_po_delivery_status!
     end
 
     event :return_item do
@@ -100,7 +104,7 @@ class PurchaseOrderItem < ApplicationRecord
            },
            class_name: "InventoryMovement",
            as: :source,
-           inverse_of: :source
+           dependent: :restrict_with_exception
 
   before_validation :set_unit_cost_and_currency
 
@@ -133,5 +137,9 @@ class PurchaseOrderItem < ApplicationRecord
     if product
       assign_attributes(unit_cost: product.cost_price, currency: product.currency)
     end
+  end
+
+  def synchronize_po_delivery_status!
+    purchase_order.synchronize_delivery_status!
   end
 end

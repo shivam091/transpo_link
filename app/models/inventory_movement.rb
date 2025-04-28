@@ -36,9 +36,10 @@ class InventoryMovement < ApplicationRecord
 
   with_options inverse_of: :inventory_movements do |a|
     a.belongs_to :inventory
-    a.belongs_to :source, polymorphic: true, optional: true
     a.belongs_to :unit
   end
+
+  belongs_to :source, polymorphic: true, optional: true
 
   before_save :set_default_attributes
   after_create :create_inventory_audit_log

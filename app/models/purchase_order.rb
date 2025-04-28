@@ -126,7 +126,28 @@ class PurchaseOrder < ApplicationRecord
     [warehouse, manager, supplier]
   end
 
+  # Method to synchronize PO status based on PO Items' status
+  def synchronize_delivery_status!
+    if all_items_delivered?
+      fully_deliver! if may_fully_deliver?
+    elsif some_items_delivered_or_partially_delivered?
+      partially_deliver! if may_partially_deliver?
+    else
+      # No automatic fallback. Just stay in current status.
+    end
+  rescue AASM::InvalidTransition => e
+    Rails.logger.error("Failed to synchronize PO delivery status: #{e.message}")
+  end
+
   private
+
+  def all_items_delivered?
+    purchase_order_items.all?(&:delivered?)
+  end
+
+  def some_items_delivered_or_partially_delivered?
+    purchase_order_items.any? { |item| item.status.in?(["delivered", "partially_delivered"]) }
+  end
 
   def reject_purchase_order_item?(attributes)
     [

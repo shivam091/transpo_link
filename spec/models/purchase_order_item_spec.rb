@@ -76,7 +76,19 @@ RSpec.describe PurchaseOrderItem, type: :model do
   end
 
   describe "associations" do
-    it { is_expected.to have_many(:restocks).inverse_of(:source).class_name("InventoryMovement") }
+    it { is_expected.to have_many(:restocks).class_name("InventoryMovement").dependent(:restrict_with_exception) }
+
+    describe "#restocks" do
+      let(:source) { create(:purchase_order_item) }
+      let(:unit) { source.unit }
+
+      let!(:restock_movement) { create(:inventory_movement, :restock, source:, unit:) }
+      let!(:other_movement) { create(:inventory_movement, :purchase, source:, unit:) }
+
+      it "returns only restock inventory movements" do
+        expect(source.restocks).to contain_exactly(restock_movement)
+      end
+    end
 
     it { is_expected.to belong_to(:purchase_order).inverse_of(:purchase_order_items).touch }
     it { is_expected.to belong_to(:product).inverse_of(:purchase_order_items) }
@@ -139,6 +151,17 @@ RSpec.describe PurchaseOrderItem, type: :model do
   end
 
   describe "instance methods" do
+    describe "#synchronize_po_delivery_status!" do
+      let(:purchase_order) { create(:purchase_order) }
+      let(:purchase_order_item) { create(:purchase_order_item, purchase_order:) }
+
+      it "calls synchronize_delivery_status! on associated purchase_order" do
+        expect(purchase_order).to receive(:synchronize_delivery_status!)
+
+        purchase_order_item.send(:synchronize_po_delivery_status!)
+      end
+    end
+
     describe "#product_unit_is_in_warehouse_unit_category" do
       let!(:product) { create(:product) }
 
