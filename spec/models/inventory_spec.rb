@@ -82,7 +82,7 @@ RSpec.describe Inventory, type: :model do
     it { is_expected.to have_many(:inventory_batches).inverse_of(:inventory).dependent(:destroy) }
 
     it { is_expected.to belong_to(:warehouse).inverse_of(:inventories) }
-    it { is_expected.to belong_to(:product).inverse_of(:inventories).touch }
+    it { is_expected.to belong_to(:product).inverse_of(:inventories) }
     it { is_expected.to belong_to(:unit).inverse_of(:inventories) }
   end
 

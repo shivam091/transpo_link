@@ -7,7 +7,7 @@
 require "spec_helper"
 
 RSpec.describe InventoryAuditLog, type: :model do
-  subject { build(:inventory_audit_log) }
+  subject(:inventory_audit_log) { build(:inventory_audit_log) }
 
   describe "valid factory" do
     it { is_expected.to have_a_valid_factory(:inventory_audit_log) }
@@ -45,5 +45,19 @@ RSpec.describe InventoryAuditLog, type: :model do
     it { is_expected.to belong_to(:inventory).inverse_of(:inventory_audit_logs) }
     it { is_expected.to belong_to(:inventory_movement).inverse_of(:inventory_audit_logs).optional }
     it { is_expected.to belong_to(:user).inverse_of(:inventory_audit_logs) }
+  end
+
+  describe "callbacks" do
+    it { is_expected.to have_callback(:before, :validation, :set_default_attributes) }
+
+    describe "#set_default_attributes" do
+      include_context "with current user"
+
+      it "should set current user to audit log" do
+        inventory_audit_log.validate
+
+        expect(inventory_audit_log.user).to eq(current_user)
+      end
+    end
   end
 end
