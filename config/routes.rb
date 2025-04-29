@@ -88,7 +88,7 @@ Rails.application.routes.draw do
       patch :reject
     end
 
-    resources :purchase_order_items, path: "purchase-order-items", except: :show do
+    resources :purchase_order_items, path: "purchase-order-items" do
       member do
         patch :cancel
       end
