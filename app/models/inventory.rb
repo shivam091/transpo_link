@@ -54,7 +54,7 @@ class Inventory < ApplicationRecord
 
   with_options inverse_of: :inventories do |a|
     a.belongs_to :warehouse
-    a.belongs_to :product, touch: true
+    a.belongs_to :product
     a.belongs_to :unit
   end
 

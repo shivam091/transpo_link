@@ -13,10 +13,40 @@ FactoryBot.define do
     notes { Faker::Lorem.paragraph(sentence_count: 3) }
     status { PurchaseOrder.statuses[:draft] }
 
-    PurchaseOrder.statuses.each_key do |status|
-      trait status do
-        status { PurchaseOrder.statuses[status] }
-      end
+    trait :draft do
+      status { PurchaseOrder.statuses[:draft] }
+    end
+
+    trait :submitted do
+      status { PurchaseOrder.statuses[:submitted] }
+    end
+
+    trait :approved do
+      status { PurchaseOrder.statuses[:approved] }
+    end
+
+    trait :partially_delivered do
+      status { PurchaseOrder.statuses[:partially_delivered] }
+    end
+
+    trait :fully_delivered do
+      status { PurchaseOrder.statuses[:fully_delivered] }
+    end
+
+    trait :cancelled do
+      status { PurchaseOrder.statuses[:cancelled] }
+    end
+
+    trait :rejected do
+      status { PurchaseOrder.statuses[:rejected] }
+    end
+
+    trait :closed do
+      status { PurchaseOrder.statuses[:closed] }
+    end
+
+    trait :on_hold do
+      status { PurchaseOrder.statuses[:on_hold] }
     end
 
     trait :with_po_items do
