@@ -27,6 +27,8 @@
           select_unit_of_measure: "Select unit of measure",
         },
       },
+      show: {
+      },
     }
   }
 }

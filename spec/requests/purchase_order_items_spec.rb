@@ -107,6 +107,15 @@ RSpec.describe "PurchaseOrderItems", type: :request do
     end
   end
 
+  describe "GET /purchase-orders/:purchase_order_id/purchase-order-items/:id" do
+    it "renders purchase order item details modal" do
+      get purchase_order_purchase_order_item_path(purchase_order, po_item1)
+
+      expect(controller_assigns(:purchase_order_item)).to eq(po_item1)
+      expect(response).to have_http_status(:ok)
+    end
+  end
+
   describe "DELETE /purchase-orders/:purchase_order_id/purchase-order-items/:id" do
     context "when deletion is successful" do
       it "deletes the purchase order item and updates the turbo frame" do
