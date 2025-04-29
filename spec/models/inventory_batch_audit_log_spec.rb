@@ -10,7 +10,7 @@ RSpec.describe InventoryBatchAuditLog, type: :model do
   subject { build(:inventory_batch_audit_log) }
 
   describe "valid factory" do
-    it { is_expected.to have_a_valid_factory(:inventory_audit_log) }
+    it { is_expected.to have_a_valid_factory(:inventory_batch_audit_log) }
   end
 
   describe "attributes, indexes, foreign keys, and check constraints" do
