@@ -76,6 +76,7 @@ RSpec.describe PurchaseOrderItem, type: :model do
   end
 
   describe "associations" do
+    it { is_expected.to have_many(:inventory_movements).dependent(:restrict_with_exception) }
     it { is_expected.to have_many(:restocks).class_name("InventoryMovement").dependent(:restrict_with_exception) }
 
     describe "#restocks" do
