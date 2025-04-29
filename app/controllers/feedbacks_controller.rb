@@ -31,7 +31,7 @@ class FeedbacksController < ApplicationController
 
     if response.success?
       set_flash_message(:notice, :success)
-      redirect_to request.referrer, status: :see_other
+      redirect_back fallback_location: feedbacks_path, status: :see_other
     else
       set_flash_message(:alert, :error, immediate: true)
       respond_to do |format|
@@ -55,7 +55,7 @@ class FeedbacksController < ApplicationController
     else
       set_flash_message(:alert, :error)
     end
-    redirect_to request.referrer, status: :see_other
+    redirect_back fallback_location: feedbacks_path, status: :see_other
   end
 
   # GET /feedbacks/:id
