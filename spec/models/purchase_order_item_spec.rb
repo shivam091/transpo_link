@@ -107,6 +107,7 @@ RSpec.describe PurchaseOrderItem, type: :model do
 
   describe "delegates" do
     it { is_expected.to delegate_method(:symbol).to(:unit).with_prefix }
+    it { is_expected.to delegate_method(:name).to(:product).with_prefix }
   end
 
   include_examples "apply default scope on created_at:desc"
@@ -292,6 +293,32 @@ RSpec.describe PurchaseOrderItem, type: :model do
 
           expect(purchase_order_item.errors[:product_id]).to be_blank
         end
+      end
+    end
+
+    describe "#remaining_quantity" do
+      it "returns the difference between quantity and received_quantity" do
+        purchase_order_item = build(:purchase_order_item, quantity: 10.0, received_quantity: 4.0)
+
+        expect(purchase_order_item.remaining_quantity).to eq(6.0)
+      end
+
+      it "returns the full quantity when nothing has been received" do
+        purchase_order_item = build(:purchase_order_item, quantity: 5.0, received_quantity: 0.0)
+
+        expect(purchase_order_item.remaining_quantity).to eq(5.0)
+      end
+
+      it "returns zero when received_quantity equals quantity" do
+        purchase_order_item = build(:purchase_order_item, quantity: 7.5, received_quantity: 7.5)
+
+        expect(purchase_order_item.remaining_quantity).to eq(0.0)
+      end
+
+      it "returns negative when received_quantity exceeds quantity (should be rare, but defensive)" do
+        purchase_order_item = build(:purchase_order_item, quantity: 3.0, received_quantity: 4.0)
+
+        expect(purchase_order_item.remaining_quantity).to eq(-1.0)
       end
     end
   end

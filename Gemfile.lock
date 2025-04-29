@@ -81,8 +81,6 @@ GEM
     addressable (2.8.7)
       public_suffix (>= 2.0.2, < 7.0)
     ast (2.4.2)
-    autoprefixer-rails (10.4.19.0)
-      execjs (~> 2)
     base64 (0.2.0)
     bcrypt (3.1.20)
     benchmark (0.4.0)
@@ -92,8 +90,7 @@ GEM
       debug_inspector (>= 1.2.0)
     bootsnap (1.18.4)
       msgpack (~> 1.2)
-    bootstrap (5.3.3)
-      autoprefixer-rails (>= 9.1.0)
+    bootstrap (5.3.5)
       popper_js (>= 2.11.8, < 3)
     brakeman (7.0.2)
       racc
@@ -141,7 +138,6 @@ GEM
     erubi (1.13.1)
     et-orbi (1.2.11)
       tzinfo
-    execjs (2.10.0)
     factory_bot (6.5.0)
       activesupport (>= 5.0.0)
     factory_bot_rails (6.4.4)
@@ -215,7 +211,7 @@ GEM
     msgpack (1.7.5)
     net-http (0.6.0)
       uri
-    net-imap (0.5.6)
+    net-imap (0.5.7)
       date
       net-protocol
     net-pop (0.1.2)
@@ -481,7 +477,7 @@ DEPENDENCIES
   IPinfo (~> 2)
   aasm (~> 5)
   bootsnap
-  bootstrap (~> 5.3.3)
+  bootstrap (~> 5.3.5)
   brakeman
   bullet (~> 8)
   capybara

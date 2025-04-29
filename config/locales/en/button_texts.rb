@@ -29,6 +29,7 @@
       next: "Next &rsaquo;",
       approve: "Approve",
       reject: "Reject",
+      close: "Close",
     },
   }
 }

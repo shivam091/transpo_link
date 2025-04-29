@@ -98,9 +98,16 @@ class PurchaseOrderItem < ApplicationRecord
 
   before_validation :set_unit_cost_and_currency
 
-  delegate :symbol, to: :unit, prefix: true
+  with_options prefix: true do |d|
+    d.delegate :symbol, to: :unit
+    d.delegate :name, to: :product
+  end
 
   default_scope -> { order_created_desc }
+
+  def remaining_quantity
+    quantity - received_quantity
+  end
 
   private
 
