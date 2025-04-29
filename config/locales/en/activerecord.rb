@@ -254,7 +254,9 @@
           unit_cost: "Unit cost",
           total_cost: "Total cost",
           currency: "Currency",
-          status: "Status"
+          status: "Status",
+          ordered_quantity: "Ordered quantity",
+          remaining_quantity: "Remaining quantity",
         },
       },
       errors: {
