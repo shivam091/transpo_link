@@ -99,6 +99,8 @@ RSpec.describe User, type: :model do
     it { is_expected.to have_many(:request_logs).inverse_of(:user).dependent(:nullify) }
     it { is_expected.to have_many(:legal_identifiers).inverse_of(:user).dependent(:destroy) }
     it { is_expected.to have_many(:inventory_audit_logs).inverse_of(:user).dependent(:nullify) }
+    it { is_expected.to have_many(:inventory_batch_audit_logs).inverse_of(:user).dependent(:nullify) }
+    it { is_expected.to have_many(:inventory_batch_processing_logs).inverse_of(:user).dependent(:nullify) }
     it { is_expected.to have_many(:feedbacks).inverse_of(:user).dependent(:nullify) }
     it { is_expected.to have_many(:purchase_orders).inverse_of(:manager).dependent(:restrict_with_exception) }
     it { is_expected.to have_many(:supplied_purchase_orders).inverse_of(:supplier).class_name("PurchaseOrder").dependent(:restrict_with_exception) }
