@@ -94,7 +94,7 @@ group :development, :test do
   gem "rspec-rails", "~> 7.1"
 
   # Provides one-liners to test common Rails functionality
-  gem "shoulda-matchers", "~> 6.4"
+  gem "shoulda-matchers", "~> 6.5"
 
   # Clean your ActiveRecord databases with database cleaner.
   gem "database_cleaner", "~> 2.1"
