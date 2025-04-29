@@ -43,6 +43,7 @@ class User < ApplicationRecord
     a.has_many :legal_identifiers, dependent: :destroy
     a.has_many :inventory_audit_logs, dependent: :nullify
     a.has_many :inventory_batch_audit_logs, dependent: :nullify
+    a.has_many :inventory_batch_processing_logs, dependent: :nullify
     a.has_many :feedbacks, dependent: :nullify
   end
 

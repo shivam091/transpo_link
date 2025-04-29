@@ -26,10 +26,9 @@ class CreateInventoryBatchAuditLogs < ActiveRecord::Migration[8.0]
                    },
                    null: false,
                    index: {using: :btree}
+      t.timestamps_with_timezone null: false
 
       t.index [:inventory_batch_id, :user_id], using: :btree
-
-      t.timestamps_with_timezone null: false
 
       t.check_constraint "previous_quantity IS NOT NULL", name: :check_inventory_batch_audit_logs_previous_quantity_presence
       t.check_constraint "new_quantity IS NOT NULL", name: :check_inventory_batch_audit_logs_new_quantity_presence
