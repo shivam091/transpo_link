@@ -60,4 +60,36 @@ RSpec.describe InventoryMovement, type: :model do
     it { is_expected.to belong_to(:source).optional }
     it { is_expected.to belong_to(:unit).inverse_of(:inventory_movements) }
   end
+
+  describe "validations" do
+    describe "#quantity" do
+      it { is_expected.to validate_presence_of(:quantity) }
+      it { is_expected.to validate_numericality_of(:quantity).is_other_than(0.0) }
+    end
+
+    describe "#unit_cost" do
+      it { is_expected.to validate_presence_of(:unit_cost) }
+      it { is_expected.to validate_numericality_of(:unit_cost).is_greater_than(0.0) }
+    end
+
+    describe "#total_cost" do
+      it { is_expected.to validate_presence_of(:total_cost) }
+      it { is_expected.to validate_numericality_of(:total_cost).is_greater_than_or_equal_to(:unit_cost) }
+    end
+
+    describe "#movement_type" do
+      it { is_expected.to validate_presence_of(:movement_type) }
+      it "allows valid movement_type values" do
+        described_class.movement_types.keys.each do |valid_type|
+          expect(build(:inventory_movement, movement_type: valid_type)).to be_valid
+        end
+      end
+
+      it "does not allow invalid movement_type values" do
+        expect {
+          build(:inventory_movement, movement_type: "invalid_type")
+        }.to raise_error(ArgumentError, /is not a valid movement_type/)
+      end
+    end
+  end
 end

@@ -33,6 +33,10 @@ RSpec.describe NullifyIfBlank do
   it { is_expected.to nullify_if_blank(:name) }
   it { is_expected.to nullify_if_blank(:email) }
 
+  describe "callbacks" do
+    it { expect(NullifyIfBlankModel).to have_callback(:before, :validation, :nullify_blank_attributes) }
+  end
+
   describe "#nullify_blank_attributes" do
     it "nullifies attributes that are blank before validation" do
       subject.name, subject.email = "", "  "

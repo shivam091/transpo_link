@@ -254,7 +254,9 @@
           unit_cost: "Unit cost",
           total_cost: "Total cost",
           currency: "Currency",
-          status: "Status"
+          status: "Status",
+          ordered_quantity: "Ordered quantity",
+          remaining_quantity: "Remaining quantity",
         },
       },
       errors: {
@@ -386,7 +388,7 @@
           purchase_order_item: {
             attributes: {
               product_id: {
-                uniqueness: "has already been added",
+                uniqueness: "has already been added to this purchase order",
                 unit_category_mismatch: "is incompatible with the selected warehouse due to unit category mismatch",
               },
               status: {

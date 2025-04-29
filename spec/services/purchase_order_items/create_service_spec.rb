@@ -27,7 +27,12 @@ RSpec.describe PurchaseOrderItems::CreateService, type: :service do
     end
 
     context "when provided attributes are invalid" do
-      let(:purchase_order_item_attributes) { {quantity: nil} }
+      let(:purchase_order_item_attributes) do
+        attributes_for(:purchase_order_item,
+          product_id: nil,
+          purchase_order_id: nil
+        )
+      end
 
       include_examples "does not change record count", PurchaseOrderItem
       include_examples "returns an error response"

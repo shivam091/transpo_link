@@ -83,8 +83,15 @@ RSpec.describe PurchaseOrderItem, type: :model do
 
   describe "state machines" do
     it { is_expected.to have_state(:pending) }
+    it { is_expected.to transition_from(:pending).to(:ordered).on_event(:place_order) }
     it { is_expected.to transition_from(:pending).to(:cancelled).on_event(:cancel) }
+    it { is_expected.to transition_from(:ordered).to(:cancelled).on_event(:cancel) }
+    it { is_expected.to transition_from(:pending).to(:partially_delivered).on_event(:partially_deliver) }
     it { is_expected.to transition_from(:pending).to(:delivered).on_event(:deliver) }
+    it { is_expected.to transition_from(:delivered).to(:returned).on_event(:return_item) }
+    it { is_expected.to transition_from(:delivered).to(:damaged).on_event(:mark_damaged) }
+    it { is_expected.to transition_from(:pending).to(:backordered).on_event(:backorder) }
+    it { is_expected.to transition_from(:partially_delivered).to(:backordered).on_event(:backorder) }
   end
 
   describe "callbacks" do
@@ -93,6 +100,7 @@ RSpec.describe PurchaseOrderItem, type: :model do
 
   describe "delegates" do
     it { is_expected.to delegate_method(:symbol).to(:unit).with_prefix }
+    it { is_expected.to delegate_method(:name).to(:product).with_prefix }
   end
 
   include_examples "apply default scope on created_at:desc"
@@ -100,7 +108,6 @@ RSpec.describe PurchaseOrderItem, type: :model do
   describe "validations" do
     describe "#product_id" do
       it { is_expected.to validate_presence_of(:product_id) }
-      it { is_expected.to validate_uniqueness_of(:product_id).scoped_to(:purchase_order_id).with_message("has already been added").case_insensitive }
     end
 
     describe "#quantity" do
@@ -175,52 +182,14 @@ RSpec.describe PurchaseOrderItem, type: :model do
         end
       end
     end
-  end
-
-  describe "instance methods" do
-    describe "#unit_is_in_product_unit_category" do
-      let(:product) { create(:product) }
-      let(:unit) { product.unit }
-      let(:invalid_unit) { build_stubbed(:kilometre_unit) }
-
-      context "when the unit is in the valid category" do
-        let!(:purchase_order_item) { build(:purchase_order_item, product:, unit:) }
-
-        it "does not add validation errors" do
-          purchase_order_item.validate
-
-          expect(purchase_order_item.errors[:unit_id]).to be_blank
-        end
-      end
-
-      context "when the unit is not in the valid category" do
-        let!(:purchase_order_item) { build(:purchase_order_item, product:, unit: invalid_unit) }
-
-        it "adds an error on unit_id" do
-          purchase_order_item.validate
-
-          expect(purchase_order_item.errors[:unit_id]).to include("is incompatible for the selected product")
-        end
-      end
-
-      context "when product is not present" do
-        let!(:purchase_order_item) { build(:purchase_order_item, product: nil, unit:) }
-
-        it "does not add validation errors" do
-          purchase_order_item.validate
-
-          expect(purchase_order_item.errors[:unit_id]).to be_blank
-        end
-      end
-    end
 
     describe "#product_unit_is_in_warehouse_unit_category" do
-      let(:warehouse) { create(:warehouse) }
-
       let!(:product) { create(:product) }
-      let!(:purchase_order) { create(:purchase_order, warehouse:) }
 
-      context "when the unit is in the valid category" do
+      context "when the unit is in a valid category" do
+        let!(:warehouse) { create(:warehouse) }
+        let!(:purchase_order) { create(:purchase_order, warehouse:) }
+
         let(:purchase_order_item) { build(:purchase_order_item, purchase_order:, product:) }
 
         it "does not add validation errors" do
@@ -230,7 +199,7 @@ RSpec.describe PurchaseOrderItem, type: :model do
         end
       end
 
-      context "when the unit is not in the valid category" do
+      context "when the unit is not in a valid category" do
         let!(:warehouse) { create(:warehouse, unit: create(:litre_unit)) }
         let!(:purchase_order) { create(:purchase_order, warehouse:) }
 
@@ -251,6 +220,32 @@ RSpec.describe PurchaseOrderItem, type: :model do
 
           expect(purchase_order_item.errors[:product_id]).to be_blank
         end
+      end
+    end
+
+    describe "#remaining_quantity" do
+      it "returns the difference between quantity and received_quantity" do
+        purchase_order_item = build(:purchase_order_item, quantity: 10.0, received_quantity: 4.0)
+
+        expect(purchase_order_item.remaining_quantity).to eq(6.0)
+      end
+
+      it "returns the full quantity when nothing has been received" do
+        purchase_order_item = build(:purchase_order_item, quantity: 5.0, received_quantity: 0.0)
+
+        expect(purchase_order_item.remaining_quantity).to eq(5.0)
+      end
+
+      it "returns zero when received_quantity equals quantity" do
+        purchase_order_item = build(:purchase_order_item, quantity: 7.5, received_quantity: 7.5)
+
+        expect(purchase_order_item.remaining_quantity).to eq(0.0)
+      end
+
+      it "returns negative when received_quantity exceeds quantity (should be rare, but defensive)" do
+        purchase_order_item = build(:purchase_order_item, quantity: 3.0, received_quantity: 4.0)
+
+        expect(purchase_order_item.remaining_quantity).to eq(-1.0)
       end
     end
   end

@@ -18,7 +18,7 @@ RSpec.describe Inventories::ReplenishService, type: :service do
   let!(:unit_conversion) { create(:dozen_item_conversion, source_unit:, target_unit:) }
 
   let!(:purchase_order) do
-    create(:purchase_order, :pending, warehouse:, manager:, supplier:).tap do |po|
+    create(:purchase_order, :submitted, warehouse:, manager:, supplier:).tap do |po|
       create(:purchase_order_item, purchase_order: po, product:, unit: source_unit, quantity: 10)
     end
   end
@@ -49,7 +49,7 @@ RSpec.describe Inventories::ReplenishService, type: :service do
     it "raises UnitConversionError" do
       expect {
         service_response
-      }.to raise_error(PurchaseOrders::UnitConversionError, 'Cannot convert from "Dozen" to "Item". Please ensure a valid unit conversion exists.')
+      }.to raise_error(UnitConversionError, 'Cannot convert from "Dozen" to "Item". Please ensure a valid unit conversion exists.')
     end
   end
 end

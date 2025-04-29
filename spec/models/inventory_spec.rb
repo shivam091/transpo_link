@@ -134,42 +134,6 @@ RSpec.describe Inventory, type: :model do
       end
     end
 
-    describe "#inventory_unit_matches_product_unit_category" do
-      let!(:product) { create(:product) }
-
-      let(:invalid_unit) { build_stubbed(:kilometre_unit) }
-
-      context "when the unit is in the valid category" do
-        let(:inventory) { build(:inventory, product:, unit: product.unit) }
-
-        it "does not add validation errors" do
-          inventory.validate
-
-          expect(inventory.errors[:unit_id]).to be_blank
-        end
-      end
-
-      context "when the unit is not in the valid category" do
-        let(:inventory) { build(:inventory, product:, unit: invalid_unit) }
-
-        it "adds an error on unit_id" do
-          inventory.validate
-
-          expect(inventory.errors[:unit_id]).to include("is incompatible for the selected product")
-        end
-      end
-
-      context "when product is not present" do
-        let(:inventory) { build(:inventory, product: nil) }
-
-        it "skips validation when product is nil" do
-          inventory.validate
-
-          expect(inventory.errors[:unit_id]).to be_blank
-        end
-      end
-    end
-
     describe "#product_unit_category_matches_warehouse_capacity" do
       let!(:product) { create(:product) }
       let!(:warehouse) { create(:warehouse) }

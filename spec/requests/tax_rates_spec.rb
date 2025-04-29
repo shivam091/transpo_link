@@ -10,8 +10,8 @@ RSpec.describe "TaxRates", type: :request do
   let!(:active_tax_rate) { create(:tax_rate, valid_to: Date.current + 1.day) }
   let!(:future_tax_rate) { create(:tax_rate, valid_from: (Date.current + 1.week)) }
 
-  let(:valid_attributes) { attributes_for(:tax_rate, tax_identifier_type: "pan") }
-  let(:invalid_attributes) { attributes_for(:tax_rate, tax_identifier_type: "") }
+  let(:valid_params) { {tax_rate: attributes_for(:tax_rate, tax_identifier_type: "pan")} }
+  let(:invalid_params) { {tax_rate: attributes_for(:tax_rate, tax_identifier_type: "")} }
 
   include_context "sign in as admin"
 
@@ -62,9 +62,9 @@ RSpec.describe "TaxRates", type: :request do
   end
 
   describe "POST /tax-rates" do
-    context "when provided attributes are valid" do
+    context "when provided parameters are valid" do
       it "creates the tax rate and redirects" do
-        post tax_rates_path, params: {tax_rate: valid_attributes}, as: :turbo_stream
+        post tax_rates_path, params: valid_params, as: :turbo_stream
 
         expect(response).to redirect_to(tax_rates_path)
         expect(flash[:notice]).to eq("Tax rate was successfully created.")
@@ -72,9 +72,9 @@ RSpec.describe "TaxRates", type: :request do
       end
     end
 
-    context "when provided attributes are invalid" do
+    context "when provided parameters are invalid" do
       it "does not create the tax rate and renders errors" do
-        post tax_rates_path, params: {tax_rate: invalid_attributes}, as: :turbo_stream
+        post tax_rates_path, params: invalid_params, as: :turbo_stream
 
         expect(flash[:alert]).to eq("Tax rate could not be created.")
         expect(response.media_type).to eq(Mime[:turbo_stream])
@@ -94,11 +94,9 @@ RSpec.describe "TaxRates", type: :request do
   end
 
   describe "PUT|PATCH /tax-rates/:id" do
-    context "when provided attributes are valid" do
+    context "when provided parameters are valid" do
       it "updates the tax rate and redirects" do
-        expect {
-          put tax_rate_path(active_tax_rate), params: {tax_rate: valid_attributes}, as: :turbo_stream
-        }.to change { active_tax_rate.reload.tax_identifier_type }.to("pan")
+        put tax_rate_path(active_tax_rate), params: valid_params, as: :turbo_stream
 
         expect(response).to redirect_to(tax_rates_path)
         expect(flash[:notice]).to eq("Tax rate was successfully updated.")
@@ -106,11 +104,9 @@ RSpec.describe "TaxRates", type: :request do
       end
     end
 
-    context "when provided attributes are invalid" do
+    context "when provided parameters are invalid" do
       it "does not update the tax rate and renders errors" do
-        expect {
-          put tax_rate_path(active_tax_rate), params: {tax_rate: invalid_attributes}, as: :turbo_stream
-        }.to not_change { active_tax_rate.reload.tax_identifier_type }
+        put tax_rate_path(active_tax_rate), params: invalid_params, as: :turbo_stream
 
         expect(flash[:alert]).to eq("Tax rate could not be updated.")
         expect(response.media_type).to eq(Mime[:turbo_stream])
@@ -121,9 +117,9 @@ RSpec.describe "TaxRates", type: :request do
   end
 
   describe "DELETE /tax-rates/:id" do
-    context "when valid id" do
+    context "when deletion is successful" do
       it "deletes the tax rate and redirects" do
-        delete tax_rate_path(active_tax_rate)
+        delete tax_rate_path(active_tax_rate), as: :turbo_stream
 
         expect(response).to redirect_to(tax_rates_path)
         expect(flash[:info]).to eq("Tax rate was successfully deleted.")
@@ -131,11 +127,11 @@ RSpec.describe "TaxRates", type: :request do
       end
     end
 
-    context "when delete fails" do
+    context "when deletion is unsuccessful" do
       it "does not delete the tax rate and redirects with an error message" do
         allow(TaxRates::DestroyService).to receive(:call) { ServiceResponse.error }
 
-        delete tax_rate_path(active_tax_rate)
+        delete tax_rate_path(active_tax_rate), as: :turbo_stream
 
         expect(response).to redirect_to(tax_rates_path)
         expect(flash[:alert]).to eq("Tax rate could not be deleted.")

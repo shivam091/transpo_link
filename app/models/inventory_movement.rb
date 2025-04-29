@@ -14,6 +14,24 @@ class InventoryMovement < ApplicationRecord
     reservation: "reservation"
   }
 
+  validates :quantity,
+            presence: true,
+            numericality: {other_than: 0.0},
+            reduce: true
+  validates :unit_cost,
+            presence: true,
+            numericality: {greater_than: 0.0},
+            reduce: true
+  validates :total_cost,
+            presence: true,
+            numericality: {greater_than_or_equal_to: :unit_cost},
+            if: -> { unit_cost.present? },
+            reduce: true
+  validates :movement_type,
+            presence: true,
+            inclusion: {in: movement_types.keys},
+            reduce: true
+
   has_many :inventory_audit_logs, inverse_of: :inventory_movement, dependent: :destroy
 
   with_options inverse_of: :inventory_movements do |a|

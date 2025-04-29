@@ -151,19 +151,26 @@
       purchase_order: {
         statuses: {
           draft: "Draft",
-          pending: "Pending",
+          submitted: "Submitted",
           approved: "Approved",
+          partially_delivered: "Partially delivered",
+          fully_delivered: "Fully delivered",
           cancelled: "Cancelled",
           rejected: "Rejected",
-          partially_delivered: "Partially delivered",
-          fully_delivered: "Fully delivered"
+          closed: "Closed",
+          on_hold: "On hold",
         },
       },
       purchase_order_item: {
         statuses: {
           pending: "Pending",
+          ordered: "Ordered",
+          partially_delivered: "Partially delivered",
           delivered: "Delivered",
+          backordered: "Backordered",
           cancelled: "Cancelled",
+          returned: "Returned",
+          damaged: "Damaged",
         },
       },
       unit: {

@@ -56,6 +56,10 @@ RSpec.describe InventoryBatch, type: :model do
     it { is_expected.to sanitize_attribute(:batch_number) }
   end
 
+  describe "callbacks" do
+    it { is_expected.to have_callback(:after, :save, :update_inventory_average_cost_price) }
+  end
+
   describe "validations" do
     describe "#batch_number" do
       it { is_expected.to validate_presence_of(:batch_number) }

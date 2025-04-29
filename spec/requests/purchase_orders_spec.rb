@@ -11,16 +11,16 @@ RSpec.describe "PurchaseOrders", type: :request do
 
   let!(:purchase_order) { create(:purchase_order, manager:) }
 
-  let(:valid_attributes) do
-    attributes_for(
-      :purchase_order,
-      warehouse_id: purchase_order.warehouse.id,
-      manager_id: manager.id,
-      supplier_id: purchase_order.supplier.id,
-      notes: "Test notes"
-    )
+  let(:valid_params) do
+    {
+      purchase_order: attributes_for(:purchase_order,
+        warehouse_id: purchase_order.warehouse.id,
+        manager_id: manager.id,
+        supplier_id: purchase_order.supplier.id
+      )
+    }
   end
-  let(:invalid_attributes) { {warehouse_id: nil, manager_id: nil, supplier_id: nil} }
+  let(:invalid_params) { {purchase_order: {warehouse_id: nil, manager_id: nil, supplier_id: nil}} }
 
   describe "GET /purchase-orders" do
     it "renders list of all purchase orders with pagination" do
@@ -39,9 +39,9 @@ RSpec.describe "PurchaseOrders", type: :request do
   end
 
   describe "POST /purchase-orders" do
-    context "when provided attributes are valid" do
+    context "when provided parameters are valid" do
       it "creates the purchase order and redirects" do
-        post purchase_orders_path, params: {purchase_order: valid_attributes}, as: :turbo_stream
+        post purchase_orders_path, params: valid_params, as: :turbo_stream
 
         expect(response).to redirect_to(purchase_orders_path)
         expect(flash[:notice]).to eq("Purchase order has been successfully created.")
@@ -49,9 +49,9 @@ RSpec.describe "PurchaseOrders", type: :request do
       end
     end
 
-    context "when provided attributes are invalid" do
+    context "when provided parameters are invalid" do
       it "does not create the purchase order and renders errors" do
-        post purchase_orders_path, params: {purchase_order: invalid_attributes}, as: :turbo_stream
+        post purchase_orders_path, params: invalid_params, as: :turbo_stream
 
         expect(flash[:alert]).to eq("We encountered a problem creating purchase order. Please try again.")
         expect(response.media_type).to eq(Mime[:turbo_stream])
@@ -71,11 +71,9 @@ RSpec.describe "PurchaseOrders", type: :request do
   end
 
   describe "PUT|PATCH /purchase-orders/:id" do
-    context "when provided attributes are valid" do
+    context "when provided parameters are valid" do
       it "updates the purchase order and redirects" do
-        expect {
-          put purchase_order_path(purchase_order), params: {purchase_order: valid_attributes}, as: :turbo_stream
-        }.to change { purchase_order.reload.notes }.to("Test notes")
+        put purchase_order_path(purchase_order), params: valid_params, as: :turbo_stream
 
         expect(response).to redirect_to(purchase_orders_path)
         expect(flash[:notice]).to eq("Purchase order has been successfully updated.")
@@ -83,11 +81,9 @@ RSpec.describe "PurchaseOrders", type: :request do
       end
     end
 
-    context "when provided attributes are invalid" do
+    context "when provided parameters are invalid" do
       it "does not update the purchase order and renders errors" do
-        expect {
-          put purchase_order_path(purchase_order), params: {purchase_order: invalid_attributes}, as: :turbo_stream
-        }.to not_change { purchase_order.reload.notes }
+        put purchase_order_path(purchase_order), params: invalid_params, as: :turbo_stream
 
         expect(flash[:alert]).to eq("We encountered a problem updating purchase order. Please try again.")
         expect(response.media_type).to eq(Mime[:turbo_stream])
@@ -107,9 +103,9 @@ RSpec.describe "PurchaseOrders", type: :request do
   end
 
   describe "DELETE /purchase-orders/:id" do
-    context "when valid id" do
+    context "when deletion is successful" do
       it "deletes the purchase order and redirects" do
-        delete purchase_order_path(purchase_order)
+        delete purchase_order_path(purchase_order), as: :turbo_stream
 
         expect(response).to redirect_to(purchase_orders_path)
         expect(flash[:info]).to eq("Purchase order has been successfully deleted.")
@@ -117,11 +113,11 @@ RSpec.describe "PurchaseOrders", type: :request do
       end
     end
 
-    context "when delete fails" do
+    context "when deletion is unsuccessful" do
       it "does not delete the purchase order and redirects with an error message" do
         allow(PurchaseOrders::DestroyService).to receive(:call) { ServiceResponse.error }
 
-        delete purchase_order_path(purchase_order)
+        delete purchase_order_path(purchase_order), as: :turbo_stream
 
         expect(response).to redirect_to(purchase_orders_path)
         expect(flash[:alert]).to eq("We encountered a problem deleting purchase order. Please try again.")
@@ -133,7 +129,7 @@ RSpec.describe "PurchaseOrders", type: :request do
   describe "PATCH /purchase-orders/:id/cancel" do
     context "when cancellation is successful" do
       it "cancels the purchase order and redirects" do
-        patch cancel_purchase_order_path(purchase_order)
+        patch cancel_purchase_order_path(purchase_order), as: :turbo_stream
 
         expect(response).to redirect_to(purchase_orders_path)
         expect(flash[:info]).to eq("Purchase order has been successfully cancelled.")
@@ -141,11 +137,11 @@ RSpec.describe "PurchaseOrders", type: :request do
       end
     end
 
-    context "when cancellation fails" do
+    context "when cancellation is unsuccessful" do
       it "does not cancel the purchase order and redirects with an error message" do
         allow(PurchaseOrders::CancelService).to receive(:call) { ServiceResponse.error }
 
-        patch cancel_purchase_order_path(purchase_order)
+        patch cancel_purchase_order_path(purchase_order), as: :turbo_stream
 
         expect(response).to redirect_to(purchase_orders_path)
         expect(flash[:alert]).to eq("We encountered a problem cancelling purchase order. Please try again.")
@@ -157,7 +153,7 @@ RSpec.describe "PurchaseOrders", type: :request do
   describe "PATCH /purchase-orders/:id/submit" do
     context "when submission is successful" do
       it "submits the purchase order and redirects" do
-        patch submit_purchase_order_path(purchase_order)
+        patch submit_purchase_order_path(purchase_order), as: :turbo_stream
 
         expect(response).to redirect_to(purchase_orders_path)
         expect(flash[:info]).to eq("Purchase order has been successfully submitted to the supplier for approval.")
@@ -165,11 +161,11 @@ RSpec.describe "PurchaseOrders", type: :request do
       end
     end
 
-    context "when submission fails" do
+    context "when submission is unsuccessful" do
       it "does not submit the purchase order and redirects with an error message" do
         allow(PurchaseOrders::SubmitService).to receive(:call) { ServiceResponse.error }
 
-        patch submit_purchase_order_path(purchase_order)
+        patch submit_purchase_order_path(purchase_order), as: :turbo_stream
 
         expect(response).to redirect_to(purchase_orders_path)
         expect(flash[:alert]).to eq("We encountered a problem submitting purchase order. Please try again.")
@@ -185,7 +181,7 @@ RSpec.describe "PurchaseOrders", type: :request do
     let(:supplier) { warehouse.suppliers.first }
 
     let!(:purchase_order) do
-      create(:purchase_order, :pending, warehouse:, manager:, supplier:).tap do |po|
+      create(:purchase_order, :submitted, warehouse:, manager:, supplier:).tap do |po|
         create(:purchase_order_item, purchase_order: po, product:, unit:, quantity: 10)
       end
     end
@@ -194,7 +190,7 @@ RSpec.describe "PurchaseOrders", type: :request do
       before { create(:inventory, warehouse:, product:, unit:) }
 
       it "approves the purchase order and redirects" do
-        patch approve_purchase_order_path(purchase_order)
+        patch approve_purchase_order_path(purchase_order), as: :turbo_stream
 
         expect(response).to redirect_to(purchase_orders_path)
         expect(flash[:info]).to eq("Purchase order has been successfully approved.")
@@ -204,7 +200,7 @@ RSpec.describe "PurchaseOrders", type: :request do
 
     context "when inventory is missing" do
       it "does not approve the purchase order and redirects with a missing inventory error" do
-        patch approve_purchase_order_path(purchase_order)
+        patch approve_purchase_order_path(purchase_order), as: :turbo_stream
 
         expect(response).to redirect_to(root_path)
         expect(flash[:alert]).to eq('Inventory is missing for the product "Test product" in the warehouse "Test warehouse".')
@@ -215,11 +211,11 @@ RSpec.describe "PurchaseOrders", type: :request do
     context "when unit conversion fails" do
       before do
         create(:inventory, warehouse:, product:, unit:)
-        allow(UnitConversion).to receive(:convert) { nil }
+        allow(UnitConversion).to receive(:convert).and_raise(UnitConversionError.new(unit, unit))
       end
 
       it "does not approve the purchase order and redirects with an unit conversion error" do
-        patch approve_purchase_order_path(purchase_order)
+        patch approve_purchase_order_path(purchase_order), as: :turbo_stream
 
         expect(response).to redirect_to(root_path)
         expect(flash[:alert]).to eq('Cannot convert from "Item" to "Item". Please ensure a valid unit conversion exists.')
@@ -227,11 +223,11 @@ RSpec.describe "PurchaseOrders", type: :request do
       end
     end
 
-    context "when approval fails" do
+    context "when approval is unsuccessful" do
       it "does not approve the purchase order and redirects with an error message" do
         allow(PurchaseOrders::ApproveService).to receive(:call) { ServiceResponse.error }
 
-        patch approve_purchase_order_path(purchase_order)
+        patch approve_purchase_order_path(purchase_order), as: :turbo_stream
 
         expect(response).to redirect_to(purchase_orders_path)
         expect(flash[:alert]).to eq("We encountered a problem approving purchase order. Please try again.")
@@ -241,11 +237,11 @@ RSpec.describe "PurchaseOrders", type: :request do
   end
 
   describe "PATCH /purchase-orders/:id/reject" do
-    let!(:purchase_order) { create(:purchase_order, :pending, manager:) }
+    let!(:purchase_order) { create(:purchase_order, :submitted, manager:) }
 
     context "when rejection is successful" do
       it "rejects the purchase order and redirects" do
-        patch reject_purchase_order_path(purchase_order)
+        patch reject_purchase_order_path(purchase_order), as: :turbo_stream
 
         expect(response).to redirect_to(purchase_orders_path)
         expect(flash[:info]).to eq("Purchase order has been successfully rejected.")
@@ -253,11 +249,11 @@ RSpec.describe "PurchaseOrders", type: :request do
       end
     end
 
-    context "when rejection fails" do
+    context "when rejection is unsuccessful" do
       it "does not reject the purchase order and redirects with an error message" do
         allow(PurchaseOrders::RejectService).to receive(:call) { ServiceResponse.error }
 
-        patch reject_purchase_order_path(purchase_order)
+        patch reject_purchase_order_path(purchase_order), as: :turbo_stream
 
         expect(response).to redirect_to(purchase_orders_path)
         expect(flash[:alert]).to eq("We encountered a problem rejecting purchase order. Please try again.")

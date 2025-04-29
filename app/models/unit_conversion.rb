@@ -45,7 +45,8 @@ class UnitConversion < ApplicationRecord
           .and(arel_table[:target_unit_id].eq(target_unit.id))
       )
 
-      return nil unless unit_conversion # Return nil if no conversion exists
+      # raise error if no conversion exists
+      raise UnitConversionError.new(source_unit, target_unit) unless unit_conversion
 
       quantity * unit_conversion.multiplier
     end
@@ -62,7 +63,7 @@ class UnitConversion < ApplicationRecord
   end
 
   def units_must_have_same_category
-    return if source_unit.blank? || target_unit.blank?
+    return unless source_unit && target_unit
 
     if source_unit_category != target_unit_category
       errors.add(:target_unit_id, :category_mismatch, message: "must belong to the same category as source unit")

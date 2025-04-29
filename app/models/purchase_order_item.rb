@@ -2,6 +2,17 @@
 # -*- frozen_string_literal: true -*-
 # -*- warn_indent: true -*-
 
+# == Status Definitions
+#
+# pending: Default state when item is added to PO. Not yet processed.
+# ordered: Item has been included in an approved order.
+# partially_delivered: Some quantity of the item has been received.
+# delivered: Entire quantity of the item has been received.
+# backordered: Item is on backorder, waiting for vendor stock.
+# cancelled: Item was removed from the order or no longer needed.
+# returned: Item was received and later returned.
+# damaged: Item was received in poor condition and flagged.
+
 class PurchaseOrderItem < ApplicationRecord
   include AASM, ActsAsMoney, Sortable
 
@@ -9,8 +20,13 @@ class PurchaseOrderItem < ApplicationRecord
 
   enum :status, {
     pending: "pending",
+    ordered: "ordered",
+    partially_delivered: "partially_delivered",
     delivered: "delivered",
-    cancelled: "cancelled"
+    backordered: "backordered",
+    cancelled: "cancelled",
+    returned: "returned",
+    damaged: "damaged",
   }
 
   attribute :received_quantity, default: 0.0
@@ -18,20 +34,40 @@ class PurchaseOrderItem < ApplicationRecord
 
   aasm column: :status, enum: true, requires_lock: true do
     state :pending, initial: true
-    state :delivered, :cancelled
+    state :ordered, :partially_delivered, :delivered, :cancelled, :returned,
+          :damaged, :backordered
+
+    event :place_order do
+      transitions from: :pending, to: :ordered
+    end
 
     event :cancel do
-      transitions from: :pending, to: :cancelled
+      transitions from: [:pending, :ordered], to: :cancelled
+    end
+
+    event :partially_deliver do
+      transitions from: :pending, to: :partially_delivered
     end
 
     event :deliver do
       transitions from: :pending, to: :delivered
     end
+
+    event :return_item do
+      transitions from: :delivered, to: :returned
+    end
+
+    event :mark_damaged do
+      transitions from: :delivered, to: :damaged
+    end
+
+    event :backorder do
+      transitions from: [:pending, :partially_delivered], to: :backordered
+    end
   end
 
   validates :product_id,
             presence: true,
-            uniqueness: {scope: :purchase_order_id, message: :uniqueness},
             reduce: true
   validates :quantity, :unit_cost,
             presence: true,
@@ -47,8 +83,10 @@ class PurchaseOrderItem < ApplicationRecord
             inclusion: {in: statuses.values, message: :inclusion},
             reduce: true
 
-  validate :product_unit_is_in_warehouse_unit_category,
-           :unit_is_in_product_unit_category
+  validate :product_unit_is_in_warehouse_unit_category
+
+  validates_with UnitIsInProductUnitCategoryValidator
+  validates_with UniqueProductInCollectionValidator, parent: :purchase_order, collection: :purchase_order_items
 
   with_options inverse_of: :purchase_order_items do |a|
     a.belongs_to :purchase_order, touch: true
@@ -58,28 +96,25 @@ class PurchaseOrderItem < ApplicationRecord
 
   before_validation :set_unit_cost_and_currency
 
-  delegate :symbol, to: :unit, prefix: true
+  with_options prefix: true do |d|
+    d.delegate :symbol, to: :unit
+    d.delegate :name, to: :product
+  end
 
   default_scope -> { order_created_desc }
 
-  private
-
-  def unit_is_in_product_unit_category
-    return unless product && unit
-
-    allowed_units = Unit.for_category(product.unit_category).symbols
-
-    if allowed_units.blank? || !allowed_units.include?(unit_symbol)
-      errors.add(:unit_id, :incompatible_unit_category)
-    end
+  def remaining_quantity
+    quantity - received_quantity
   end
 
+  private
+
   def product_unit_is_in_warehouse_unit_category
-    return unless purchase_order&.warehouse && product
+    return unless (warehouse = purchase_order&.warehouse) && product
 
-    allowed_symbols = Unit.for_category(purchase_order.warehouse.unit_category).symbols
+    allowed_units = Unit.for_category(warehouse.unit_category).symbols
 
-    unless allowed_symbols.include?(product.unit_symbol)
+    if allowed_units.blank? || allowed_units.exclude?(product.unit_symbol)
       errors.add(:product_id, :unit_category_mismatch)
     end
   end
@@ -87,7 +122,7 @@ class PurchaseOrderItem < ApplicationRecord
   def set_unit_cost_and_currency
     return unless will_save_change_to_product_id?
 
-    if product.present?
+    if product
       assign_attributes(unit_cost: product.cost_price, currency: product.currency)
     end
   end

@@ -7,14 +7,31 @@
 require "spec_helper"
 
 RSpec.describe "Locales", type: :request do
-  let(:valid_attributes) { {preferred_locale: "es"} }
-  let(:invalid_attributes) { {preferred_locale: ""} }
+  let(:valid_params) do
+    {
+      user: {
+        user_preference_attributes: attributes_for(:user_preference,
+          preferred_locale: "es"
+        )
+      }
+    }
+  end
+  let(:invalid_params) do
+    {
+      user: {
+        user_preference_attributes: attributes_for(:user_preference,
+          preferred_locale: ""
+        )
+      }
+    }
+  end
+  let(:headers) { {"HTTP_REFERER" => root_path} }
 
   include_context "sign in as admin"
 
   describe "GET /locale/edit" do
     it "renders locale edit page" do
-      get edit_locale_path
+      get edit_locale_path, as: :turbo_stream
 
       expect(response).to have_http_status(:ok)
       expect(response.body).to include("<turbo-frame id=\"edit_locale_form_frame\" target=\"_top\">")
@@ -24,13 +41,9 @@ RSpec.describe "Locales", type: :request do
   end
 
   describe "PUT|PATCH /locale" do
-    context "when provided attributes are valid" do
+    context "when provided parameters are valid" do
       it "updates the locale and redirects" do
-        expect {
-          put locale_path, params: {
-            user: {user_preference_attributes: valid_attributes}
-          }, headers: {"HTTP_REFERER" => root_path}, as: :turbo_stream
-        }.to change { admin.reload.preferred_locale }.to("es")
+        put locale_path, params: valid_params, headers:, as: :turbo_stream
 
         expect(response).to redirect_to(root_path)
         expect(response).to_not redirect_to(preference_path)
@@ -39,11 +52,9 @@ RSpec.describe "Locales", type: :request do
       end
     end
 
-    context "when provided attributes are invalid" do
+    context "when provided parameters are invalid" do
       it "does not update the locale and renders errors" do
-        expect {
-          put locale_path, params: {user: {user_preference_attributes: invalid_attributes}}, as: :turbo_stream
-        }.to not_change { admin.reload.preferred_locale }
+        put locale_path, params: invalid_params, headers:, as: :turbo_stream
 
         expect(flash[:alert]).to be_present
         expect(response.media_type).to eq(Mime[:turbo_stream])

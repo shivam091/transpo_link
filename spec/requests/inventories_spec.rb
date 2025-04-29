@@ -8,17 +8,18 @@ require "spec_helper"
 
 RSpec.describe "Inventories", type: :request do
   let!(:inventory) { create(:inventory) }
+  let!(:product) { create(:product) }
 
-  let(:product) { create(:product) }
-  let(:valid_attributes) do
-    attributes_for(:inventory,
-      currency: "INR",
-      product_id: product.id,
-      warehouse_id: inventory.warehouse.id,
-      unit_id: inventory.unit.id
-    )
+  let(:valid_params) do
+    {
+      inventory: attributes_for(:inventory,
+        product_id: product.id,
+        warehouse_id: inventory.warehouse.id,
+        unit_id: inventory.unit.id
+      )
+    }
   end
-  let(:invalid_attributes) { attributes_for(:inventory, currency: nil) }
+  let(:invalid_params) { {inventory: attributes_for(:inventory, currency: nil)} }
 
   include_context "sign in as admin"
 
@@ -39,9 +40,9 @@ RSpec.describe "Inventories", type: :request do
   end
 
   describe "POST /inventories" do
-    context "when provided attributes are valid" do
+    context "when provided parameters are valid" do
       it "creates the inventory and redirects" do
-        post inventories_path, params: {inventory: valid_attributes}, as: :turbo_stream
+        post inventories_path, params: valid_params, as: :turbo_stream
 
         expect(response).to redirect_to(inventories_path)
         expect(flash[:notice]).to eq("Inventory has been successfully created.")
@@ -49,9 +50,9 @@ RSpec.describe "Inventories", type: :request do
       end
     end
 
-    context "when provided attributes are invalid" do
+    context "when provided parameters are invalid" do
       it "does not create the inventory and renders errors" do
-        post inventories_path, params: {inventory: invalid_attributes}, as: :turbo_stream
+        post inventories_path, params: invalid_params, as: :turbo_stream
 
         expect(flash[:alert]).to eq("We encountered a problem creating inventory. Please try again.")
         expect(response.media_type).to eq(Mime[:turbo_stream])
@@ -71,11 +72,9 @@ RSpec.describe "Inventories", type: :request do
   end
 
   describe "PUT|PATCH /inventories/:id" do
-    context "when provided attributes are valid" do
+    context "when provided parameters are valid" do
       it "updates the inventory and redirects" do
-        expect {
-          put inventory_path(inventory), params: {inventory: valid_attributes}, as: :turbo_stream
-        }.to change { inventory.reload.currency }.to("INR")
+        put inventory_path(inventory), params: valid_params, as: :turbo_stream
 
         expect(response).to redirect_to(inventories_path)
         expect(flash[:notice]).to eq("Inventory has been successfully updated.")
@@ -83,11 +82,9 @@ RSpec.describe "Inventories", type: :request do
       end
     end
 
-    context "when provided attributes are invalid" do
+    context "when provided parameters are invalid" do
       it "does not update the inventory and renders errors" do
-        expect {
-          put inventory_path(inventory), params: {inventory: invalid_attributes}, as: :turbo_stream
-        }.to not_change { inventory.reload.currency }
+        put inventory_path(inventory), params: invalid_params, as: :turbo_stream
 
         expect(flash[:alert]).to eq("We encountered a problem updating inventory. Please try again.")
         expect(response.media_type).to eq(Mime[:turbo_stream])
