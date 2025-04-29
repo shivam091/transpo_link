@@ -1,0 +1,9 @@
+- title = @purchase_order_item.product_name
+= title(title)
+= render_modal(title: title, modal_id: "purchase-order-item-details") do
+  .row.g-2
+    = safe_render.partial("purchase_order_items/show")
+  .modal-actions
+    = button_tag type: :button, class: "btn btn-secondary", data: {action: "click->remote-modal#hide"} do
+      = sprite_icon("times")
+      = button_text(:close)

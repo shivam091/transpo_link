@@ -62,6 +62,10 @@ class PurchaseOrderItemsController < ApplicationController
     end
   end
 
+  # GET /purchase-orders/:purchase_order_id/purchase-order-items/:id
+  def show
+  end
+
   # DELETE /purchase-orders/:purchase_order_id/purchase-order-items/:id
   def destroy
     response = PurchaseOrderItems::DestroyService.(@purchase_order_item)
