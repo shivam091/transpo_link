@@ -87,6 +87,9 @@ RSpec.describe InventoryBatch, type: :model do
   end
 
   describe "associations" do
+    it { is_expected.to have_many(:inventory_batch_audit_logs).inverse_of(:inventory_batch).dependent(:nullify) }
+    it { is_expected.to have_many(:inventory_batch_processing_logs).inverse_of(:inventory_batch).dependent(:nullify) }
+
     it { is_expected.to belong_to(:inventory).inverse_of(:inventory_batches).touch }
     it { is_expected.to belong_to(:unit).inverse_of(:inventory_batches) }
   end
