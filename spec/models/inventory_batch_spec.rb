@@ -227,6 +227,32 @@ RSpec.describe InventoryBatch, type: :model do
       end
     end
 
+    describe "#previous_quantity" do
+      let(:inventory_batch) { create(:inventory_batch, quantity: 10.0) }
+
+      context "when quantity has been updated" do
+        before { inventory_batch.update(quantity: 15.0) }
+
+        it "returns the previous quantity value" do
+          expect(inventory_batch.previous_quantity).to eq(10.0)
+        end
+      end
+
+      context "when quantity has not changed" do
+        it "returns 0.0" do
+          expect(inventory_batch.previous_quantity).to eq(0.0)
+        end
+      end
+
+      context "when quantity_previously_was is nil" do
+        let(:new_batch) { build(:inventory_batch, quantity: 5.0) }
+
+        it "returns 0.0 for new records" do
+          expect(new_batch.previous_quantity).to eq(0.0)
+        end
+      end
+    end
+
     describe "#quantity_change" do
       let!(:inventory_batch) { create(:inventory_batch, quantity: 10) }
 

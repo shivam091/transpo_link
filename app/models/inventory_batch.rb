@@ -53,8 +53,12 @@ class InventoryBatch < ApplicationRecord
     )
   end
 
+  def previous_quantity
+    quantity_previously_was || 0.0
+  end
+
   def quantity_change
-    quantity - (quantity_previously_was || 0)
+    quantity - previous_quantity
   end
 
   def merge_with!(attributes)
