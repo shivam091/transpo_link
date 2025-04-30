@@ -4,7 +4,7 @@
 
 class Warehouse < ApplicationRecord
   include Toggleable, HasReferenceCode, Pageable, Sortable, Sanitizable,
-          NullifyIfBlank, Navigable
+          NullifyIfBlank, Navigable, ScaleEnforcer
 
   LISTING_ATTRIBUTES = %i[
     reference_code name email_address contact_number capacity latitude longitude
@@ -13,6 +13,8 @@ class Warehouse < ApplicationRecord
   nullify_if_blank :email_address, :contact_number, :description, :latitude, :longitude
 
   sanitize_attributes :name, :email_address, :contact_number, :description
+
+  scale_attributes :total_capacity, :latitude, :longitude
 
   validates :name,
             presence: true,
@@ -51,8 +53,6 @@ class Warehouse < ApplicationRecord
             },
             allow_nil: true,
             reduce: true
-  validates :manager_ids, presence: true, reduce: true
-  validates :supplier_ids, presence: true, reduce: true
 
   has_one :address, as: :addressable, inverse_of: :addressable, dependent: :destroy
 

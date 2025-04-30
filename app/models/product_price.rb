@@ -3,9 +3,11 @@
 # -*- warn_indent: true -*-
 
 class ProductPrice < ApplicationRecord
-  include Sortable, ActsAsMoney
+  include Sortable, ActsAsMoney, ScaleEnforcer
 
   LISTING_ATTRIBUTES = %i[warehouse_id min_quantity unit_price].freeze
+
+  scale_attributes :min_quantity, :unit_price
 
   validates :min_quantity,
             presence: true,

@@ -3,10 +3,14 @@
 # -*- warn_indent: true -*-
 
 class Stock < ApplicationRecord
+  include ScaleEnforcer
+
   self.primary_key = :inventory_id
 
   attribute :quantity_in_hand, default: 0.0
   attribute :quantity_pending_to_buyer, default: 0.0
+
+  scale_attributes :quantity_in_hand, :quantity_pending_to_buyer
 
   validates :quantity_in_hand,
             presence: true,

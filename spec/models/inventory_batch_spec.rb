@@ -46,6 +46,7 @@ RSpec.describe InventoryBatch, type: :model do
     it { is_expected.to include_module(ActsAsMoney) }
     it { is_expected.to include_module(Sanitizable) }
     it { is_expected.to include_module(NullifyIfBlank) }
+    it { is_expected.to include_module(ScaleEnforcer) }
   end
 
   describe "nullified attributes" do
@@ -54,6 +55,11 @@ RSpec.describe InventoryBatch, type: :model do
 
   describe "sanitized attributes" do
     it { is_expected.to sanitize_attribute(:batch_number) }
+  end
+
+  describe "scaled attributes" do
+    it { is_expected.to apply_scale_to(:quantity) }
+    it { is_expected.to apply_scale_to(:cost_price) }
   end
 
   describe "callbacks" do
@@ -76,12 +82,64 @@ RSpec.describe InventoryBatch, type: :model do
 
     describe "#quantity" do
       it { is_expected.to validate_presence_of(:quantity) }
-      it { is_expected.to validate_numericality_of(:quantity).is_greater_than(0.0) }
+
+      context "when quantity is invalid" do
+        it "is invalid" do
+          subject.quantity = "abcd"
+          subject.validate
+
+          expect(subject.errors[:quantity]).to include("must be greater than 0.0")
+        end
+      end
+
+      context "when quantity <= 0.0" do
+        it "is invalid" do
+          subject.quantity = 0.0
+          subject.validate
+
+          expect(subject.errors[:quantity]).to include("must be greater than 0.0")
+        end
+      end
+
+      context "when quantity > 0.0" do
+        it "is valid" do
+          subject.quantity = 1.0
+          subject.validate
+
+          expect(subject.errors[:quantity]).to be_empty
+        end
+      end
     end
 
     describe "#cost_price" do
       it { is_expected.to validate_presence_of(:cost_price) }
-      it { is_expected.to validate_numericality_of(:cost_price).is_greater_than(0.0) }
+
+      context "when cost_price is invalid" do
+        it "is invalid" do
+          subject.cost_price = "abcd"
+          subject.validate
+
+          expect(subject.errors[:cost_price]).to include("must be greater than 0.0")
+        end
+      end
+
+      context "when cost_price <= 0.0" do
+        it "is invalid" do
+          subject.cost_price = 0.0
+          subject.validate
+
+          expect(subject.errors[:cost_price]).to include("must be greater than 0.0")
+        end
+      end
+
+      context "when cost_price > 0.0" do
+        it "is valid" do
+          subject.cost_price = 1.0
+          subject.validate
+
+          expect(subject.errors[:cost_price]).to be_empty
+        end
+      end
     end
 
     describe "#unit_id" do

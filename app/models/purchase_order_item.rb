@@ -14,7 +14,7 @@
 # damaged: Item was received in poor condition and flagged.
 
 class PurchaseOrderItem < ApplicationRecord
-  include AASM, ActsAsMoney, Sortable
+  include AASM, ActsAsMoney, Sortable, ScaleEnforcer
 
   LISTING_ATTRIBUTES = %i[product_id quantity unit_cost total_cost status].freeze
 
@@ -31,6 +31,8 @@ class PurchaseOrderItem < ApplicationRecord
 
   attribute :received_quantity, default: 0.0
   attribute :status, :enum, default: statuses[:pending]
+
+  scale_attributes :quantity, :unit_cost, :received_quantity
 
   aasm column: :status, enum: true, requires_lock: true do
     state :pending, initial: true
