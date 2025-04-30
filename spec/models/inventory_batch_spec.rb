@@ -49,6 +49,10 @@ RSpec.describe InventoryBatch, type: :model do
     it { is_expected.to include_module(ScaleEnforcer) }
   end
 
+  describe "constants" do
+    it { is_expected.to have_constant(:LISTING_ATTRIBUTES) }
+  end
+
   describe "nullified attributes" do
     it { is_expected.to nullify_if_blank(:expiration_date) }
   end
@@ -65,6 +69,10 @@ RSpec.describe InventoryBatch, type: :model do
   describe "callbacks" do
     it { is_expected.to have_callback(:before, :create, :convert_to_inventory_unit) }
     it { is_expected.to have_callback(:after, :save, :update_inventory_average_cost_price) }
+  end
+
+  describe "delegates" do
+    it { is_expected.to delegate_method(:symbol).to(:unit).with_prefix }
   end
 
   describe "validations" do

@@ -5,6 +5,8 @@
 class InventoryBatch < ApplicationRecord
   include ActsAsMoney, NullifyIfBlank, Sanitizable, ScaleEnforcer
 
+  LISTING_ATTRIBUTES = %i[batch_number expiration_date quantity cost_price].freeze
+
   nullify_if_blank :expiration_date
 
   sanitize_attributes :batch_number
@@ -45,6 +47,10 @@ class InventoryBatch < ApplicationRecord
 
   before_create :convert_to_inventory_unit
   after_save :update_inventory_average_cost_price
+
+  with_options prefix: true do |d|
+    d.delegate :symbol, to: :unit
+  end
 
   scope :by_batch_number_and_expiry, ->(batch_number, expiry) do
     where(

@@ -16,6 +16,10 @@
   .table-cell
     = number_to_currency(inventory.average_cost_price, unit: inventory.currency.symbol)
   .table-cell.cell-narrow
+    = link_to inventory_inventory_batches_path(inventory),
+      data: {turbo_frame: dom_id(inventory, :batches), action: "click->lazy-turbo-frame#toggle"} do
+      = sprite_icon("fold-down", data: {lazy_turbo_frame_target: "icon"})
+      = sprite_icon("fold-up", class: "d-none", data: {lazy_turbo_frame_target: "icon"})
     = link_to "javascript:void(0)", class: "text-reset", data: {bs_toggle: "dropdown"}, aria: {expanded: false} do
       = sprite_icon("ellipsis-vertical")
     %ul.dropdown-menu
@@ -27,3 +31,4 @@
         = link_to edit_inventory_path(inventory), class: "dropdown-item" do
           = sprite_icon("pencil")
           = button_text(:edit)
+= turbo_frame_tag dom_id(inventory, :batches), class: "d-none"
