@@ -27,6 +27,7 @@
         select_tracking_method: "Select tracking method",
       },
       show: {
+        batches: "Batches",
       },
     }
   }

@@ -66,5 +66,11 @@
               = Replenishment.human_attribute_name(:quantity_pending_from_supplier)
             .widget-row-body
               = number_to_measurement_unit(@inventory.quantity_pending_from_supplier, @inventory.unit_symbol)
+    .widget
+      .widget-header
+        .widget-title
+          = t(".batches")
+      .widget-body
+        = safe_render.template("inventory_batches/index")
   .card-footer
     = safe_render.partial("shared/navigable_links", resource: @inventory)
