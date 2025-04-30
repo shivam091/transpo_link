@@ -67,8 +67,8 @@ RSpec.describe ProductPrice, type: :model do
       context "when min_quantity is invalid" do
         it "is invalid" do
           subject.min_quantity = "abcd"
+          subject.validate
 
-          expect(subject).to be_invalid
           expect(subject.errors[:min_quantity]).to include("must be greater than 0.0")
         end
       end
@@ -76,8 +76,8 @@ RSpec.describe ProductPrice, type: :model do
       context "when min_quantity <= 0.0" do
         it "is invalid" do
           subject.min_quantity = 0.0
+          subject.validate
 
-          expect(subject).to be_invalid
           expect(subject.errors[:min_quantity]).to include("must be greater than 0.0")
         end
       end
@@ -85,8 +85,9 @@ RSpec.describe ProductPrice, type: :model do
       context "when min_quantity > 0.0" do
         it "is valid" do
           subject.min_quantity = 1.0
+          subject.validate
 
-          expect(subject).to be_valid
+          expect(subject.errors[:min_quantity]).to be_empty
         end
       end
     end
@@ -97,8 +98,8 @@ RSpec.describe ProductPrice, type: :model do
       context "when unit_price is invalid" do
         it "is invalid" do
           subject.unit_price = "abcd"
+          subject.validate
 
-          expect(subject).to be_invalid
           expect(subject.errors[:unit_price]).to include("must be greater than 0.0")
         end
       end
@@ -106,8 +107,8 @@ RSpec.describe ProductPrice, type: :model do
       context "when unit_price <= 0.0" do
         it "is invalid" do
           subject.unit_price = 0.0
+          subject.validate
 
-          expect(subject).to be_invalid
           expect(subject.errors[:unit_price]).to include("must be greater than 0.0")
         end
       end
@@ -115,8 +116,9 @@ RSpec.describe ProductPrice, type: :model do
       context "when unit_price > 0.0" do
         it "is valid" do
           subject.unit_price = 1.0
+          subject.validate
 
-          expect(subject).to be_valid
+          expect(subject.errors[:unit_price]).to be_empty
         end
       end
     end

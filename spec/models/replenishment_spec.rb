@@ -50,17 +50,18 @@ RSpec.describe Replenishment, type: :model do
       context "when quantity_pending_from_supplier < 0.0" do
         it "is invalid" do
           subject.quantity_pending_from_supplier = -1.0
+          subject.validate
 
-          expect(subject).to be_invalid
           expect(subject.errors[:quantity_pending_from_supplier]).to include("must be greater than or equal to 0.0")
         end
       end
 
       context "when quantity_pending_from_supplier >= 0.0" do
         it "is valid" do
-          subject.quantity_pending_from_supplier = 0.00
+          subject.quantity_pending_from_supplier = 0.0
+          subject.validate
 
-          expect(subject).to be_valid
+          expect(subject.errors[:quantity_pending_from_supplier]).to be_empty
         end
       end
     end

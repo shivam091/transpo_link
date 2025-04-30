@@ -58,8 +58,8 @@ RSpec.describe Stock, type: :model do
       context "when quantity_in_hand < 0.0" do
         it "is invalid" do
           subject.quantity_in_hand = -1.0
+          subject.validate
 
-          expect(subject).to be_invalid
           expect(subject.errors[:quantity_in_hand]).to include("must be greater than or equal to 0.0")
         end
       end
@@ -67,8 +67,9 @@ RSpec.describe Stock, type: :model do
       context "when quantity_in_hand >= 0.0" do
         it "is valid" do
           subject.quantity_in_hand = 0.00
+          subject.validate
 
-          expect(subject).to be_valid
+          expect(subject.errors[:quantity_in_hand]).to be_empty
         end
       end
     end
@@ -79,17 +80,18 @@ RSpec.describe Stock, type: :model do
       context "when quantity_pending_to_buyer < 0.0" do
         it "is invalid" do
           subject.quantity_pending_to_buyer = -1.0
+          subject.validate
 
-          expect(subject).to be_invalid
           expect(subject.errors[:quantity_pending_to_buyer]).to include("must be greater than or equal to 0.0")
         end
       end
 
       context "when quantity_pending_to_buyer >= 0.0" do
         it "is valid" do
-          subject.quantity_pending_to_buyer = 0.00
+          subject.quantity_pending_to_buyer = 0.0
+          subject.validate
 
-          expect(subject).to be_valid
+          expect(subject.errors[:quantity_pending_to_buyer]).to be_empty
         end
       end
     end

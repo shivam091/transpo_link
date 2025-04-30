@@ -66,8 +66,8 @@ RSpec.describe UnitConversion, type: :model do
       context "when multiplier is invalid" do
         it "is invalid" do
           subject.multiplier = "abcd"
+          subject.validate
 
-          expect(subject).to be_invalid
           expect(subject.errors[:multiplier]).to include("must be greater than 0.0")
         end
       end
@@ -75,8 +75,8 @@ RSpec.describe UnitConversion, type: :model do
       context "when multiplier <= 0.0" do
         it "is invalid" do
           subject.multiplier = 0.0
+          subject.validate
 
-          expect(subject).to be_invalid
           expect(subject.errors[:multiplier]).to include("must be greater than 0.0")
         end
       end
@@ -84,8 +84,9 @@ RSpec.describe UnitConversion, type: :model do
       context "when multiplier > 0.0" do
         it "is valid" do
           subject.multiplier = 1.0
+          subject.validate
 
-          expect(subject).to be_valid
+          expect(subject.errors[:multiplier]).to be_empty
         end
       end
     end

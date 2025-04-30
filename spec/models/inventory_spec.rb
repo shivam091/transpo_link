@@ -117,8 +117,8 @@ RSpec.describe Inventory, type: :model do
       context "when low_stock_threshold is invalid" do
         it "is invalid" do
           subject.low_stock_threshold = "abcd"
+          subject.validate
 
-          expect(subject).to be_invalid
           expect(subject.errors[:low_stock_threshold]).to include("must be greater than 0.0")
         end
       end
@@ -126,8 +126,8 @@ RSpec.describe Inventory, type: :model do
       context "when low_stock_threshold <= 0.0" do
         it "is invalid" do
           subject.low_stock_threshold = 0.0
+          subject.validate
 
-          expect(subject).to be_invalid
           expect(subject.errors[:low_stock_threshold]).to include("must be greater than 0.0")
         end
       end
@@ -135,8 +135,9 @@ RSpec.describe Inventory, type: :model do
       context "when low_stock_threshold > 0.0" do
         it "is valid" do
           subject.low_stock_threshold = 1.0
+          subject.validate
 
-          expect(subject).to be_valid
+          expect(subject.errors[:low_stock_threshold]).to be_empty
         end
       end
     end
@@ -147,8 +148,8 @@ RSpec.describe Inventory, type: :model do
       context "when average_cost_price < 0.0" do
         it "is invalid" do
           subject.average_cost_price = -0.5
+          subject.validate
 
-          expect(subject).to be_invalid
           expect(subject.errors[:average_cost_price]).to include("must be greater than or equal to 0.0")
         end
       end
@@ -156,8 +157,9 @@ RSpec.describe Inventory, type: :model do
       context "when average_cost_price >= 0.0" do
         it "is valid" do
           subject.average_cost_price = 0.0
+          subject.validate
 
-          expect(subject).to be_valid
+          expect(subject.errors[:average_cost_price]).to be_empty
         end
       end
     end

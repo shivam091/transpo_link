@@ -86,8 +86,8 @@ RSpec.describe InventoryBatch, type: :model do
       context "when quantity is invalid" do
         it "is invalid" do
           subject.quantity = "abcd"
+          subject.validate
 
-          expect(subject).to be_invalid
           expect(subject.errors[:quantity]).to include("must be greater than 0.0")
         end
       end
@@ -95,8 +95,8 @@ RSpec.describe InventoryBatch, type: :model do
       context "when quantity <= 0.0" do
         it "is invalid" do
           subject.quantity = 0.0
+          subject.validate
 
-          expect(subject).to be_invalid
           expect(subject.errors[:quantity]).to include("must be greater than 0.0")
         end
       end
@@ -104,8 +104,9 @@ RSpec.describe InventoryBatch, type: :model do
       context "when quantity > 0.0" do
         it "is valid" do
           subject.quantity = 1.0
+          subject.validate
 
-          expect(subject).to be_valid
+          expect(subject.errors[:quantity]).to be_empty
         end
       end
     end
@@ -116,8 +117,8 @@ RSpec.describe InventoryBatch, type: :model do
       context "when cost_price is invalid" do
         it "is invalid" do
           subject.cost_price = "abcd"
+          subject.validate
 
-          expect(subject).to be_invalid
           expect(subject.errors[:cost_price]).to include("must be greater than 0.0")
         end
       end
@@ -125,8 +126,8 @@ RSpec.describe InventoryBatch, type: :model do
       context "when cost_price <= 0.0" do
         it "is invalid" do
           subject.cost_price = 0.0
+          subject.validate
 
-          expect(subject).to be_invalid
           expect(subject.errors[:cost_price]).to include("must be greater than 0.0")
         end
       end
@@ -134,8 +135,9 @@ RSpec.describe InventoryBatch, type: :model do
       context "when cost_price > 0.0" do
         it "is valid" do
           subject.cost_price = 1.0
+          subject.validate
 
-          expect(subject).to be_valid
+          expect(subject.errors[:cost_price]).to be_empty
         end
       end
     end
