@@ -71,6 +71,12 @@ RSpec.describe Inventory, type: :model do
     it { is_expected.to include_module(Sortable) }
     it { is_expected.to include_module(ActsAsMoney) }
     it { is_expected.to include_module(Navigable) }
+    it { is_expected.to include_module(ScaleEnforcer) }
+  end
+
+  describe "scaled attributes" do
+    it { is_expected.to apply_scale_to(:low_stock_threshold) }
+    it { is_expected.to apply_scale_to(:average_cost_price) }
   end
 
   describe "associations" do
@@ -82,7 +88,7 @@ RSpec.describe Inventory, type: :model do
     it { is_expected.to have_many(:inventory_batches).inverse_of(:inventory).dependent(:destroy) }
 
     it { is_expected.to belong_to(:warehouse).inverse_of(:inventories) }
-    it { is_expected.to belong_to(:product).inverse_of(:inventories).touch }
+    it { is_expected.to belong_to(:product).inverse_of(:inventories) }
     it { is_expected.to belong_to(:unit).inverse_of(:inventories) }
   end
 
@@ -107,12 +113,55 @@ RSpec.describe Inventory, type: :model do
 
     describe "#low_stock_threshold" do
       it { is_expected.to validate_presence_of(:low_stock_threshold) }
-      it { is_expected.to validate_numericality_of(:low_stock_threshold).is_greater_than(0.0) }
+
+      context "when low_stock_threshold is invalid" do
+        it "is invalid" do
+          subject.low_stock_threshold = "abcd"
+          subject.validate
+
+          expect(subject.errors[:low_stock_threshold]).to include("must be greater than 0.0")
+        end
+      end
+
+      context "when low_stock_threshold <= 0.0" do
+        it "is invalid" do
+          subject.low_stock_threshold = 0.0
+          subject.validate
+
+          expect(subject.errors[:low_stock_threshold]).to include("must be greater than 0.0")
+        end
+      end
+
+      context "when low_stock_threshold > 0.0" do
+        it "is valid" do
+          subject.low_stock_threshold = 1.0
+          subject.validate
+
+          expect(subject.errors[:low_stock_threshold]).to be_empty
+        end
+      end
     end
 
     describe "#average_cost_price" do
       it { is_expected.to validate_presence_of(:average_cost_price) }
-      it { is_expected.to validate_numericality_of(:average_cost_price).is_greater_than_or_equal_to(0.0) }
+
+      context "when average_cost_price < 0.0" do
+        it "is invalid" do
+          subject.average_cost_price = -0.5
+          subject.validate
+
+          expect(subject.errors[:average_cost_price]).to include("must be greater than or equal to 0.0")
+        end
+      end
+
+      context "when average_cost_price >= 0.0" do
+        it "is valid" do
+          subject.average_cost_price = 0.0
+          subject.validate
+
+          expect(subject.errors[:average_cost_price]).to be_empty
+        end
+      end
     end
   end
 

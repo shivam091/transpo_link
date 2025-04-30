@@ -88,10 +88,14 @@ Rails.application.routes.draw do
       patch :reject
     end
 
+    resource :delivery, only: [:new, :create], module: :purchase_orders
+
     resources :purchase_order_items, path: "purchase-order-items" do
       member do
         patch :cancel
       end
+
+      resource :delivery, only: [:new, :create], module: :purchase_order_items
     end
   end
   resources :units, only: :index

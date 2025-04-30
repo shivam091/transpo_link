@@ -200,6 +200,20 @@
           created_at: "Created at",
           updated_at: "Updated at",
         },
+        inventory_batch_audit_log: {
+          inventory_batch_id: "Inventory batch",
+          user_id: "Action by",
+          previous_quantity: "Previous quantity",
+          new_quantity: "New quantity",
+          metadata: "Metadata",
+        },
+        inventory_batch_processing_log: {
+          inventory_batch_id: "Inventory batch",
+          user_id: "Triggered by",
+          status: "Status",
+          error_message: "Error message",
+          metadata: "Metadata",
+        },
         inventory_movement: {
           inventory_id: "Inventory",
           quantity: "Quantity",

@@ -7,7 +7,7 @@
 require "spec_helper"
 
 RSpec.describe InventoryMovement, type: :model do
-  subject { build(:inventory_movement) }
+  subject(:inventory_movement) { build(:inventory_movement) }
 
   describe "valid factory" do
     it { is_expected.to have_a_valid_factory(:inventory_movement) }
@@ -53,6 +53,16 @@ RSpec.describe InventoryMovement, type: :model do
     it { is_expected.to define_enum_for(:movement_type).backed_by_column_of_type(:enum) }
   end
 
+  describe "included modules" do
+    it { is_expected.to include_module(ScaleEnforcer) }
+  end
+
+  describe "scaled attributes" do
+    it { is_expected.to apply_scale_to(:quantity) }
+    it { is_expected.to apply_scale_to(:unit_cost) }
+    it { is_expected.to apply_scale_to(:total_cost) }
+  end
+
   describe "associations" do
     it { is_expected.to have_many(:inventory_audit_logs).inverse_of(:inventory_movement).dependent(:destroy) }
 
@@ -61,34 +71,139 @@ RSpec.describe InventoryMovement, type: :model do
     it { is_expected.to belong_to(:unit).inverse_of(:inventory_movements) }
   end
 
+  describe "callbacks" do
+    it { is_expected.to have_callback(:before, :save, :set_default_attributes) }
+    it { is_expected.to have_callback(:after, :create, :create_inventory_audit_log) }
+  end
+
   describe "validations" do
     describe "#quantity" do
       it { is_expected.to validate_presence_of(:quantity) }
-      it { is_expected.to validate_numericality_of(:quantity).is_other_than(0.0) }
+
+      context "when quantity is invalid" do
+        it "is invalid" do
+          subject.quantity = "abcd"
+          subject.validate
+
+          expect(subject.errors[:quantity]).to include("must be other than 0.0")
+        end
+      end
+
+      context "when quantity <= 0.0" do
+        it "is invalid" do
+          subject.quantity = 0.0
+          subject.validate
+
+          expect(subject.errors[:quantity]).to include("must be other than 0.0")
+        end
+      end
+
+      context "when quantity > 0.0" do
+        it "is valid" do
+          subject.quantity = 1.0
+          subject.validate
+
+          expect(subject.errors[:quantity]).to be_empty
+        end
+      end
     end
 
     describe "#unit_cost" do
       it { is_expected.to validate_presence_of(:unit_cost) }
-      it { is_expected.to validate_numericality_of(:unit_cost).is_greater_than(0.0) }
+
+      context "when unit_cost is invalid" do
+        it "is invalid" do
+          subject.unit_cost = "abcd"
+          subject.validate
+
+          expect(subject.errors[:unit_cost]).to include("must be greater than 0.0")
+        end
+      end
+
+      context "when unit_cost <= 0.0" do
+        it "is invalid" do
+          subject.unit_cost = 0.0
+          subject.validate
+
+          expect(subject.errors[:unit_cost]).to include("must be greater than 0.0")
+        end
+      end
+
+      context "when unit_cost > 0.0" do
+        it "is valid" do
+          subject.unit_cost = 1.0
+          subject.validate
+
+          expect(subject.errors[:unit_cost]).to be_empty
+        end
+      end
     end
 
     describe "#total_cost" do
       it { is_expected.to validate_presence_of(:total_cost) }
-      it { is_expected.to validate_numericality_of(:total_cost).is_greater_than_or_equal_to(:unit_cost) }
+
+      context "when total_cost < unit_cost" do
+        it "is invalid" do
+          subject.unit_cost = 10.0
+          subject.total_cost = 5.0
+          subject.validate
+
+          expect(subject.errors[:total_cost]).to include("must be greater than or equal to 10.0")
+        end
+      end
+
+      context "when total_cost >= unit_cost" do
+        it "is valid" do
+          subject.unit_cost = 10.0
+          subject.total_cost = 12.0
+          subject.validate
+
+          expect(subject.errors[:total_cost]).to be_empty
+        end
+      end
     end
 
     describe "#movement_type" do
       it { is_expected.to validate_presence_of(:movement_type) }
+
       it "allows valid movement_type values" do
         described_class.movement_types.keys.each do |valid_type|
           expect(build(:inventory_movement, movement_type: valid_type)).to be_valid
         end
       end
 
-      it "does not allow invalid movement_type values" do
+      it "raises error on invalid movement_type value" do
         expect {
           build(:inventory_movement, movement_type: "invalid_type")
         }.to raise_error(ArgumentError, /is not a valid movement_type/)
+      end
+    end
+  end
+
+  describe "instance methods" do
+    describe "#set_default_attributes" do
+      let(:inventory) { create(:inventory) }
+      let(:inventory_movement) do
+        build(:inventory_movement, inventory:, unit: inventory.unit, source: inventory)
+      end
+
+      it "sets the movement_date and metadata before saving" do
+        freeze_time do
+          inventory_movement.save!
+
+          expect(inventory_movement.movement_date).to eq(Time.current.utc)
+          expect(inventory_movement.metadata).to eq({ "action" => "restock" })
+        end
+      end
+    end
+
+    describe "#create_inventory_audit_log" do
+      let(:inventory) { create(:inventory) }
+
+      it "calls InventoryAuditLogs::CreateService after creation" do
+        expect(InventoryAuditLogs::CreateService).to receive(:call).with(instance_of(Inventory), an_instance_of(InventoryMovement))
+
+        create(:inventory_movement, inventory:, unit: inventory.unit)
       end
     end
   end

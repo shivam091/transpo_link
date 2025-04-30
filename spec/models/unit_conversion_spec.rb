@@ -38,6 +38,11 @@ RSpec.describe UnitConversion, type: :model do
 
   describe "included modules" do
     it { is_expected.to include_module(Pageable) }
+    it { is_expected.to include_module(ScaleEnforcer) }
+  end
+
+  describe "scaled attributes" do
+    it { is_expected.to apply_scale_to(:multiplier) }
   end
 
   describe "associations" do
@@ -57,7 +62,33 @@ RSpec.describe UnitConversion, type: :model do
 
     describe "#multiplier" do
       it { is_expected.to validate_presence_of(:multiplier) }
-      it { is_expected.to validate_numericality_of(:multiplier).is_greater_than(0.0) }
+
+      context "when multiplier is invalid" do
+        it "is invalid" do
+          subject.multiplier = "abcd"
+          subject.validate
+
+          expect(subject.errors[:multiplier]).to include("must be greater than 0.0")
+        end
+      end
+
+      context "when multiplier <= 0.0" do
+        it "is invalid" do
+          subject.multiplier = 0.0
+          subject.validate
+
+          expect(subject.errors[:multiplier]).to include("must be greater than 0.0")
+        end
+      end
+
+      context "when multiplier > 0.0" do
+        it "is valid" do
+          subject.multiplier = 1.0
+          subject.validate
+
+          expect(subject.errors[:multiplier]).to be_empty
+        end
+      end
     end
   end
 
@@ -80,30 +111,50 @@ RSpec.describe UnitConversion, type: :model do
       let(:source_unit) { create(:kilogramme_unit) }
       let(:target_unit) { create(:gramme_unit) }
 
-      context "when source and target units are the same" do
+      context "when source and target units are the same (Unit objects)" do
         let(:result) { described_class.convert(source_unit, source_unit, 2) }
 
-        it "returns the same quantity" do
-          expect(result).to eq(2)
+        it "returns the same quantity as BigDecimal" do
+          expect(result).to eq(2.0)
+          expect(result).to be_a(BigDecimal)
         end
       end
 
-      context "when conversion exists" do
+      context "when source and target units are the same (Unit IDs)" do
+        let(:result) { described_class.convert(source_unit.id, source_unit.id, 5) }
+
+        it "returns the same quantity as BigDecimal" do
+          expect(result).to eq(5.0)
+          expect(result).to be_a(BigDecimal)
+        end
+      end
+
+      context "when conversion exists (using Unit objects)" do
         let!(:conversion) { create(:kilogramme_gramme_conversion, source_unit:, target_unit:) }
 
         let(:result) { described_class.convert(source_unit, target_unit, 2) }
 
-        it "returns the converted quantity" do
+        it "returns the converted quantity as BigDecimal" do
           expect(result).to eq(2000.0)
+          expect(result).to be_a(BigDecimal)
+        end
+      end
+
+      context "when conversion exists (using Unit IDs)" do
+        let!(:conversion) { create(:kilogramme_gramme_conversion, source_unit:, target_unit:) }
+
+        let(:result) { described_class.convert(source_unit.id, target_unit.id, 3) }
+
+        it "returns the converted quantity as BigDecimal" do
+          expect(result).to eq(3000.0)
+          expect(result).to be_a(BigDecimal)
         end
       end
 
       context "when conversion does not exist" do
-        let(:result) { described_class.convert(source_unit, target_unit, 2) }
-
         it "raises UnitConversionError" do
           expect {
-            result
+            described_class.convert(source_unit, target_unit, 2)
           }.to raise_error(UnitConversionError, /Please ensure a valid unit conversion exists./)
         end
       end

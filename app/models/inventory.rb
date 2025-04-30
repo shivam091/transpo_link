@@ -3,7 +3,7 @@
 # -*- warn_indent: true -*-
 
 class Inventory < ApplicationRecord
-  include HasReferenceCode, Pageable, Sortable, ActsAsMoney, Navigable
+  include HasReferenceCode, Pageable, Sortable, ActsAsMoney, Navigable, ScaleEnforcer
 
   LISTING_ATTRIBUTES = %i[
     reference_code product_id warehouse_id tracking_method low_stock_threshold
@@ -18,6 +18,8 @@ class Inventory < ApplicationRecord
 
   attribute :average_cost_price, default: 0.0
   attribute :tracking_method, :enum, default: tracking_methods[:average_cost]
+
+  scale_attributes :average_cost_price, :low_stock_threshold
 
   validates :warehouse_id, :unit_id, presence: true, reduce: true
   validates :product_id,
@@ -52,7 +54,7 @@ class Inventory < ApplicationRecord
 
   with_options inverse_of: :inventories do |a|
     a.belongs_to :warehouse
-    a.belongs_to :product, touch: true
+    a.belongs_to :product
     a.belongs_to :unit
   end
 
