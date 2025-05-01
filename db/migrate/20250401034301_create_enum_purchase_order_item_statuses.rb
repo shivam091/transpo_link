@@ -10,12 +10,7 @@ class CreateEnumPurchaseOrderItemStatuses < ActiveRecord::Migration[8.0]
                   ordered
                   partially_delivered
                   delivered
-                  backordered
                   cancelled
-                  returned
-                  damaged
-                  ready_for_restock
-                  restocked
                 ]
   end
 end

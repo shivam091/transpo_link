@@ -111,10 +111,6 @@ RSpec.describe PurchaseOrderItem, type: :model do
     it { is_expected.to transition_from(:pending).to(:partially_delivered).on_event(:partially_deliver) }
     it { is_expected.to transition_from(:pending).to(:delivered).on_event(:deliver) }
     it { is_expected.to transition_from(:partially_delivered).to(:delivered).on_event(:deliver) }
-    it { is_expected.to transition_from(:delivered).to(:returned).on_event(:return_item) }
-    it { is_expected.to transition_from(:delivered).to(:damaged).on_event(:mark_damaged) }
-    it { is_expected.to transition_from(:pending).to(:backordered).on_event(:backorder) }
-    it { is_expected.to transition_from(:partially_delivered).to(:backordered).on_event(:backorder) }
   end
 
   describe "callbacks" do

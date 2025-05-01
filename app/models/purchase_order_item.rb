@@ -8,13 +8,7 @@
 # ordered: Item has been included in an approved order.
 # partially_delivered: Some quantity of the item has been received.
 # delivered: Entire quantity of the item has been received.
-# backordered: Item is on backorder, waiting for vendor stock.
 # cancelled: Item was removed from the order or no longer needed.
-# returned: Item was received and later returned.
-# damaged: Item was received in poor condition and flagged.
-# ready_for_restock: Item has been delivered (fully or partially), and batch details are recorded.
-#                    Awaiting restock into inventory.
-# restocked: Item has been successfully restocked into the inventory system via batch/inventory movement.
 
 class PurchaseOrderItem < ApplicationRecord
   include AASM, ActsAsMoney, Sortable, ScaleEnforcer
@@ -26,12 +20,7 @@ class PurchaseOrderItem < ApplicationRecord
     ordered: "ordered",
     partially_delivered: "partially_delivered",
     delivered: "delivered",
-    backordered: "backordered",
     cancelled: "cancelled",
-    returned: "returned",
-    damaged: "damaged",
-    ready_for_restock: "ready_for_restock",
-    restocked: "restocked"
   }
 
   attribute :received_quantity, default: 0.0
@@ -41,8 +30,7 @@ class PurchaseOrderItem < ApplicationRecord
 
   aasm column: :status, enum: true, requires_lock: true do
     state :pending, initial: true
-    state :ordered, :partially_delivered, :delivered, :cancelled, :returned,
-          :damaged, :backordered
+    state :ordered, :partially_delivered, :delivered, :cancelled
 
     event :place_order do
       transitions from: :pending, to: :ordered
@@ -62,26 +50,6 @@ class PurchaseOrderItem < ApplicationRecord
       transitions from: [:pending, :partially_delivered], to: :delivered
 
       after :synchronize_po_delivery_status!
-    end
-
-    event :return_item do
-      transitions from: :delivered, to: :returned
-    end
-
-    event :mark_damaged do
-      transitions from: :delivered, to: :damaged
-    end
-
-    event :backorder do
-      transitions from: [:pending, :partially_delivered], to: :backordered
-    end
-
-    event :mark_ready_for_restock do
-      transitions from: [:partially_delivered, :delivered], to: :ready_for_restock
-    end
-
-    event :restock do
-      transitions from: :ready_for_restock, to: :restocked, guard: :received_quantity_present?
     end
   end
 

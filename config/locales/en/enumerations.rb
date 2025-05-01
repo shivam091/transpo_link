@@ -167,12 +167,7 @@
           ordered: "Ordered",
           partially_delivered: "Partially delivered",
           delivered: "Delivered",
-          backordered: "Backordered",
           cancelled: "Cancelled",
-          returned: "Returned",
-          damaged: "Damaged",
-          ready_for_restock: "Ready for restock",
-          restocked: "Restocked"
         },
       },
       unit: {
