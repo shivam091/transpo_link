@@ -45,6 +45,11 @@ class InventoryBatch < ApplicationRecord
     a.belongs_to :unit
   end
 
+  belongs_to :restockable, polymorphic: true, optional: true
+
+  has_one :product, through: :inventory
+  has_one :warehouse, through: :inventory
+
   before_create :convert_to_inventory_unit
   after_save :update_inventory_average_cost_price
 

@@ -40,6 +40,8 @@ module TranspoLink
         closed:              "#3D550CFF", # Verdun Green
         on_hold:             "#FBC740FF", # Sunglow
         ordered:             "#5DA9E9FF", # Blue Jeans
+        ready_for_restock:   "#2FF3E0FF", # Bright Turquoise
+        restocked:           "#3D550CFF", # Verdun Green
       },
       tax_type: {
         exclusive:           "#F26B38FF", # Water leaf

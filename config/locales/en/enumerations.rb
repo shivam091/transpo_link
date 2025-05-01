@@ -171,6 +171,8 @@
           cancelled: "Cancelled",
           returned: "Returned",
           damaged: "Damaged",
+          ready_for_restock: "Ready for restock",
+          restocked: "Restocked"
         },
       },
       unit: {
@@ -181,7 +183,16 @@
           area: "Area",
           volume: "Volume"
         }
-      }
+      },
+      inventory_batch_processing_log: {
+        status: {
+          pending: "Pending",
+          queued: "Queued",
+          processing: "Processing",
+          succeeded: "Succeeded",
+          failed: "Failed"
+        },
+      },
     }
   }
 }

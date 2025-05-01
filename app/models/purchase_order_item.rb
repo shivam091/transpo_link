@@ -12,11 +12,14 @@
 # cancelled: Item was removed from the order or no longer needed.
 # returned: Item was received and later returned.
 # damaged: Item was received in poor condition and flagged.
+# ready_for_restock: Item has been delivered (fully or partially), and batch details are recorded.
+#                    Awaiting restock into inventory.
+# restocked: Item has been successfully restocked into the inventory system via batch/inventory movement.
 
 class PurchaseOrderItem < ApplicationRecord
   include AASM, ActsAsMoney, Sortable, ScaleEnforcer
 
-  LISTING_ATTRIBUTES = %i[product_id oredered_quantity remaining_quantity unit_cost total_cost status].freeze
+  LISTING_ATTRIBUTES = %i[product_id ordered_quantity remaining_quantity unit_cost total_cost status].freeze
 
   enum :status, {
     pending: "pending",
@@ -27,6 +30,8 @@ class PurchaseOrderItem < ApplicationRecord
     cancelled: "cancelled",
     returned: "returned",
     damaged: "damaged",
+    ready_for_restock: "ready_for_restock",
+    restocked: "restocked"
   }
 
   attribute :received_quantity, default: 0.0
@@ -70,6 +75,14 @@ class PurchaseOrderItem < ApplicationRecord
     event :backorder do
       transitions from: [:pending, :partially_delivered], to: :backordered
     end
+
+    event :mark_ready_for_restock do
+      transitions from: [:partially_delivered, :delivered], to: :ready_for_restock
+    end
+
+    event :restock do
+      transitions from: :ready_for_restock, to: :restocked, guard: :received_quantity_present?
+    end
   end
 
   validates :product_id,
@@ -100,6 +113,7 @@ class PurchaseOrderItem < ApplicationRecord
     a.belongs_to :unit
   end
 
+  has_many :inventory_batches, as: :restockable, dependent: :restrict_with_exception
   has_many :inventory_movements, as: :source, dependent: :restrict_with_exception
   has_many :restocks,
            -> {

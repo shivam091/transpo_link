@@ -22,12 +22,15 @@ RSpec.describe InventoryBatch, type: :model do
     it { is_expected.to have_db_column(:unit_id).of_type(:uuid).with_options(null: false) }
     it { is_expected.to have_db_column(:cost_price).of_type(:decimal).with_options(precision: 12, scale: 2) }
     it { is_expected.to have_db_column(:currency).of_type(:string) }
+    it { is_expected.to have_db_column(:restockable_id).of_type(:uuid) }
+    it { is_expected.to have_db_column(:restockable_type).of_type(:string) }
     it { is_expected.to have_db_column(:created_at).of_type(:timestamptz).with_options(null: false) }
     it { is_expected.to have_db_column(:updated_at).of_type(:timestamptz).with_options(null: false) }
 
     it { is_expected.to have_db_index(:inventory_id) }
     it { is_expected.to have_db_index(:unit_id) }
     it { is_expected.to have_db_index([:inventory_id, :batch_number]).unique }
+    it { is_expected.to have_db_index([:restockable_type, :restockable_id]) }
 
     it { is_expected.to have_foreign_key(:inventory_id).with_name(:fk_inventory_batches_inventory_id_on_inventories).on_delete(:cascade) }
     it { is_expected.to have_foreign_key(:unit_id).with_name(:fk_inventory_batches_unit_id_on_units).on_delete(:restrict) }
@@ -156,11 +159,15 @@ RSpec.describe InventoryBatch, type: :model do
   end
 
   describe "associations" do
+    it { is_expected.to have_one(:product) }
+    it { is_expected.to have_one(:warehouse) }
+
     it { is_expected.to have_many(:inventory_batch_audit_logs).inverse_of(:inventory_batch).dependent(:nullify) }
     it { is_expected.to have_many(:inventory_batch_processing_logs).inverse_of(:inventory_batch).dependent(:nullify) }
 
     it { is_expected.to belong_to(:inventory).inverse_of(:inventory_batches).touch }
     it { is_expected.to belong_to(:unit).inverse_of(:inventory_batches) }
+    it { is_expected.to belong_to(:restockable).optional }
   end
 
   describe "scopes" do
