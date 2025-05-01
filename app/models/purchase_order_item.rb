@@ -16,7 +16,7 @@
 class PurchaseOrderItem < ApplicationRecord
   include AASM, ActsAsMoney, Sortable, ScaleEnforcer
 
-  LISTING_ATTRIBUTES = %i[product_id quantity unit_cost total_cost status].freeze
+  LISTING_ATTRIBUTES = %i[product_id oredered_quantity remaining_quantity unit_cost total_cost status].freeze
 
   enum :status, {
     pending: "pending",

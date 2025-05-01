@@ -7,6 +7,8 @@
   .table-cell
     = number_to_measurement_unit(purchase_order_item.quantity, purchase_order_item.unit_symbol)
   .table-cell
+    = number_to_measurement_unit(purchase_order_item.remaining_quantity, purchase_order_item.unit_symbol)
+  .table-cell
     = number_to_currency(purchase_order_item.unit_cost, unit: purchase_order_item.currency.symbol)
   .table-cell
     = number_to_currency(purchase_order_item.total_cost, unit: purchase_order_item.currency.symbol)
