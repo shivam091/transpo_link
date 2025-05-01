@@ -18,7 +18,7 @@ RSpec.describe InventoryBatchProcessingLog, type: :model do
     it { is_expected.to have_db_column(:inventory_batch_id).of_type(:uuid).with_options(null: false) }
     it { is_expected.to have_db_column(:user_id).of_type(:uuid).with_options(null: false) }
     it { is_expected.to have_db_column(:status).of_type(:enum) }
-    it { is_expected.to have_db_column(:error_message).of_type(:text) }
+    it { is_expected.to have_db_column(:error_logs).of_type(:jsonb).with_options(default: {}) }
     it { is_expected.to have_db_column(:metadata).of_type(:jsonb).with_options(default: {}) }
     it { is_expected.to have_db_column(:created_at).of_type(:timestamptz).with_options(null: false) }
     it { is_expected.to have_db_column(:updated_at).of_type(:timestamptz).with_options(null: false) }
@@ -26,13 +26,13 @@ RSpec.describe InventoryBatchProcessingLog, type: :model do
     it { is_expected.to have_db_index(:inventory_batch_id) }
     it { is_expected.to have_db_index(:user_id) }
     it { is_expected.to have_db_index(:status) }
+    it { is_expected.to have_db_index(:error_logs) }
     it { is_expected.to have_db_index(:metadata) }
     it { is_expected.to have_db_index([:inventory_batch_id, :user_id]) }
 
     it { is_expected.to have_foreign_key(:inventory_batch_id).with_name(:fk_inventory_batch_processing_logs_inventory_batch_id_on_invent).on_delete(:nullify) }
     it { is_expected.to have_foreign_key(:user_id).with_name(:fk_inventory_batch_processing_logs_user_id_on_users).on_delete(:nullify) }
 
-    it { is_expected.to have_check_constraint(:check_inventory_batch_processing_logs_error_message_length).with_expression("char_length(error_message) <= 2000") }
     it { is_expected.to have_check_constraint(:check_inventory_batch_processing_logs_status_presence).with_expression("status IS NOT NULL") }
     it { is_expected.to have_check_constraint(:check_inventory_batch_processing_logs_status_in_enum_values) }
   end
@@ -55,10 +55,6 @@ RSpec.describe InventoryBatchProcessingLog, type: :model do
   end
 
   describe "validations" do
-    describe "#error_message" do
-      it { is_expected.to validate_length_of(:error_message).is_at_most(2000).allow_blank }
-    end
-
     describe "#status" do
       it { is_expected.to validate_presence_of(:status) }
     end

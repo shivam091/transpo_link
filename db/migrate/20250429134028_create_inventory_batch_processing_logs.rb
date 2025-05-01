@@ -17,7 +17,7 @@ class CreateInventoryBatchProcessingLogs < ActiveRecord::Migration[8.0]
                    null: false,
                    index: {using: :btree}
       t.enum :status, enum_type: :batch_processing_statuses, index: {using: :btree}
-      t.text :error_message
+      t.jsonb :error_logs, default: {}, index: {using: :gin}
       t.jsonb :metadata, default: {}, index: {using: :gin}
       t.references :user,
                    type: :uuid,
@@ -31,8 +31,6 @@ class CreateInventoryBatchProcessingLogs < ActiveRecord::Migration[8.0]
       t.timestamps_with_timezone null: false
 
       t.index [:inventory_batch_id, :user_id], using: :btree
-
-      t.check_constraint "CHAR_LENGTH(error_message) <= 2000", name: :check_inventory_batch_processing_logs_error_message_length
 
       t.check_constraint "status IS NOT NULL", name: :check_inventory_batch_processing_logs_status_presence
       t.check_constraint "status IN (#{enum_values('batch_processing_statuses')})", name: :check_inventory_batch_processing_logs_status_in_enum_values

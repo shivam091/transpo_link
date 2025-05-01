@@ -6,7 +6,7 @@ FactoryBot.define do
   factory :inventory_batch_processing_log do
     association :inventory_batch
     association :user, factory: :manager
-    error_message { "" }
+    error_logs { {} }
     status { InventoryBatchProcessingLog.statuses[:pending] }
     metadata { {} }
 

@@ -5,17 +5,14 @@
 class InventoryBatchProcessingLog < ApplicationRecord
   enum :status, {
     pending: "pending",
+    queued: "queued",
     processing: "processing",
     succeeded: "succeeded",
     failed: "failed"
   }
 
-  attribute :status, :enum, default: InventoryBatchProcessingLog.statuses[:pending]
+  attribute :status, :enum, default: statuses[:pending]
 
-  validates :error_message,
-            length: {maximum: 2000},
-            allow_blank: true,
-            reduce: true
   validates :status,
             presence: true,
             reduce: true
