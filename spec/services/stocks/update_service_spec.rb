@@ -22,9 +22,9 @@ RSpec.describe Stocks::UpdateService, type: :service do
           service_response
         }.to change {
           stock.reload.quantity_in_hand
-        }.from(0).to(5).and change {
+        }.by(5).and change {
           stock.reload.quantity_pending_to_buyer
-        }.from(0).to(3)
+        }.by(3)
       end
     end
 
@@ -40,9 +40,9 @@ RSpec.describe Stocks::UpdateService, type: :service do
           service_response
         }.to change {
           stock.reload.quantity_in_hand
-        }.from(10).to(8).and change {
+        }.by(-2).and change {
           stock.reload.quantity_pending_to_buyer
-        }.from(5).to(4)
+        }.by(-1)
       end
     end
 

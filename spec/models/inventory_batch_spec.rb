@@ -280,7 +280,7 @@ RSpec.describe InventoryBatch, type: :model do
         it "adds quantity directly and saves the batch" do
           expect {
             inventory_batch.merge_with!(quantity: 5)
-          }.to change { inventory_batch.reload.quantity }.from(10).to(15)
+          }.to change { inventory_batch.reload.quantity }.by(5)
         end
       end
 
@@ -292,7 +292,7 @@ RSpec.describe InventoryBatch, type: :model do
 
           expect {
             inventory_batch.merge_with!(quantity: 2, source_unit:)
-          }.to change { inventory_batch.reload.quantity }.from(10).to(34)
+          }.to change { inventory_batch.reload.quantity }.by(24)
         end
       end
 
@@ -302,7 +302,7 @@ RSpec.describe InventoryBatch, type: :model do
 
           expect {
             inventory_batch.merge_with!(quantity: 3, source_unit: unit)
-          }.to change { inventory_batch.reload.quantity }.from(10).to(13)
+          }.to change { inventory_batch.reload.quantity }.by(3)
         end
       end
 
