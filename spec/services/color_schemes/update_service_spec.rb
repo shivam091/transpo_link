@@ -7,7 +7,7 @@
 require "spec_helper"
 
 RSpec.describe ColorSchemes::UpdateService, type: :service do
-  let!(:user) { create(:admin, :active, :with_address, :confirmed) }
+  let!(:user) { create(:admin, :active, :confirmed) }
 
   subject(:service_response) { described_class.(user, color_scheme) }
 

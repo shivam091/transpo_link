@@ -7,7 +7,7 @@
 require "spec_helper"
 
 RSpec.describe TaxRate, type: :model do
-  subject { build(:tax_rate) }
+  subject(:tax_rate) { build(:tax_rate) }
 
   describe "valid factory" do
     it { is_expected.to have_a_valid_factory(:tax_rate) }
@@ -106,28 +106,28 @@ RSpec.describe TaxRate, type: :model do
 
       context "when rate < 0.0" do
         it "is invalid" do
-          subject.rate = -1.0
-          subject.validate
+          tax_rate.rate = -1.0
+          tax_rate.validate
 
-          expect(subject.errors[:rate]).to include("must be greater than or equal to 0.0")
+          expect(tax_rate.errors[:rate]).to include("must be greater than or equal to 0.0")
         end
       end
 
       context "when rate > 100.0" do
         it "is invalid" do
-          subject.rate = 101.0
-          subject.validate
+          tax_rate.rate = 101.0
+          tax_rate.validate
 
-          expect(subject.errors[:rate]).to include("must be less than or equal to 100.0")
+          expect(tax_rate.errors[:rate]).to include("must be less than or equal to 100.0")
         end
       end
 
       context "when rate <= 100.0 and rate >= 0.0" do
         it "is valid" do
-          subject.rate = 16.0
-          subject.validate
+          tax_rate.rate = 16.0
+          tax_rate.validate
 
-          expect(subject.errors[:rate]).to be_empty
+          expect(tax_rate.errors[:rate]).to be_empty
         end
       end
     end

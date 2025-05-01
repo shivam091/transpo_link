@@ -7,7 +7,7 @@
 require "spec_helper"
 
 RSpec.describe LegalIdentifier, type: :model do
-  subject { create(:legal_identifier, :for_business) }
+  subject(:legal_identifier) { build(:legal_identifier, :for_business) }
 
   describe "valid factory" do
     it { is_expected.to have_a_valid_factory(:legal_identifier) }
@@ -109,6 +109,8 @@ RSpec.describe LegalIdentifier, type: :model do
     end
 
     describe "#tax_identifier" do
+      let!(:legal_identifier) { create(:legal_identifier) }
+
       it { is_expected.to validate_presence_of(:tax_identifier) }
       it do
         is_expected.to validate_uniqueness_of(:tax_identifier)
@@ -130,14 +132,14 @@ RSpec.describe LegalIdentifier, type: :model do
 
     describe "#business_identifier_type" do
       context "when #entity_type is 'business'" do
-        before { allow(subject).to receive(:business?) { true } }
+        before { allow(legal_identifier).to receive(:business?) { true } }
 
         it { is_expected.to validate_presence_of(:business_identifier_type) }
         # it { is_expected.to validate_inclusion_of(:business_identifier_type).in_array(described_class.business_identifier_types.values) }
       end
 
       context "when #entity_type is 'individual'" do
-        before { allow(subject).to receive(:individual?) { true } }
+        before { allow(legal_identifier).to receive(:individual?) { true } }
 
         it { is_expected.to validate_absence_of(:business_identifier_type).with_message("must not be present when entity type is business") }
       end
@@ -145,7 +147,9 @@ RSpec.describe LegalIdentifier, type: :model do
 
     describe "#business_identifier" do
       context "when #entity_type is 'business'" do
-        before { allow(subject).to receive(:business?) { true } }
+        let!(:legal_identifier) { create(:legal_identifier, :for_business) }
+
+        before { allow(legal_identifier).to receive(:business?) { true } }
 
         it { is_expected.to validate_presence_of(:business_identifier) }
         it do
@@ -157,7 +161,7 @@ RSpec.describe LegalIdentifier, type: :model do
       end
 
       context "when #entity_type is 'individual'" do
-        before { allow(subject).to receive(:individual?) { true } }
+        before { allow(legal_identifier).to receive(:individual?) { true } }
 
         it { is_expected.to validate_absence_of(:business_identifier).with_message("must not be present when entity type is business") }
       end
@@ -212,7 +216,7 @@ RSpec.describe LegalIdentifier, type: :model do
   describe "class methods" do
     describe ".accessible" do
       it "returns list of accessible legal identifiers" do
-        expect(described_class.accessible(subject.user)).to include(subject)
+        expect(described_class.accessible(legal_identifier.user)).to include(legal_identifier)
       end
     end
   end

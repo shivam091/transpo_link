@@ -7,7 +7,7 @@
 require "spec_helper"
 
 RSpec.describe PurchaseOrder, type: :model do
-  subject { build_stubbed(:purchase_order) }
+  subject(:purchase_order) { build_stubbed(:purchase_order) }
 
   describe "valid factory" do
     it { is_expected.to have_a_valid_factory(:purchase_order) }

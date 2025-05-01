@@ -7,7 +7,7 @@
 require "spec_helper"
 
 RSpec.describe UserPreference, type: :model do
-  subject { build(:user_preference) }
+  subject(:user_preference) { build(:user_preference) }
 
   describe "valid factory" do
     it { is_expected.to have_a_valid_factory(:user_preference) }

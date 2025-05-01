@@ -11,8 +11,8 @@ RSpec.describe Inventories::ReplenishService, type: :service do
   let(:target_unit) { create(:item_unit) }
   let(:warehouse) { create(:warehouse, name: "Test warehouse", unit: source_unit) }
   let(:product) { create(:product, name: "Test product", unit: source_unit) }
-  let(:supplier) { warehouse.suppliers.first }
-  let(:manager) { warehouse.managers.first }
+  let(:manager) { create(:manager) }
+  let(:supplier) { create(:supplier) }
 
   let!(:inventory) { create(:inventory, warehouse:, product:, unit: target_unit) }
   let!(:unit_conversion) { create(:dozen_item_conversion, source_unit:, target_unit:) }
