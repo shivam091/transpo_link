@@ -40,6 +40,7 @@
         no_purchase_order_items_to_display: "No purchase order items to display",
         no_inventory_batches_to_display: "No inventory batches to display",
         no_inventory_movements_to_display: "No inventory movements to display",
+        no_inventory_audit_logs_to_display: "No inventory audit logs to display",
       },
       remote_modal: {
         close: "Close",

@@ -71,6 +71,7 @@ class InventoriesController < ApplicationController
 
     @inventory_batches = @inventory.inventory_batches.includes(:unit)
     @inventory_movements = @inventory.inventory_movements.includes(:unit)
+    @inventory_audit_logs = @inventory.inventory_audit_logs.includes(user: [:user_detail])
   end
 
   private

@@ -30,6 +30,7 @@
         basic_details: "Basic details",
         batches: "Batches",
         movements: "Movements",
+        audit_logs: "Audit logs",
       },
     }
   }
