@@ -7,6 +7,7 @@ class CreateEnumBatchProcessingStatuses < ActiveRecord::Migration[8.0]
     create_enum :batch_processing_statuses,
                 %i[
                   pending
+                  queued
                   processing
                   succeeded
                   failed

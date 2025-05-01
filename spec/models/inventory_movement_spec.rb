@@ -55,6 +55,11 @@ RSpec.describe InventoryMovement, type: :model do
 
   describe "included modules" do
     it { is_expected.to include_module(ScaleEnforcer) }
+    it { is_expected.to include_module(Sortable) }
+  end
+
+  describe "constants" do
+    it { is_expected.to have_constant(:LISTING_ATTRIBUTES) }
   end
 
   describe "scaled attributes" do
@@ -75,6 +80,12 @@ RSpec.describe InventoryMovement, type: :model do
     it { is_expected.to have_callback(:before, :save, :set_default_attributes) }
     it { is_expected.to have_callback(:after, :create, :create_inventory_audit_log) }
   end
+
+  describe "delegates" do
+    it { is_expected.to delegate_method(:symbol).to(:unit).with_prefix }
+  end
+
+  include_examples "apply default scope on created_at:desc"
 
   describe "validations" do
     describe "#quantity" do

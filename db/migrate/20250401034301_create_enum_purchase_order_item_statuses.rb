@@ -14,6 +14,8 @@ class CreateEnumPurchaseOrderItemStatuses < ActiveRecord::Migration[8.0]
                   cancelled
                   returned
                   damaged
+                  ready_for_restock
+                  restocked
                 ]
   end
 end

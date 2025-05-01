@@ -17,13 +17,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_29_134028) do
 
   # Custom types defined in this database.
   # Note that some types may not work with other database engines. Be careful if changing database.
-  create_enum "batch_processing_statuses", ["pending", "processing", "succeeded", "failed"]
+  create_enum "batch_processing_statuses", ["pending", "queued", "processing", "succeeded", "failed"]
   create_enum "business_categories", ["b2b", "b2c"]
   create_enum "color_schemes", ["auto", "dark", "light"]
   create_enum "entity_types", ["business", "individual"]
   create_enum "legal_identifier_statuses", ["unapproved", "approved", "rejected"]
   create_enum "movement_types", ["restock", "purchase", "sale", "return", "transfer_in", "transfer_out", "adjustment", "reservation"]
-  create_enum "purchase_order_item_statuses", ["pending", "ordered", "partially_delivered", "delivered", "backordered", "cancelled", "returned", "damaged"]
+  create_enum "purchase_order_item_statuses", ["pending", "ordered", "partially_delivered", "delivered", "backordered", "cancelled", "returned", "damaged", "ready_for_restock", "restocked"]
   create_enum "purchase_order_statuses", ["draft", "submitted", "approved", "partially_delivered", "fully_delivered", "cancelled", "rejected", "closed", "on_hold"]
   create_enum "tax_types", ["exclusive", "inclusive"]
   create_enum "tracking_methods", ["fifo", "lifo", "average_cost"]
@@ -134,18 +134,18 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_29_134028) do
   create_table "inventory_batch_processing_logs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "inventory_batch_id", null: false
     t.enum "status", enum_type: "batch_processing_statuses"
-    t.text "error_message"
+    t.jsonb "error_logs", default: {}
     t.jsonb "metadata", default: {}
     t.uuid "user_id", null: false
     t.timestamptz "created_at", null: false
     t.timestamptz "updated_at", null: false
+    t.index ["error_logs"], name: "index_inventory_batch_processing_logs_on_error_logs", using: :gin
     t.index ["inventory_batch_id", "user_id"], name: "idx_on_inventory_batch_id_user_id_0cc004d3e8"
     t.index ["inventory_batch_id"], name: "index_inventory_batch_processing_logs_on_inventory_batch_id"
     t.index ["metadata"], name: "index_inventory_batch_processing_logs_on_metadata", using: :gin
     t.index ["status"], name: "index_inventory_batch_processing_logs_on_status"
     t.index ["user_id"], name: "index_inventory_batch_processing_logs_on_user_id"
-    t.check_constraint "char_length(error_message) <= 2000", name: "check_inventory_batch_processing_logs_error_message_length"
-    t.check_constraint "status = ANY (ARRAY['pending'::batch_processing_statuses, 'processing'::batch_processing_statuses, 'succeeded'::batch_processing_statuses, 'failed'::batch_processing_statuses])", name: "check_inventory_batch_processing_logs_status_in_enum_values"
+    t.check_constraint "status = ANY (ARRAY['pending'::batch_processing_statuses, 'queued'::batch_processing_statuses, 'processing'::batch_processing_statuses, 'succeeded'::batch_processing_statuses, 'failed'::batch_processing_statuses])", name: "check_inventory_batch_processing_logs_status_in_enum_values"
     t.check_constraint "status IS NOT NULL", name: "check_inventory_batch_processing_logs_status_presence"
   end
 
@@ -157,10 +157,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_29_134028) do
     t.uuid "unit_id", null: false
     t.decimal "cost_price", precision: 12, scale: 2
     t.string "currency"
+    t.string "restockable_type"
+    t.uuid "restockable_id"
     t.timestamptz "created_at", null: false
     t.timestamptz "updated_at", null: false
     t.index ["inventory_id", "batch_number"], name: "index_inventory_batches_on_inventory_id_and_batch_number", unique: true
     t.index ["inventory_id"], name: "index_inventory_batches_on_inventory_id"
+    t.index ["restockable_type", "restockable_id"], name: "index_inventory_batches_on_restockable"
     t.index ["unit_id"], name: "index_inventory_batches_on_unit_id"
     t.check_constraint "batch_number IS NOT NULL AND batch_number::text <> ''::text", name: "check_inventory_batches_batch_number_presence"
     t.check_constraint "char_length(batch_number::text) <= 55", name: "check_inventory_batches_batch_number_length"
@@ -315,7 +318,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_29_134028) do
     t.check_constraint "quantity IS NOT NULL", name: "check_purchase_order_items_quantity_presence"
     t.check_constraint "received_quantity >= 0.0", name: "check_purchase_order_items_received_quantity_non_negative"
     t.check_constraint "received_quantity IS NOT NULL", name: "check_purchase_order_items_received_quantity_presence"
-    t.check_constraint "status = ANY (ARRAY['pending'::purchase_order_item_statuses, 'ordered'::purchase_order_item_statuses, 'partially_delivered'::purchase_order_item_statuses, 'delivered'::purchase_order_item_statuses, 'backordered'::purchase_order_item_statuses, 'cancelled'::purchase_order_item_statuses, 'returned'::purchase_order_item_statuses, 'damaged'::purchase_order_item_statuses])", name: "check_purchase_order_items_status_in_enum_values"
+    t.check_constraint "status = ANY (ARRAY['pending'::purchase_order_item_statuses, 'ordered'::purchase_order_item_statuses, 'partially_delivered'::purchase_order_item_statuses, 'delivered'::purchase_order_item_statuses, 'backordered'::purchase_order_item_statuses, 'cancelled'::purchase_order_item_statuses, 'returned'::purchase_order_item_statuses, 'damaged'::purchase_order_item_statuses, 'ready_for_restock'::purchase_order_item_statuses, 'restocked'::purchase_order_item_statuses])", name: "check_purchase_order_items_status_in_enum_values"
     t.check_constraint "status IS NOT NULL", name: "check_purchase_order_items_status_presence"
     t.check_constraint "unit_cost > 0.0", name: "check_purchase_order_items_unit_cost_positive"
     t.check_constraint "unit_cost IS NOT NULL", name: "check_purchase_order_items_unit_cost_presence"

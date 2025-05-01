@@ -3,7 +3,9 @@
 # -*- warn_indent: true -*-
 
 class InventoryMovement < ApplicationRecord
-  include ScaleEnforcer
+  include ScaleEnforcer, Sortable
+
+  LISTING_ATTRIBUTES = %i[movement_date movement_type quantity unit_cost total_cost].freeze
 
   enum :movement_type, {
     restock: "restock",
@@ -47,6 +49,12 @@ class InventoryMovement < ApplicationRecord
 
   before_save :set_default_attributes
   after_create :create_inventory_audit_log
+
+  with_options prefix: true do |d|
+    d.delegate :symbol, to: :unit
+  end
+
+  default_scope { order_created_desc }
 
   private
 
