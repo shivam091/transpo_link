@@ -7,7 +7,7 @@
 require "spec_helper"
 
 RSpec.describe Product, type: :model do
-  subject { create(:product) }
+  subject(:product) { build(:product) }
 
   describe "valid factory" do
     it { is_expected.to have_a_valid_factory(:product) }
@@ -125,12 +125,16 @@ RSpec.describe Product, type: :model do
     end
 
     describe "#sku" do
+      let!(:product) { create(:product) }
+
       it { is_expected.to validate_presence_of(:sku) }
       it { is_expected.to validate_length_of(:sku).is_at_most(50) }
       it { is_expected.to validate_uniqueness_of(:sku) }
     end
 
     describe "#barcode" do
+      let!(:product) { create(:product) }
+
       it { is_expected.to validate_length_of(:barcode).is_at_most(50).allow_blank }
       it { is_expected.to validate_uniqueness_of(:barcode).case_insensitive }
     end
@@ -140,28 +144,28 @@ RSpec.describe Product, type: :model do
 
       context "when min_stock_threshold is invalid" do
         it "is invalid" do
-          subject.min_stock_threshold = "abcd"
-          subject.validate
+          product.min_stock_threshold = "abcd"
+          product.validate
 
-          expect(subject.errors[:min_stock_threshold]).to include("must be greater than 0.0")
+          expect(product.errors[:min_stock_threshold]).to include("must be greater than 0.0")
         end
       end
 
       context "when min_stock_threshold <= 0.0" do
         it "is invalid" do
-          subject.min_stock_threshold = 0.0
-          subject.validate
+          product.min_stock_threshold = 0.0
+          product.validate
 
-          expect(subject.errors[:min_stock_threshold]).to include("must be greater than 0.0")
+          expect(product.errors[:min_stock_threshold]).to include("must be greater than 0.0")
         end
       end
 
       context "when min_stock_threshold > 0.0" do
         it "is valid" do
-          subject.min_stock_threshold = 1.0
-          subject.validate
+          product.min_stock_threshold = 1.0
+          product.validate
 
-          expect(subject.errors[:min_stock_threshold]).to be_empty
+          expect(product.errors[:min_stock_threshold]).to be_empty
         end
       end
     end
@@ -175,28 +179,28 @@ RSpec.describe Product, type: :model do
 
       context "when cost_price is invalid" do
         it "is invalid" do
-          subject.cost_price = "abcd"
-          subject.validate
+          product.cost_price = "abcd"
+          product.validate
 
-          expect(subject.errors[:cost_price]).to include("must be greater than 0.0")
+          expect(product.errors[:cost_price]).to include("must be greater than 0.0")
         end
       end
 
       context "when cost_price <= 0.0" do
         it "is invalid" do
-          subject.cost_price = 0.0
-          subject.validate
+          product.cost_price = 0.0
+          product.validate
 
-          expect(subject.errors[:cost_price]).to include("must be greater than 0.0")
+          expect(product.errors[:cost_price]).to include("must be greater than 0.0")
         end
       end
 
       context "when cost_price > 0.0" do
         it "is valid" do
-          subject.cost_price = 1.0
-          subject.validate
+          product.cost_price = 1.0
+          product.validate
 
-          expect(subject.errors[:cost_price]).to be_empty
+          expect(product.errors[:cost_price]).to be_empty
         end
       end
     end

@@ -7,7 +7,7 @@
 require "spec_helper"
 
 RSpec.describe Warehouse, type: :model do
-  subject { build(:warehouse) }
+  subject(:warehouse) { build(:warehouse) }
 
   describe "valid factory" do
     it { is_expected.to have_a_valid_factory(:warehouse) }
@@ -131,28 +131,28 @@ RSpec.describe Warehouse, type: :model do
 
       context "when total_capacity <= 0.0" do
         it "is invalid" do
-          subject.total_capacity = 0.0
-          subject.validate
+          warehouse.total_capacity = 0.0
+          warehouse.validate
 
-          expect(subject.errors[:total_capacity]).to include("must be greater than 0.0")
+          expect(warehouse.errors[:total_capacity]).to include("must be greater than 0.0")
         end
       end
 
       context "when total_capacity >= 100000000000.0" do
         it "is invalid" do
-          subject.total_capacity = 100000000001.0
-          subject.validate
+          warehouse.total_capacity = 100000000001.0
+          warehouse.validate
 
-          expect(subject.errors[:total_capacity]).to include("must be less than 100000000000.0")
+          expect(warehouse.errors[:total_capacity]).to include("must be less than 100000000000.0")
         end
       end
 
       context "when total_capacity < 100000000000.0 and total_capacity > 0.0" do
         it "is valid" do
-          subject.total_capacity = 10000.0
-          subject.validate
+          warehouse.total_capacity = 10000.0
+          warehouse.validate
 
-          expect(subject.errors[:total_capacity]).to be_empty
+          expect(warehouse.errors[:total_capacity]).to be_empty
         end
       end
     end
@@ -164,37 +164,37 @@ RSpec.describe Warehouse, type: :model do
     describe "#latitude" do
       context "when latitude < -90.0" do
         it "is invalid" do
-          subject.latitude = -91.0
-          subject.validate
+          warehouse.latitude = -91.0
+          warehouse.validate
 
-          expect(subject.errors[:latitude]).to include("must be greater than or equal to -90.0")
+          expect(warehouse.errors[:latitude]).to include("must be greater than or equal to -90.0")
         end
       end
 
       context "when latitude > 90.0" do
         it "is invalid" do
-          subject.latitude = 91.0
-          subject.validate
+          warehouse.latitude = 91.0
+          warehouse.validate
 
-          expect(subject.errors[:latitude]).to include("must be less than or equal to 90.0")
+          expect(warehouse.errors[:latitude]).to include("must be less than or equal to 90.0")
         end
       end
 
       context "when latitude is between -90.0 and 90.0" do
         it "is valid" do
-          subject.latitude = 25
-          subject.validate
+          warehouse.latitude = 25
+          warehouse.validate
 
-          expect(subject.errors[:latitude]).to be_empty
+          expect(warehouse.errors[:latitude]).to be_empty
         end
       end
 
       context "when latitude is empty or nil" do
         it "is valid" do
-          subject.latitude = nil
-          subject.validate
+          warehouse.latitude = nil
+          warehouse.validate
 
-          expect(subject.errors[:latitude]).to be_empty
+          expect(warehouse.errors[:latitude]).to be_empty
         end
       end
     end
@@ -202,37 +202,37 @@ RSpec.describe Warehouse, type: :model do
     describe "#longitude" do
       context "when longitude < -180.0" do
         it "is invalid" do
-          subject.longitude = -181.0
-          subject.validate
+          warehouse.longitude = -181.0
+          warehouse.validate
 
-          expect(subject.errors[:longitude]).to include("must be greater than or equal to -180.0")
+          expect(warehouse.errors[:longitude]).to include("must be greater than or equal to -180.0")
         end
       end
 
       context "when longitude > 180.0" do
         it "is invalid" do
-          subject.longitude = 181.0
-          subject.validate
+          warehouse.longitude = 181.0
+          warehouse.validate
 
-          expect(subject.errors[:longitude]).to include("must be less than or equal to 180.0")
+          expect(warehouse.errors[:longitude]).to include("must be less than or equal to 180.0")
         end
       end
 
       context "when longitude is between -180.0 and 180.0" do
         it "is valid" do
-          subject.longitude = 25
-          subject.validate
+          warehouse.longitude = 25
+          warehouse.validate
 
-          expect(subject.errors[:longitude]).to be_empty
+          expect(warehouse.errors[:longitude]).to be_empty
         end
       end
 
       context "when longitude is empty or nil" do
         it "is valid" do
-          subject.longitude = nil
-          subject.validate
+          warehouse.longitude = nil
+          warehouse.validate
 
-          expect(subject.errors[:longitude]).to be_empty
+          expect(warehouse.errors[:longitude]).to be_empty
         end
       end
     end

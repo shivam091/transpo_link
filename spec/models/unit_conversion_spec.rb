@@ -7,7 +7,7 @@
 require "spec_helper"
 
 RSpec.describe UnitConversion, type: :model do
-  subject { create(:unit_conversion) }
+  subject(:unit_conversion) { create(:unit_conversion) }
 
   describe "valid factory" do
     it { is_expected.to have_a_valid_factory(:unit_conversion) }
@@ -52,6 +52,8 @@ RSpec.describe UnitConversion, type: :model do
 
   describe "validations" do
     describe "#source_unit_id" do
+      let!(:unit_conversion) { create(:unit_conversion) }
+
       it { is_expected.to validate_presence_of(:source_unit_id) }
       it { is_expected.to validate_uniqueness_of(:source_unit_id).scoped_to([:target_unit_id]).case_insensitive.with_message("already has conversion for the selected target unit") }
     end
@@ -65,28 +67,28 @@ RSpec.describe UnitConversion, type: :model do
 
       context "when multiplier is invalid" do
         it "is invalid" do
-          subject.multiplier = "abcd"
-          subject.validate
+          unit_conversion.multiplier = "abcd"
+          unit_conversion.validate
 
-          expect(subject.errors[:multiplier]).to include("must be greater than 0.0")
+          expect(unit_conversion.errors[:multiplier]).to include("must be greater than 0.0")
         end
       end
 
       context "when multiplier <= 0.0" do
         it "is invalid" do
-          subject.multiplier = 0.0
-          subject.validate
+          unit_conversion.multiplier = 0.0
+          unit_conversion.validate
 
-          expect(subject.errors[:multiplier]).to include("must be greater than 0.0")
+          expect(unit_conversion.errors[:multiplier]).to include("must be greater than 0.0")
         end
       end
 
       context "when multiplier > 0.0" do
         it "is valid" do
-          subject.multiplier = 1.0
-          subject.validate
+          unit_conversion.multiplier = 1.0
+          unit_conversion.validate
 
-          expect(subject.errors[:multiplier]).to be_empty
+          expect(unit_conversion.errors[:multiplier]).to be_empty
         end
       end
     end

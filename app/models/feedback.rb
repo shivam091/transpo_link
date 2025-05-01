@@ -35,6 +35,8 @@ class Feedback < ApplicationRecord
 
   class << self
     def accessible(user)
+      return user.feedbacks unless user.admin?
+
       all
     end
 

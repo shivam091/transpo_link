@@ -7,7 +7,7 @@
 require "spec_helper"
 
 RSpec.describe RequestLog, type: :model do
-  subject { build(:request_log) }
+  subject(:request_log) { build(:request_log) }
 
   describe "attributes, indexes, foreign keys, and check constraints" do
     it { is_expected.to have_db_column(:id).of_type(:uuid) }

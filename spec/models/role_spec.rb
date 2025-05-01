@@ -7,7 +7,7 @@
 require "spec_helper"
 
 RSpec.describe Role, type: :model do
-  subject { build(:admin_role) }
+  subject(:role) { build(:admin_role) }
 
   describe "valid factory" do
     it { is_expected.to have_a_valid_factory(:admin_role).with_traits(:active) }

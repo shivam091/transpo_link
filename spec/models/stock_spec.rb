@@ -7,7 +7,7 @@
 require "spec_helper"
 
 RSpec.describe Stock, type: :model do
-  subject { build(:stock) }
+  subject(:stock) { build(:stock) }
 
   describe "valid factory" do
     it { is_expected.to have_a_valid_factory(:stock) }
@@ -57,19 +57,19 @@ RSpec.describe Stock, type: :model do
 
       context "when quantity_in_hand < 0.0" do
         it "is invalid" do
-          subject.quantity_in_hand = -1.0
-          subject.validate
+          stock.quantity_in_hand = -1.0
+          stock.validate
 
-          expect(subject.errors[:quantity_in_hand]).to include("must be greater than or equal to 0.0")
+          expect(stock.errors[:quantity_in_hand]).to include("must be greater than or equal to 0.0")
         end
       end
 
       context "when quantity_in_hand >= 0.0" do
         it "is valid" do
-          subject.quantity_in_hand = 0.00
-          subject.validate
+          stock.quantity_in_hand = 0.00
+          stock.validate
 
-          expect(subject.errors[:quantity_in_hand]).to be_empty
+          expect(stock.errors[:quantity_in_hand]).to be_empty
         end
       end
     end
@@ -79,19 +79,19 @@ RSpec.describe Stock, type: :model do
 
       context "when quantity_pending_to_buyer < 0.0" do
         it "is invalid" do
-          subject.quantity_pending_to_buyer = -1.0
-          subject.validate
+          stock.quantity_pending_to_buyer = -1.0
+          stock.validate
 
-          expect(subject.errors[:quantity_pending_to_buyer]).to include("must be greater than or equal to 0.0")
+          expect(stock.errors[:quantity_pending_to_buyer]).to include("must be greater than or equal to 0.0")
         end
       end
 
       context "when quantity_pending_to_buyer >= 0.0" do
         it "is valid" do
-          subject.quantity_pending_to_buyer = 0.0
-          subject.validate
+          stock.quantity_pending_to_buyer = 0.0
+          stock.validate
 
-          expect(subject.errors[:quantity_pending_to_buyer]).to be_empty
+          expect(stock.errors[:quantity_pending_to_buyer]).to be_empty
         end
       end
     end

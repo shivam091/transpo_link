@@ -7,7 +7,7 @@
 require "spec_helper"
 
 RSpec.describe Inventory, type: :model do
-  subject { create(:inventory) }
+  subject(:inventory) { build(:inventory) }
 
   describe "valid factory" do
     it { is_expected.to have_a_valid_factory(:inventory) }
@@ -98,6 +98,8 @@ RSpec.describe Inventory, type: :model do
     end
 
     describe "#product_id" do
+      let!(:inventory) { create(:inventory) }
+
       it { is_expected.to validate_presence_of(:product_id) }
       it { is_expected.to validate_uniqueness_of(:product_id).scoped_to(:warehouse_id).with_message("already has inventory for the selected warehouse").ignoring_case_sensitivity }
     end
@@ -116,28 +118,28 @@ RSpec.describe Inventory, type: :model do
 
       context "when low_stock_threshold is invalid" do
         it "is invalid" do
-          subject.low_stock_threshold = "abcd"
-          subject.validate
+          inventory.low_stock_threshold = "abcd"
+          inventory.validate
 
-          expect(subject.errors[:low_stock_threshold]).to include("must be greater than 0.0")
+          expect(inventory.errors[:low_stock_threshold]).to include("must be greater than 0.0")
         end
       end
 
       context "when low_stock_threshold <= 0.0" do
         it "is invalid" do
-          subject.low_stock_threshold = 0.0
-          subject.validate
+          inventory.low_stock_threshold = 0.0
+          inventory.validate
 
-          expect(subject.errors[:low_stock_threshold]).to include("must be greater than 0.0")
+          expect(inventory.errors[:low_stock_threshold]).to include("must be greater than 0.0")
         end
       end
 
       context "when low_stock_threshold > 0.0" do
         it "is valid" do
-          subject.low_stock_threshold = 1.0
-          subject.validate
+          inventory.low_stock_threshold = 1.0
+          inventory.validate
 
-          expect(subject.errors[:low_stock_threshold]).to be_empty
+          expect(inventory.errors[:low_stock_threshold]).to be_empty
         end
       end
     end
@@ -147,19 +149,19 @@ RSpec.describe Inventory, type: :model do
 
       context "when average_cost_price < 0.0" do
         it "is invalid" do
-          subject.average_cost_price = -0.5
-          subject.validate
+          inventory.average_cost_price = -0.5
+          inventory.validate
 
-          expect(subject.errors[:average_cost_price]).to include("must be greater than or equal to 0.0")
+          expect(inventory.errors[:average_cost_price]).to include("must be greater than or equal to 0.0")
         end
       end
 
       context "when average_cost_price >= 0.0" do
         it "is valid" do
-          subject.average_cost_price = 0.0
-          subject.validate
+          inventory.average_cost_price = 0.0
+          inventory.validate
 
-          expect(subject.errors[:average_cost_price]).to be_empty
+          expect(inventory.errors[:average_cost_price]).to be_empty
         end
       end
     end
