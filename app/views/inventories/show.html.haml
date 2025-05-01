@@ -28,5 +28,11 @@
           = t(".batches")
       .widget-body
         = safe_render.template("inventory_batches/index")
+    .widget
+      .widget-header
+        .widget-title
+          = t(".movements")
+      .widget-body
+        = safe_render.template("inventory_movements/index")
   .card-footer
     = safe_render.partial("shared/navigable_links", resource: @inventory)

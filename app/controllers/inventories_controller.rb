@@ -68,6 +68,9 @@ class InventoriesController < ApplicationController
   # GET /inventories/:id
   def show
     add_breadcrumb @inventory.reference_code, inventory_path(@inventory)
+
+    @inventory_batches = @inventory.inventory_batches.includes(:unit)
+    @inventory_movements = @inventory.inventory_movements.includes(:unit)
   end
 
   private

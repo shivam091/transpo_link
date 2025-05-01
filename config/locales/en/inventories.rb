@@ -29,6 +29,7 @@
       show: {
         basic_details: "Basic details",
         batches: "Batches",
+        movements: "Movements",
       },
     }
   }
