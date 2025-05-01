@@ -1,3 +1,58 @@
 = title(t(".title"))
 .card.card-primary.border.border-primary
   .card-body
+    %ul.timeline
+      %li
+        .timeline-time
+          %span.date today
+          %span.time 04:20
+        .timeline-icon
+          %a{:href => "javascript:;"}  
+        .timeline-body
+          .timeline-header
+            %span.userimage
+              %img{:alt => "", :src => "https://bootdey.com/img/Content/avatar/avatar1.png"}/
+            %span.username
+              %a{:href => "javascript:;"} John Smith
+              %small
+            %span.float-end.text-muted
+          .timeline-content
+            %p
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc faucibus turpis quis tincidunt luctus.
+              Nam sagittis dui in nunc consequat, in imperdiet nunc sagittis.
+      %li
+        .timeline-time
+          %span.date 24 February 2014
+          %span.time 08:17
+        .timeline-icon
+          %a{:href => "javascript:;"}  
+        .timeline-body
+          .timeline-header
+            %span.userimage
+              %img{:alt => "", :src => "https://bootdey.com/img/Content/avatar/avatar1.png"}/
+            %span.username Richard Leong
+            %span.float-end.text-muted
+          .timeline-content
+            %p.lead
+              %i.fa.fa-quote-left.fa-fw.float-start
+              Quisque sed varius nisl. Nulla facilisi. Phasellus consequat sapien sit amet nibh molestie placerat. Donec nulla quam, ullamcorper ut velit vitae, lobortis condimentum magna. Suspendisse mollis in sem vel mollis.
+              %i.fa.fa-quote-right.fa-fw.float-end
+      %li
+        .timeline-time
+          %span.date 10 January 2014
+          %span.time 20:43
+        .timeline-icon
+          %a{:href => "javascript:;"}  
+        .timeline-body
+          .timeline-header
+            %span.userimage
+              %img{:alt => "", :src => "https://bootdey.com/img/Content/avatar/avatar1.png"}/
+            %span.username Lelouch Wong
+            %span.float-end.text-muted
+          .timeline-content
+            %h4.template-title
+              %i.fa.fa-map-marker.text-danger.fa-fw
+              795 Folsom Ave, Suite 600 San Francisco, CA 94107
+            %p In hac habitasse platea dictumst. Pellentesque bibendum id sem nec faucibus. Maecenas molestie, augue vel accumsan rutrum, massa mi rutrum odio, id luctus mauris nibh ut leo.
+            %p.m-t-20
+              %img{:alt => "", :src => "https://bootdey.com/img/Content/avatar/avatar7.png"}/
