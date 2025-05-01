@@ -7,7 +7,7 @@
 require "spec_helper"
 
 RSpec.describe InventoryBatch, type: :model do
-  subject { build(:inventory_batch) }
+  subject(:inventory_batch) { build(:inventory_batch) }
 
   describe "valid factory" do
     it { is_expected.to have_a_valid_factory(:inventory_batch) }
@@ -85,28 +85,28 @@ RSpec.describe InventoryBatch, type: :model do
 
       context "when quantity is invalid" do
         it "is invalid" do
-          subject.quantity = "abcd"
-          subject.validate
+          inventory_batch.quantity = "abcd"
+          inventory_batch.validate
 
-          expect(subject.errors[:quantity]).to include("must be greater than 0.0")
+          expect(inventory_batch.errors[:quantity]).to include("must be greater than 0.0")
         end
       end
 
       context "when quantity <= 0.0" do
         it "is invalid" do
-          subject.quantity = 0.0
-          subject.validate
+          inventory_batch.quantity = 0.0
+          inventory_batch.validate
 
-          expect(subject.errors[:quantity]).to include("must be greater than 0.0")
+          expect(inventory_batch.errors[:quantity]).to include("must be greater than 0.0")
         end
       end
 
       context "when quantity > 0.0" do
         it "is valid" do
-          subject.quantity = 1.0
-          subject.validate
+          inventory_batch.quantity = 1.0
+          inventory_batch.validate
 
-          expect(subject.errors[:quantity]).to be_empty
+          expect(inventory_batch.errors[:quantity]).to be_empty
         end
       end
     end
@@ -116,28 +116,28 @@ RSpec.describe InventoryBatch, type: :model do
 
       context "when cost_price is invalid" do
         it "is invalid" do
-          subject.cost_price = "abcd"
-          subject.validate
+          inventory_batch.cost_price = "abcd"
+          inventory_batch.validate
 
-          expect(subject.errors[:cost_price]).to include("must be greater than 0.0")
+          expect(inventory_batch.errors[:cost_price]).to include("must be greater than 0.0")
         end
       end
 
       context "when cost_price <= 0.0" do
         it "is invalid" do
-          subject.cost_price = 0.0
-          subject.validate
+          inventory_batch.cost_price = 0.0
+          inventory_batch.validate
 
-          expect(subject.errors[:cost_price]).to include("must be greater than 0.0")
+          expect(inventory_batch.errors[:cost_price]).to include("must be greater than 0.0")
         end
       end
 
       context "when cost_price > 0.0" do
         it "is valid" do
-          subject.cost_price = 1.0
-          subject.validate
+          inventory_batch.cost_price = 1.0
+          inventory_batch.validate
 
-          expect(subject.errors[:cost_price]).to be_empty
+          expect(inventory_batch.errors[:cost_price]).to be_empty
         end
       end
     end
@@ -227,6 +227,32 @@ RSpec.describe InventoryBatch, type: :model do
       end
     end
 
+    describe "#previous_quantity" do
+      let(:inventory_batch) { create(:inventory_batch, quantity: 10.0) }
+
+      context "when quantity has been updated" do
+        before { inventory_batch.update(quantity: 15.0) }
+
+        it "returns the previous quantity value" do
+          expect(inventory_batch.previous_quantity).to eq(10.0)
+        end
+      end
+
+      context "when quantity has not changed" do
+        it "returns 0.0" do
+          expect(inventory_batch.previous_quantity).to eq(0.0)
+        end
+      end
+
+      context "when quantity_previously_was is nil" do
+        let(:new_batch) { build(:inventory_batch, quantity: 5.0) }
+
+        it "returns 0.0 for new records" do
+          expect(new_batch.previous_quantity).to eq(0.0)
+        end
+      end
+    end
+
     describe "#quantity_change" do
       let!(:inventory_batch) { create(:inventory_batch, quantity: 10) }
 
@@ -254,7 +280,7 @@ RSpec.describe InventoryBatch, type: :model do
         it "adds quantity directly and saves the batch" do
           expect {
             inventory_batch.merge_with!(quantity: 5)
-          }.to change { inventory_batch.reload.quantity }.from(10).to(15)
+          }.to change { inventory_batch.reload.quantity }.by(5)
         end
       end
 
@@ -266,7 +292,7 @@ RSpec.describe InventoryBatch, type: :model do
 
           expect {
             inventory_batch.merge_with!(quantity: 2, source_unit:)
-          }.to change { inventory_batch.reload.quantity }.from(10).to(34)
+          }.to change { inventory_batch.reload.quantity }.by(24)
         end
       end
 
@@ -276,7 +302,7 @@ RSpec.describe InventoryBatch, type: :model do
 
           expect {
             inventory_batch.merge_with!(quantity: 3, source_unit: unit)
-          }.to change { inventory_batch.reload.quantity }.from(10).to(13)
+          }.to change { inventory_batch.reload.quantity }.by(3)
         end
       end
 

@@ -25,9 +25,8 @@ RSpec.describe "Locales", type: :request do
       }
     }
   end
-  let(:headers) { {"HTTP_REFERER" => root_path} }
 
-  include_context "sign in as admin"
+  include_context "sign in as manager"
 
   describe "GET /locale/edit" do
     it "renders locale edit page" do
@@ -43,18 +42,17 @@ RSpec.describe "Locales", type: :request do
   describe "PUT|PATCH /locale" do
     context "when provided parameters are valid" do
       it "updates the locale and redirects" do
-        put locale_path, params: valid_params, headers:, as: :turbo_stream
+        put locale_path, params: valid_params, as: :turbo_stream
 
         expect(response).to redirect_to(root_path)
-        expect(response).to_not redirect_to(preference_path)
         expect(flash[:notice]).to be_present
-        expect(response).to have_http_status(:found)
+        expect(response).to have_http_status(:see_other)
       end
     end
 
     context "when provided parameters are invalid" do
       it "does not update the locale and renders errors" do
-        put locale_path, params: invalid_params, headers:, as: :turbo_stream
+        put locale_path, params: invalid_params, as: :turbo_stream
 
         expect(flash[:alert]).to be_present
         expect(response.media_type).to eq(Mime[:turbo_stream])

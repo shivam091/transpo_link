@@ -7,7 +7,7 @@
 require "spec_helper"
 
 RSpec.describe InventoryBatchProcessingLog, type: :model do
-  subject { build(:inventory_batch_processing_log) }
+  subject(:inventory_batch_processing_log) { build(:inventory_batch_processing_log) }
 
   describe "valid factory" do
     it { is_expected.to have_a_valid_factory(:inventory_batch_processing_log) }

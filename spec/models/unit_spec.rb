@@ -7,7 +7,7 @@
 require "spec_helper"
 
 RSpec.describe Unit, type: :model do
-  subject { create(:unit) }
+  subject(:unit) { create(:unit) }
 
   describe "valid factory" do
     it { is_expected.to have_a_valid_factory(:item_unit) }
@@ -78,6 +78,8 @@ RSpec.describe Unit, type: :model do
     end
 
     describe "#symbol" do
+      let!(:unit) { create(:unit) }
+
       it { is_expected.to validate_presence_of(:symbol) }
       it { is_expected.to validate_uniqueness_of(:symbol).scoped_to(:category).with_message("already exists for the selected category") }
     end

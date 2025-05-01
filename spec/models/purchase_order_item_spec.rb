@@ -138,28 +138,28 @@ RSpec.describe PurchaseOrderItem, type: :model do
 
       context "when quantity is invalid" do
         it "is invalid" do
-          subject.quantity = "abcd"
-          subject.validate
+          purchase_order_item.quantity = "abcd"
+          purchase_order_item.validate
 
-          expect(subject.errors[:quantity]).to include("must be greater than 0.0")
+          expect(purchase_order_item.errors[:quantity]).to include("must be greater than 0.0")
         end
       end
 
       context "when quantity <= 0.0" do
         it "is invalid" do
-          subject.quantity = 0.0
-          subject.validate
+          purchase_order_item.quantity = 0.0
+          purchase_order_item.validate
 
-          expect(subject.errors[:quantity]).to include("must be greater than 0.0")
+          expect(purchase_order_item.errors[:quantity]).to include("must be greater than 0.0")
         end
       end
 
       context "when quantity > 0.0" do
         it "is valid" do
-          subject.quantity = 1.0
-          subject.validate
+          purchase_order_item.quantity = 1.0
+          purchase_order_item.validate
 
-          expect(subject.errors[:quantity]).to be_empty
+          expect(purchase_order_item.errors[:quantity]).to be_empty
         end
       end
     end
@@ -169,19 +169,19 @@ RSpec.describe PurchaseOrderItem, type: :model do
 
       context "when received_quantity < 0.0" do
         it "is invalid" do
-          subject.received_quantity = -0.5
-          subject.validate
+          purchase_order_item.received_quantity = -0.5
+          purchase_order_item.validate
 
-          expect(subject.errors[:received_quantity]).to include("must be greater than or equal to 0.0")
+          expect(purchase_order_item.errors[:received_quantity]).to include("must be greater than or equal to 0.0")
         end
       end
 
       context "when received_quantity >= 0.0" do
         it "is valid" do
-          subject.received_quantity = 0.0
-          subject.validate
+          purchase_order_item.received_quantity = 0.0
+          purchase_order_item.validate
 
-          expect(subject.errors[:received_quantity]).to be_empty
+          expect(purchase_order_item.errors[:received_quantity]).to be_empty
         end
       end
     end
@@ -191,28 +191,28 @@ RSpec.describe PurchaseOrderItem, type: :model do
 
       context "when unit_cost is invalid" do
         it "is invalid" do
-          subject.unit_cost = "abcd"
-          subject.validate
+          purchase_order_item.unit_cost = "abcd"
+          purchase_order_item.validate
 
-          expect(subject.errors[:unit_cost]).to include("must be greater than 0.0")
+          expect(purchase_order_item.errors[:unit_cost]).to include("must be greater than 0.0")
         end
       end
 
       context "when unit_cost <= 0.0" do
         it "is invalid" do
-          subject.unit_cost = 0.0
-          subject.validate
+          purchase_order_item.unit_cost = 0.0
+          purchase_order_item.validate
 
-          expect(subject.errors[:unit_cost]).to include("must be greater than 0.0")
+          expect(purchase_order_item.errors[:unit_cost]).to include("must be greater than 0.0")
         end
       end
 
       context "when unit_cost > 0.0" do
         it "is valid" do
-          subject.unit_cost = 1.0
-          subject.validate
+          purchase_order_item.unit_cost = 1.0
+          purchase_order_item.validate
 
-          expect(subject.errors[:unit_cost]).to be_empty
+          expect(purchase_order_item.errors[:unit_cost]).to be_empty
         end
       end
     end

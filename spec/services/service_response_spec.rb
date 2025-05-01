@@ -62,4 +62,64 @@ RSpec.describe ServiceResponse do
       end
     end
   end
+
+  describe "#on_success" do
+    context "when status is :success" do
+      let(:service_response) { described_class.success(payload: {key: "value"}) }
+
+      it "yields and executes the block" do
+        executed = false
+        result = service_response.on_success do |resp|
+          executed = true
+
+          expect(resp).to eq(service_response)
+        end
+
+        expect(executed).to be_truthy
+        expect(result).to eq(service_response)
+      end
+    end
+
+    context "when status is not :success" do
+      let(:service_response) { described_class.error }
+
+      it "does not execute the block" do
+        executed = false
+        result = service_response.on_success { executed = true }
+
+        expect(executed).to be_falsy
+        expect(result).to eq(service_response)
+      end
+    end
+  end
+
+  describe "#on_error" do
+    context "when status is :error" do
+      let(:service_response) { described_class.error(payload: {error: "something"}) }
+
+      it "yields and executes the block" do
+        executed = false
+        result = service_response.on_error do |resp|
+          executed = true
+
+          expect(resp).to eq(service_response)
+        end
+
+        expect(executed).to be_truthy
+        expect(result).to eq(service_response)
+      end
+    end
+
+    context "when status is not :error" do
+      let(:service_response) { described_class.success }
+
+      it "does not execute the block" do
+        executed = false
+        result = service_response.on_error { executed = true }
+
+        expect(executed).to be_falsy
+        expect(result).to eq(service_response)
+      end
+    end
+  end
 end

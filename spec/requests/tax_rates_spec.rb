@@ -8,7 +8,7 @@ require "spec_helper"
 
 RSpec.describe "TaxRates", type: :request do
   let!(:active_tax_rate) { create(:tax_rate, valid_to: Date.current + 1.day) }
-  let!(:future_tax_rate) { create(:tax_rate, valid_from: (Date.current + 1.week)) }
+  let!(:future_tax_rate) { create(:tax_rate, valid_from: (Date.current + 1.week), valid_to: (Date.current + 2.week)) }
 
   let(:valid_params) { {tax_rate: attributes_for(:tax_rate, tax_identifier_type: "pan")} }
   let(:invalid_params) { {tax_rate: attributes_for(:tax_rate, tax_identifier_type: "")} }

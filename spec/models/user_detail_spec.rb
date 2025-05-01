@@ -7,7 +7,7 @@
 require "spec_helper"
 
 RSpec.describe UserDetail, type: :model do
-  subject { build(:user_detail) }
+  subject(:user_detail) { build(:user_detail) }
 
   describe "valid factory" do
     it { is_expected.to have_a_valid_factory(:user_detail) }

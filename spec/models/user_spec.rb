@@ -9,7 +9,7 @@ require "spec_helper"
 RSpec.describe User, type: :model do
   let!(:dummy_password) { Rails.application.credentials.config[:TEST_PASSWORD] }
 
-  subject { create(:admin, :confirmed) }
+  subject(:user) { build(:admin, :confirmed) }
 
   describe "valid factory" do
     it { is_expected.to have_a_valid_factory(:admin) }
@@ -147,6 +147,8 @@ RSpec.describe User, type: :model do
 
   describe "validations" do
     describe "#email" do
+      let(:user) { create(:admin) }
+
       it { is_expected.to validate_presence_of(:email) }
       it { is_expected.to validate_uniqueness_of(:email).ignoring_case_sensitivity }
       it { is_expected.to allow_value("abc@email.com").for(:email) }
@@ -160,22 +162,22 @@ RSpec.describe User, type: :model do
 
     describe "#password" do
       context "when password is required" do
-        before { allow(subject).to receive(:password_required?) { true } }
+        before { allow(user).to receive(:password_required?) { true } }
 
         it { is_expected.to validate_presence_of(:password) }
         it { is_expected.to validate_length_of(:password).is_at_least(8).is_at_most(20) }
       end
 
       context "when password is not required" do
-        before { allow(subject).to receive(:password_required?) { false } }
+        before { allow(user).to receive(:password_required?) { false } }
 
         it { is_expected.to_not validate_presence_of(:password) }
       end
 
       context "when password is present and not password_confirmation" do
         before do
-          allow(subject).to receive(:password) { dummy_password }
-          allow(subject).to receive(:password_confirmation) { "" }
+          allow(user).to receive(:password) { dummy_password }
+          allow(user).to receive(:password_confirmation) { "" }
         end
 
         it { is_expected.to be_invalid }
@@ -183,8 +185,8 @@ RSpec.describe User, type: :model do
 
       context "when both password and password_confirmation are present" do
         before do
-          allow(subject).to receive(:password) { dummy_password }
-          allow(subject).to receive(:password_confirmation) { dummy_password }
+          allow(user).to receive(:password) { dummy_password }
+          allow(user).to receive(:password_confirmation) { dummy_password }
         end
 
         it { is_expected.to be_valid }
@@ -282,35 +284,36 @@ RSpec.describe User, type: :model do
   describe "instance methods" do
     describe "#active_for_authentication?" do
       it "returns true if the user is active" do
-        subject.is_active = true
+        user.is_active = true
 
-        expect(subject.active_for_authentication?).to be_truthy
+        expect(user.active_for_authentication?).to be_truthy
       end
 
       it "returns false if the user is not active" do
-        subject.is_active = false
+        user.is_active = false
 
-        expect(subject.active_for_authentication?).to be_falsy
+        expect(user.active_for_authentication?).to be_falsy
       end
     end
 
     describe "#update_password_updated_at" do
-      let!(:original_timestamp) { subject.password_updated_at }
+      let!(:user) { create(:admin) }
+      let!(:original_timestamp) { user.password_updated_at }
 
       context "when the password is updated" do
         it "updates the password_updated_at timestamp" do
-          subject.update(password: dummy_password, password_confirmation: dummy_password)
-          subject.reload
+          user.update(password: dummy_password, password_confirmation: dummy_password)
+          user.reload
 
-          expect(subject.password_updated_at).to be > original_timestamp
+          expect(user.password_updated_at).to be > original_timestamp
         end
       end
 
       context "when other attributes are updated" do
         it "does not change the password_updated_at timestamp" do
-          subject.update(email: "new_email@example.com")
+          user.update(email: "new_email@example.com")
 
-          expect(subject.password_updated_at).to eq(original_timestamp)
+          expect(user.password_updated_at).to eq(original_timestamp)
         end
       end
     end
@@ -389,8 +392,8 @@ RSpec.describe User, type: :model do
     end
 
     describe "#admin?" do
-      it { expect(subject.admin?).to be_truthy }
-      it { expect(subject.supplier?).to be_falsy }
+      it { expect(user.admin?).to be_truthy }
+      it { expect(user.supplier?).to be_falsy }
     end
 
     describe "#buyer?" do

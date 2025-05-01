@@ -9,7 +9,9 @@ require "spec_helper"
 RSpec.describe "PurchaseOrders", type: :request do
   include_context "sign in as manager"
 
-  let!(:purchase_order) { create(:purchase_order, manager:) }
+  let(:supplier) { create(:supplier) }
+
+  let!(:purchase_order) { create(:purchase_order, manager:, supplier:) }
 
   let(:valid_params) do
     {
@@ -175,9 +177,10 @@ RSpec.describe "PurchaseOrders", type: :request do
   end
 
   describe "PATCH /purchase-orders/:id/approve" do
-    let(:warehouse) { create(:warehouse, name: "Test warehouse") }
+    let(:warehouse) { create(:warehouse, :with_supplier, name: "Test warehouse") }
     let(:product) { create(:product, name: "Test product") }
     let(:unit) { product.unit }
+    let(:supplier) { warehouse.managers.first }
     let(:supplier) { warehouse.suppliers.first }
 
     let!(:purchase_order) do
