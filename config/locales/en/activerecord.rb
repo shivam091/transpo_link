@@ -4,6 +4,23 @@
 
 {
   en: {
+    activemodel: {
+      models: {
+        "purchase_order_items/delivery" => "Delivery",
+      },
+      attributes: {
+        "purchase_order_items/delivery" => {
+          quantity: "Delivery quantity",
+          unit: "Delivery unit",
+        },
+      },
+      errors: {
+        messages: {
+          blank: "is required",
+          greater_than: "must be greater than %{count}",
+        },
+      },
+    },
     activerecord: {
       attributes: {
         role: {

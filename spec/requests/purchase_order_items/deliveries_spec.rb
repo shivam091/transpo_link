@@ -7,24 +7,19 @@
 require "spec_helper"
 
 RSpec.describe "PurchaseOrderItems::Deliveries", type: :request do
-  let!(:product) { create(:product) }
-  let!(:warehouse) { create(:warehouse) }
-  let!(:inventory) { create(:inventory, product:, warehouse:) }
+  let(:unit) { create(:dozen_unit) }
+  let(:valid_params) { {delivery: {quantity: 12, unit: unit.id}} }
+  let(:invalid_params) { {delivery: {quantity: nil, unit: nil}} }
 
-  let(:purchase_order) { create(:purchase_order, :submitted, warehouse:) }
-  let(:purchase_order_item) { create(:purchase_order_item, product:, purchase_order:) }
-
-  let(:valid_params) { {inventory_batch: attributes_for(:inventory_batch, unit_id: inventory.unit_id)} }
-  let(:invalid_params) { {inventory_batch: attributes_for(:inventory_batch)} }
+  let!(:purchase_order) { create(:purchase_order, :submitted) }
+  let!(:purchase_order_item) { create(:purchase_order_item, purchase_order:, unit:) }
 
   include_context "sign in as manager"
 
   describe "GET /purchase-orders/:purchase_order_id/purchase-order-items/:purchase_order_item_id/delivery/new" do
-    before { get new_purchase_order_purchase_order_item_delivery_path(purchase_order, purchase_order_item) }
-
-    include_examples "initializes a new instance", :inventory_batch, InventoryBatch
-
     it "renders new purchase order item delivery modal" do
+      get new_purchase_order_purchase_order_item_delivery_path(purchase_order, purchase_order_item), as: :turbo_stream
+
       expect(response.body).to include("<turbo-frame id=\"new_purchase_order_item_delivery_form_frame\" target=\"_top\">")
       expect(response).to have_http_status(:ok)
     end
@@ -36,7 +31,7 @@ RSpec.describe "PurchaseOrderItems::Deliveries", type: :request do
         post purchase_order_purchase_order_item_delivery_path(purchase_order, purchase_order_item), params: valid_params, as: :turbo_stream
 
         expect(response).to redirect_to(purchase_orders_path)
-        expect(flash[:notice]).to eq("The item delivery has been recorded and is being processed. It will be available for use shortly.")
+        expect(flash[:notice]).to eq("The item delivery has been recorded.")
         expect(response).to have_http_status(:see_other)
       end
     end
