@@ -272,6 +272,10 @@
           ordered_quantity: "Ordered quantity",
           remaining_quantity: "Remaining quantity",
         },
+        "purchase_order_items/delivery" => {
+          quantity: "Quantity",
+          unit_id: "Unit of measure",
+        },
       },
       errors: {
         format: "%{attribute} %{message}",

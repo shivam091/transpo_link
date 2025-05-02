@@ -7,23 +7,23 @@ class PurchaseOrderItems::DeliveriesController < ApplicationController
 
   # GET /purchase-orders/:purchase_order_id/purchase-order-items/:purchase_order_item_id/delivery/new
   def new
-    @inventory_batch = InventoryBatch.new
+    @delivery = @purchase_order_item.deliveries.build
   end
 
   # POST /purchase-orders/:purchase_order_id/purchase-order-items/:purchase_order_item_id/delivery
   def create
-    inventory = @purchase_order.warehouse.inventories.for_product(@purchase_order_item.product)
-
-    response = InventoryBatches::UpsertService.(inventory, inventory_batch_params)
-    @inventory_batch = response.payload[:inventory_batch]
+    response = PurchaseOrderItems::Deliveries::CreateService.(@purchase_order_item, delivery_params)
+    @delivery = response.payload[:delivery]
 
     if response.success?
       set_flash_message(:notice, :success)
+
       redirect_back fallback_location: purchase_orders_path, status: :see_other
     else
       respond_to do |format|
         format.turbo_stream do
           set_flash_message(:alert, :error, immediate: true)
+
           render turbo_stream: [update_form_frame, render_flash], status: :unprocessable_entity
         end
       end
@@ -40,16 +40,8 @@ class PurchaseOrderItems::DeliveriesController < ApplicationController
     @purchase_order_item ||= @purchase_order.purchase_order_items.find(params[:purchase_order_item_id])
   end
 
-  def inventory_batch_params
-    params.require(:inventory_batch).permit(
-      :batch_number,
-      :expiration_date,
-      :quantity,
-      :unit_id
-    ).merge!(
-      cost_price: @purchase_order_item.unit_cost,
-      currency: @purchase_order_item.currency
-    )
+  def delivery_params
+    params.require(:delivery).permit(:quantity, :unit_id)
   end
 
   def form_frame_id
