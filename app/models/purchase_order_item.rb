@@ -79,6 +79,8 @@ class PurchaseOrderItem < ApplicationRecord
     a.belongs_to :purchase_order, touch: true
     a.belongs_to :product
     a.belongs_to :unit
+
+    a.has_one :warehouse, through: :purchase_order, dependent: :restrict_with_exception
   end
 
   has_many :inventory_movements, as: :source, dependent: :restrict_with_exception
@@ -89,6 +91,10 @@ class PurchaseOrderItem < ApplicationRecord
            class_name: "InventoryMovement",
            as: :source,
            dependent: :restrict_with_exception
+  has_many :deliveries,
+           class_name: "PurchaseOrderItems::Delivery",
+           inverse_of: :purchase_order_item,
+           dependent: :destroy
 
   before_validation :set_unit_cost_and_currency
 
