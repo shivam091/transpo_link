@@ -9,6 +9,7 @@ require "spec_helper"
 RSpec.describe PurchaseOrderItems::ProcessDeliveryService, type: :service do
   let!(:purchase_order_item) { create(:purchase_order_item, quantity: 5, received_quantity: 2) }
   let(:received_quantity) { 3 }
+  let(:inventory) { create(:inventory, product: purchase_order_item.product, warehouse: purchase_order_item.warehouse) }
 
   subject(:service_response) { described_class.(purchase_order_item, received_quantity) }
 
@@ -22,6 +23,28 @@ RSpec.describe PurchaseOrderItems::ProcessDeliveryService, type: :service do
       expect {
         service_response
       }.to change { purchase_order_item.reload.received_quantity }.by(received_quantity)
+    end
+
+    context "when decrementing replenishment" do
+      let(:converted_quantity) { 3.0 }
+
+      before do
+        allow_any_instance_of(Warehouse).to receive_message_chain(:inventories, :for_product).and_return(inventory)
+        allow(UnitConversion).to receive(:convert)
+          .with(purchase_order_item.unit, inventory.unit, received_quantity)
+          .and_return(converted_quantity)
+        allow(Replenishments::UpdateService).to receive(:call)
+      end
+
+      it "converts the quantity and calls Replenishments::UpdateService with :decrement" do
+        service_response
+
+        expect(UnitConversion).to have_received(:convert)
+          .with(purchase_order_item.unit, inventory.unit, received_quantity)
+
+        expect(Replenishments::UpdateService).to have_received(:call)
+          .with(inventory, converted_quantity, :decrement)
+      end
     end
 
     context "when total received quantity equals ordered quantity" do

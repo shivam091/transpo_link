@@ -11,6 +11,7 @@ class PurchaseOrderItems::ProcessDeliveryService < ApplicationService
   def call
     PurchaseOrderItem.transaction do
       update_received_quantity!
+      decrement_replenishment!
       decide_delivery_status
     end
   end
@@ -23,6 +24,16 @@ class PurchaseOrderItems::ProcessDeliveryService < ApplicationService
     result = PurchaseOrderItems::UpdateReceivedQuantityService.(purchase_order_item, received_quantity)
 
     raise ActiveRecord::Rollback if result.error?
+  end
+
+  def decrement_replenishment!
+    warehouse, product = purchase_order_item.warehouse, purchase_order_item.product
+    inventory = warehouse.inventories.for_product(product)
+
+    source_unit, target_unit = purchase_order_item.unit, inventory.unit
+    quantity = UnitConversion.convert(source_unit, target_unit, received_quantity)
+
+    Replenishments::UpdateService.(inventory, quantity, :decrement)
   end
 
   def decide_delivery_status
