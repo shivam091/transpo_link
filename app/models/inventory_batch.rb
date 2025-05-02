@@ -45,8 +45,6 @@ class InventoryBatch < ApplicationRecord
     a.belongs_to :unit
   end
 
-  belongs_to :restockable, polymorphic: true, optional: true
-
   has_one :product, through: :inventory
   has_one :warehouse, through: :inventory
 
