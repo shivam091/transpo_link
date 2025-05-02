@@ -82,6 +82,8 @@ RSpec.describe PurchaseOrder, type: :model do
   end
 
   describe "state machines" do
+    let!(:purchase_order) { create(:purchase_order) }
+
     it { is_expected.to have_state(:draft) }
     it { is_expected.to transition_from(:draft).to(:submitted).on_event(:submit) }
     it { is_expected.to transition_from(:submitted).to(:approved).on_event(:approve) }
@@ -350,6 +352,20 @@ RSpec.describe PurchaseOrder, type: :model do
           expect(Rails.logger).to receive(:error).with("Failed to synchronize PO delivery status: Event 'draft' cannot transition from 'draft'.")
 
           purchase_order.synchronize_delivery_status!
+        end
+      end
+    end
+
+    describe "#update_actual_delivery_date" do
+      let(:purchase_order) { create(:purchase_order, :approved, actual_delivery_date: nil) }
+
+      it "sets actual_delivery_date to current time on delivery" do
+        freeze_time do
+          expect {
+            purchase_order.fully_deliver!
+          }.to change {
+            purchase_order.reload.actual_delivery_date
+          }.from(nil).to(Date.current)
         end
       end
     end
