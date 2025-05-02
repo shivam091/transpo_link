@@ -79,6 +79,8 @@ class PurchaseOrderItem < ApplicationRecord
     a.belongs_to :purchase_order, touch: true
     a.belongs_to :product
     a.belongs_to :unit
+
+    a.has_one :warehouse, through: :purchase_order, dependent: :restrict_with_exception
   end
 
   has_many :inventory_batches, as: :restockable, dependent: :restrict_with_exception
