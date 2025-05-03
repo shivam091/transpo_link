@@ -91,6 +91,13 @@ class PurchaseOrderItem < ApplicationRecord
            class_name: "InventoryMovement",
            as: :source,
            dependent: :restrict_with_exception
+  has_many :purchases,
+           -> {
+             where(InventoryMovement.arel_table[:movement_type].eq(InventoryMovement.movement_types[:purchase]))
+           },
+           class_name: "InventoryMovement",
+           as: :source,
+           dependent: :restrict_with_exception
   has_many :deliveries,
            class_name: "PurchaseOrderItems::Delivery",
            inverse_of: :purchase_order_item,
@@ -107,6 +114,15 @@ class PurchaseOrderItem < ApplicationRecord
 
   def remaining_quantity
     quantity - received_quantity
+  end
+
+  def inventory
+    return unless purchase_order&.warehouse && product
+
+    @inventory ||= Inventory.find_by(
+      warehouse_id: purchase_order.warehouse_id,
+      product_id: product_id
+    )
   end
 
   private
