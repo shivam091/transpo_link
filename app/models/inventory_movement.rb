@@ -48,6 +48,7 @@ class InventoryMovement < ApplicationRecord
   belongs_to :source, polymorphic: true, optional: true
 
   before_save :set_default_attributes
+  before_create :convert_to_inventory_unit
   after_create :create_inventory_audit_log
 
   with_options prefix: true do |d|
@@ -65,5 +66,12 @@ class InventoryMovement < ApplicationRecord
 
   def create_inventory_audit_log
     InventoryAuditLogs::CreateService.(inventory, self)
+  end
+
+  def convert_to_inventory_unit
+    return if (target_unit = inventory.unit) == (source_unit = unit)
+
+    self.quantity = UnitConversion.convert(source_unit, target_unit, quantity)
+    self.unit = target_unit # Store in default unit
   end
 end
