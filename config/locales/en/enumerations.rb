@@ -179,15 +179,6 @@
           volume: "Volume"
         }
       },
-      inventory_batch_processing_log: {
-        status: {
-          pending: "Pending",
-          queued: "Queued",
-          processing: "Processing",
-          succeeded: "Succeeded",
-          failed: "Failed"
-        },
-      },
     }
   }
 }
