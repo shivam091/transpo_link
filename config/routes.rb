@@ -92,7 +92,7 @@ Rails.application.routes.draw do
 
     resource :delivery, only: [:new, :create], module: :purchase_orders
 
-    resources :purchase_order_items, path: "purchase-order-items" do
+    resources :purchase_order_items, path: "purchase-order-items", shallow: true do
       member do
         patch :cancel
       end

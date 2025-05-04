@@ -52,11 +52,9 @@ RSpec.describe "PurchaseOrderItems", type: :request do
       it "creates the purchase order item and closes the modal" do
         post purchase_order_purchase_order_items_path(purchase_order), params: valid_params, as: :turbo_stream
 
+        expect(response).to redirect_to(purchase_orders_path)
         expect(flash[:notice]).to eq("Purchase order item has been successfully added.")
-        expect(response.media_type).to eq(Mime[:turbo_stream])
-        expect(response.body).to include("<turbo-stream action=\"update\" target=\"#{dom_id(purchase_order, :items)}\">")
-        expect(response.body).to include("<turbo-stream action=\"update\" target=\"remote_modal\"><template></template></turbo-stream>") # Empty modal
-        expect(response).to have_http_status(:ok)
+        expect(response).to have_http_status(:see_other)
       end
     end
 
@@ -72,9 +70,9 @@ RSpec.describe "PurchaseOrderItems", type: :request do
     end
   end
 
-  describe "GET /purchase-orders/:purchase_order_id/purchase-order-items/:id/edit" do
+  describe "GET /purchase-order-items/:id/edit" do
     it "renders edit purchase order item modal" do
-      get edit_purchase_order_purchase_order_item_path(purchase_order, po_item1)
+      get edit_purchase_order_item_path(po_item1)
 
       expect(controller_assigns(:purchase_order_item)).to eq(po_item1)
       expect(response.body).to include("<turbo-frame id=\"edit_purchase_order_item_form_frame\" target=\"_top\">")
@@ -82,22 +80,20 @@ RSpec.describe "PurchaseOrderItems", type: :request do
     end
   end
 
-  describe "PATCH /purchase-orders/:purchase_order_id/purchase-order-items/:id" do
+  describe "PATCH /purchase-order-items/:id" do
     context "when provided parameters are valid" do
       it "updates the purchase order item and closes the modal" do
-        patch purchase_order_purchase_order_item_path(purchase_order, po_item1), params: valid_params, as: :turbo_stream
+        patch purchase_order_item_path(po_item1), params: valid_params, as: :turbo_stream
 
+        expect(response).to redirect_to(purchase_orders_path)
         expect(flash[:notice]).to eq("Purchase order item has been successfully updated.")
-        expect(response.media_type).to eq(Mime[:turbo_stream])
-        expect(response.body).to include("<turbo-stream action=\"update\" target=\"#{dom_id(purchase_order, :items)}\">")
-        expect(response.body).to include("<turbo-stream action=\"update\" target=\"remote_modal\"><template></template></turbo-stream>") # Empty modal
-        expect(response).to have_http_status(:ok)
+        expect(response).to have_http_status(:see_other)
       end
     end
 
     context "when provided parameters are invalid" do
       it "does not update the purchase order item and renders errors" do
-        patch purchase_order_purchase_order_item_path(purchase_order, po_item1), params: invalid_params, as: :turbo_stream
+        patch purchase_order_item_path(po_item1), params: invalid_params, as: :turbo_stream
 
         expect(flash[:alert]).to eq("We encountered a problem updating the purchase order item. Please try again.")
         expect(response.media_type).to eq(Mime[:turbo_stream])
@@ -107,24 +103,23 @@ RSpec.describe "PurchaseOrderItems", type: :request do
     end
   end
 
-  describe "GET /purchase-orders/:purchase_order_id/purchase-order-items/:id" do
+  describe "GET /purchase-order-items/:id" do
     it "renders purchase order item details modal" do
-      get purchase_order_purchase_order_item_path(purchase_order, po_item1)
+      get purchase_order_item_path(po_item1)
 
       expect(controller_assigns(:purchase_order_item)).to eq(po_item1)
       expect(response).to have_http_status(:ok)
     end
   end
 
-  describe "DELETE /purchase-orders/:purchase_order_id/purchase-order-items/:id" do
+  describe "DELETE /purchase-order-items/:id" do
     context "when deletion is successful" do
       it "deletes the purchase order item and updates the turbo frame" do
-        delete purchase_order_purchase_order_item_path(purchase_order, po_item1), as: :turbo_stream
+        delete purchase_order_item_path(po_item1), as: :turbo_stream
 
-        expect(flash[:info]).to eq("Purchase order item has been successfully deleted.")
-        expect(response.media_type).to eq(Mime[:turbo_stream])
-        expect(response.body).to include("<turbo-stream action=\"update\" target=\"#{dom_id(purchase_order, :items)}\">")
-        expect(response).to have_http_status(:ok)
+        expect(response).to redirect_to(purchase_orders_path)
+        expect(flash[:notice]).to eq("Purchase order item has been successfully deleted.")
+        expect(response).to have_http_status(:see_other)
       end
     end
 
@@ -132,24 +127,23 @@ RSpec.describe "PurchaseOrderItems", type: :request do
       it "does not delete the purchase order item and render errors" do
         allow(PurchaseOrderItems::DestroyService).to receive(:call) { ServiceResponse.error }
 
-        delete purchase_order_purchase_order_item_path(purchase_order, po_item1), as: :turbo_stream
+        delete purchase_order_item_path(po_item1), as: :turbo_stream
 
+        expect(response).to redirect_to(purchase_orders_path)
         expect(flash[:alert]).to eq("We encountered a problem deleting the purchase order item. Please try again.")
-        expect(response.media_type).to eq(Mime[:turbo_stream])
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:see_other)
       end
     end
   end
 
-  describe "PATCH /purchase-orders/:purchase_order_id/purchase-order-items/:id/cancel" do
+  describe "PATCH /purchase-order-items/:id/cancel" do
     context "when cancellation is successful" do
       it "cancels the purchase order item and updates the turbo frame" do
-        patch cancel_purchase_order_purchase_order_item_path(purchase_order, po_item1), as: :turbo_stream
+        patch cancel_purchase_order_item_path(po_item1), as: :turbo_stream
 
-        expect(flash[:info]).to eq("Purchase order item has been successfully cancelled.")
-        expect(response.media_type).to eq(Mime[:turbo_stream])
-        expect(response.body).to include("<turbo-stream action=\"update\" target=\"#{dom_id(purchase_order, :items)}\">")
-        expect(response).to have_http_status(:ok)
+        expect(response).to redirect_to(purchase_orders_path)
+        expect(flash[:notice]).to eq("Purchase order item has been successfully cancelled.")
+        expect(response).to have_http_status(:see_other)
       end
     end
 
@@ -157,11 +151,11 @@ RSpec.describe "PurchaseOrderItems", type: :request do
       it "does not cancel the purchase order item and render errors" do
         allow(PurchaseOrderItems::CancelService).to receive(:call) { ServiceResponse.error }
 
-        patch cancel_purchase_order_purchase_order_item_path(purchase_order, po_item1), as: :turbo_stream
+        patch cancel_purchase_order_item_path(po_item1), as: :turbo_stream
 
+        expect(response).to redirect_to(purchase_orders_path)
         expect(flash[:alert]).to eq("We encountered a problem cancelling the purchase order item. Please try again.")
-        expect(response.media_type).to eq(Mime[:turbo_stream])
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:see_other)
       end
     end
   end

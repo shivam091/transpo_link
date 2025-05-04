@@ -16,8 +16,8 @@ RSpec.describe "PurchaseOrderItems::Deliveries", type: :request do
 
   include_context "sign in as manager"
 
-  describe "GET /purchase-orders/:purchase_order_id/purchase-order-items/:purchase_order_item_id/deliveries/new" do
-    before { get new_purchase_order_purchase_order_item_delivery_path(purchase_order, purchase_order_item), as: :turbo_stream }
+  describe "GET /purchase-order-items/:purchase_order_item_id/deliveries/new" do
+    before { get new_purchase_order_item_delivery_path(purchase_order_item), as: :turbo_stream }
 
     include_examples "initializes a new instance", :delivery, PurchaseOrderItems::Delivery
 
@@ -27,7 +27,7 @@ RSpec.describe "PurchaseOrderItems::Deliveries", type: :request do
     end
   end
 
-  describe "POST /purchase-orders/:purchase_order_id/purchase-order-items/:purchase_order_item_id/deliveries" do
+  describe "POST /purchase-order-items/:purchase_order_item_id/deliveries" do
     before do
       allow_any_instance_of(PurchaseOrderItems::Delivery).to receive(:convert_to_item_unit)
       allow_any_instance_of(PurchaseOrderItems::Delivery).to receive(:process_delivery)
@@ -35,7 +35,7 @@ RSpec.describe "PurchaseOrderItems::Deliveries", type: :request do
 
     context "when provided parameters are valid" do
       it "creates the delivery and redirects" do
-        post purchase_order_purchase_order_item_deliveries_path(purchase_order, purchase_order_item), params: valid_params, as: :turbo_stream
+        post purchase_order_item_deliveries_path(purchase_order_item), params: valid_params, as: :turbo_stream
 
         expect(response).to redirect_to(purchase_orders_path)
         expect(flash[:notice]).to eq("The item delivery has been recorded.")
@@ -45,7 +45,7 @@ RSpec.describe "PurchaseOrderItems::Deliveries", type: :request do
 
     context "when provided parameters are invalid" do
       it "does not create the delivery and renders errors" do
-        post purchase_order_purchase_order_item_deliveries_path(purchase_order, purchase_order_item), params: invalid_params, as: :turbo_stream
+        post purchase_order_item_deliveries_path(purchase_order_item), params: invalid_params, as: :turbo_stream
 
         expect(flash[:alert]).to eq("Unable to record the item delivery. Please check the details and try again.")
         expect(response.media_type).to eq(Mime[:turbo_stream])
