@@ -30,10 +30,11 @@ RSpec.describe "PurchaseOrderItems::Deliveries", type: :request do
   describe "POST /purchase-orders/:purchase_order_id/purchase-order-items/:purchase_order_item_id/deliveries" do
     before do
       allow_any_instance_of(PurchaseOrderItems::Delivery).to receive(:convert_to_item_unit)
+      allow_any_instance_of(PurchaseOrderItems::Delivery).to receive(:process_delivery)
     end
 
     context "when provided parameters are valid" do
-      it "creates the inventory batch and redirects" do
+      it "creates the delivery and redirects" do
         post purchase_order_purchase_order_item_deliveries_path(purchase_order, purchase_order_item), params: valid_params, as: :turbo_stream
 
         expect(response).to redirect_to(purchase_orders_path)
@@ -43,7 +44,7 @@ RSpec.describe "PurchaseOrderItems::Deliveries", type: :request do
     end
 
     context "when provided parameters are invalid" do
-      it "does not create the inventory batch and renders errors" do
+      it "does not create the delivery and renders errors" do
         post purchase_order_purchase_order_item_deliveries_path(purchase_order, purchase_order_item), params: invalid_params, as: :turbo_stream
 
         expect(flash[:alert]).to eq("Unable to record the item delivery. Please check the details and try again.")

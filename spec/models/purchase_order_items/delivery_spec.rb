@@ -96,6 +96,8 @@ RSpec.describe PurchaseOrderItems::Delivery, type: :model do
     let(:purchase_order_item) { create(:purchase_order_item, unit: target_unit) }
 
     describe "#convert_to_item_unit" do
+      before { allow(delivery).to receive(:process_delivery) }
+
       context "when source and target units are the same" do
         let(:delivery) { build(:po_item_delivery, purchase_order_item:, unit: target_unit, quantity: 10) }
 
@@ -120,6 +122,16 @@ RSpec.describe PurchaseOrderItems::Delivery, type: :model do
           expect(delivery.quantity).to eq(60)
           expect(delivery.unit).to eq(target_unit)
         end
+      end
+    end
+
+    describe "#process_delivery" do
+      let(:delivery) { build(:po_item_delivery, purchase_order_item:) }
+
+      it "calls PurchaseOrderItems::Deliveries::ProcessService with the delivery" do
+        expect(PurchaseOrderItems::Deliveries::ProcessService).to receive(:call).with(delivery)
+
+        delivery.save!
       end
     end
   end

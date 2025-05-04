@@ -21,6 +21,7 @@ class PurchaseOrderItems::Delivery < ApplicationRecord
   belongs_to :unit, inverse_of: :delivered_po_items
 
   before_create :convert_to_item_unit
+  after_create :process_delivery
 
   private
 
@@ -29,5 +30,9 @@ class PurchaseOrderItems::Delivery < ApplicationRecord
 
     self.quantity = UnitConversion.convert(source_unit, target_unit, quantity)
     self.unit = target_unit # Store in item unit
+  end
+
+  def process_delivery
+    PurchaseOrderItems::Deliveries::ProcessService.(self)
   end
 end

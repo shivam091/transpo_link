@@ -14,6 +14,7 @@ RSpec.describe PurchaseOrderItems::Deliveries::CreateService, type: :service do
   describe ".call" do
     before do
       allow_any_instance_of(PurchaseOrderItems::Delivery).to receive(:convert_to_item_unit)
+      allow_any_instance_of(PurchaseOrderItems::Delivery).to receive(:process_delivery)
     end
 
     context "when provided attributes are valid" do
