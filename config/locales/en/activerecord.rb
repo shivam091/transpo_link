@@ -410,6 +410,13 @@
               },
             }
           },
+          "purchase_order_items/delivery" => {
+            attributes: {
+              quantity: {
+                exceeds_remaining_quantity: "cannot exceed remaining quantity of the purchase order item"
+              }
+            }
+          },
         },
         messages: {
           label_already_exists_at_group_level: "already exists at group level for %{group}. Please choose another one.",

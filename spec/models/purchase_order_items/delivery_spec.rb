@@ -7,7 +7,7 @@
 require "spec_helper"
 
 RSpec.describe PurchaseOrderItems::Delivery, type: :model do
-  subject(:po_item_delivery) { build(:po_item_delivery) }
+  subject(:delivery) { build(:po_item_delivery, quantity: 1) }
 
   describe "valid factory" do
     it { is_expected.to have_a_valid_factory(:po_item_delivery) }
@@ -41,20 +41,29 @@ RSpec.describe PurchaseOrderItems::Delivery, type: :model do
   end
 
   describe "associations" do
+    before do
+      allow(delivery).to receive(:convert_to_item_unit)
+      allow(delivery).to receive(:converted_quantity_must_not_exceed_remaining_quantity)
+    end
+
     it { is_expected.to belong_to(:purchase_order_item).inverse_of(:deliveries) }
     it { is_expected.to belong_to(:unit).inverse_of(:delivered_po_items) }
   end
 
   describe "callbacks" do
-    it { is_expected.to have_callback(:before, :create, :convert_to_item_unit) }
+    it { is_expected.to have_callback(:before, :validation, :store_original_attributes) }
+    it { is_expected.to have_callback(:before, :validation, :convert_to_item_unit) }
+    it { is_expected.to have_callback(:after, :create, :process_delivery) }
   end
 
   describe "validations" do
+    before { allow(delivery).to receive(:convert_to_item_unit) }
+
     describe "#quantity" do
       it { is_expected.to validate_presence_of(:quantity) }
 
       context "when quantity is invalid" do
-        let(:delivery) { described_class.new(quantity: "abcd") }
+        let(:delivery) { build(:po_item_delivery, quantity: "abcd") }
 
         it "is invalid" do
           delivery.validate
@@ -64,7 +73,7 @@ RSpec.describe PurchaseOrderItems::Delivery, type: :model do
       end
 
       context "when quantity <= 0.0" do
-        let(:delivery) { described_class.new(quantity: 0.0) }
+        let(:delivery) { build(:po_item_delivery, quantity: 0.0) }
 
         it "is invalid" do
           delivery.validate
@@ -74,7 +83,7 @@ RSpec.describe PurchaseOrderItems::Delivery, type: :model do
       end
 
       context "when quantity > 0.0" do
-        let(:delivery) { described_class.new(quantity: 1.0) }
+        let(:delivery) { build(:po_item_delivery, quantity: 1.0) }
 
         it "is valid" do
           delivery.validate
@@ -93,13 +102,13 @@ RSpec.describe PurchaseOrderItems::Delivery, type: :model do
     let!(:source_unit) { create(:dozen_unit) }
     let!(:target_unit) { create(:item_unit) }
 
-    let(:purchase_order_item) { create(:purchase_order_item, unit: target_unit) }
+    let(:purchase_order_item) { create(:purchase_order_item, quantity: 12, unit: target_unit) }
 
     describe "#convert_to_item_unit" do
       before { allow(delivery).to receive(:process_delivery) }
 
       context "when source and target units are the same" do
-        let(:delivery) { build(:po_item_delivery, purchase_order_item:, unit: target_unit, quantity: 10) }
+        let(:delivery) { build(:po_item_delivery, unit: target_unit, quantity: 10, purchase_order_item:) }
 
         it "does not change quantity or unit" do
           expect(UnitConversion).not_to receive(:convert)
@@ -112,14 +121,14 @@ RSpec.describe PurchaseOrderItems::Delivery, type: :model do
       end
 
       context "when source and target units are different and conversion succeeds" do
-        let(:delivery) { build(:po_item_delivery, purchase_order_item:, unit: source_unit, quantity: 5) }
+        let(:delivery) { build(:po_item_delivery, unit: source_unit, quantity: 1, purchase_order_item:) }
 
         it "converts the quantity and sets unit to target unit" do
-          allow(UnitConversion).to receive(:convert).with(source_unit, target_unit, 5) { 60 }
+          allow(UnitConversion).to receive(:convert).with(source_unit, target_unit, 1) { 12 }
 
           delivery.save!
 
-          expect(delivery.quantity).to eq(60)
+          expect(delivery.quantity).to eq(12)
           expect(delivery.unit).to eq(target_unit)
         end
       end
@@ -132,6 +141,71 @@ RSpec.describe PurchaseOrderItems::Delivery, type: :model do
         expect(PurchaseOrderItems::Deliveries::ProcessService).to receive(:call).with(delivery)
 
         delivery.save!
+      end
+    end
+
+    describe "#store_original_attributes" do
+      let(:delivery) { build(:po_item_delivery, quantity: 5, unit: source_unit) }
+
+      before { allow(UnitConversion).to receive(:convert) }
+
+      it "stores original quantity and unit_id before conversion" do
+        expect(delivery.original_quantity).to be_nil
+        expect(delivery.original_unit_id).to be_nil
+
+        delivery.validate
+
+        expect(delivery.original_quantity).to eq(5)
+        expect(delivery.original_unit_id).to eq(source_unit.id)
+      end
+
+      it "does not override existing original values" do
+        delivery.original_quantity = 3
+        delivery.original_unit_id = target_unit.id
+
+        delivery.validate
+
+        expect(delivery.original_quantity).to eq(3)
+        expect(delivery.original_unit_id).to eq(target_unit.id)
+      end
+    end
+
+    describe "#converted_quantity_must_not_exceed_remaining_quantity" do
+      context "when converted quantity exceeds remaining quantity" do
+        let(:delivery) { build(:po_item_delivery, quantity: 10, unit: source_unit, purchase_order_item:) }
+
+        before do
+          allow(UnitConversion).to receive(:convert) { 20 } # Converted to 20 items
+          allow(delivery.purchase_order_item).to receive(:remaining_quantity) { 15 }
+        end
+
+        it "adds an error to quantity" do
+          delivery.validate
+
+          expect(delivery.errors[:quantity]).to include("cannot exceed remaining quantity of the purchase order item")
+        end
+      end
+
+      context "when converted quantity is within remaining quantity" do
+        let(:delivery) do
+          build(
+            :po_item_delivery,
+            quantity: 10,
+            unit: source_unit,
+            purchase_order_item: purchase_order_item
+          )
+        end
+
+        before do
+          allow(UnitConversion).to receive(:convert) { 10 }
+          allow(delivery.purchase_order_item).to receive(:remaining_quantity) { 15 }
+        end
+
+        it "does not add an error" do
+          delivery.validate
+
+          expect(delivery.errors[:quantity]).to be_empty
+        end
       end
     end
   end

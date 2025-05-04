@@ -119,9 +119,11 @@ class PurchaseOrderItem < ApplicationRecord
   def inventory
     return unless purchase_order&.warehouse && product
 
+    inventory_arel = Inventory.arel_table
+
     @inventory ||= Inventory.find_by(
-      warehouse_id: purchase_order.warehouse_id,
-      product_id: product_id
+      inventory_arel[:warehouse_id].eq(purchase_order.warehouse_id)
+        .and(inventory_arel[:product_id].eq(product_id))
     )
   end
 

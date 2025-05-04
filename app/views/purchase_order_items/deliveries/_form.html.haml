@@ -3,12 +3,13 @@
   = safe_render.partial "purchase_order_items/show"
   .col-md-12.col-lg-6
     = form.label :quantity, class: "form-label required"
-    = form.number_field :quantity, step: 0.01
+    = form.number_field :quantity, step: 0.01, value: (@delivery.original_quantity || @delivery.quantity)
     = help_text(t(".quantity_help_text"))
   .col-md-12.col-lg-6
     = form.label :unit_id, class: "form-label required"
     = form.measurement_unit_select :unit_id, category: @purchase_order_item.unit.category,
-      selected: form.object.unit&.id, include_blank: t(".select_unit_of_measure")
+      selected: (@delivery.original_unit_id || @delivery.unit_id),
+      include_blank: t(".select_unit_of_measure")
     = help_text(t(".unit_id_help_text"))
   .modal-actions
     = button_tag type: :submit, class: "btn btn-primary" do
