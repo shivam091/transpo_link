@@ -81,6 +81,7 @@ class PurchaseOrderItem < ApplicationRecord
     a.belongs_to :unit
   end
 
+  has_many :inventory_batches, as: :restockable, dependent: :restrict_with_exception
   has_many :inventory_movements, as: :source, dependent: :restrict_with_exception
   has_many :restocks,
            -> {
