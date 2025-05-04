@@ -5,12 +5,12 @@
 class PurchaseOrderItems::DeliveriesController < ApplicationController
   before_action :find_purchase_order, :find_purchase_order_item
 
-  # GET /purchase-orders/:purchase_order_id/purchase-order-items/:purchase_order_item_id/delivery/new
+  # GET /purchase-orders/:purchase_order_id/purchase-order-items/:purchase_order_item_id/deliveries/new
   def new
     @delivery = @purchase_order_item.deliveries.build
   end
 
-  # POST /purchase-orders/:purchase_order_id/purchase-order-items/:purchase_order_item_id/delivery
+  # POST /purchase-orders/:purchase_order_id/purchase-order-items/:purchase_order_item_id/deliveries
   def create
     response = PurchaseOrderItems::Deliveries::CreateService.(@purchase_order_item, delivery_params)
     @delivery = response.payload[:delivery]
