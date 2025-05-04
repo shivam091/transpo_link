@@ -19,4 +19,15 @@ class PurchaseOrderItems::Delivery < ApplicationRecord
 
   belongs_to :purchase_order_item, inverse_of: :deliveries
   belongs_to :unit, inverse_of: :delivered_po_items
+
+  before_create :convert_to_item_unit
+
+  private
+
+  def convert_to_item_unit
+    return if (source_unit = unit) == (target_unit = purchase_order_item.unit)
+
+    self.quantity = UnitConversion.convert(source_unit, target_unit, quantity)
+    self.unit = target_unit # Store in item unit
+  end
 end

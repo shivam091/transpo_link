@@ -28,6 +28,10 @@ RSpec.describe "PurchaseOrderItems::Deliveries", type: :request do
   end
 
   describe "POST /purchase-orders/:purchase_order_id/purchase-order-items/:purchase_order_item_id/deliveries" do
+    before do
+      allow_any_instance_of(PurchaseOrderItems::Delivery).to receive(:convert_to_item_unit)
+    end
+
     context "when provided parameters are valid" do
       it "creates the inventory batch and redirects" do
         post purchase_order_purchase_order_item_deliveries_path(purchase_order, purchase_order_item), params: valid_params, as: :turbo_stream
