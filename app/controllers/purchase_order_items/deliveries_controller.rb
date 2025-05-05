@@ -3,14 +3,14 @@
 # -*- warn_indent: true -*-
 
 class PurchaseOrderItems::DeliveriesController < ApplicationController
-  before_action :find_purchase_order, :find_purchase_order_item
+  before_action :set_purchase_order_item
 
-  # GET /purchase-orders/:purchase_order_id/purchase-order-items/:purchase_order_item_id/deliveries/new
+  # GET /purchase-order-items/:purchase_order_item_id/deliveries/new
   def new
     @delivery = @purchase_order_item.deliveries.build
   end
 
-  # POST /purchase-orders/:purchase_order_id/purchase-order-items/:purchase_order_item_id/deliveries
+  # POST /purchase-order-items/:purchase_order_item_id/deliveries
   def create
     response = PurchaseOrderItems::Deliveries::CreateService.(@purchase_order_item, delivery_params)
     @delivery = response.payload[:delivery]
@@ -32,12 +32,8 @@ class PurchaseOrderItems::DeliveriesController < ApplicationController
 
   private
 
-  def find_purchase_order
-    @purchase_order ||= PurchaseOrder.find(params[:purchase_order_id])
-  end
-
-  def find_purchase_order_item
-    @purchase_order_item ||= @purchase_order.purchase_order_items.find(params[:purchase_order_item_id])
+  def set_purchase_order_item
+    @purchase_order_item ||= PurchaseOrderItem.find(params[:purchase_order_item_id])
   end
 
   def delivery_params
