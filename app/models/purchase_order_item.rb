@@ -99,7 +99,7 @@ class PurchaseOrderItem < ApplicationRecord
            as: :source,
            dependent: :restrict_with_exception
   has_many :deliveries,
-           class_name: "PurchaseOrderItems::Delivery",
+           class_name: "PurchaseOrderItem::Delivery",
            inverse_of: :purchase_order_item,
            dependent: :destroy
 
