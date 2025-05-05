@@ -2,9 +2,7 @@
 # -*- frozen_string_literal: true -*-
 # -*- warn_indent: true -*-
 
-class PurchaseOrderItems::Delivery < ApplicationRecord
-  self.table_name = :purchase_order_item_deliveries
-
+class PurchaseOrderItem::Delivery < ApplicationRecord
   include ScaleEnforcer
 
   scale_attributes :quantity
@@ -36,6 +34,7 @@ class PurchaseOrderItems::Delivery < ApplicationRecord
   end
 
   def convert_to_item_unit
+    return unless unit && quantity
     return if (source_unit = unit) == (target_unit = purchase_order_item.unit)
 
     self.quantity = UnitConversion.convert(source_unit, target_unit, quantity)

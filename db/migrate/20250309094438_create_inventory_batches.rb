@@ -27,7 +27,13 @@ class CreateInventoryBatches < ActiveRecord::Migration[8.0]
                    null: false,
                    index: {using: :btree} # Unit used in this batch
       t.decimal :cost_price, precision: 12, scale: 2 # Cost per unit
-      t.string :currency # Currency from the purchase order
+      t.string :currency # Currency used in this batch
+      # Polymorphic reference (e.g., purchase_order_item, manual_adjustment, return, etc.)
+      t.references :restockable,
+                   type: :uuid,
+                   polymorphic: true,
+                   null: true,
+                   index: {using: :btree}
       t.timestamps_with_timezone null: false
 
       t.index [:inventory_id, :batch_number], unique: true

@@ -20,8 +20,8 @@ RSpec.describe PurchaseOrderItems::Deliveries::ProcessService, type: :service do
     context "with mocked services and method calls" do
       before do
         allow(purchase_order_item).to receive(:inventory) { inventory }
-        allow_any_instance_of(PurchaseOrderItems::Delivery).to receive(:converted_quantity_must_not_exceed_remaining_quantity)
-        allow_any_instance_of(PurchaseOrderItems::Delivery).to receive(:process_delivery)
+        allow_any_instance_of(PurchaseOrderItem::Delivery).to receive(:converted_quantity_must_not_exceed_remaining_quantity)
+        allow_any_instance_of(PurchaseOrderItem::Delivery).to receive(:process_delivery)
 
         allow(InventoryMovements::PurchaseService).to receive(:call)
         allow(PurchaseOrderItems::UpdateReceivedQuantityService).to receive(:call)

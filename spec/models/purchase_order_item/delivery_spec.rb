@@ -2,11 +2,11 @@
 # -*- frozen_string_literal: true -*-
 # -*- warn_indent: true -*-
 
-# spec/models/purchase_order_items/delivery_spec.rb
+# spec/models/purchase_order_item/delivery_spec.rb
 
 require "spec_helper"
 
-RSpec.describe PurchaseOrderItems::Delivery, type: :model do
+RSpec.describe PurchaseOrderItem::Delivery, type: :model do
   subject(:delivery) { build(:po_item_delivery, quantity: 1) }
 
   describe "valid factory" do

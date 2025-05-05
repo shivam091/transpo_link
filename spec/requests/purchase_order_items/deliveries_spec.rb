@@ -19,7 +19,7 @@ RSpec.describe "PurchaseOrderItems::Deliveries", type: :request do
   describe "GET /purchase-order-items/:purchase_order_item_id/deliveries/new" do
     before { get new_purchase_order_item_delivery_path(purchase_order_item), as: :turbo_stream }
 
-    include_examples "initializes a new instance", :delivery, PurchaseOrderItems::Delivery
+    include_examples "initializes a new instance", :delivery, PurchaseOrderItem::Delivery
 
     it "renders new purchase order item delivery modal" do
       expect(response.body).to include("<turbo-frame id=\"new_purchase_order_item_delivery_form_frame\" target=\"_top\">")
@@ -29,8 +29,8 @@ RSpec.describe "PurchaseOrderItems::Deliveries", type: :request do
 
   describe "POST /purchase-order-items/:purchase_order_item_id/deliveries" do
     before do
-      allow_any_instance_of(PurchaseOrderItems::Delivery).to receive(:convert_to_item_unit)
-      allow_any_instance_of(PurchaseOrderItems::Delivery).to receive(:process_delivery)
+      allow_any_instance_of(PurchaseOrderItem::Delivery).to receive(:convert_to_item_unit)
+      allow_any_instance_of(PurchaseOrderItem::Delivery).to receive(:process_delivery)
     end
 
     context "when provided parameters are valid" do

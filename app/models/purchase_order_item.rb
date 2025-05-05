@@ -83,6 +83,7 @@ class PurchaseOrderItem < ApplicationRecord
     a.has_one :warehouse, through: :purchase_order, dependent: :restrict_with_exception
   end
 
+  has_many :inventory_batches, as: :restockable, dependent: :restrict_with_exception
   has_many :inventory_movements, as: :source, dependent: :restrict_with_exception
   has_many :restocks,
            -> {
@@ -99,7 +100,7 @@ class PurchaseOrderItem < ApplicationRecord
            as: :source,
            dependent: :restrict_with_exception
   has_many :deliveries,
-           class_name: "PurchaseOrderItems::Delivery",
+           class_name: "PurchaseOrderItem::Delivery",
            inverse_of: :purchase_order_item,
            dependent: :destroy
 

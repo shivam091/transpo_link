@@ -92,7 +92,7 @@ RSpec.describe PurchaseOrderItem, type: :model do
     it { is_expected.to have_one(:warehouse).through(:purchase_order).inverse_of(:purchase_order_items).dependent(:restrict_with_exception) }
 
     it { is_expected.to have_many(:inventory_movements).dependent(:restrict_with_exception) }
-    it { is_expected.to have_many(:deliveries).class_name("PurchaseOrderItems::Delivery").inverse_of(:purchase_order_item).dependent(:destroy) }
+    it { is_expected.to have_many(:deliveries).class_name("PurchaseOrderItem::Delivery").inverse_of(:purchase_order_item).dependent(:destroy) }
     it { is_expected.to have_many(:restocks).class_name("InventoryMovement").dependent(:restrict_with_exception) }
 
     describe "#restocks" do
