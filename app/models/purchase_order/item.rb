@@ -80,20 +80,20 @@ class PurchaseOrder::Item < ApplicationRecord
     a.belongs_to :unit
   end
 
-  has_many :inventory_batches, as: :restockable, dependent: :restrict_with_exception
-  has_many :inventory_movements, as: :source, dependent: :restrict_with_exception
+  has_many :inventory_batches, class_name: "Inventory::Batch", as: :restockable, dependent: :restrict_with_exception
+  has_many :inventory_movements, class_name: "Inventory::Movement", as: :source, dependent: :restrict_with_exception
   has_many :restocks,
            -> {
-             where(InventoryMovement.arel_table[:movement_type].eq(InventoryMovement.movement_types[:restock]))
+             where(Inventory::Movement.arel_table[:type].eq(Inventory::Movement.types[:restock]))
            },
-           class_name: "InventoryMovement",
+           class_name: "Inventory::Movement",
            as: :source,
            dependent: :restrict_with_exception
   has_many :purchases,
            -> {
-             where(InventoryMovement.arel_table[:movement_type].eq(InventoryMovement.movement_types[:purchase]))
+             where(Inventory::Movement.arel_table[:type].eq(Inventory::Movement.types[:purchase]))
            },
-           class_name: "InventoryMovement",
+           class_name: "Inventory::Movement",
            as: :source,
            dependent: :restrict_with_exception
   has_many :deliveries,

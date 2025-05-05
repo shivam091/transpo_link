@@ -35,8 +35,8 @@ class Unit < ApplicationRecord
     a.has_many :warehouses
     a.has_many :products
     a.has_many :inventories
-    a.has_many :inventory_batches
-    a.has_many :inventory_movements
+    a.has_many :inventory_batches, class_name: "Inventory::Batch"
+    a.has_many :inventory_movements, class_name: "Inventory::Movement"
     a.has_many :purchase_order_items, class_name: "PurchaseOrder::Item"
     a.has_many :delivered_po_items, class_name: "PurchaseOrder::Item::Delivery"
   end

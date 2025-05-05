@@ -21,7 +21,7 @@ RSpec.describe InventoryBatches::CreateService, type: :service do
         )
       end
 
-      include_examples "creates a record", InventoryBatch
+      include_examples "creates a record", Inventory::Batch
       include_examples "returns a success response"
     end
 
@@ -30,7 +30,7 @@ RSpec.describe InventoryBatches::CreateService, type: :service do
         attributes_for(:inventory_batch, batch_number: nil, expiration_date: nil)
       end
 
-      include_examples "does not change record count", InventoryBatch
+      include_examples "does not change record count", Inventory::Batch
       include_examples "returns an error response"
     end
   end

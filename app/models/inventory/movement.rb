@@ -2,12 +2,15 @@
 # -*- frozen_string_literal: true -*-
 # -*- warn_indent: true -*-
 
-class InventoryMovement < ApplicationRecord
+class Inventory::Movement < ApplicationRecord
+  self.table_name = :inventory_movements
+  self.inheritance_column = :_type_disabled
+
   include ScaleEnforcer, Sortable
 
-  LISTING_ATTRIBUTES = %i[movement_date movement_type quantity unit_cost total_cost].freeze
+  LISTING_ATTRIBUTES = %i[movement_date type quantity unit_cost total_cost].freeze
 
-  enum :movement_type, {
+  enum :type, {
     restock: "restock",
     purchase: "purchase",
     sale: "sale",
@@ -33,18 +36,15 @@ class InventoryMovement < ApplicationRecord
             numericality: {greater_than_or_equal_to: :unit_cost},
             if: -> { unit_cost.present? },
             reduce: true
-  validates :movement_type,
+  validates :type,
             presence: true,
-            inclusion: {in: movement_types.keys},
+            inclusion: {in: types.keys},
             reduce: true
 
-  has_many :inventory_audit_logs, inverse_of: :inventory_movement, dependent: :destroy
+  has_many :audit_logs, inverse_of: :movement, class_name: "Inventory::AuditLog", dependent: :destroy
 
-  with_options inverse_of: :inventory_movements do |a|
-    a.belongs_to :inventory
-    a.belongs_to :unit
-  end
-
+  belongs_to :inventory, inverse_of: :movements
+  belongs_to :unit, inverse_of: :inventory_movements
   belongs_to :source, polymorphic: true, optional: true
 
   before_save :set_default_attributes
@@ -61,7 +61,7 @@ class InventoryMovement < ApplicationRecord
 
   def set_default_attributes
     self.movement_date = Time.now.utc
-    self.metadata = {action: movement_type}
+    self.metadata = {action: type}
   end
 
   def create_inventory_audit_log

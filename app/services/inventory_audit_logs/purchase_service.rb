@@ -7,11 +7,11 @@ module InventoryAuditLogs
     protected
 
     def previous_quantity
-      inventory.inventory_movements.purchase.sum(&:quantity) - inventory_movement.quantity
+      inventory.movements.purchase.sum(&:quantity) - inventory_movement.quantity
     end
 
     def new_quantity
-      inventory.inventory_movements.purchase.sum(&:quantity)
+      inventory.movements.purchase.sum(&:quantity)
     end
   end
 end

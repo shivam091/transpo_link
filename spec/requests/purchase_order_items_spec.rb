@@ -114,7 +114,7 @@ RSpec.describe "PurchaseOrderItems", type: :request do
 
   describe "DELETE /purchase-order-items/:id" do
     context "when deletion is successful" do
-      it "deletes the purchase order item and updates the turbo frame" do
+      it "deletes the purchase order item and redirects" do
         delete purchase_order_item_path(po_item1), as: :turbo_stream
 
         expect(response).to redirect_to(purchase_orders_path)
@@ -138,7 +138,7 @@ RSpec.describe "PurchaseOrderItems", type: :request do
 
   describe "PATCH /purchase-order-items/:id/cancel" do
     context "when cancellation is successful" do
-      it "cancels the purchase order item and updates the turbo frame" do
+      it "cancels the purchase order item and redirects" do
         patch cancel_purchase_order_item_path(po_item1), as: :turbo_stream
 
         expect(response).to redirect_to(purchase_orders_path)

@@ -17,8 +17,8 @@ RSpec.describe InventoryAuditLogs::CreateService, type: :service do
   subject(:service_response) { described_class.(inventory, inventory_movement) }
 
   describe ".call" do
-    context "when movement_type is purchase" do
-      before { allow(inventory_movement).to receive(:movement_type) { :purchase } }
+    context "when type is purchase" do
+      before { allow(inventory_movement).to receive(:type) { :purchase } }
 
       it "calls the PurchaseService" do
         expect(InventoryAuditLogs::PurchaseService).to receive(:call).with(inventory, inventory_movement)
@@ -27,8 +27,8 @@ RSpec.describe InventoryAuditLogs::CreateService, type: :service do
       end
     end
 
-    context "when movement_type is restock" do
-      before { allow(inventory_movement).to receive(:movement_type) { :restock } }
+    context "when type is restock" do
+      before { allow(inventory_movement).to receive(:type) { :restock } }
 
       it "calls the RestockService" do
         expect(InventoryAuditLogs::RestockService).to receive(:call).with(inventory, inventory_movement)
@@ -37,11 +37,11 @@ RSpec.describe InventoryAuditLogs::CreateService, type: :service do
       end
     end
 
-    context "when movement_type is unsupported" do
-      before { allow(inventory_movement).to receive(:movement_type) { :unknown_movement_type } }
+    context "when type is unsupported" do
+      before { allow(inventory_movement).to receive(:type) { :unknown_type } }
 
       it "raises a NotImplementedError" do
-        expect { service_response }.to raise_error(NotImplementedError, "Audit log service not implemented for unknown_movement_type")
+        expect { service_response }.to raise_error(NotImplementedError, "Audit log service not implemented for unknown_type")
       end
     end
   end

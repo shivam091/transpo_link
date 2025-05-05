@@ -35,7 +35,7 @@ RSpec.describe InventoryBatches::UpsertService, type: :service do
           service_response
         end
 
-        include_examples "creates a record", InventoryBatch
+        include_examples "creates a record", Inventory::Batch
         include_examples "returns a success response"
       end
 
@@ -99,7 +99,7 @@ RSpec.describe InventoryBatches::UpsertService, type: :service do
           service_response
         end
 
-        include_examples "creates a record", InventoryBatch
+        include_examples "creates a record", Inventory::Batch
         include_examples "returns a success response"
       end
 

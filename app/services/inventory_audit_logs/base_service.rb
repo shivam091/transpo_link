@@ -18,9 +18,9 @@ module InventoryAuditLogs
     attr_reader :inventory, :inventory_movement
 
     def create_inventory_audit_log
-      inventory_audit_log = inventory_movement.inventory_audit_logs.build(
+      inventory_audit_log = inventory_movement.audit_logs.build(
         inventory: inventory,
-        movement_type: inventory_movement.movement_type,
+        type: inventory_movement.type,
         previous_quantity: previous_quantity,
         new_quantity: new_quantity,
         metadata: {source_type: inventory_movement.source_type, source_id: inventory_movement.source_id}

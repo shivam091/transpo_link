@@ -21,7 +21,7 @@ module InventoryMovements
     attr_reader :inventory, :source, :inventory_movement_attributes
 
     def record_inventory_movement
-      inventory_movement = source.send(movement_type.to_s.pluralize).build(inventory_movement_attributes)
+      inventory_movement = source.send(type.to_s.pluralize).build(inventory_movement_attributes)
 
       if inventory_movement.save
         ServiceResponse.success(payload: {inventory_movement:})
@@ -33,8 +33,8 @@ module InventoryMovements
     protected
 
     # Overridable hooks & methods
-    def movement_type
-      raise NotImplementedError, "Subclasses must implement `movement_type`"
+    def type
+      raise NotImplementedError, "Subclasses must implement `type`"
     end
   end
 end

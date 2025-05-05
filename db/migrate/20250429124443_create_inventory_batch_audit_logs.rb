@@ -5,11 +5,11 @@
 class CreateInventoryBatchAuditLogs < ActiveRecord::Migration[8.0]
   def change
     create_table :inventory_batch_audit_logs, id: :uuid do |t|
-      t.references :inventory_batch,
+      t.references :batch,
                    type: :uuid,
                    foreign_key: {
                      to_table: :inventory_batches,
-                     name: :fk_inventory_batch_audit_logs_inventory_batch_id_on_inventory_batches,
+                     name: :fk_inventory_batch_audit_logs_batch_id_on_inventory_batches,
                      on_delete: :nullify
                    },
                    null: false,
@@ -28,7 +28,7 @@ class CreateInventoryBatchAuditLogs < ActiveRecord::Migration[8.0]
                    index: {using: :btree}
       t.timestamps_with_timezone null: false
 
-      t.index [:inventory_batch_id, :user_id], using: :btree
+      t.index [:batch_id, :user_id], using: :btree
 
       t.check_constraint "previous_quantity IS NOT NULL", name: :check_inventory_batch_audit_logs_previous_quantity_presence
       t.check_constraint "new_quantity IS NOT NULL", name: :check_inventory_batch_audit_logs_new_quantity_presence

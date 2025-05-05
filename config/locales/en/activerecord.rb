@@ -189,7 +189,7 @@
           created_at: "Created at",
           updated_at: "Updated at",
         },
-        inventory_batch: {
+        "inventory/batch" => {
           inventory_id: "Inventory",
           batch_number: "Batch number",
           expiration_date: "Expiration date",
@@ -200,17 +200,17 @@
           created_at: "Created at",
           updated_at: "Updated at",
         },
-        inventory_batch_audit_log: {
-          inventory_batch_id: "Inventory batch",
+        "inventory/batch/audit_log" => {
+          batch_id: "Batch",
           user_id: "Action by",
           previous_quantity: "Previous quantity",
           new_quantity: "New quantity",
           metadata: "Metadata",
         },
-        inventory_movement: {
+        "inventory/movement" => {
           inventory_id: "Inventory",
           quantity: "Quantity",
-          movement_type: "Movement type",
+          type: "Type",
           unit_id: "Inventory unit",
           unit_cost: "Unit cost",
           total_cost: "Total cost",
@@ -220,11 +220,11 @@
           created_at: "Created at",
           updated_at: "Updated at",
         },
-        inventory_audit_log: {
+        "inventory/audit_log" => {
           inventory_id: "Inventory",
-          inventory_movement_id: "Inventory movement",
+          movement_id: "Movement",
           user_id: "User",
-          movement_type: "Movement type",
+          type: "Type",
           previous_quantity: "Previous quantity",
           new_quantity: "New quantity",
           metadata: "Metadata",
@@ -379,7 +379,7 @@
               },
             }
           },
-          inventory_batch: {
+          "inventory/batch" => {
             attributes: {
               batch_number: {
                 uniqueness: "already exists for the selected inventory"

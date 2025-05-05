@@ -3,13 +3,13 @@
 # -*- warn_indent: true -*-
 
 FactoryBot.define do
-  factory :inventory_audit_log do
+  factory :inventory_audit_log, class: "Inventory::AuditLog" do
     association :inventory
-    association :inventory_movement
+    association :movement, factory: :inventory_movement
     association :user, factory: :manager
-    movement_type { InventoryMovement.movement_types.keys.sample }
+    type { Inventory::Movement.types.keys.sample }
     previous_quantity { Faker::Number.between(from: 1, to: 100) }
     new_quantity { Faker::Number.between(from: 1, to: 100) }
-    metadata { {movement_type:, previous_quantity:, new_quantity:} }
+    metadata { {type:, previous_quantity:, new_quantity:} }
   end
 end

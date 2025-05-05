@@ -23,7 +23,7 @@ RSpec.describe Inventories::UpdateAverageCostPriceService, type: :service do
 
   subject(:service_response) { described_class.(inventory) }
 
-  before { allow_any_instance_of(InventoryBatch).to receive(:update_inventory_average_cost_price) }
+  before { allow_any_instance_of(Inventory::Batch).to receive(:update_inventory_average_cost_price) }
 
   describe ".call" do
     it "calculates & updates the average cost price" do

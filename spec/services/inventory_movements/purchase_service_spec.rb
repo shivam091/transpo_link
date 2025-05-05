@@ -24,12 +24,12 @@ RSpec.describe InventoryMovements::PurchaseService, type: :service do
         }
       end
 
-      include_examples "creates a record", InventoryMovement
+      include_examples "creates a record", Inventory::Movement
 
       it "sets correct inventory movement attributes for purchase" do
         inventory_movement = service_response.payload[:inventory_movement]
 
-        expect(inventory_movement.movement_type).to eq("purchase")
+        expect(inventory_movement.type).to eq("purchase")
         expect(inventory_movement.inventory).to eq(inventory)
         expect(inventory_movement.source).to eq(source)
         expect(inventory_movement.quantity).to eq(5.0)
@@ -42,7 +42,7 @@ RSpec.describe InventoryMovements::PurchaseService, type: :service do
     context "with invalid attributes" do
       let(:inventory_movement_attributes) { { quantity: nil, unit_id: nil } }
 
-      include_examples "does not change record count", InventoryMovement
+      include_examples "does not change record count", Inventory::Movement
       include_examples "returns an error response"
     end
   end

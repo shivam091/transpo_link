@@ -7,7 +7,7 @@ class InventoryBatchesController < ApplicationController
 
   # GET /inventories/:inventory_id/inventory-batches
   def index
-    @inventory_batches = @inventory.inventory_batches
+    @inventory_batches = @inventory.batches
 
     render partial: "inventory_batches/list"
   end

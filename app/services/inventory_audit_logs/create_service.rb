@@ -18,13 +18,13 @@ module InventoryAuditLogs
     attr_reader :inventory, :inventory_movement
 
     def audit_log_service_class
-      case inventory_movement.movement_type.to_sym
+      case inventory_movement.type.to_sym
       when :restock
         RestockService
       when :purchase
         PurchaseService
       else
-        raise NotImplementedError, "Audit log service not implemented for #{inventory_movement.movement_type}"
+        raise NotImplementedError, "Audit log service not implemented for #{inventory_movement.type}"
       end
     end
   end

@@ -6,8 +6,8 @@ module InventoryMovements
   class PurchaseService < BaseService
     protected
 
-    def movement_type
-      InventoryMovement.movement_types[:purchase]
+    def type
+      Inventory::Movement.types[:purchase]
     end
   end
 end

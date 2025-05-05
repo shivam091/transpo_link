@@ -2,7 +2,7 @@
 # -*- frozen_string_literal: true -*-
 # -*- warn_indent: true -*-
 
-class InventoryBatch < ApplicationRecord
+class Inventory::Batch < ApplicationRecord
   include ActsAsMoney, NullifyIfBlank, Sanitizable, ScaleEnforcer
 
   LISTING_ATTRIBUTES = %i[batch_number expiration_date quantity cost_price].freeze
@@ -35,15 +35,12 @@ class InventoryBatch < ApplicationRecord
             reduce: true
   validates :unit_id, presence: true, reduce: true
 
-  with_options inverse_of: :inventory_batch do |a|
-    a.has_many :inventory_batch_audit_logs, dependent: :nullify
+  with_options inverse_of: :batch do |a|
+    a.has_many :audit_logs, class_name: "Inventory::Batch::AuditLog", dependent: :nullify
   end
 
-  with_options inverse_of: :inventory_batches do |a|
-    a.belongs_to :inventory, touch: true
-    a.belongs_to :unit
-  end
-
+  belongs_to :inventory, inverse_of: :batches, touch: true
+  belongs_to :unit, inverse_of: :inventory_batches
   belongs_to :restockable, polymorphic: true, optional: true
 
   has_one :product, through: :inventory

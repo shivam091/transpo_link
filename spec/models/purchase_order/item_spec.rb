@@ -91,16 +91,17 @@ RSpec.describe PurchaseOrder::Item, type: :model do
 
     it { is_expected.to have_one(:warehouse).through(:purchase_order).inverse_of(:purchase_order_items).dependent(:restrict_with_exception) }
 
-    it { is_expected.to have_many(:inventory_movements).dependent(:restrict_with_exception) }
+    it { is_expected.to have_many(:inventory_batches).class_name("Inventory::Batch").dependent(:restrict_with_exception) }
+    it { is_expected.to have_many(:inventory_movements).class_name("Inventory::Movement").dependent(:restrict_with_exception) }
     it { is_expected.to have_many(:deliveries).class_name("PurchaseOrder::Item::Delivery").inverse_of(:item).dependent(:destroy) }
-    it { is_expected.to have_many(:restocks).class_name("InventoryMovement").dependent(:restrict_with_exception) }
+    it { is_expected.to have_many(:restocks).class_name("Inventory::Movement").dependent(:restrict_with_exception) }
 
     describe "#restocks" do
       let(:association) { described_class.reflect_on_association(:restocks) }
 
       it "has many purchases" do
         expect(association.macro).to eq(:has_many)
-        expect(association.options[:class_name]).to eq("InventoryMovement")
+        expect(association.options[:class_name]).to eq("Inventory::Movement")
         expect(association.options[:dependent]).to eq(:restrict_with_exception)
       end
 
@@ -114,7 +115,7 @@ RSpec.describe PurchaseOrder::Item, type: :model do
 
       it "has many purchases" do
         expect(association.macro).to eq(:has_many)
-        expect(association.options[:class_name]).to eq("InventoryMovement")
+        expect(association.options[:class_name]).to eq("Inventory::Movement")
         expect(association.options[:dependent]).to eq(:restrict_with_exception)
       end
 

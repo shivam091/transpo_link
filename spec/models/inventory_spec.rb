@@ -83,9 +83,9 @@ RSpec.describe Inventory, type: :model do
     it { is_expected.to have_one(:stock).inverse_of(:inventory).dependent(:destroy) }
     it { is_expected.to have_one(:replenishment).inverse_of(:inventory).dependent(:destroy) }
 
-    it { is_expected.to have_many(:inventory_movements).inverse_of(:inventory).dependent(:destroy) }
-    it { is_expected.to have_many(:inventory_audit_logs).inverse_of(:inventory).dependent(:destroy) }
-    it { is_expected.to have_many(:inventory_batches).inverse_of(:inventory).dependent(:destroy) }
+    it { is_expected.to have_many(:movements).class_name("Inventory::Movement").inverse_of(:inventory).dependent(:destroy) }
+    it { is_expected.to have_many(:audit_logs).class_name("Inventory::AuditLog").inverse_of(:inventory).dependent(:destroy) }
+    it { is_expected.to have_many(:batches).class_name("Inventory::Batch").inverse_of(:inventory).dependent(:destroy) }
 
     it { is_expected.to belong_to(:warehouse).inverse_of(:inventories) }
     it { is_expected.to belong_to(:product).inverse_of(:inventories) }

@@ -17,7 +17,7 @@ class InventoryBatches::CreateService < ApplicationService
   attr_reader :inventory, :inventory_batch_attributes
 
   def create_inventory_batch
-    inventory_batch = inventory.inventory_batches.build(inventory_batch_attributes)
+    inventory_batch = inventory.batches.build(inventory_batch_attributes)
 
     if inventory_batch.save
       ServiceResponse.success(payload: {inventory_batch:})

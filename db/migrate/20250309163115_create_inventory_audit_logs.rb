@@ -14,11 +14,11 @@ class CreateInventoryAuditLogs < ActiveRecord::Migration[8.0]
                    },
                    null: false,
                    index: {using: :btree}
-      t.references :inventory_movement,
+      t.references :movement,
                    type: :uuid,
                    foreign_key: {
                      to_table: :inventory_movements,
-                     name: :fk_inventory_audit_logs_inventory_movement_id_on_inventory_movements,
+                     name: :fk_inventory_audit_logs_movement_id_on_inventory_movements,
                      on_delete: :cascade
                    },
                    null: true,
@@ -32,15 +32,15 @@ class CreateInventoryAuditLogs < ActiveRecord::Migration[8.0]
                    },
                    null: false,
                    index: {using: :btree}
-      t.string :movement_type, index: {using: :btree}
+      t.string :type, index: {using: :btree}
       t.decimal :previous_quantity, precision: 12, scale: 2, default: 0.0
       t.decimal :new_quantity, precision: 12, scale: 2, default: 0.0
       t.jsonb :metadata, default: "{}", index: {using: :gin}
       t.timestamps_with_timezone null: false
 
-      t.index [:inventory_id, :movement_type], using: :btree
+      t.index [:inventory_id, :type], using: :btree
 
-      t.check_constraint "movement_type IS NOT NULL", name: :check_inventory_audit_logs_movement_type_presence
+      t.check_constraint "type IS NOT NULL", name: :check_inventory_audit_logs_type_presence
 
       t.check_constraint "previous_quantity IS NOT NULL", name: :check_inventory_audit_logs_previous_quantity_presence
       t.check_constraint "new_quantity IS NOT NULL", name: :check_inventory_audit_logs_new_quantity_presence

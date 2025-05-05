@@ -21,9 +21,9 @@ RSpec.describe InventoryMovements::BaseService, type: :service do
 
   subject(:service_instance) { described_class.new(inventory, source, inventory_movement_attributes) }
 
-  describe "#movement_type" do
+  describe "#type" do
     it "raises NotImplementedError" do
-      expect { service_instance.send(:movement_type) }.to raise_error(NotImplementedError, /Subclasses must implement `movement_type`/)
+      expect { service_instance.send(:type) }.to raise_error(NotImplementedError, /Subclasses must implement `type`/)
     end
   end
 end

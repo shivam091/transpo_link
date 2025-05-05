@@ -2,11 +2,11 @@
 # -*- frozen_string_literal: true -*-
 # -*- warn_indent: true -*-
 
-# spec/models/inventory_batch_spec.rb
+# spec/models/inventory/batch_spec.rb
 
 require "spec_helper"
 
-RSpec.describe InventoryBatch, type: :model do
+RSpec.describe Inventory::Batch, type: :model do
   subject(:inventory_batch) { build(:inventory_batch) }
 
   describe "valid factory" do
@@ -162,9 +162,9 @@ RSpec.describe InventoryBatch, type: :model do
     it { is_expected.to have_one(:product) }
     it { is_expected.to have_one(:warehouse) }
 
-    it { is_expected.to have_many(:inventory_batch_audit_logs).inverse_of(:inventory_batch).dependent(:nullify) }
+    it { is_expected.to have_many(:audit_logs).class_name("Inventory::Batch::AuditLog").inverse_of(:batch).dependent(:nullify) }
 
-    it { is_expected.to belong_to(:inventory).inverse_of(:inventory_batches).touch }
+    it { is_expected.to belong_to(:inventory).inverse_of(:batches).touch }
     it { is_expected.to belong_to(:unit).inverse_of(:inventory_batches) }
     it { is_expected.to belong_to(:restockable).optional }
   end

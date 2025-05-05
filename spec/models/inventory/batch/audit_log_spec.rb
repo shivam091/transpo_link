@@ -2,11 +2,11 @@
 # -*- frozen_string_literal: true -*-
 # -*- warn_indent: true -*-
 
-# spec/models/inventory_batch_audit_log_spec.rb
+# spec/models/inventory/batch/audit_log_spec.rb
 
 require "spec_helper"
 
-RSpec.describe InventoryBatchAuditLog, type: :model do
+RSpec.describe Inventory::Batch::AuditLog, type: :model do
   subject(:inventory_batch_audit_log) { build(:inventory_batch_audit_log) }
 
   describe "valid factory" do
@@ -15,7 +15,7 @@ RSpec.describe InventoryBatchAuditLog, type: :model do
 
   describe "attributes, indexes, foreign keys, and check constraints" do
     it { is_expected.to have_db_column(:id).of_type(:uuid) }
-    it { is_expected.to have_db_column(:inventory_batch_id).of_type(:uuid).with_options(null: false) }
+    it { is_expected.to have_db_column(:batch_id).of_type(:uuid).with_options(null: false) }
     it { is_expected.to have_db_column(:user_id).of_type(:uuid).with_options(null: false) }
     it { is_expected.to have_db_column(:previous_quantity).of_type(:decimal).with_options(precision: 12, scale: 2, default: 0.0) }
     it { is_expected.to have_db_column(:new_quantity).of_type(:decimal).with_options(precision: 12, scale: 2, default: 0.0) }
@@ -23,12 +23,12 @@ RSpec.describe InventoryBatchAuditLog, type: :model do
     it { is_expected.to have_db_column(:created_at).of_type(:timestamptz).with_options(null: false) }
     it { is_expected.to have_db_column(:updated_at).of_type(:timestamptz).with_options(null: false) }
 
-    it { is_expected.to have_db_index(:inventory_batch_id) }
+    it { is_expected.to have_db_index(:batch_id) }
     it { is_expected.to have_db_index(:user_id) }
     it { is_expected.to have_db_index(:metadata) }
-    it { is_expected.to have_db_index([:inventory_batch_id, :user_id]) }
+    it { is_expected.to have_db_index([:batch_id, :user_id]) }
 
-    it { is_expected.to have_foreign_key(:inventory_batch_id).with_name(:fk_inventory_batch_audit_logs_inventory_batch_id_on_inventory_b).on_delete(:nullify) }
+    it { is_expected.to have_foreign_key(:batch_id).with_name(:fk_inventory_batch_audit_logs_batch_id_on_inventory_batches).on_delete(:nullify) }
     it { is_expected.to have_foreign_key(:user_id).with_name(:fk_inventory_batch_audit_logs_user_id_on_users).on_delete(:nullify) }
 
     it { is_expected.to have_check_constraint(:check_inventory_batch_audit_logs_previous_quantity_presence).with_expression("previous_quantity IS NOT NULL") }
@@ -36,7 +36,7 @@ RSpec.describe InventoryBatchAuditLog, type: :model do
   end
 
   describe "associations" do
-    it { is_expected.to belong_to(:inventory_batch).inverse_of(:inventory_batch_audit_logs) }
+    it { is_expected.to belong_to(:batch).class_name("Inventory::Batch").inverse_of(:audit_logs) }
     it { is_expected.to belong_to(:user).inverse_of(:inventory_batch_audit_logs) }
   end
 end

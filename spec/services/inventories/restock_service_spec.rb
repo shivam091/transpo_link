@@ -16,14 +16,14 @@ RSpec.describe Inventories::RestockService, type: :service do
     context "when provided attributes are valid" do
       let(:restock_attributes) { attributes_for(:inventory_movement, unit_id: inventory.unit_id) }
 
-      include_examples "creates a record", InventoryMovement
+      include_examples "creates a record", Inventory::Movement
       include_examples "returns a success response"
     end
 
     context "when provided attributes are invalid" do
       let(:restock_attributes) { attributes_for(:inventory_movement, unit_id: nil) }
 
-      include_examples "does not change record count", InventoryMovement
+      include_examples "does not change record count", Inventory::Movement
       include_examples "returns an error response"
     end
   end

@@ -28,14 +28,14 @@ RSpec.describe InventoryAuditLogs::PurchaseService, type: :service do
   include_context "with current user"
 
   describe ".call" do
-    before { allow_any_instance_of(InventoryMovement).to receive(:create_inventory_audit_log) }
+    before { allow_any_instance_of(Inventory::Movement).to receive(:create_inventory_audit_log) }
 
     context "when movement type is purchase" do
       let!(:prior_purchases) do
         create_list(:inventory_movement, 2, :purchase, quantity: 5.0, inventory:, unit: target_unit)
       end
 
-      include_examples "creates a record", InventoryAuditLog
+      include_examples "creates a record", Inventory::AuditLog
 
       it "sets correct audit log attributes for purchase" do
         inventory_audit_log = service_response.payload[:inventory_audit_log]
@@ -43,7 +43,7 @@ RSpec.describe InventoryAuditLogs::PurchaseService, type: :service do
         expected_previous_quantity = prior_purchases.sum(&:quantity) # 10.0
         expected_new_quantity = expected_previous_quantity + inventory_movement.quantity # 12.0
 
-        expect(inventory_audit_log.movement_type).to eq("purchase")
+        expect(inventory_audit_log.type).to eq("purchase")
         expect(inventory_audit_log.previous_quantity).to eq(expected_previous_quantity)
         expect(inventory_audit_log.new_quantity).to eq(expected_new_quantity)
       end
@@ -52,9 +52,9 @@ RSpec.describe InventoryAuditLogs::PurchaseService, type: :service do
     end
 
     context "when audit log creation fails due to validation error" do
-      before { allow_any_instance_of(InventoryAuditLog).to receive(:save) { false } }
+      before { allow_any_instance_of(Inventory::AuditLog).to receive(:save) { false } }
 
-      include_examples "does not change record count", InventoryAuditLog
+      include_examples "does not change record count", Inventory::AuditLog
       include_examples "returns an error response"
     end
   end

@@ -19,7 +19,7 @@ class InventoryBatches::UpsertService < ApplicationService
   attr_reader :inventory, :inventory_batch_attributes
 
   def create_or_merge_inventory_batch
-    inventory_batch = inventory.inventory_batches.by_batch_number_and_expiry(
+    inventory_batch = inventory.batches.by_batch_number_and_expiry(
       *inventory_batch_attributes.values_at(:batch_number, :expiration_date)
     ).first
 

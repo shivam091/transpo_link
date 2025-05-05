@@ -47,9 +47,9 @@ class Inventory < ApplicationRecord
     a.has_one :stock
     a.has_one :replenishment
 
-    a.has_many :inventory_movements
-    a.has_many :inventory_audit_logs
-    a.has_many :inventory_batches
+    a.has_many :movements, class_name: "Inventory::Movement"
+    a.has_many :audit_logs, class_name: "Inventory::AuditLog"
+    a.has_many :batches, class_name: "Inventory::Batch"
   end
 
   with_options inverse_of: :inventories do |a|

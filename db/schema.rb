@@ -95,35 +95,35 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_02_140259) do
 
   create_table "inventory_audit_logs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "inventory_id", null: false
-    t.uuid "inventory_movement_id"
+    t.uuid "movement_id"
     t.uuid "user_id", null: false
-    t.string "movement_type"
+    t.string "type"
     t.decimal "previous_quantity", precision: 12, scale: 2, default: "0.0"
     t.decimal "new_quantity", precision: 12, scale: 2, default: "0.0"
     t.jsonb "metadata", default: "{}"
     t.timestamptz "created_at", null: false
     t.timestamptz "updated_at", null: false
-    t.index ["inventory_id", "movement_type"], name: "index_inventory_audit_logs_on_inventory_id_and_movement_type"
+    t.index ["inventory_id", "type"], name: "index_inventory_audit_logs_on_inventory_id_and_type"
     t.index ["inventory_id"], name: "index_inventory_audit_logs_on_inventory_id"
-    t.index ["inventory_movement_id"], name: "index_inventory_audit_logs_on_inventory_movement_id"
     t.index ["metadata"], name: "index_inventory_audit_logs_on_metadata", using: :gin
-    t.index ["movement_type"], name: "index_inventory_audit_logs_on_movement_type"
+    t.index ["movement_id"], name: "index_inventory_audit_logs_on_movement_id"
+    t.index ["type"], name: "index_inventory_audit_logs_on_type"
     t.index ["user_id"], name: "index_inventory_audit_logs_on_user_id"
-    t.check_constraint "movement_type IS NOT NULL", name: "check_inventory_audit_logs_movement_type_presence"
     t.check_constraint "new_quantity IS NOT NULL", name: "check_inventory_audit_logs_new_quantity_presence"
     t.check_constraint "previous_quantity IS NOT NULL", name: "check_inventory_audit_logs_previous_quantity_presence"
+    t.check_constraint "type IS NOT NULL", name: "check_inventory_audit_logs_type_presence"
   end
 
   create_table "inventory_batch_audit_logs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.uuid "inventory_batch_id", null: false
+    t.uuid "batch_id", null: false
     t.decimal "previous_quantity", precision: 12, scale: 2, default: "0.0"
     t.decimal "new_quantity", precision: 12, scale: 2, default: "0.0"
     t.jsonb "metadata", default: {}
     t.uuid "user_id", null: false
     t.timestamptz "created_at", null: false
     t.timestamptz "updated_at", null: false
-    t.index ["inventory_batch_id", "user_id"], name: "idx_on_inventory_batch_id_user_id_a136d8f767"
-    t.index ["inventory_batch_id"], name: "index_inventory_batch_audit_logs_on_inventory_batch_id"
+    t.index ["batch_id", "user_id"], name: "index_inventory_batch_audit_logs_on_batch_id_and_user_id"
+    t.index ["batch_id"], name: "index_inventory_batch_audit_logs_on_batch_id"
     t.index ["metadata"], name: "index_inventory_batch_audit_logs_on_metadata", using: :gin
     t.index ["user_id"], name: "index_inventory_batch_audit_logs_on_user_id"
     t.check_constraint "new_quantity IS NOT NULL", name: "check_inventory_batch_audit_logs_new_quantity_presence"
@@ -159,7 +159,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_02_140259) do
   create_table "inventory_movements", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "inventory_id", null: false
     t.decimal "quantity", precision: 12, scale: 2, default: "0.0"
-    t.enum "movement_type", enum_type: "movement_types"
+    t.enum "type", enum_type: "movement_types"
     t.uuid "unit_id", null: false
     t.decimal "unit_cost", precision: 12, scale: 2
     t.decimal "total_cost", precision: 12, scale: 2
@@ -170,18 +170,18 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_02_140259) do
     t.jsonb "metadata", default: "{}"
     t.timestamptz "created_at", null: false
     t.timestamptz "updated_at", null: false
-    t.index ["inventory_id", "source_id", "source_type", "movement_type"], name: "idx_on_inventory_id_source_id_source_type_movement__dc133791ed"
+    t.index ["inventory_id", "source_id", "source_type", "type"], name: "idx_on_inventory_id_source_id_source_type_type_72508ff077"
     t.index ["inventory_id"], name: "index_inventory_movements_on_inventory_id"
     t.index ["metadata"], name: "index_inventory_movements_on_metadata", using: :gin
     t.index ["source_type", "source_id"], name: "index_inventory_movements_on_source"
     t.index ["unit_id"], name: "index_inventory_movements_on_unit_id"
     t.check_constraint "currency IS NOT NULL AND currency::text <> ''::text", name: "check_inventory_movements_currency_presence"
-    t.check_constraint "movement_type = ANY (ARRAY['restock'::movement_types, 'purchase'::movement_types, 'sale'::movement_types, 'return'::movement_types, 'transfer_in'::movement_types, 'transfer_out'::movement_types, 'adjustment'::movement_types, 'reservation'::movement_types])", name: "check_inventory_movements_movement_type_in_enum_values"
-    t.check_constraint "movement_type IS NOT NULL", name: "check_inventory_movements_movement_type_presence"
     t.check_constraint "quantity <> 0.0", name: "check_inventory_movements_quantity_nonzero"
     t.check_constraint "quantity IS NOT NULL", name: "check_inventory_movements_quantity_presence"
     t.check_constraint "total_cost >= unit_cost", name: "check_inventory_movements_total_cost_gteq_unit_cost"
     t.check_constraint "total_cost IS NOT NULL", name: "check_inventory_movements_total_cost_presence"
+    t.check_constraint "type = ANY (ARRAY['restock'::movement_types, 'purchase'::movement_types, 'sale'::movement_types, 'return'::movement_types, 'transfer_in'::movement_types, 'transfer_out'::movement_types, 'adjustment'::movement_types, 'reservation'::movement_types])", name: "check_inventory_movements_type_in_enum_values"
+    t.check_constraint "type IS NOT NULL", name: "check_inventory_movements_type_presence"
     t.check_constraint "unit_cost > 0.0", name: "check_inventory_movements_unit_cost_positive"
     t.check_constraint "unit_cost IS NOT NULL", name: "check_inventory_movements_unit_cost_presence"
   end
@@ -599,9 +599,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_02_140259) do
   add_foreign_key "inventories", "units", name: "fk_inventories_unit_id_on_units", on_delete: :restrict
   add_foreign_key "inventories", "warehouses", name: "fk_inventories_warehouse_id_on_warehouses", on_delete: :restrict
   add_foreign_key "inventory_audit_logs", "inventories", name: "fk_inventory_audit_logs_inventory_id_on_inventories", on_delete: :cascade
-  add_foreign_key "inventory_audit_logs", "inventory_movements", name: "fk_inventory_audit_logs_inventory_movement_id_on_inventory_move", on_delete: :cascade
+  add_foreign_key "inventory_audit_logs", "inventory_movements", column: "movement_id", name: "fk_inventory_audit_logs_movement_id_on_inventory_movements", on_delete: :cascade
   add_foreign_key "inventory_audit_logs", "users", name: "fk_inventory_audit_logs_user_id_on_users", on_delete: :nullify
-  add_foreign_key "inventory_batch_audit_logs", "inventory_batches", name: "fk_inventory_batch_audit_logs_inventory_batch_id_on_inventory_b", on_delete: :nullify
+  add_foreign_key "inventory_batch_audit_logs", "inventory_batches", column: "batch_id", name: "fk_inventory_batch_audit_logs_batch_id_on_inventory_batches", on_delete: :nullify
   add_foreign_key "inventory_batch_audit_logs", "users", name: "fk_inventory_batch_audit_logs_user_id_on_users", on_delete: :nullify
   add_foreign_key "inventory_batches", "inventories", name: "fk_inventory_batches_inventory_id_on_inventories", on_delete: :cascade
   add_foreign_key "inventory_batches", "units", name: "fk_inventory_batches_unit_id_on_units", on_delete: :restrict
