@@ -64,12 +64,6 @@ class Inventory < ApplicationRecord
   delegate :quantity_pending_from_supplier, to: :replenishment
   delegate :symbol, to: :unit, prefix: true
 
-  class << self
-    def for_product(product)
-      find_by(arel_table[:product_id].eq(product.id))
-    end
-  end
-
   def key_associations
     [product, warehouse]
   end

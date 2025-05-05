@@ -97,7 +97,7 @@ Rails.application.routes.draw do
         patch :cancel
       end
 
-      resource :delivery, only: [:new, :create], module: :purchase_order_items
+      resources :deliveries, only: [:new, :create], module: :purchase_order_items
     end
   end
   resources :units, only: :index

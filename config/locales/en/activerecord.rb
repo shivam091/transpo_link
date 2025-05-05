@@ -265,6 +265,10 @@
           ordered_quantity: "Ordered quantity",
           remaining_quantity: "Remaining quantity",
         },
+        "purchase_order_item/delivery" => {
+          quantity: "Quantity",
+          unit_id: "Unit of measure",
+        },
       },
       errors: {
         format: "%{attribute} %{message}",
@@ -404,6 +408,13 @@
               unit_id: {
                 incompatible_unit_category: "is incompatible for the selected product"
               },
+            }
+          },
+          "purchase_order_item/delivery" => {
+            attributes: {
+              quantity: {
+                exceeds_remaining_quantity: "cannot exceed remaining quantity of the purchase order item"
+              }
             }
           },
         },
