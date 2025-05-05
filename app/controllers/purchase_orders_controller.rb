@@ -4,7 +4,7 @@
 
 class PurchaseOrdersController < ApplicationController
   before_action :set_breadcrumbs, :fetch_accessible_purchase_orders
-  before_action :find_purchase_order, except: [:index, :new, :create]
+  before_action :set_purchase_order, except: [:index, :new, :create]
 
   # GET /purchase-orders
   def index
@@ -164,7 +164,7 @@ class PurchaseOrdersController < ApplicationController
     add_breadcrumb t("purchase_orders.breadcrumb"), purchase_orders_path
   end
 
-  def find_purchase_order
+  def set_purchase_order
     @purchase_order ||= @purchase_orders.find(params[:id])
   end
 end

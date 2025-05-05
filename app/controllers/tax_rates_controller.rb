@@ -4,7 +4,7 @@
 
 class TaxRatesController < ApplicationController
   before_action :set_breadcrumbs
-  before_action :find_tax_rate, only: [:edit, :update, :destroy]
+  before_action :set_tax_rate, only: [:edit, :update, :destroy]
 
   # GET /tax-rates
   def index
@@ -97,7 +97,7 @@ class TaxRatesController < ApplicationController
     )
   end
 
-  def find_tax_rate
+  def set_tax_rate
     @tax_rate ||= TaxRate.find(params[:id])
   end
 

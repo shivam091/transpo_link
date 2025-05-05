@@ -4,7 +4,7 @@
 
 class LegalIdentifiersController < ApplicationController
   before_action :set_breadcrumbs, :legal_identifiers
-  before_action :find_legal_identifier, except: [:index, :new, :create]
+  before_action :set_legal_identifier, except: [:index, :new, :create]
 
   # GET /legal-identifiers
   def index
@@ -124,7 +124,7 @@ class LegalIdentifiersController < ApplicationController
     @legal_identifiers ||= LegalIdentifier.accessible(current_user)
   end
 
-  def find_legal_identifier
+  def set_legal_identifier
     @legal_identifier ||= @legal_identifiers.find(params[:id])
   end
 

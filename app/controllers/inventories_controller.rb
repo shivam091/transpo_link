@@ -4,7 +4,7 @@
 
 class InventoriesController < ApplicationController
   before_action :set_breadcrumbs
-  before_action :find_inventory, except: [:index, :new, :create]
+  before_action :set_inventory, except: [:index, :new, :create]
 
   # GET /inventories
   def index
@@ -88,7 +88,7 @@ class InventoriesController < ApplicationController
     )
   end
 
-  def find_inventory
+  def set_inventory
     @inventory ||= Inventory.find(params[:id])
   end
 

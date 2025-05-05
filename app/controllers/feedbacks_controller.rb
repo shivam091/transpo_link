@@ -4,7 +4,7 @@
 
 class FeedbacksController < ApplicationController
   before_action :set_breadcrumbs
-  before_action :find_feedback, only: [:show, :mark_as_read]
+  before_action :set_feedback, only: [:show, :mark_as_read]
 
   # GET /feedbacks
   def index
@@ -75,7 +75,7 @@ class FeedbacksController < ApplicationController
     end
   end
 
-  def find_feedback
+  def set_feedback
     @feedback ||= Feedback.find(params[:id])
   end
 

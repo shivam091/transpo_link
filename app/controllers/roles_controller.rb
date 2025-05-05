@@ -4,7 +4,7 @@
 
 class RolesController < ApplicationController
   before_action :set_breadcrumbs
-  before_action :find_role, except: :index
+  before_action :set_role, except: :index
 
   # GET /roles
   def index
@@ -48,7 +48,7 @@ class RolesController < ApplicationController
     params.require(:role).permit(:name, :is_active)
   end
 
-  def find_role
+  def set_role
     @role ||= Role.find(params[:id])
   end
 

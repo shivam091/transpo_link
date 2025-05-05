@@ -3,7 +3,7 @@
 # -*- warn_indent: true -*-
 
 class Inventories::BatchesController < ApplicationController
-  before_action :find_inventory
+  before_action :set_inventory
 
   # GET /inventories/:inventory_id/batches
   def index
@@ -14,7 +14,7 @@ class Inventories::BatchesController < ApplicationController
 
   private
 
-  def find_inventory
+  def set_inventory
     @inventory ||= Inventory.find(params[:inventory_id])
   end
 end

@@ -4,7 +4,7 @@
 
 class UsersController < ApplicationController
   before_action :set_breadcrumbs
-  before_action :find_user, only: :show
+  before_action :set_user, only: :show
 
   # GET /users
   def index
@@ -25,7 +25,7 @@ class UsersController < ApplicationController
 
   private
 
-  def find_user
+  def set_user
     @user ||= User.find(params[:id])
   end
 

@@ -4,7 +4,7 @@
 
 class ProductCategoriesController < ApplicationController
   before_action :set_breadcrumbs
-  before_action :find_product_category, except: [:index, :new, :create]
+  before_action :set_product_category, except: [:index, :new, :create]
 
   # GET /product-categories
   def index
@@ -87,7 +87,7 @@ class ProductCategoriesController < ApplicationController
     params.require(:product_category).permit(:name, :parent_category_id, :is_active)
   end
 
-  def find_product_category
+  def set_product_category
     @product_category ||= ProductCategory.find(params[:id])
   end
 
