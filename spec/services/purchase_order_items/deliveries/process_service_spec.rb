@@ -23,17 +23,17 @@ RSpec.describe PurchaseOrderItems::Deliveries::ProcessService, type: :service do
         allow_any_instance_of(PurchaseOrder::Item::Delivery).to receive(:converted_quantity_must_not_exceed_remaining_quantity)
         allow_any_instance_of(PurchaseOrder::Item::Delivery).to receive(:process_delivery)
 
-        allow(InventoryMovements::PurchaseService).to receive(:call)
+        allow(Inventories::Movements::PurchaseService).to receive(:call)
         allow(PurchaseOrderItems::UpdateReceivedQuantityService).to receive(:call)
         allow(UnitConversion).to receive(:convert) { 4.0 }
         allow(Replenishments::UpdateService).to receive(:call)
         allow(PurchaseOrderItems::EvaluateDeliveryStatusService).to receive(:call)
       end
 
-      it "calls InventoryMovements::PurchaseService with correct arguments" do
+      it "calls Inventories::Movements::PurchaseService with correct arguments" do
         service_response
 
-        expect(InventoryMovements::PurchaseService).to have_received(:call).with(
+        expect(Inventories::Movements::PurchaseService).to have_received(:call).with(
           inventory,
           item,
           hash_including(

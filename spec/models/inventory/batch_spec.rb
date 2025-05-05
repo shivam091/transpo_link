@@ -7,7 +7,7 @@
 require "spec_helper"
 
 RSpec.describe Inventory::Batch, type: :model do
-  subject(:inventory_batch) { build(:inventory_batch) }
+  subject(:batch) { build(:inventory_batch) }
 
   describe "valid factory" do
     it { is_expected.to have_a_valid_factory(:inventory_batch) }
@@ -80,7 +80,7 @@ RSpec.describe Inventory::Batch, type: :model do
 
   describe "validations" do
     describe "#batch_number" do
-      let!(:inventory_batch) { create(:inventory_batch, batch_number: "ABC123") }
+      let!(:batch) { create(:inventory_batch, batch_number: "ABC123") }
 
       it { is_expected.to validate_presence_of(:batch_number) }
       it { is_expected.to validate_length_of(:batch_number).is_at_most(55) }
@@ -96,28 +96,28 @@ RSpec.describe Inventory::Batch, type: :model do
 
       context "when quantity is invalid" do
         it "is invalid" do
-          inventory_batch.quantity = "abcd"
-          inventory_batch.validate
+          batch.quantity = "abcd"
+          batch.validate
 
-          expect(inventory_batch.errors[:quantity]).to include("must be greater than 0.0")
+          expect(batch.errors[:quantity]).to include("must be greater than 0.0")
         end
       end
 
       context "when quantity <= 0.0" do
         it "is invalid" do
-          inventory_batch.quantity = 0.0
-          inventory_batch.validate
+          batch.quantity = 0.0
+          batch.validate
 
-          expect(inventory_batch.errors[:quantity]).to include("must be greater than 0.0")
+          expect(batch.errors[:quantity]).to include("must be greater than 0.0")
         end
       end
 
       context "when quantity > 0.0" do
         it "is valid" do
-          inventory_batch.quantity = 1.0
-          inventory_batch.validate
+          batch.quantity = 1.0
+          batch.validate
 
-          expect(inventory_batch.errors[:quantity]).to be_empty
+          expect(batch.errors[:quantity]).to be_empty
         end
       end
     end
@@ -127,28 +127,28 @@ RSpec.describe Inventory::Batch, type: :model do
 
       context "when cost_price is invalid" do
         it "is invalid" do
-          inventory_batch.cost_price = "abcd"
-          inventory_batch.validate
+          batch.cost_price = "abcd"
+          batch.validate
 
-          expect(inventory_batch.errors[:cost_price]).to include("must be greater than 0.0")
+          expect(batch.errors[:cost_price]).to include("must be greater than 0.0")
         end
       end
 
       context "when cost_price <= 0.0" do
         it "is invalid" do
-          inventory_batch.cost_price = 0.0
-          inventory_batch.validate
+          batch.cost_price = 0.0
+          batch.validate
 
-          expect(inventory_batch.errors[:cost_price]).to include("must be greater than 0.0")
+          expect(batch.errors[:cost_price]).to include("must be greater than 0.0")
         end
       end
 
       context "when cost_price > 0.0" do
         it "is valid" do
-          inventory_batch.cost_price = 1.0
-          inventory_batch.validate
+          batch.cost_price = 1.0
+          batch.validate
 
-          expect(inventory_batch.errors[:cost_price]).to be_empty
+          expect(batch.errors[:cost_price]).to be_empty
         end
       end
     end
@@ -199,12 +199,12 @@ RSpec.describe Inventory::Batch, type: :model do
   describe "instance methods" do
     describe "#update_inventory_average_cost_price" do
       let(:inventory) { create(:inventory) }
-      let(:inventory_batch) { build(:inventory_batch, inventory:) }
+      let(:batch) { build(:inventory_batch, inventory:) }
 
       it "calls Inventories::UpdateAverageCostPriceService with the inventory" do
         expect(Inventories::UpdateAverageCostPriceService).to receive(:call).with(inventory)
 
-        inventory_batch.save! # triggers after_save callback
+        batch.save! # triggers after_save callback
       end
     end
 
@@ -215,46 +215,46 @@ RSpec.describe Inventory::Batch, type: :model do
       let(:inventory) { create(:inventory, unit: target_unit) }
 
       context "when source and target units are the same" do
-        let(:inventory_batch) { build(:inventory_batch, inventory:, unit: target_unit, quantity: 10) }
+        let(:batch) { build(:inventory_batch, inventory:, unit: target_unit, quantity: 10) }
 
         it "does not change quantity or unit" do
           expect(UnitConversion).not_to receive(:convert)
 
-          inventory_batch.save!
+          batch.save!
 
-          expect(inventory_batch.quantity).to eq(10)
-          expect(inventory_batch.unit).to eq(target_unit)
+          expect(batch.quantity).to eq(10)
+          expect(batch.unit).to eq(target_unit)
         end
       end
 
       context "when source and target units are different and conversion succeeds" do
-        let(:inventory_batch) { build(:inventory_batch, inventory:, unit: source_unit, quantity: 5) }
+        let(:batch) { build(:inventory_batch, inventory:, unit: source_unit, quantity: 5) }
 
         it "converts the quantity and sets unit to target unit" do
           allow(UnitConversion).to receive(:convert).with(source_unit, target_unit, 5) { 10 }
 
-          inventory_batch.save!
+          batch.save!
 
-          expect(inventory_batch.quantity).to eq(10)
-          expect(inventory_batch.unit).to eq(target_unit)
+          expect(batch.quantity).to eq(10)
+          expect(batch.unit).to eq(target_unit)
         end
       end
     end
 
     describe "#previous_quantity" do
-      let(:inventory_batch) { create(:inventory_batch, quantity: 10.0) }
+      let(:batch) { create(:inventory_batch, quantity: 10.0) }
 
       context "when quantity has been updated" do
-        before { inventory_batch.update(quantity: 15.0) }
+        before { batch.update(quantity: 15.0) }
 
         it "returns the previous quantity value" do
-          expect(inventory_batch.previous_quantity).to eq(10.0)
+          expect(batch.previous_quantity).to eq(10.0)
         end
       end
 
       context "when quantity has not changed" do
         it "returns 0.0" do
-          expect(inventory_batch.previous_quantity).to eq(0.0)
+          expect(batch.previous_quantity).to eq(0.0)
         end
       end
 
@@ -268,19 +268,19 @@ RSpec.describe Inventory::Batch, type: :model do
     end
 
     describe "#quantity_change" do
-      let!(:inventory_batch) { create(:inventory_batch, quantity: 10) }
+      let!(:batch) { create(:inventory_batch, quantity: 10) }
 
       context "when quantity has changed" do
         it "returns the change in quantity" do
-          inventory_batch.update(quantity: 15)
+          batch.update(quantity: 15)
 
-          expect(inventory_batch.quantity_change).to eq(5)
+          expect(batch.quantity_change).to eq(5)
         end
       end
 
       context "when quantity has not changed" do
         it "returns original quantity" do
-          expect(inventory_batch.quantity_change).to eq(10)
+          expect(batch.quantity_change).to eq(10)
         end
       end
     end
@@ -288,13 +288,13 @@ RSpec.describe Inventory::Batch, type: :model do
     describe "merge_with!" do
       let(:unit) { create(:item_unit) }
       let(:inventory) { create(:inventory, unit:) }
-      let(:inventory_batch) { create(:inventory_batch, inventory:, unit:, quantity: 10) }
+      let(:batch) { create(:inventory_batch, inventory:, unit:, quantity: 10) }
 
       context "when source_unit is not provided" do
         it "adds quantity directly and saves the batch" do
           expect {
-            inventory_batch.merge_with!(quantity: 5)
-          }.to change { inventory_batch.reload.quantity }.by(5)
+            batch.merge_with!(quantity: 5)
+          }.to change { batch.reload.quantity }.by(5)
         end
       end
 
@@ -305,8 +305,8 @@ RSpec.describe Inventory::Batch, type: :model do
           expect(UnitConversion).to receive(:convert).with(source_unit, unit, 2) { 24 }
 
           expect {
-            inventory_batch.merge_with!(quantity: 2, source_unit:)
-          }.to change { inventory_batch.reload.quantity }.by(24)
+            batch.merge_with!(quantity: 2, source_unit:)
+          }.to change { batch.reload.quantity }.by(24)
         end
       end
 
@@ -315,15 +315,15 @@ RSpec.describe Inventory::Batch, type: :model do
           expect(UnitConversion).not_to receive(:convert)
 
           expect {
-            inventory_batch.merge_with!(quantity: 3, source_unit: unit)
-          }.to change { inventory_batch.reload.quantity }.by(3)
+            batch.merge_with!(quantity: 3, source_unit: unit)
+          }.to change { batch.reload.quantity }.by(3)
         end
       end
 
       context "when quantity is missing" do
         it "raises ArgumentError" do
           expect {
-            inventory_batch.merge_with!({})
+            batch.merge_with!({})
           }.to raise_error(ArgumentError, "Quantity must be present")
         end
       end

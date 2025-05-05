@@ -1,0 +1,20 @@
+.table-row
+  .table-cell.cell-narrow
+    = index
+  .table-cell
+    = batch.batch_number
+  .table-cell
+    = prettify_date(batch.expiration_date) || "-"
+  .table-cell
+    = number_to_measurement_unit(batch.quantity, batch.unit_symbol)
+  .table-cell
+    = number_to_currency(batch.cost_price, unit: batch.currency.symbol)
+  .table-cell.cell-narrow
+    = link_to "javascript:void(0)", class: "text-reset", data: {bs_toggle: "dropdown"},
+      aria: {expanded: false} do
+      = sprite_icon("ellipsis-vertical")
+    %ul.dropdown-menu
+      %li
+        = link_to "javascript:void(0)", class: "dropdown-item" do
+          = sprite_icon("arrow-right")
+          = button_text(:view_details)

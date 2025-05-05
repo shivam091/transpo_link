@@ -69,9 +69,9 @@ class InventoriesController < ApplicationController
   def show
     add_breadcrumb @inventory.reference_code, inventory_path(@inventory)
 
-    @inventory_batches = @inventory.batches.includes(:unit)
-    @inventory_movements = @inventory.movements.includes(:unit)
-    @inventory_audit_logs = @inventory.audit_logs.includes(user: [:detail])
+    @batches = @inventory.batches.includes(:unit)
+    @movements = @inventory.movements.includes(:unit)
+    @audit_logs = @inventory.audit_logs.includes(user: [:detail])
   end
 
   private

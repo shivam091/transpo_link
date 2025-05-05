@@ -80,7 +80,7 @@ Rails.application.routes.draw do
   resources :products, concerns: [:reviewable, :toggleable]
   resources :feedbacks, only: [:index, :show], concerns: :notifiable
   resources :inventories, except: :destroy do
-    resources :inventory_batches, path: "inventory-batches", only: :index
+    resources :batches, only: :index, module: :inventory
   end
   resources :purchase_orders, path: "purchase-orders" do
     member do

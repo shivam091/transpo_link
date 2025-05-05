@@ -48,7 +48,7 @@ class Inventory::Movement < ApplicationRecord
 
   before_save :set_default_attributes
   before_create :convert_to_inventory_unit
-  after_create :create_inventory_audit_log
+  after_create :create_audit_log
 
   with_options prefix: true do |d|
     d.delegate :symbol, to: :unit
@@ -63,8 +63,8 @@ class Inventory::Movement < ApplicationRecord
     self.metadata = {action: type}
   end
 
-  def create_inventory_audit_log
-    InventoryAuditLogs::CreateService.(inventory, self)
+  def create_audit_log
+    Inventories::AuditLogs::CreateService.(inventory, self)
   end
 
   def convert_to_inventory_unit

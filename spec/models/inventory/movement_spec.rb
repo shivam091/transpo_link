@@ -7,7 +7,7 @@
 require "spec_helper"
 
 RSpec.describe Inventory::Movement, type: :model do
-  subject(:inventory_movement) { build(:inventory_movement) }
+  subject(:movement) { build(:inventory_movement) }
 
   describe "valid factory" do
     it { is_expected.to have_a_valid_factory(:inventory_movement) }
@@ -78,7 +78,7 @@ RSpec.describe Inventory::Movement, type: :model do
 
   describe "callbacks" do
     it { is_expected.to have_callback(:before, :save, :set_default_attributes) }
-    it { is_expected.to have_callback(:after, :create, :create_inventory_audit_log) }
+    it { is_expected.to have_callback(:after, :create, :create_audit_log) }
   end
 
   describe "delegates" do
@@ -93,28 +93,28 @@ RSpec.describe Inventory::Movement, type: :model do
 
       context "when quantity is invalid" do
         it "is invalid" do
-          inventory_movement.quantity = "abcd"
-          inventory_movement.validate
+          movement.quantity = "abcd"
+          movement.validate
 
-          expect(inventory_movement.errors[:quantity]).to include("must be other than 0.0")
+          expect(movement.errors[:quantity]).to include("must be other than 0.0")
         end
       end
 
       context "when quantity <= 0.0" do
         it "is invalid" do
-          inventory_movement.quantity = 0.0
-          inventory_movement.validate
+          movement.quantity = 0.0
+          movement.validate
 
-          expect(inventory_movement.errors[:quantity]).to include("must be other than 0.0")
+          expect(movement.errors[:quantity]).to include("must be other than 0.0")
         end
       end
 
       context "when quantity > 0.0" do
         it "is valid" do
-          inventory_movement.quantity = 1.0
-          inventory_movement.validate
+          movement.quantity = 1.0
+          movement.validate
 
-          expect(inventory_movement.errors[:quantity]).to be_empty
+          expect(movement.errors[:quantity]).to be_empty
         end
       end
     end
@@ -124,28 +124,28 @@ RSpec.describe Inventory::Movement, type: :model do
 
       context "when unit_cost is invalid" do
         it "is invalid" do
-          inventory_movement.unit_cost = "abcd"
-          inventory_movement.validate
+          movement.unit_cost = "abcd"
+          movement.validate
 
-          expect(inventory_movement.errors[:unit_cost]).to include("must be greater than 0.0")
+          expect(movement.errors[:unit_cost]).to include("must be greater than 0.0")
         end
       end
 
       context "when unit_cost <= 0.0" do
         it "is invalid" do
-          inventory_movement.unit_cost = 0.0
-          inventory_movement.validate
+          movement.unit_cost = 0.0
+          movement.validate
 
-          expect(inventory_movement.errors[:unit_cost]).to include("must be greater than 0.0")
+          expect(movement.errors[:unit_cost]).to include("must be greater than 0.0")
         end
       end
 
       context "when unit_cost > 0.0" do
         it "is valid" do
-          inventory_movement.unit_cost = 1.0
-          inventory_movement.validate
+          movement.unit_cost = 1.0
+          movement.validate
 
-          expect(inventory_movement.errors[:unit_cost]).to be_empty
+          expect(movement.errors[:unit_cost]).to be_empty
         end
       end
     end
@@ -155,21 +155,21 @@ RSpec.describe Inventory::Movement, type: :model do
 
       context "when total_cost < unit_cost" do
         it "is invalid" do
-          inventory_movement.unit_cost = 10.0
-          inventory_movement.total_cost = 5.0
-          inventory_movement.validate
+          movement.unit_cost = 10.0
+          movement.total_cost = 5.0
+          movement.validate
 
-          expect(inventory_movement.errors[:total_cost]).to include("must be greater than or equal to 10.0")
+          expect(movement.errors[:total_cost]).to include("must be greater than or equal to 10.0")
         end
       end
 
       context "when total_cost >= unit_cost" do
         it "is valid" do
-          inventory_movement.unit_cost = 10.0
-          inventory_movement.total_cost = 12.0
-          inventory_movement.validate
+          movement.unit_cost = 10.0
+          movement.total_cost = 12.0
+          movement.validate
 
-          expect(inventory_movement.errors[:total_cost]).to be_empty
+          expect(movement.errors[:total_cost]).to be_empty
         end
       end
     end
@@ -194,25 +194,25 @@ RSpec.describe Inventory::Movement, type: :model do
   describe "instance methods" do
     describe "#set_default_attributes" do
       let(:inventory) { create(:inventory) }
-      let(:inventory_movement) do
+      let(:movement) do
         build(:inventory_movement, inventory:, unit: inventory.unit, source: inventory)
       end
 
       it "sets the movement_date and metadata before saving" do
         freeze_time do
-          inventory_movement.save!
+          movement.save!
 
-          expect(inventory_movement.movement_date).to eq(Time.current.utc)
-          expect(inventory_movement.metadata).to eq({ "action" => "restock" })
+          expect(movement.movement_date).to eq(Time.current.utc)
+          expect(movement.metadata).to eq({ "action" => "restock" })
         end
       end
     end
 
-    describe "#create_inventory_audit_log" do
+    describe "#create_audit_log" do
       let(:inventory) { create(:inventory) }
 
-      it "calls InventoryAuditLogs::CreateService after creation" do
-        expect(InventoryAuditLogs::CreateService).to receive(:call).with(instance_of(Inventory), an_instance_of(Inventory::Movement))
+      it "calls Inventories::AuditLogs::CreateService after creation" do
+        expect(Inventories::AuditLogs::CreateService).to receive(:call).with(instance_of(Inventory), an_instance_of(Inventory::Movement))
 
         create(:inventory_movement, inventory:, unit: inventory.unit)
       end
@@ -226,28 +226,28 @@ RSpec.describe Inventory::Movement, type: :model do
       let(:purchase_order_item) { create(:purchase_order_item, unit: target_unit) }
 
       context "when source and target units are the same" do
-        let(:inventory_movement) { build(:inventory_movement, source: purchase_order_item, unit: target_unit, quantity: 10, inventory:) }
+        let(:movement) { build(:inventory_movement, source: purchase_order_item, unit: target_unit, quantity: 10, inventory:) }
 
         it "does not change quantity or unit" do
           expect(UnitConversion).not_to receive(:convert)
 
-          inventory_movement.save!
+          movement.save!
 
-          expect(inventory_movement.quantity).to eq(10)
-          expect(inventory_movement.unit).to eq(target_unit)
+          expect(movement.quantity).to eq(10)
+          expect(movement.unit).to eq(target_unit)
         end
       end
 
       context "when source and target units are different and conversion succeeds" do
-        let(:inventory_movement) { build(:inventory_movement, source: purchase_order_item, unit: source_unit, quantity: 5, inventory:) }
+        let(:movement) { build(:inventory_movement, source: purchase_order_item, unit: source_unit, quantity: 5, inventory:) }
 
         it "converts the quantity and sets unit to target unit" do
           allow(UnitConversion).to receive(:convert).with(source_unit, target_unit, 5) { 60 }
 
-          inventory_movement.save!
+          movement.save!
 
-          expect(inventory_movement.quantity).to eq(60)
-          expect(inventory_movement.unit).to eq(target_unit)
+          expect(movement.quantity).to eq(60)
+          expect(movement.unit).to eq(target_unit)
         end
       end
     end

@@ -27,18 +27,18 @@
         .widget-title
           = t(".batches")
       .widget-body
-        = safe_render.template("inventory_batches/index")
+        = safe_render.template("inventories/batches/index")
     .widget
       .widget-header
         .widget-title
           = t(".movements")
       .widget-body
-        = safe_render.template("inventory_movements/index")
+        = safe_render.template("inventories/movements/index")
     .widget
       .widget-header
         .widget-title
           = t(".audit_logs")
       .widget-body
-        = safe_render.template("inventory_audit_logs/index")
+        = safe_render.template("inventories/audit_logs/index")
   .card-footer
     = safe_render.partial("shared/navigable_links", resource: @inventory)

@@ -27,7 +27,7 @@ class PurchaseOrderItems::Deliveries::ProcessService < ApplicationService
       total_cost: item.total_cost,
       currency: item.currency,
     }
-    InventoryMovements::PurchaseService.(inventory, item, purchase_attributes)
+    Inventories::Movements::PurchaseService.(inventory, item, purchase_attributes)
 
     # Update received quantity
     PurchaseOrderItems::UpdateReceivedQuantityService.(item, delivery.quantity)

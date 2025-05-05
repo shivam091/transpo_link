@@ -7,7 +7,7 @@
 require "spec_helper"
 
 RSpec.describe Inventory::AuditLog, type: :model do
-  subject(:inventory_audit_log) { build(:inventory_audit_log) }
+  subject(:audit_log) { build(:inventory_audit_log) }
 
   describe "valid factory" do
     it { is_expected.to have_a_valid_factory(:inventory_audit_log) }
@@ -62,9 +62,9 @@ RSpec.describe Inventory::AuditLog, type: :model do
       include_context "with current user"
 
       it "should set current user to audit log" do
-        inventory_audit_log.validate
+        audit_log.validate
 
-        expect(inventory_audit_log.user).to eq(current_user)
+        expect(audit_log.user).to eq(current_user)
       end
     end
   end

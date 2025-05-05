@@ -16,7 +16,7 @@
   .table-cell
     = number_to_currency(inventory.average_cost_price, unit: inventory.currency.symbol)
   .table-cell.cell-narrow
-    = link_to inventory_inventory_batches_path(inventory),
+    = link_to inventory_batches_path(inventory),
       data: {turbo_frame: dom_id(inventory, :batches), action: "click->lazy-turbo-frame#toggle"} do
       = sprite_icon("fold-down", data: {lazy_turbo_frame_target: "icon"})
       = sprite_icon("fold-up", class: "d-none", data: {lazy_turbo_frame_target: "icon"})
