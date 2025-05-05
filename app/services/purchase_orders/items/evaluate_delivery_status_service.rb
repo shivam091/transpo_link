@@ -2,7 +2,7 @@
 # -*- frozen_string_literal: true -*-
 # -*- warn_indent: true -*-
 
-class PurchaseOrderItems::EvaluateDeliveryStatusService < ApplicationService
+class PurchaseOrders::Items::EvaluateDeliveryStatusService < ApplicationService
   def initialize(purchase_order_item)
     @purchase_order_item = purchase_order_item
   end
@@ -27,10 +27,10 @@ class PurchaseOrderItems::EvaluateDeliveryStatusService < ApplicationService
   end
 
   def deliver_purchase_order_item
-    PurchaseOrderItems::DeliverService.(purchase_order_item)
+    PurchaseOrders::Items::DeliverService.(purchase_order_item)
   end
 
   def partially_deliver_purchase_order_item
-    PurchaseOrderItems::PartiallyDeliverService.(purchase_order_item)
+    PurchaseOrders::Items::PartiallyDeliverService.(purchase_order_item)
   end
 end

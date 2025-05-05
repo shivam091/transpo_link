@@ -165,11 +165,11 @@ class PurchaseOrder < ApplicationRecord
   end
 
   def cancel_items!
-    items.each { |item| PurchaseOrderItems::CancelService.(item) }
+    items.each { |item| PurchaseOrders::Items::CancelService.(item) }
   end
 
   def deliver_items!
-    items.each { |item| PurchaseOrderItems::DeliverService.(item) }
+    items.each { |item| PurchaseOrders::Items::DeliverService.(item) }
   end
 
   def update_actual_delivery_date

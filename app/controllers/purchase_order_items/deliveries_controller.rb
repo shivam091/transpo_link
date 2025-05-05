@@ -12,7 +12,7 @@ class PurchaseOrderItems::DeliveriesController < ApplicationController
 
   # POST /purchase-order-items/:purchase_order_item_id/deliveries
   def create
-    response = PurchaseOrderItems::Deliveries::CreateService.(@purchase_order_item, delivery_params)
+    response = PurchaseOrders::Items::Deliveries::CreateService.(@purchase_order_item, delivery_params)
     @delivery = response.payload[:delivery]
 
     if response.success?

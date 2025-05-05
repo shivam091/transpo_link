@@ -2,7 +2,7 @@
 # -*- frozen_string_literal: true -*-
 # -*- warn_indent: true -*-
 
-class PurchaseOrderItems::UpdateReceivedQuantityService < ApplicationService
+class PurchaseOrders::Items::UpdateReceivedQuantityService < ApplicationService
   def initialize(purchase_order_item, quantity)
     @purchase_order_item = purchase_order_item
     @quantity = quantity

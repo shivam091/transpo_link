@@ -2,7 +2,7 @@
 # -*- frozen_string_literal: true -*-
 # -*- warn_indent: true -*-
 
-class PurchaseOrderItems::ProcessDeliveryService < ApplicationService
+class PurchaseOrders::Items::ProcessDeliveryService < ApplicationService
   def initialize(purchase_order_item, received_quantity)
     @purchase_order_item = purchase_order_item
     @received_quantity = received_quantity
@@ -20,7 +20,7 @@ class PurchaseOrderItems::ProcessDeliveryService < ApplicationService
   attr_reader :purchase_order_item, :received_quantity
 
   def update_received_quantity!
-    result = PurchaseOrderItems::UpdateReceivedQuantityService.(purchase_order_item, received_quantity)
+    result = PurchaseOrders::Items::UpdateReceivedQuantityService.(purchase_order_item, received_quantity)
 
     raise ActiveRecord::Rollback if result.error?
   end
@@ -37,10 +37,10 @@ class PurchaseOrderItems::ProcessDeliveryService < ApplicationService
   end
 
   def deliver_purchase_order_item
-    PurchaseOrderItems::DeliverService.(purchase_order_item)
+    PurchaseOrders::Items::DeliverService.(purchase_order_item)
   end
 
   def partially_deliver_purchase_order_item
-    PurchaseOrderItems::PartiallyDeliverService.(purchase_order_item)
+    PurchaseOrders::Items::PartiallyDeliverService.(purchase_order_item)
   end
 end

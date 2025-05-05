@@ -137,8 +137,8 @@ RSpec.describe PurchaseOrder::Item::Delivery, type: :model do
     describe "#process_delivery" do
       let(:delivery) { build(:po_item_delivery, item:) }
 
-      it "calls PurchaseOrderItems::Deliveries::ProcessService with the delivery" do
-        expect(PurchaseOrderItems::Deliveries::ProcessService).to receive(:call).with(delivery)
+      it "calls PurchaseOrders::Items::Deliveries::ProcessService with the delivery" do
+        expect(PurchaseOrders::Items::Deliveries::ProcessService).to receive(:call).with(delivery)
 
         delivery.save!
       end

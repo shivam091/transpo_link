@@ -125,7 +125,7 @@ RSpec.describe "PurchaseOrderItems", type: :request do
 
     context "when deletion is successful" do
       it "does not delete the purchase order item and render errors" do
-        allow(PurchaseOrderItems::DestroyService).to receive(:call) { ServiceResponse.error }
+        allow(PurchaseOrders::Items::DestroyService).to receive(:call) { ServiceResponse.error }
 
         delete purchase_order_item_path(po_item1), as: :turbo_stream
 
@@ -149,7 +149,7 @@ RSpec.describe "PurchaseOrderItems", type: :request do
 
     context "when cancellation is unsuccessful" do
       it "does not cancel the purchase order item and render errors" do
-        allow(PurchaseOrderItems::CancelService).to receive(:call) { ServiceResponse.error }
+        allow(PurchaseOrders::Items::CancelService).to receive(:call) { ServiceResponse.error }
 
         patch cancel_purchase_order_item_path(po_item1), as: :turbo_stream
 

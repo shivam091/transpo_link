@@ -2,11 +2,11 @@
 # -*- frozen_string_literal: true -*-
 # -*- warn_indent: true -*-
 
-# spec/services/purchase_order_items/update_received_quantity_service_spec.rb
+# spec/services/purchase_orders/items/update_received_quantity_service_spec.rb
 
 require "spec_helper"
 
-RSpec.describe PurchaseOrderItems::UpdateReceivedQuantityService, type: :service do
+RSpec.describe PurchaseOrders::Items::UpdateReceivedQuantityService, type: :service do
   let(:quantity) { 3 }
   let(:max_allowed) { 5 }
 

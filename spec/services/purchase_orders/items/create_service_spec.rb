@@ -2,11 +2,11 @@
 # -*- frozen_string_literal: true -*-
 # -*- warn_indent: true -*-
 
-# spec/services/purchase_order_items/create_service_spec.rb
+# spec/services/purchase_orders/items/create_service_spec.rb
 
 require "spec_helper"
 
-RSpec.describe PurchaseOrderItems::CreateService, type: :service do
+RSpec.describe PurchaseOrders::Items::CreateService, type: :service do
   let(:product) { create(:product) }
 
   let!(:purchase_order) { create(:purchase_order) }

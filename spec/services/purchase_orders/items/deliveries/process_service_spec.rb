@@ -2,11 +2,11 @@
 # -*- frozen_string_literal: true -*-
 # -*- warn_indent: true -*-
 
-# spec/services/purchase_order_items/deliveries/process_service_spec.rb
+# spec/services/purchase_orders/items/deliveries/process_service_spec.rb
 
 require "spec_helper"
 
-RSpec.describe PurchaseOrderItems::Deliveries::ProcessService, type: :service do
+RSpec.describe PurchaseOrders::Items::Deliveries::ProcessService, type: :service do
   let!(:source_unit) { create(:dozen_unit) }
   let!(:target_unit) { create(:item_unit) }
 
@@ -24,10 +24,10 @@ RSpec.describe PurchaseOrderItems::Deliveries::ProcessService, type: :service do
         allow_any_instance_of(PurchaseOrder::Item::Delivery).to receive(:process_delivery)
 
         allow(Inventories::Movements::PurchaseService).to receive(:call)
-        allow(PurchaseOrderItems::UpdateReceivedQuantityService).to receive(:call)
+        allow(PurchaseOrders::Items::UpdateReceivedQuantityService).to receive(:call)
         allow(UnitConversion).to receive(:convert) { 4.0 }
         allow(Replenishments::UpdateService).to receive(:call)
-        allow(PurchaseOrderItems::EvaluateDeliveryStatusService).to receive(:call)
+        allow(PurchaseOrders::Items::EvaluateDeliveryStatusService).to receive(:call)
       end
 
       it "calls Inventories::Movements::PurchaseService with correct arguments" do
@@ -46,10 +46,10 @@ RSpec.describe PurchaseOrderItems::Deliveries::ProcessService, type: :service do
         )
       end
 
-      it "calls PurchaseOrderItems::UpdateReceivedQuantityService with correct arguments" do
+      it "calls PurchaseOrders::Items::UpdateReceivedQuantityService with correct arguments" do
         service_response
 
-        expect(PurchaseOrderItems::UpdateReceivedQuantityService).to have_received(:call).with(item, delivery.quantity)
+        expect(PurchaseOrders::Items::UpdateReceivedQuantityService).to have_received(:call).with(item, delivery.quantity)
       end
 
       it "calls UnitConversion with correct units" do
@@ -64,10 +64,10 @@ RSpec.describe PurchaseOrderItems::Deliveries::ProcessService, type: :service do
         expect(Replenishments::UpdateService).to have_received(:call).with(inventory, 4.0, :decrement)
       end
 
-      it "calls PurchaseOrderItems::EvaluateDeliveryStatusService" do
+      it "calls PurchaseOrders::Items::EvaluateDeliveryStatusService" do
         service_response
 
-        expect(PurchaseOrderItems::EvaluateDeliveryStatusService).to have_received(:call).with(item)
+        expect(PurchaseOrders::Items::EvaluateDeliveryStatusService).to have_received(:call).with(item)
       end
     end
   end

@@ -2,7 +2,7 @@
 # -*- frozen_string_literal: true -*-
 # -*- warn_indent: true -*-
 
-class PurchaseOrderItems::Deliveries::CreateService < ApplicationService
+class PurchaseOrders::Items::Deliveries::CreateService < ApplicationService
   def initialize(purchase_order_item, delivery_attributes)
     @purchase_order_item = purchase_order_item
     @delivery_attributes = delivery_attributes

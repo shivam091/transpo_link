@@ -50,6 +50,6 @@ class PurchaseOrder::Item::Delivery < ApplicationRecord
   end
 
   def process_delivery
-    PurchaseOrderItems::Deliveries::ProcessService.(self)
+    PurchaseOrders::Items::Deliveries::ProcessService.(self)
   end
 end

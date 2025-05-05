@@ -20,7 +20,7 @@ class PurchaseOrderItemsController < ApplicationController
 
   # POST /purchase-orders/:purchase_order_id/purchase-order-items
   def create
-    response = PurchaseOrderItems::CreateService.(@purchase_order, purchase_order_item_params)
+    response = PurchaseOrders::Items::CreateService.(@purchase_order, purchase_order_item_params)
     @purchase_order_item = response.payload[:purchase_order_item]
 
     if response.success?
@@ -44,7 +44,7 @@ class PurchaseOrderItemsController < ApplicationController
 
   # PUT|PATCH /purchase-order-items/:id
   def update
-    response = PurchaseOrderItems::UpdateService.(@purchase_order_item, purchase_order_item_params)
+    response = PurchaseOrders::Items::UpdateService.(@purchase_order_item, purchase_order_item_params)
     @purchase_order_item = response.payload[:purchase_order_item]
 
     if response.success?
@@ -68,7 +68,7 @@ class PurchaseOrderItemsController < ApplicationController
 
   # DELETE /purchase-order-items/:id
   def destroy
-    response = PurchaseOrderItems::DestroyService.(@purchase_order_item)
+    response = PurchaseOrders::Items::DestroyService.(@purchase_order_item)
     @purchase_order_item = response.payload[:purchase_order_item]
 
     if response.success?
@@ -82,7 +82,7 @@ class PurchaseOrderItemsController < ApplicationController
 
   # PATCH /purchase-order-items/:id/cancel
   def cancel
-    response = PurchaseOrderItems::CancelService.(@purchase_order_item)
+    response = PurchaseOrders::Items::CancelService.(@purchase_order_item)
     @purchase_order_item = response.payload[:purchase_order_item]
 
     if response.success?

@@ -21,7 +21,7 @@ RSpec.describe PurchaseOrders::FullDeliveryService, type: :service do
       end
 
       it "calls deliver service on each purchase order item" do
-        expect(PurchaseOrderItems::DeliverService).to receive(:call).exactly(items_count).times.and_call_original
+        expect(PurchaseOrders::Items::DeliverService).to receive(:call).exactly(items_count).times.and_call_original
 
         expect {
           service_response

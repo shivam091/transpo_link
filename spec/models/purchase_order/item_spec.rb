@@ -7,7 +7,7 @@
 require "spec_helper"
 
 RSpec.describe PurchaseOrder::Item, type: :model do
-  subject(:purchase_order_item) { build(:purchase_order_item) }
+  subject(:item) { build(:purchase_order_item) }
 
   describe "valid factory" do
     it { is_expected.to have_a_valid_factory(:purchase_order_item) }
@@ -65,14 +65,14 @@ RSpec.describe PurchaseOrder::Item, type: :model do
   end
 
   describe "default values" do
-    let(:purchase_order_item) { described_class.new }
+    let(:item) { described_class.new }
 
     it "should set 0.0 as default value for #received_quantity" do
-      expect(purchase_order_item.received_quantity).to eq(0.0)
+      expect(item.received_quantity).to eq(0.0)
     end
 
     it "should set pending as default value for #status" do
-      expect(purchase_order_item.status).to eq("pending")
+      expect(item.status).to eq("pending")
     end
   end
 
@@ -160,28 +160,28 @@ RSpec.describe PurchaseOrder::Item, type: :model do
 
       context "when quantity is invalid" do
         it "is invalid" do
-          purchase_order_item.quantity = "abcd"
-          purchase_order_item.validate
+          item.quantity = "abcd"
+          item.validate
 
-          expect(purchase_order_item.errors[:quantity]).to include("must be greater than 0.0")
+          expect(item.errors[:quantity]).to include("must be greater than 0.0")
         end
       end
 
       context "when quantity <= 0.0" do
         it "is invalid" do
-          purchase_order_item.quantity = 0.0
-          purchase_order_item.validate
+          item.quantity = 0.0
+          item.validate
 
-          expect(purchase_order_item.errors[:quantity]).to include("must be greater than 0.0")
+          expect(item.errors[:quantity]).to include("must be greater than 0.0")
         end
       end
 
       context "when quantity > 0.0" do
         it "is valid" do
-          purchase_order_item.quantity = 1.0
-          purchase_order_item.validate
+          item.quantity = 1.0
+          item.validate
 
-          expect(purchase_order_item.errors[:quantity]).to be_empty
+          expect(item.errors[:quantity]).to be_empty
         end
       end
     end
@@ -191,19 +191,19 @@ RSpec.describe PurchaseOrder::Item, type: :model do
 
       context "when received_quantity < 0.0" do
         it "is invalid" do
-          purchase_order_item.received_quantity = -0.5
-          purchase_order_item.validate
+          item.received_quantity = -0.5
+          item.validate
 
-          expect(purchase_order_item.errors[:received_quantity]).to include("must be greater than or equal to 0.0")
+          expect(item.errors[:received_quantity]).to include("must be greater than or equal to 0.0")
         end
       end
 
       context "when received_quantity >= 0.0" do
         it "is valid" do
-          purchase_order_item.received_quantity = 0.0
-          purchase_order_item.validate
+          item.received_quantity = 0.0
+          item.validate
 
-          expect(purchase_order_item.errors[:received_quantity]).to be_empty
+          expect(item.errors[:received_quantity]).to be_empty
         end
       end
     end
@@ -213,28 +213,28 @@ RSpec.describe PurchaseOrder::Item, type: :model do
 
       context "when unit_cost is invalid" do
         it "is invalid" do
-          purchase_order_item.unit_cost = "abcd"
-          purchase_order_item.validate
+          item.unit_cost = "abcd"
+          item.validate
 
-          expect(purchase_order_item.errors[:unit_cost]).to include("must be greater than 0.0")
+          expect(item.errors[:unit_cost]).to include("must be greater than 0.0")
         end
       end
 
       context "when unit_cost <= 0.0" do
         it "is invalid" do
-          purchase_order_item.unit_cost = 0.0
-          purchase_order_item.validate
+          item.unit_cost = 0.0
+          item.validate
 
-          expect(purchase_order_item.errors[:unit_cost]).to include("must be greater than 0.0")
+          expect(item.errors[:unit_cost]).to include("must be greater than 0.0")
         end
       end
 
       context "when unit_cost > 0.0" do
         it "is valid" do
-          purchase_order_item.unit_cost = 1.0
-          purchase_order_item.validate
+          item.unit_cost = 1.0
+          item.validate
 
-          expect(purchase_order_item.errors[:unit_cost]).to be_empty
+          expect(item.errors[:unit_cost]).to be_empty
         end
       end
     end
@@ -252,12 +252,12 @@ RSpec.describe PurchaseOrder::Item, type: :model do
   describe "instance methods" do
     describe "#synchronize_po_delivery_status!" do
       let(:purchase_order) { create(:purchase_order) }
-      let(:purchase_order_item) { create(:purchase_order_item, purchase_order:) }
+      let(:item) { create(:purchase_order_item, purchase_order:) }
 
       it "calls synchronize_delivery_status! on associated purchase_order" do
         expect(purchase_order).to receive(:synchronize_delivery_status!)
 
-        purchase_order_item.send(:synchronize_po_delivery_status!)
+        item.send(:synchronize_po_delivery_status!)
       end
     end
 
@@ -268,12 +268,12 @@ RSpec.describe PurchaseOrder::Item, type: :model do
         let!(:warehouse) { create(:warehouse) }
         let!(:purchase_order) { create(:purchase_order, warehouse:) }
 
-        let(:purchase_order_item) { build(:purchase_order_item, purchase_order:, product:) }
+        let(:item) { build(:purchase_order_item, purchase_order:, product:) }
 
         it "does not add validation errors" do
-          purchase_order_item.validate
+          item.validate
 
-          expect(purchase_order_item.errors[:product_id]).to be_blank
+          expect(item.errors[:product_id]).to be_blank
         end
       end
 
@@ -281,49 +281,49 @@ RSpec.describe PurchaseOrder::Item, type: :model do
         let!(:warehouse) { create(:warehouse, unit: create(:litre_unit)) }
         let!(:purchase_order) { create(:purchase_order, warehouse:) }
 
-        let(:purchase_order_item) { build(:purchase_order_item, purchase_order:, product:) }
+        let(:item) { build(:purchase_order_item, purchase_order:, product:) }
 
         it "adds an error on unit_id" do
-          purchase_order_item.validate
+          item.validate
 
-          expect(purchase_order_item.errors[:product_id]).to include("is incompatible with the selected warehouse due to unit category mismatch")
+          expect(item.errors[:product_id]).to include("is incompatible with the selected warehouse due to unit category mismatch")
         end
       end
 
       context "when product is not present" do
-        let(:purchase_order_item) { build(:purchase_order_item, purchase_order: nil, product:) }
+        let(:item) { build(:purchase_order_item, purchase_order: nil, product:) }
 
         it "does not add validation errors" do
-          purchase_order_item.validate
+          item.validate
 
-          expect(purchase_order_item.errors[:product_id]).to be_blank
+          expect(item.errors[:product_id]).to be_blank
         end
       end
     end
 
     describe "#remaining_quantity" do
       it "returns the difference between quantity and received_quantity" do
-        purchase_order_item = build(:purchase_order_item, quantity: 10.0, received_quantity: 4.0)
+        item = build(:purchase_order_item, quantity: 10.0, received_quantity: 4.0)
 
-        expect(purchase_order_item.remaining_quantity).to eq(6.0)
+        expect(item.remaining_quantity).to eq(6.0)
       end
 
       it "returns the full quantity when nothing has been received" do
-        purchase_order_item = build(:purchase_order_item, quantity: 5.0, received_quantity: 0.0)
+        item = build(:purchase_order_item, quantity: 5.0, received_quantity: 0.0)
 
-        expect(purchase_order_item.remaining_quantity).to eq(5.0)
+        expect(item.remaining_quantity).to eq(5.0)
       end
 
       it "returns zero when received_quantity equals quantity" do
-        purchase_order_item = build(:purchase_order_item, quantity: 7.5, received_quantity: 7.5)
+        item = build(:purchase_order_item, quantity: 7.5, received_quantity: 7.5)
 
-        expect(purchase_order_item.remaining_quantity).to eq(0.0)
+        expect(item.remaining_quantity).to eq(0.0)
       end
 
       it "returns negative when received_quantity exceeds quantity (should be rare, but defensive)" do
-        purchase_order_item = build(:purchase_order_item, quantity: 3.0, received_quantity: 4.0)
+        item = build(:purchase_order_item, quantity: 3.0, received_quantity: 4.0)
 
-        expect(purchase_order_item.remaining_quantity).to eq(-1.0)
+        expect(item.remaining_quantity).to eq(-1.0)
       end
     end
 
@@ -331,26 +331,26 @@ RSpec.describe PurchaseOrder::Item, type: :model do
       let(:warehouse) { create(:warehouse) }
       let(:product) { create(:product) }
       let(:purchase_order) { create(:purchase_order, warehouse:) }
-      let(:purchase_order_item) { create(:purchase_order_item, purchase_order:, product:) }
+      let(:item) { create(:purchase_order_item, purchase_order:, product:) }
 
       context "when matching inventory exists" do
         let!(:inventory) { create(:inventory, warehouse:, product:) }
 
         it "returns the matching inventory record" do
-          expect(purchase_order_item.inventory).to eq(inventory)
+          expect(item.inventory).to eq(inventory)
         end
 
         it "memoizes the result" do
           # force multiple calls to check memoization
           expect(Inventory).to receive(:find_by).once.and_call_original
 
-          2.times { purchase_order_item.inventory }
+          2.times { item.inventory }
         end
       end
 
       context "when no matching inventory exists" do
         it "returns nil" do
-          expect(purchase_order_item.inventory).to be_nil
+          expect(item.inventory).to be_nil
         end
       end
 
@@ -374,44 +374,44 @@ RSpec.describe PurchaseOrder::Item, type: :model do
       let!(:purchase_order) { create(:purchase_order) }
 
       context "when #unit_cost & #currency are not set" do
-        let(:purchase_order_item) { build(:purchase_order_item, purchase_order:, product:) }
+        let(:item) { build(:purchase_order_item, purchase_order:, product:) }
 
         it "sets unit_cost and currency from the product" do
-          expect(purchase_order_item.unit_cost).to be_nil
-          expect(purchase_order_item.currency.iso_code).to eq("INR")
+          expect(item.unit_cost).to be_nil
+          expect(item.currency.iso_code).to eq("INR")
 
-          purchase_order_item.valid?
+          item.valid?
 
-          expect(purchase_order_item.unit_cost).to eq(100.5)
-          expect(purchase_order_item.currency.iso_code).to eq("USD")
+          expect(item.unit_cost).to eq(100.5)
+          expect(item.currency.iso_code).to eq("USD")
         end
       end
 
       context "when #unit_cost & #currency are already set" do
-        let(:purchase_order_item) { build(:purchase_order_item, unit_cost: 120.75, currency: "EUR", purchase_order:, product:) }
+        let(:item) { build(:purchase_order_item, unit_cost: 120.75, currency: "EUR", purchase_order:, product:) }
 
         it "overrides unit_cost and currency & sets them from the product" do
-          expect(purchase_order_item.unit_cost).to eq(120.75)
-          expect(purchase_order_item.currency.iso_code).to eq("EUR")
+          expect(item.unit_cost).to eq(120.75)
+          expect(item.currency.iso_code).to eq("EUR")
 
-          purchase_order_item.valid?
+          item.valid?
 
-          expect(purchase_order_item.unit_cost).to eq(100.5)
-          expect(purchase_order_item.currency.iso_code).to eq("USD")
+          expect(item.unit_cost).to eq(100.5)
+          expect(item.currency.iso_code).to eq("USD")
         end
       end
 
       context "when product is not set" do
-        let(:purchase_order_item) { build(:purchase_order_item, product: nil) }
+        let(:item) { build(:purchase_order_item, product: nil) }
 
         it "does nothing" do
-          expect(purchase_order_item.unit_cost).to be_nil
-          expect(purchase_order_item.currency.iso_code).to eq("INR")
+          expect(item.unit_cost).to be_nil
+          expect(item.currency.iso_code).to eq("INR")
 
-          purchase_order_item.valid?
+          item.valid?
 
-          expect(purchase_order_item.unit_cost).to be_nil
-          expect(purchase_order_item.currency.iso_code).to eq("INR")
+          expect(item.unit_cost).to be_nil
+          expect(item.currency.iso_code).to eq("INR")
         end
       end
     end

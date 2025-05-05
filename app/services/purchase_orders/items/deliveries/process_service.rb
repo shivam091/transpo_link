@@ -2,7 +2,7 @@
 # -*- frozen_string_literal: true -*-
 # -*- warn_indent: true -*-
 
-class PurchaseOrderItems::Deliveries::ProcessService < ApplicationService
+class PurchaseOrders::Items::Deliveries::ProcessService < ApplicationService
   def initialize(delivery)
     @delivery = delivery
   end
@@ -30,7 +30,7 @@ class PurchaseOrderItems::Deliveries::ProcessService < ApplicationService
     Inventories::Movements::PurchaseService.(inventory, item, purchase_attributes)
 
     # Update received quantity
-    PurchaseOrderItems::UpdateReceivedQuantityService.(item, delivery.quantity)
+    PurchaseOrders::Items::UpdateReceivedQuantityService.(item, delivery.quantity)
 
     # Decrement replenishment
     source_unit, target_unit = delivery.unit, inventory.unit
@@ -38,6 +38,6 @@ class PurchaseOrderItems::Deliveries::ProcessService < ApplicationService
     Replenishments::UpdateService.(inventory, converted_quantity, :decrement)
 
     # Evaluate delivery status
-    PurchaseOrderItems::EvaluateDeliveryStatusService.(item)
+    PurchaseOrders::Items::EvaluateDeliveryStatusService.(item)
   end
 end

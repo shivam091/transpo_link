@@ -2,11 +2,11 @@
 # -*- frozen_string_literal: true -*-
 # -*- warn_indent: true -*-
 
-# spec/services/purchase_order_items/deliveries/create_service_spec.rb
+# spec/services/purchase_orders/items/deliveries/create_service_spec.rb
 
 require "spec_helper"
 
-RSpec.describe PurchaseOrderItems::Deliveries::CreateService, type: :service do
+RSpec.describe PurchaseOrders::Items::Deliveries::CreateService, type: :service do
   let!(:purchase_order_item) { create(:purchase_order_item) }
 
   subject(:service_response) { described_class.(purchase_order_item, delivery_attributes) }
