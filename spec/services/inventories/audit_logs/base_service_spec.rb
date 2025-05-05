@@ -12,7 +12,7 @@ RSpec.describe Inventories::AuditLogs::BaseService, type: :service do
   let(:unit_conversion) { create(:dozen_item_conversion, source_unit:, target_unit:) }
 
   let!(:inventory) { create(:inventory, unit: target_unit) }
-  let!(:inventory_movement) do
+  let!(:movement) do
     create(:inventory_movement,
       :purchase,
       quantity: 2.0,
@@ -22,7 +22,7 @@ RSpec.describe Inventories::AuditLogs::BaseService, type: :service do
     )
   end
 
-  subject(:service_instance) { described_class.new(inventory, inventory_movement) }
+  subject(:service_instance) { described_class.new(inventory, movement) }
 
   describe "#previous_quantity" do
     it "raises NotImplementedError" do
