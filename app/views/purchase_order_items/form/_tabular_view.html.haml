@@ -8,17 +8,17 @@
       .table-header
         .table-cell.cell-narrow #
         .table-cell.required{scope: "col"}
-          = PurchaseOrderItem.human_attribute_name(:product_id)
+          = PurchaseOrder::Item.human_attribute_name(:product_id)
         .table-cell.required{scope: "col"}
-          = PurchaseOrderItem.human_attribute_name(:quantity)
+          = PurchaseOrder::Item.human_attribute_name(:quantity)
         .table-cell.required{scope: "col"}
-          = PurchaseOrderItem.human_attribute_name(:unit_id)
+          = PurchaseOrder::Item.human_attribute_name(:unit_id)
         .table-cell.cell-narrow
           = t("shared.actions")
       .table-body
         %template{data: {nested_forms_target: "template"}}
-          = form.fields_for :purchase_order_items, form.object.purchase_order_items.build, child_index: "NEW_RECORD" do |purchase_order_item_form|
-            = safe_render.partial("purchase_order_items/form/tabular_field", form: purchase_order_item_form)
-        = form.fields_for :purchase_order_items do |purchase_order_item_form|
-          = safe_render.partial("purchase_order_items/form/tabular_field", form: purchase_order_item_form)
+          = form.fields_for :items, form.object.items.build, child_index: "NEW_RECORD" do |item_form|
+            = safe_render.partial("purchase_order_items/form/tabular_field", form: item_form)
+        = form.fields_for :items do |item_form|
+          = safe_render.partial("purchase_order_items/form/tabular_field", form: item_form)
         .table-row.d-none{data: {nested_forms_target: "target"}}

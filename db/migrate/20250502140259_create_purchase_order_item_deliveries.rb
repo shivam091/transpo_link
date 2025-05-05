@@ -5,11 +5,11 @@
 class CreatePurchaseOrderItemDeliveries < ActiveRecord::Migration[8.0]
   def change
     create_table :purchase_order_item_deliveries, id: :uuid do |t|
-      t.references :purchase_order_item,
+      t.references :item,
                    type: :uuid,
                    foreign_key: {
                      to_table: :purchase_order_items,
-                     name: :fk_purchase_order_item_deliveries_purchase_order_item_id_on_purchase_order_items,
+                     name: :fk_purchase_order_item_deliveries_item_id_on_purchase_order_items,
                      on_delete: :cascade
                    },
                    null: false,

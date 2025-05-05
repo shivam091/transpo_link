@@ -277,12 +277,12 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_02_140259) do
   end
 
   create_table "purchase_order_item_deliveries", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.uuid "purchase_order_item_id", null: false
+    t.uuid "item_id", null: false
     t.uuid "unit_id", null: false
     t.decimal "quantity", precision: 12, scale: 2
     t.timestamptz "created_at", null: false
     t.timestamptz "updated_at", null: false
-    t.index ["purchase_order_item_id"], name: "index_purchase_order_item_deliveries_on_purchase_order_item_id"
+    t.index ["item_id"], name: "index_purchase_order_item_deliveries_on_item_id"
     t.index ["quantity"], name: "index_purchase_order_item_deliveries_on_quantity"
     t.index ["unit_id"], name: "index_purchase_order_item_deliveries_on_unit_id"
     t.check_constraint "quantity > 0.0", name: "check_purchase_order_item_deliveries_quantity_positive"
@@ -613,7 +613,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_02_140259) do
   add_foreign_key "product_prices", "warehouses", name: "fk_product_prices_warehouse_id_on_warehouses", on_delete: :restrict
   add_foreign_key "products", "product_categories", name: "fk_products_product_category_id_on_product_categories", on_delete: :restrict
   add_foreign_key "products", "units", name: "fk_products_unit_id_on_units", on_delete: :restrict
-  add_foreign_key "purchase_order_item_deliveries", "purchase_order_items", name: "fk_purchase_order_item_deliveries_purchase_order_item_id_on_pur", on_delete: :cascade
+  add_foreign_key "purchase_order_item_deliveries", "purchase_order_items", column: "item_id", name: "fk_purchase_order_item_deliveries_item_id_on_purchase_order_ite", on_delete: :cascade
   add_foreign_key "purchase_order_item_deliveries", "units", name: "fk_purchase_order_item_deliveries_unit_id_on_units", on_delete: :restrict
   add_foreign_key "purchase_order_items", "products", name: "fk_purchase_order_items_product_id_on_products", on_delete: :restrict
   add_foreign_key "purchase_order_items", "purchase_orders", name: "fk_purchase_order_items_purchase_order_id_on_purchase_orders", on_delete: :cascade

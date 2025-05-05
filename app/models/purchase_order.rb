@@ -62,7 +62,7 @@ class PurchaseOrder < ApplicationRecord
     event :cancel do
       transitions from: [:draft, :submitted, :on_hold], to: :cancelled
 
-      after :cancel_purchase_order_items!
+      after :cancel_items!
     end
 
     event :hold do
@@ -81,7 +81,7 @@ class PurchaseOrder < ApplicationRecord
       transitions from: [:approved, :partially_delivered], to: :fully_delivered
 
       before :update_actual_delivery_date
-      after :deliver_purchase_order_items!
+      after :deliver_items!
     end
 
     event :close do
@@ -107,15 +107,15 @@ class PurchaseOrder < ApplicationRecord
             allow_blank: true,
             reduce: true
 
-  validates_associated :purchase_order_items
+  validates_associated :items
 
-  has_many :purchase_order_items, inverse_of: :purchase_order, dependent: :destroy
+  has_many :items, inverse_of: :purchase_order, class_name: "PurchaseOrder::Item", dependent: :destroy
 
   belongs_to :warehouse, inverse_of: :purchase_orders
   belongs_to :manager, inverse_of: :purchase_orders, class_name: "User"
   belongs_to :supplier, inverse_of: :supplied_purchase_orders, class_name: "User"
 
-  accepts_nested_attributes_for :purchase_order_items, allow_destroy: true, reject_if: :reject_purchase_order_item?
+  accepts_nested_attributes_for :items, allow_destroy: true, reject_if: :reject_item?
 
   class << self
     def accessible(user)
@@ -143,14 +143,14 @@ class PurchaseOrder < ApplicationRecord
   private
 
   def all_items_delivered?
-    purchase_order_items.all?(&:delivered?)
+    items.all?(&:delivered?)
   end
 
   def some_items_delivered_or_partially_delivered?
-    purchase_order_items.any? { |item| item.status.in?(["delivered", "partially_delivered"]) }
+    items.any? { |item| item.status.in?(["delivered", "partially_delivered"]) }
   end
 
-  def reject_purchase_order_item?(attributes)
+  def reject_item?(attributes)
     [
       attributes[:purchase_order_id],
       attributes[:product_id],
@@ -164,16 +164,12 @@ class PurchaseOrder < ApplicationRecord
     Inventories::ReplenishService.(self)
   end
 
-  def cancel_purchase_order_items!
-    purchase_order_items.each do |purchase_order_item|
-      PurchaseOrderItems::CancelService.(purchase_order_item)
-    end
+  def cancel_items!
+    items.each { |item| PurchaseOrderItems::CancelService.(item) }
   end
 
-  def deliver_purchase_order_items!
-    purchase_order_items.each do |purchase_order_item|
-      PurchaseOrderItems::DeliverService.(purchase_order_item)
-    end
+  def deliver_items!
+    items.each { |item| PurchaseOrderItems::DeliverService.(item) }
   end
 
   def update_actual_delivery_date

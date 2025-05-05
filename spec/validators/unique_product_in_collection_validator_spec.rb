@@ -9,7 +9,7 @@ require "spec_helper"
 RSpec.describe UniqueProductInCollectionValidator do
   context "when validating the purchase order" do
     let(:parent) { :purchase_order }
-    let(:child_collection) { :purchase_order_items }
+    let(:child_collection) { :items }
     let(:parent_factory) { :purchase_order }
     let(:child_factory) { :purchase_order_item }
 

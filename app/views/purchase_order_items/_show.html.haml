@@ -2,37 +2,37 @@
 .col-md-12.col-lg-6
   %dl
     %dt
-      = PurchaseOrderItem.human_attribute_name(:product_id)
+      = PurchaseOrder::Item.human_attribute_name(:product_id)
     %dd
       = link_to product.name, product_path(product), target: :_blank
 .col-md-12.col-lg-6
   %dl
     %dt
-      = PurchaseOrderItem.human_attribute_name(:ordered_quantity)
+      = PurchaseOrder::Item.human_attribute_name(:ordered_quantity)
     %dd
       = number_to_measurement_unit(@purchase_order_item.quantity, @purchase_order_item.unit_symbol)
 .col-md-12.col-lg-6
   %dl
     %dt
-      = PurchaseOrderItem.human_attribute_name(:remaining_quantity)
+      = PurchaseOrder::Item.human_attribute_name(:remaining_quantity)
     %dd
       = number_to_measurement_unit(@purchase_order_item.remaining_quantity, @purchase_order_item.unit_symbol)
 .col-md-12.col-lg-6
   %dl
     %dt
-      = PurchaseOrderItem.human_attribute_name(:unit_cost)
+      = PurchaseOrder::Item.human_attribute_name(:unit_cost)
     %dd
       = number_to_currency(@purchase_order_item.unit_cost, unit: @purchase_order_item.currency.symbol)
 .col-md-12.col-lg-6
   %dl
     %dt
-      = PurchaseOrderItem.human_attribute_name(:total_cost)
+      = PurchaseOrder::Item.human_attribute_name(:total_cost)
     %dd
       = number_to_currency(@purchase_order_item.total_cost, unit: @purchase_order_item.currency.symbol)
 .col-md-12.col-lg-6
   %dl
     %dt
-      = PurchaseOrderItem.human_attribute_name(:status)
+      = PurchaseOrder::Item.human_attribute_name(:status)
     %dd
       = safe_render.partial("shared/badge", color: TranspoLink::ColorMapper.new(:status).for(@purchase_order_item.status)) do
         = enum_l(@purchase_order_item, :status)

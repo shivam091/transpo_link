@@ -101,7 +101,7 @@ RSpec.describe PurchaseOrder, type: :model do
   end
 
   describe "associations" do
-    it { is_expected.to have_many(:purchase_order_items).inverse_of(:purchase_order).dependent(:destroy) }
+    it { is_expected.to have_many(:items).class_name("PurchaseOrder::Item").inverse_of(:purchase_order).dependent(:destroy) }
 
     it { is_expected.to belong_to(:warehouse).inverse_of(:purchase_orders) }
     it { is_expected.to belong_to(:manager).inverse_of(:purchase_orders) }
@@ -109,7 +109,7 @@ RSpec.describe PurchaseOrder, type: :model do
   end
 
   describe "nested attributes" do
-    it { is_expected.to accept_nested_attributes_for(:purchase_order_items).allow_destroy(true) }
+    it { is_expected.to accept_nested_attributes_for(:items).allow_destroy(true) }
   end
 
   describe "validations" do
@@ -160,7 +160,7 @@ RSpec.describe PurchaseOrder, type: :model do
       end
     end
 
-    describe "#reject_purchase_order_item?" do
+    describe "#reject_item?" do
       let!(:purchase_order_item) { create(:purchase_order_item, purchase_order:) }
 
       context "when creating purchase order items" do
@@ -169,7 +169,7 @@ RSpec.describe PurchaseOrder, type: :model do
 
           it "creates a purchase order item" do
             expect {
-                purchase_order.update(purchase_order_items_attributes: {
+                purchase_order.update(items_attributes: {
                   0 => {
                     product_id: another_product.id,
                     quantity: 92,
@@ -178,14 +178,14 @@ RSpec.describe PurchaseOrder, type: :model do
                     currency: "INR"
                   }
                 })
-            }.to change(PurchaseOrderItem, :count).by(1)
+            }.to change(PurchaseOrder::Item, :count).by(1)
           end
         end
 
         context "when invalid attributes are provided" do
           it "does not create a purchase order item if required attributes are blank" do
             expect {
-              purchase_order.update(purchase_order_items_attributes: {
+              purchase_order.update(items_attributes: {
                 0 => {
                   quantity: 0.0,
                   unit_id: "",
@@ -193,7 +193,7 @@ RSpec.describe PurchaseOrder, type: :model do
                   currency: ""
                 }
               })
-            }.to not_change(PurchaseOrderItem, :count)
+            }.to not_change(PurchaseOrder::Item, :count)
           end
         end
       end
@@ -201,11 +201,11 @@ RSpec.describe PurchaseOrder, type: :model do
       context "when updating purchase order items" do
         it "updates the existing purchase order item without changing the count" do
           expect {
-            purchase_order.update(purchase_order_items_attributes: {
+            purchase_order.update(items_attributes: {
               id: purchase_order_item.id,
               quantity: 20
             })
-          }.to not_change(PurchaseOrderItem, :count)
+          }.to not_change(PurchaseOrder::Item, :count)
 
           expect(purchase_order_item.reload.quantity).to eq(20)
         end
@@ -214,8 +214,8 @@ RSpec.describe PurchaseOrder, type: :model do
       context "when destroying purchase order items" do
         it "removes the purchase order item when _destroy is set to true" do
           expect {
-            purchase_order.update(purchase_order_items_attributes: {id: purchase_order_item.id, _destroy: true})
-          }.to change(PurchaseOrderItem, :count).by(-1)
+            purchase_order.update(items_attributes: {id: purchase_order_item.id, _destroy: true})
+          }.to change(PurchaseOrder::Item, :count).by(-1)
         end
       end
     end
@@ -224,7 +224,7 @@ RSpec.describe PurchaseOrder, type: :model do
       let(:purchase_order) { create(:purchase_order, :with_po_items) }
 
       context "when all items are delivered" do
-        before { purchase_order.purchase_order_items.each(&:deliver!) }
+        before { purchase_order.items.each(&:deliver!) }
 
         it "returns true" do
           expect(purchase_order.send(:all_items_delivered?)).to be_truthy
@@ -232,7 +232,7 @@ RSpec.describe PurchaseOrder, type: :model do
       end
 
       context "when some items are not delivered" do
-        before { purchase_order.purchase_order_items.first.cancel! }
+        before { purchase_order.items.first.cancel! }
 
         it "returns false" do
           expect(purchase_order.send(:all_items_delivered?)).to be_falsy
@@ -240,7 +240,7 @@ RSpec.describe PurchaseOrder, type: :model do
       end
 
       context "when no items are delivered" do
-        before { purchase_order.purchase_order_items.each(&:cancel!) }
+        before { purchase_order.items.each(&:cancel!) }
 
         it "returns false" do
           expect(purchase_order.send(:all_items_delivered?)).to be_falsy
@@ -252,7 +252,7 @@ RSpec.describe PurchaseOrder, type: :model do
       let(:purchase_order) { create(:purchase_order, :with_po_items) }
 
       context "when some items are delivered" do
-        before { purchase_order.purchase_order_items.first.deliver! }
+        before { purchase_order.items.first.deliver! }
 
         it "returns true" do
           expect(purchase_order.send(:some_items_delivered_or_partially_delivered?)).to be_truthy
@@ -260,7 +260,7 @@ RSpec.describe PurchaseOrder, type: :model do
       end
 
       context "when some items are partially delivered" do
-        before { purchase_order.purchase_order_items.first.partially_deliver! }
+        before { purchase_order.items.first.partially_deliver! }
 
         it "returns true" do
           expect(purchase_order.send(:some_items_delivered_or_partially_delivered?)).to be_truthy
@@ -268,7 +268,7 @@ RSpec.describe PurchaseOrder, type: :model do
       end
 
       context "when no items are delivered or partially delivered" do
-        before { purchase_order.purchase_order_items.each(&:cancel!) }
+        before { purchase_order.items.each(&:cancel!) }
 
         it "returns false" do
           expect(purchase_order.send(:some_items_delivered_or_partially_delivered?)).to be_falsy
@@ -281,7 +281,7 @@ RSpec.describe PurchaseOrder, type: :model do
 
       context "when all items are delivered" do
         before do
-          purchase_order.purchase_order_items.each(&:deliver!)
+          purchase_order.items.each(&:deliver!)
 
           allow(purchase_order).to receive(:may_fully_deliver?) { true }
           allow(purchase_order).to receive(:fully_deliver!).and_call_original
@@ -303,7 +303,7 @@ RSpec.describe PurchaseOrder, type: :model do
 
       context "when some items are delivered or partially delivered" do
         before do
-          purchase_order.purchase_order_items.first.deliver!  # Deliver the first item
+          purchase_order.items.first.deliver!  # Deliver the first item
 
           allow(purchase_order).to receive(:may_partially_deliver?) { true }
           allow(purchase_order).to receive(:fully_deliver!)
@@ -325,7 +325,7 @@ RSpec.describe PurchaseOrder, type: :model do
 
       context "when no items are delivered or partially delivered" do
         before do
-          purchase_order.purchase_order_items.each(&:cancel!)  # Ensure all items are cancelled
+          purchase_order.items.each(&:cancel!)  # Ensure all items are cancelled
 
           allow(purchase_order).to receive(:fully_deliver!)  # Spy on fully_deliver! method
           allow(purchase_order).to receive(:partially_deliver!)  # Spy on partially_deliver! method
@@ -342,7 +342,7 @@ RSpec.describe PurchaseOrder, type: :model do
 
       context "when an invalid transition occurs" do
         before do
-          purchase_order.purchase_order_items.each(&:deliver!)  # Deliver items to make the transition possible
+          purchase_order.items.each(&:deliver!)  # Deliver items to make the transition possible
 
           # Simulate invalid transition by allowing a failed transition
           allow(purchase_order).to receive(:may_fully_deliver?).and_raise(AASM::InvalidTransition.new(purchase_order, :draft, :default))

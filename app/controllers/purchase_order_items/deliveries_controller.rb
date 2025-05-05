@@ -33,7 +33,7 @@ class PurchaseOrderItems::DeliveriesController < ApplicationController
   private
 
   def set_purchase_order_item
-    @purchase_order_item ||= PurchaseOrderItem.find(params[:purchase_order_item_id])
+    @purchase_order_item ||= PurchaseOrder::Item.find(params[:purchase_order_item_id])
   end
 
   def delivery_params

@@ -13,8 +13,8 @@ RSpec.describe PurchaseOrderItems::Deliveries::CreateService, type: :service do
 
   describe ".call" do
     before do
-      allow_any_instance_of(PurchaseOrderItem::Delivery).to receive(:convert_to_item_unit)
-      allow_any_instance_of(PurchaseOrderItem::Delivery).to receive(:process_delivery)
+      allow_any_instance_of(PurchaseOrder::Item::Delivery).to receive(:convert_to_item_unit)
+      allow_any_instance_of(PurchaseOrder::Item::Delivery).to receive(:process_delivery)
     end
 
     context "when provided attributes are valid" do
@@ -25,7 +25,7 @@ RSpec.describe PurchaseOrderItems::Deliveries::CreateService, type: :service do
         )
       end
 
-      include_examples "creates a record", PurchaseOrderItem::Delivery
+      include_examples "creates a record", PurchaseOrder::Item::Delivery
       include_examples "returns a success response"
     end
 
@@ -34,7 +34,7 @@ RSpec.describe PurchaseOrderItems::Deliveries::CreateService, type: :service do
         attributes_for(:po_item_delivery, quantity: nil, unit_id: nil)
       end
 
-      include_examples "does not change record count", PurchaseOrderItem::Delivery
+      include_examples "does not change record count", PurchaseOrder::Item::Delivery
       include_examples "returns an error response"
     end
   end

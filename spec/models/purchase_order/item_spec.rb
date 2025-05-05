@@ -2,11 +2,11 @@
 # -*- frozen_string_literal: true -*-
 # -*- warn_indent: true -*-
 
-# spec/models/purchase_order_item_spec.rb
+# spec/models/purchase_order/item_spec.rb
 
 require "spec_helper"
 
-RSpec.describe PurchaseOrderItem, type: :model do
+RSpec.describe PurchaseOrder::Item, type: :model do
   subject(:purchase_order_item) { build(:purchase_order_item) }
 
   describe "valid factory" do
@@ -92,7 +92,7 @@ RSpec.describe PurchaseOrderItem, type: :model do
     it { is_expected.to have_one(:warehouse).through(:purchase_order).inverse_of(:purchase_order_items).dependent(:restrict_with_exception) }
 
     it { is_expected.to have_many(:inventory_movements).dependent(:restrict_with_exception) }
-    it { is_expected.to have_many(:deliveries).class_name("PurchaseOrderItem::Delivery").inverse_of(:purchase_order_item).dependent(:destroy) }
+    it { is_expected.to have_many(:deliveries).class_name("PurchaseOrder::Item::Delivery").inverse_of(:item).dependent(:destroy) }
     it { is_expected.to have_many(:restocks).class_name("InventoryMovement").dependent(:restrict_with_exception) }
 
     describe "#restocks" do
@@ -123,7 +123,7 @@ RSpec.describe PurchaseOrderItem, type: :model do
       end
     end
 
-    it { is_expected.to belong_to(:purchase_order).inverse_of(:purchase_order_items).touch }
+    it { is_expected.to belong_to(:purchase_order).inverse_of(:items).touch }
     it { is_expected.to belong_to(:product).inverse_of(:purchase_order_items) }
     it { is_expected.to belong_to(:unit).inverse_of(:purchase_order_items) }
   end

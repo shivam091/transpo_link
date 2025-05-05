@@ -10,7 +10,7 @@
 # delivered: Entire quantity of the item has been received.
 # cancelled: Item was removed from the order or no longer needed.
 
-class PurchaseOrderItem < ApplicationRecord
+class PurchaseOrder::Item < ApplicationRecord
   include AASM, ActsAsMoney, Sortable, ScaleEnforcer
 
   LISTING_ATTRIBUTES = %i[product_id ordered_quantity remaining_quantity unit_cost total_cost status].freeze
@@ -73,14 +73,11 @@ class PurchaseOrderItem < ApplicationRecord
   validate :product_unit_is_in_warehouse_unit_category
 
   validates_with UnitIsInProductUnitCategoryValidator
-  validates_with UniqueProductInCollectionValidator, parent: :purchase_order, collection: :purchase_order_items
+  validates_with UniqueProductInCollectionValidator, parent: :purchase_order, collection: :items
 
   with_options inverse_of: :purchase_order_items do |a|
-    a.belongs_to :purchase_order, touch: true
     a.belongs_to :product
     a.belongs_to :unit
-
-    a.has_one :warehouse, through: :purchase_order, dependent: :restrict_with_exception
   end
 
   has_many :inventory_batches, as: :restockable, dependent: :restrict_with_exception
@@ -100,9 +97,13 @@ class PurchaseOrderItem < ApplicationRecord
            as: :source,
            dependent: :restrict_with_exception
   has_many :deliveries,
-           class_name: "PurchaseOrderItem::Delivery",
-           inverse_of: :purchase_order_item,
+           class_name: "PurchaseOrder::Item::Delivery",
+           inverse_of: :item,
            dependent: :destroy
+
+  belongs_to :purchase_order, inverse_of: :items, touch: true
+
+  has_one :warehouse, through: :purchase_order, inverse_of: :purchase_order_items, dependent: :restrict_with_exception
 
   before_validation :set_unit_cost_and_currency
 

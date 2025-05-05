@@ -22,7 +22,7 @@ RSpec.describe PurchaseOrderItems::CreateService, type: :service do
         )
       end
 
-      include_examples "creates a record", PurchaseOrderItem
+      include_examples "creates a record", PurchaseOrder::Item
       include_examples "returns a success response"
     end
 
@@ -34,7 +34,7 @@ RSpec.describe PurchaseOrderItems::CreateService, type: :service do
         )
       end
 
-      include_examples "does not change record count", PurchaseOrderItem
+      include_examples "does not change record count", PurchaseOrder::Item
       include_examples "returns an error response"
     end
   end

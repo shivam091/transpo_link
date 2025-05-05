@@ -252,7 +252,7 @@
           status: "Status",
           notes: "Notes"
         },
-        purchase_order_item: {
+        "purchase_order/item" => {
           purchase_order_id: "Purchase order",
           product_id: "Product",
           quantity: "Quantity",
@@ -265,7 +265,7 @@
           ordered_quantity: "Ordered quantity",
           remaining_quantity: "Remaining quantity",
         },
-        "purchase_order_item/delivery" => {
+        "purchase_order/item/delivery" => {
           quantity: "Quantity",
           unit_id: "Unit of measure",
         },
@@ -396,7 +396,7 @@
               },
             }
           },
-          purchase_order_item: {
+          "purchase_order/item" => {
             attributes: {
               product_id: {
                 uniqueness: "has already been added to this purchase order",
@@ -410,7 +410,7 @@
               },
             }
           },
-          "purchase_order_item/delivery" => {
+          "purchase_order/item/delivery" => {
             attributes: {
               quantity: {
                 exceeds_remaining_quantity: "cannot exceed remaining quantity of the purchase order item"

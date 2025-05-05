@@ -16,7 +16,7 @@ class Inventories::ReplenishService < ApplicationService
   attr_reader :purchase_order
 
   def replenish_inventory
-    purchase_order.purchase_order_items.each do |item|
+    purchase_order.items.each do |item|
       warehouse, product, inventory = purchase_order.warehouse, item.product, item.inventory
 
       raise_missing_inventory_error!(warehouse, product) if inventory.nil?

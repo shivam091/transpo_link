@@ -146,7 +146,7 @@ class PurchaseOrdersController < ApplicationController
       :warehouse_id,
       :supplier_id,
       :notes,
-      purchase_order_items_attributes: [
+      items_attributes: [
         :id,
         :_destroy,
         :product_id,

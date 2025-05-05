@@ -54,7 +54,7 @@ class Product < ApplicationRecord
   with_options inverse_of: :product do |a|
     a.has_many :inventories, dependent: :destroy
     a.has_many :product_prices, dependent: :destroy
-    a.has_many :purchase_order_items, dependent: :restrict_with_exception
+    a.has_many :purchase_order_items, class_name: "PurchaseOrder::Item", dependent: :restrict_with_exception
   end
 
   with_options inverse_of: :products do |a|

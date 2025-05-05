@@ -13,14 +13,14 @@ RSpec.describe PurchaseOrderItems::DestroyService, type: :service do
 
   describe ".call" do
     context "when deletion is successful" do
-      include_examples "deletes a record", PurchaseOrderItem
+      include_examples "deletes a record", PurchaseOrder::Item
       include_examples "returns a success response"
     end
 
     context "when deletion is unsuccessful" do
       before { allow(purchase_order_item).to receive(:destroy) { false } }
 
-      include_examples "does not change record count", PurchaseOrderItem
+      include_examples "does not change record count", PurchaseOrder::Item
       include_examples "returns an error response"
     end
   end

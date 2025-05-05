@@ -39,7 +39,7 @@ RSpec.describe "PurchaseOrderItems", type: :request do
   describe "GET /purchase-orders/:purchase_order_id/purchase-order-items/new" do
     before { get new_purchase_order_purchase_order_item_path(purchase_order) }
 
-    include_examples "initializes a new instance", :purchase_order_item, PurchaseOrderItem
+    include_examples "initializes a new instance", :purchase_order_item, PurchaseOrder::Item
 
     it "renders new purchase order item modal" do
       expect(response.body).to include("<turbo-frame id=\"new_purchase_order_item_form_frame\" target=\"_top\">")

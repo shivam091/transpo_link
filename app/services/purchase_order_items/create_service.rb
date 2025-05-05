@@ -16,7 +16,7 @@ class PurchaseOrderItems::CreateService < ApplicationService
   attr_reader :purchase_order, :purchase_order_item_attributes
 
   def create_purchase_order_item
-    purchase_order_item = purchase_order.purchase_order_items.build(purchase_order_item_attributes)
+    purchase_order_item = purchase_order.items.build(purchase_order_item_attributes)
 
     if purchase_order_item.save
       ServiceResponse.success(payload: {purchase_order_item:})

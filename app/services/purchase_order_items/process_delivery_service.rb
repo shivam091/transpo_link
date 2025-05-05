@@ -9,7 +9,7 @@ class PurchaseOrderItems::ProcessDeliveryService < ApplicationService
   end
 
   def call
-    PurchaseOrderItem.transaction do
+    PurchaseOrder::Item.transaction do
       update_received_quantity!
       decide_delivery_status
     end

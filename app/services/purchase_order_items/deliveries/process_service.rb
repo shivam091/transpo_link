@@ -16,21 +16,21 @@ class PurchaseOrderItems::Deliveries::ProcessService < ApplicationService
   attr_reader :delivery
 
   def process_delivery!
-    purchase_order_item = delivery.purchase_order_item
-    inventory = purchase_order_item.inventory
+    item = delivery.item
+    inventory = item.inventory
 
     # Create inventory movement
     purchase_attributes = {
       quantity: delivery.quantity,
-      unit_id: purchase_order_item.unit_id,
-      unit_cost: purchase_order_item.unit_cost,
-      total_cost: purchase_order_item.total_cost,
-      currency: purchase_order_item.currency,
+      unit_id: item.unit_id,
+      unit_cost: item.unit_cost,
+      total_cost: item.total_cost,
+      currency: item.currency,
     }
-    InventoryMovements::PurchaseService.(inventory, purchase_order_item, purchase_attributes)
+    InventoryMovements::PurchaseService.(inventory, item, purchase_attributes)
 
     # Update received quantity
-    PurchaseOrderItems::UpdateReceivedQuantityService.(purchase_order_item, delivery.quantity)
+    PurchaseOrderItems::UpdateReceivedQuantityService.(item, delivery.quantity)
 
     # Decrement replenishment
     source_unit, target_unit = delivery.unit, inventory.unit
@@ -38,6 +38,6 @@ class PurchaseOrderItems::Deliveries::ProcessService < ApplicationService
     Replenishments::UpdateService.(inventory, converted_quantity, :decrement)
 
     # Evaluate delivery status
-    PurchaseOrderItems::EvaluateDeliveryStatusService.(purchase_order_item)
+    PurchaseOrderItems::EvaluateDeliveryStatusService.(item)
   end
 end

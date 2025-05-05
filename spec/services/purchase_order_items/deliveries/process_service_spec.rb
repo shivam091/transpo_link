@@ -11,17 +11,17 @@ RSpec.describe PurchaseOrderItems::Deliveries::ProcessService, type: :service do
   let!(:target_unit) { create(:item_unit) }
 
   let(:inventory) { create(:inventory, unit: target_unit) }
-  let(:purchase_order_item) { create(:purchase_order_item, unit: source_unit) }
-  let(:delivery) { create(:po_item_delivery, unit: source_unit, purchase_order_item:) }
+  let(:item) { create(:purchase_order_item, unit: source_unit) }
+  let(:delivery) { create(:po_item_delivery, unit: source_unit, item:) }
 
   subject(:service_response) { described_class.(delivery) }
 
   describe "#call" do
     context "with mocked services and method calls" do
       before do
-        allow(purchase_order_item).to receive(:inventory) { inventory }
-        allow_any_instance_of(PurchaseOrderItem::Delivery).to receive(:converted_quantity_must_not_exceed_remaining_quantity)
-        allow_any_instance_of(PurchaseOrderItem::Delivery).to receive(:process_delivery)
+        allow(item).to receive(:inventory) { inventory }
+        allow_any_instance_of(PurchaseOrder::Item::Delivery).to receive(:converted_quantity_must_not_exceed_remaining_quantity)
+        allow_any_instance_of(PurchaseOrder::Item::Delivery).to receive(:process_delivery)
 
         allow(InventoryMovements::PurchaseService).to receive(:call)
         allow(PurchaseOrderItems::UpdateReceivedQuantityService).to receive(:call)
@@ -35,13 +35,13 @@ RSpec.describe PurchaseOrderItems::Deliveries::ProcessService, type: :service do
 
         expect(InventoryMovements::PurchaseService).to have_received(:call).with(
           inventory,
-          purchase_order_item,
+          item,
           hash_including(
             quantity: delivery.quantity,
-            unit_id: purchase_order_item.unit_id,
-            unit_cost: purchase_order_item.unit_cost,
-            total_cost: purchase_order_item.total_cost,
-            currency: purchase_order_item.currency
+            unit_id: item.unit_id,
+            unit_cost: item.unit_cost,
+            total_cost: item.total_cost,
+            currency: item.currency
           )
         )
       end
@@ -49,9 +49,7 @@ RSpec.describe PurchaseOrderItems::Deliveries::ProcessService, type: :service do
       it "calls PurchaseOrderItems::UpdateReceivedQuantityService with correct arguments" do
         service_response
 
-        expect(PurchaseOrderItems::UpdateReceivedQuantityService).to have_received(:call).with(
-          purchase_order_item, delivery.quantity
-        )
+        expect(PurchaseOrderItems::UpdateReceivedQuantityService).to have_received(:call).with(item, delivery.quantity)
       end
 
       it "calls UnitConversion with correct units" do
@@ -63,17 +61,13 @@ RSpec.describe PurchaseOrderItems::Deliveries::ProcessService, type: :service do
       it "calls Replenishments::UpdateService with converted quantity" do
         service_response
 
-        expect(Replenishments::UpdateService).to have_received(:call).with(
-          inventory, 4.0, :decrement
-        )
+        expect(Replenishments::UpdateService).to have_received(:call).with(inventory, 4.0, :decrement)
       end
 
       it "calls PurchaseOrderItems::EvaluateDeliveryStatusService" do
         service_response
 
-        expect(PurchaseOrderItems::EvaluateDeliveryStatusService).to have_received(:call).with(
-          purchase_order_item
-        )
+        expect(PurchaseOrderItems::EvaluateDeliveryStatusService).to have_received(:call).with(item)
       end
     end
   end

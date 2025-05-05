@@ -2,7 +2,7 @@
 # -*- frozen_string_literal: true -*-
 # -*- warn_indent: true -*-
 
-class PurchaseOrderItem::Delivery < ApplicationRecord
+class PurchaseOrder::Item::Delivery < ApplicationRecord
   include ScaleEnforcer
 
   scale_attributes :quantity
@@ -20,7 +20,7 @@ class PurchaseOrderItem::Delivery < ApplicationRecord
 
   validate :converted_quantity_must_not_exceed_remaining_quantity
 
-  belongs_to :purchase_order_item, inverse_of: :deliveries
+  belongs_to :item, class_name: "PurchaseOrder::Item", inverse_of: :deliveries
   belongs_to :unit, inverse_of: :delivered_po_items
 
   before_validation :store_original_attributes, :convert_to_item_unit
@@ -35,7 +35,7 @@ class PurchaseOrderItem::Delivery < ApplicationRecord
 
   def convert_to_item_unit
     return unless unit && quantity
-    return if (source_unit = unit) == (target_unit = purchase_order_item.unit)
+    return if (source_unit = unit) == (target_unit = item.unit)
 
     self.quantity = UnitConversion.convert(source_unit, target_unit, quantity)
     self.unit = target_unit # Store in item unit
@@ -44,7 +44,7 @@ class PurchaseOrderItem::Delivery < ApplicationRecord
   def converted_quantity_must_not_exceed_remaining_quantity
     return unless quantity && unit
 
-    if quantity > purchase_order_item.remaining_quantity
+    if quantity > item.remaining_quantity
       errors.add(:quantity, :exceeds_remaining_quantity, message: "exceeds remaining quantity for the item")
     end
   end

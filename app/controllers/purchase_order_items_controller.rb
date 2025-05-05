@@ -8,14 +8,14 @@ class PurchaseOrderItemsController < ApplicationController
 
   # GET /purchase-orders/:purchase_order_id/purchase-order-items
   def index
-    @purchase_order_items = @purchase_order.purchase_order_items
+    @purchase_order_items = @purchase_order.items
 
     render partial: "purchase_order_items/list"
   end
 
   # GET /purchase-orders/:purchase_order_id/purchase-order-items/new
   def new
-    @purchase_order_item = @purchase_order.purchase_order_items.build
+    @purchase_order_item = @purchase_order.items.build
   end
 
   # POST /purchase-orders/:purchase_order_id/purchase-order-items
@@ -101,7 +101,7 @@ class PurchaseOrderItemsController < ApplicationController
   end
 
   def set_purchase_order_item
-    @purchase_order_item ||= PurchaseOrderItem.find(params[:id])
+    @purchase_order_item ||= PurchaseOrder::Item.find(params[:id])
   end
 
   def purchase_order_item_params
