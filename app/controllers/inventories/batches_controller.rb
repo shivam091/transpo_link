@@ -2,10 +2,10 @@
 # -*- frozen_string_literal: true -*-
 # -*- warn_indent: true -*-
 
-class Inventory::BatchesController < ApplicationController
+class Inventories::BatchesController < ApplicationController
   before_action :find_inventory
 
-  # GET /inventory/:inventory_id/inventory-batches
+  # GET /inventories/:inventory_id/batches
   def index
     @batches = @inventory.batches
 
