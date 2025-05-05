@@ -20,7 +20,7 @@
       .table-body
         %template{data: {nested_forms_target: "template"}}
           = form.fields_for :prices, form.object.prices.build, child_index: "NEW_RECORD" do |price_form|
-            = safe_render.partial("product_prices/form/tabular_field", form: price_form)
+            = safe_render.partial("products/prices/form/tabular_field", form: price_form)
         = form.fields_for :prices do |price_form|
-          = safe_render.partial("product_prices/form/tabular_field", form: price_form)
+          = safe_render.partial("products/prices/form/tabular_field", form: price_form)
         .table-row.d-none{data: {nested_forms_target: "target"}}

@@ -1,0 +1,9 @@
+.table-row
+  .table-cell.cell-narrow
+    = index
+  .table-cell
+    = price.warehouse_name
+  .table-cell
+    = number_to_measurement_unit(price.min_quantity, @product.unit_symbol)
+  .table-cell
+    = number_to_currency(price.unit_price, unit: price.currency.symbol)
