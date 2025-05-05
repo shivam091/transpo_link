@@ -96,7 +96,7 @@ RSpec.describe Warehouse, type: :model do
     it { is_expected.to have_many(:inventories).inverse_of(:warehouse).dependent(:restrict_with_exception) }
     it { is_expected.to have_many(:products).through(:inventories).inverse_of(:warehouses) }
 
-    it { is_expected.to have_many(:product_prices).inverse_of(:warehouse).dependent(:restrict_with_exception) }
+    it { is_expected.to have_many(:product_prices).class_name("Product::Price").inverse_of(:warehouse).dependent(:restrict_with_exception) }
     it { is_expected.to have_many(:purchase_orders).inverse_of(:warehouse).dependent(:restrict_with_exception) }
 
     it { is_expected.to belong_to(:unit).inverse_of(:warehouses) }

@@ -57,7 +57,7 @@ class Warehouse < ApplicationRecord
   has_one :address, as: :addressable, inverse_of: :addressable, dependent: :destroy
 
   with_options inverse_of: :warehouse, dependent: :restrict_with_exception do |a|
-    a.has_many :product_prices
+    a.has_many :product_prices, class_name: "Product::Price"
     a.has_many :inventories
     a.has_many :purchase_orders
     a.has_many :purchase_order_items, class_name: "PurchaseOrder::Item", through: :purchase_orders, source: :items

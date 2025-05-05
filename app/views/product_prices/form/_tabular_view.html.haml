@@ -8,19 +8,19 @@
       .table-header
         .table-cell.cell-narrow #
         .table-cell
-          = ProductPrice.human_attribute_name(:warehouse_id)
+          = Product::Price.human_attribute_name(:warehouse_id)
         .table-cell
-          = ProductPrice.human_attribute_name(:min_quantity)
+          = Product::Price.human_attribute_name(:min_quantity)
         .table-cell
-          = ProductPrice.human_attribute_name(:unit_price)
+          = Product::Price.human_attribute_name(:unit_price)
         .table-cell
-          = ProductPrice.human_attribute_name(:currency)
+          = Product::Price.human_attribute_name(:currency)
         .table-cell.cell-narrow
           = t("shared.actions")
       .table-body
         %template{data: {nested_forms_target: "template"}}
-          = form.fields_for :product_prices, form.object.product_prices.build, child_index: "NEW_RECORD" do |product_price_form|
-            = safe_render.partial("product_prices/form/tabular_field", form: product_price_form)
-        = form.fields_for :product_prices do |product_price_form|
-          = safe_render.partial("product_prices/form/tabular_field", form: product_price_form)
+          = form.fields_for :prices, form.object.prices.build, child_index: "NEW_RECORD" do |price_form|
+            = safe_render.partial("product_prices/form/tabular_field", form: price_form)
+        = form.fields_for :prices do |price_form|
+          = safe_render.partial("product_prices/form/tabular_field", form: price_form)
         .table-row.d-none{data: {nested_forms_target: "target"}}

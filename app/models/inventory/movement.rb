@@ -3,7 +3,6 @@
 # -*- warn_indent: true -*-
 
 class Inventory::Movement < ApplicationRecord
-  self.table_name = :inventory_movements
   self.inheritance_column = :_type_disabled
 
   include ScaleEnforcer, Sortable

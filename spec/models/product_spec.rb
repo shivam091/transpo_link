@@ -96,7 +96,7 @@ RSpec.describe Product, type: :model do
     it { is_expected.to have_many(:inventories).inverse_of(:product).dependent(:destroy) }
     it { is_expected.to have_many(:warehouses).through(:inventories).inverse_of(:products) }
 
-    it { is_expected.to have_many(:product_prices).inverse_of(:product).dependent(:destroy) }
+    it { is_expected.to have_many(:prices).inverse_of(:product).dependent(:destroy) }
     it { is_expected.to have_many(:feedbacks).inverse_of(:reviewable).dependent(:nullify) }
     it { is_expected.to have_many(:purchase_order_items).inverse_of(:product).dependent(:restrict_with_exception) }
 
@@ -111,7 +111,7 @@ RSpec.describe Product, type: :model do
   end
 
   describe "nested attributes" do
-    it { is_expected.to accept_nested_attributes_for(:product_prices).allow_destroy(true) }
+    it { is_expected.to accept_nested_attributes_for(:prices).allow_destroy(true) }
   end
 
   describe "validations" do
@@ -215,23 +215,23 @@ RSpec.describe Product, type: :model do
   describe "instance methods" do
     let!(:product) { create(:product) }
 
-    describe "#reject_product_price?" do
+    describe "#reject_price?" do
       let!(:product_price) { create(:product_price, product:) }
 
       context "when creating product prices" do
         context "when valid attributes are provided" do
           it "creates a product price" do
             expect {
-              product.update(product_prices_attributes: {0 => {min_quantity: 10, unit_price: 202, currency: "INR"}})
-            }.to change(ProductPrice, :count).by(1)
+              product.update(prices_attributes: {0 => {min_quantity: 10, unit_price: 202, currency: "INR"}})
+            }.to change(Product::Price, :count).by(1)
           end
         end
 
         context "when invalid attributes are provided" do
           it "does not create a product price if required attributes are blank" do
             expect {
-              product.update(product_prices_attributes: {0 => {min_quantity: "", unit_price: "", currency: ""}})
-            }.to not_change(ProductPrice, :count)
+              product.update(prices_attributes: {0 => {min_quantity: "", unit_price: "", currency: ""}})
+            }.to not_change(Product::Price, :count)
           end
         end
       end
@@ -239,8 +239,8 @@ RSpec.describe Product, type: :model do
       context "when updating product prices" do
         it "updates the existing product price without changing the count" do
           expect {
-            product.update(product_prices_attributes: {id: product_price.id, min_quantity: 10, unit_price: 202, currency: "USD"})
-          }.to not_change(ProductPrice, :count)
+            product.update(prices_attributes: {id: product_price.id, min_quantity: 10, unit_price: 202, currency: "USD"})
+          }.to not_change(Product::Price, :count)
 
           expect(product_price.reload.currency).to eq("USD")
         end
@@ -249,8 +249,8 @@ RSpec.describe Product, type: :model do
       context "when destroying product prices" do
         it "removes the product price when _destroy is set to true" do
           expect {
-            product.update(product_prices_attributes: {id: product_price.id, _destroy: true})
-          }.to change(ProductPrice, :count).by(-1)
+            product.update(prices_attributes: {id: product_price.id, _destroy: true})
+          }.to change(Product::Price, :count).by(-1)
         end
       end
     end

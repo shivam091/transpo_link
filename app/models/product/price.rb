@@ -2,7 +2,7 @@
 # -*- frozen_string_literal: true -*-
 # -*- warn_indent: true -*-
 
-class ProductPrice < ApplicationRecord
+class Product::Price < ApplicationRecord
   include Sortable, ActsAsMoney, ScaleEnforcer
 
   LISTING_ATTRIBUTES = %i[warehouse_id min_quantity unit_price].freeze
@@ -20,10 +20,8 @@ class ProductPrice < ApplicationRecord
 
   validate :warehouse_unit_is_in_product_unit_category
 
-  with_options inverse_of: :product_prices do |a|
-    a.belongs_to :product, touch: true
-    a.belongs_to :warehouse, optional: true
-  end
+  belongs_to :product, inverse_of: :prices, touch: true
+  belongs_to :warehouse, inverse_of: :product_prices, optional: true
 
   delegate :name, to: :warehouse, prefix: true, allow_nil: true
 

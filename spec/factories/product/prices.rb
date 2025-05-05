@@ -3,7 +3,7 @@
 # -*- warn_indent: true -*-
 
 FactoryBot.define do
-  factory :product_price do
+  factory :product_price, class: "Product::Price" do
     association :product
     association :warehouse
     min_quantity { Faker::Number.between(from: 1, to: 100) }

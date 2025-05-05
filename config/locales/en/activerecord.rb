@@ -171,7 +171,7 @@
           created_at: "Created at",
           updated_at: "Updated at",
         },
-        product_price: {
+        "product/price" => {
           warehouse_id: "Warehouse",
           min_quantity: "Min. quantity",
           cost_price: "Cost price",
@@ -332,11 +332,7 @@
               }
             },
           },
-          product: {
-            attributes: {
-            },
-          },
-          product_price: {
+          "product/price" => {
             attributes: {
               warehouse_id: {
                 unit_category_mismatch: "is incompatible with this product due to a capacity unit mismatch"

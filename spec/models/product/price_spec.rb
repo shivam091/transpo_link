@@ -2,11 +2,11 @@
 # -*- frozen_string_literal: true -*-
 # -*- warn_indent: true -*-
 
-# spec/models/product_price_spec.rb
+# spec/models/product/price_spec.rb
 
 require "spec_helper"
 
-RSpec.describe ProductPrice, type: :model do
+RSpec.describe Product::Price, type: :model do
   subject(:product_price) { build(:product_price) }
 
   describe "valid factory" do
@@ -52,7 +52,7 @@ RSpec.describe ProductPrice, type: :model do
   end
 
   describe "associations" do
-    it { is_expected.to belong_to(:product).inverse_of(:product_prices).touch }
+    it { is_expected.to belong_to(:product).inverse_of(:prices).touch }
     it { is_expected.to belong_to(:warehouse).inverse_of(:product_prices).optional }
   end
 

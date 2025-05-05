@@ -101,7 +101,7 @@ class ProductsController < ApplicationController
       :cost_price,
       :product_category_id,
       :is_active,
-      product_prices_attributes: [
+      prices_attributes: [
         :id,
         :_destroy,
         :warehouse_id,

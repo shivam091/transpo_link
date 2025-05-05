@@ -49,11 +49,11 @@ class Product < ApplicationRecord
             presence: true,
             reduce: true
 
-  validates_associated :product_prices
+  validates_associated :prices
 
   with_options inverse_of: :product do |a|
     a.has_many :inventories, dependent: :destroy
-    a.has_many :product_prices, dependent: :destroy
+    a.has_many :prices, class_name: "Product::Price", dependent: :destroy
     a.has_many :purchase_order_items, class_name: "PurchaseOrder::Item", dependent: :restrict_with_exception
   end
 
@@ -68,7 +68,7 @@ class Product < ApplicationRecord
   delegate :name, to: :product_category, prefix: true
   delegate :symbol, :category, to: :unit, prefix: true
 
-  accepts_nested_attributes_for :product_prices, reject_if: :reject_product_price?, allow_destroy: true
+  accepts_nested_attributes_for :prices, reject_if: :reject_price?, allow_destroy: true
 
   class << self
     def select_options
@@ -78,7 +78,7 @@ class Product < ApplicationRecord
 
   private
 
-  def reject_product_price?(attributes)
+  def reject_price?(attributes)
     [
       attributes[:warehouse_id],
       attributes[:min_quantity],
