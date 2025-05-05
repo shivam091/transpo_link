@@ -36,8 +36,8 @@ class User < ApplicationRecord
             if: :password_required?
 
   with_options inverse_of: :user do |a|
-    a.has_one :user_detail, dependent: :destroy, autosave: true
-    a.has_one :user_preference, dependent: :destroy, autosave: true
+    a.has_one :detail, class_name: "User::Detail", dependent: :destroy, autosave: true
+    a.has_one :preference, class_name: "User::Preference", dependent: :destroy, autosave: true
 
     a.has_many :request_logs, dependent: :nullify
     a.has_many :legal_identifiers, dependent: :destroy
@@ -71,7 +71,7 @@ class User < ApplicationRecord
   delegate :name, to: :role, prefix: true
   delegate :first_name, :last_name, :full_name, :mobile_number,
            :alternate_email, :alternate_contact_number,
-           to: :user_detail
+           to: :detail
   delegate :preferred_locale, :preferred_locale=,
            :preferred_time_zone, :preferred_time_zone=,
            :preferred_color_scheme, :preferred_color_scheme=,
@@ -82,10 +82,10 @@ class User < ApplicationRecord
            :first_day_of_week, :first_day_of_week=,
            :are_notifications_enabled, :are_notifications_enabled=,
            :enable_keyboard_shortcuts, :enable_keyboard_shortcuts=,
-           to: :user_preference
+           to: :preference
 
-  accepts_nested_attributes_for :user_detail, update_only: true
-  accepts_nested_attributes_for :user_preference, update_only: true
+  accepts_nested_attributes_for :detail, update_only: true
+  accepts_nested_attributes_for :preference, update_only: true
   accepts_nested_attributes_for :address, update_only: true
 
   class << self
@@ -100,7 +100,7 @@ class User < ApplicationRecord
     end
 
     def select_options
-      all.includes(:user_detail).collect { |user| [user.full_name, user.id] }
+      all.includes(:detail).collect { |user| [user.full_name, user.id] }
     end
 
     def with_role(role_name)
@@ -117,12 +117,12 @@ class User < ApplicationRecord
     super && is_active? && role.is_active?
   end
 
-  def user_detail
-    super.presence || build_user_detail
+  def detail
+    super.presence || build_detail
   end
 
-  def user_preference
-    super.presence || build_user_preference
+  def preference
+    super.presence || build_preference
   end
 
   def address

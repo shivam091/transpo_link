@@ -92,8 +92,8 @@ RSpec.describe User, type: :model do
   end
 
   describe "associations" do
-    it { is_expected.to have_one(:user_detail).inverse_of(:user).dependent(:destroy) }
-    it { is_expected.to have_one(:user_preference).inverse_of(:user).dependent(:destroy) }
+    it { is_expected.to have_one(:detail).class_name("User::Detail").inverse_of(:user).dependent(:destroy) }
+    it { is_expected.to have_one(:preference).class_name("User::Preference").inverse_of(:user).dependent(:destroy) }
     it { is_expected.to have_one(:address).inverse_of(:addressable).dependent(:destroy) }
 
     it { is_expected.to have_many(:request_logs).inverse_of(:user).dependent(:nullify) }
@@ -118,30 +118,30 @@ RSpec.describe User, type: :model do
 
   describe "delegates" do
     it { is_expected.to delegate_method(:name).to(:role).with_prefix }
-    it { is_expected.to delegate_method(:full_name).to(:user_detail) }
-    it { is_expected.to delegate_method(:first_name).to(:user_detail) }
-    it { is_expected.to delegate_method(:last_name).to(:user_detail) }
-    it { is_expected.to delegate_method(:mobile_number).to(:user_detail) }
-    it { is_expected.to delegate_method(:alternate_contact_number).to(:user_detail) }
-    it { is_expected.to delegate_method(:alternate_email).to(:user_detail) }
-    it { is_expected.to delegate_method(:preferred_locale).to(:user_preference) }
-    it { is_expected.to delegate_method(:preferred_time_zone).to(:user_preference) }
-    it { is_expected.to delegate_method(:preferred_color_scheme).to(:user_preference) }
-    it { is_expected.to delegate_method(:preferred_currency).to(:user_preference) }
-    it { is_expected.to delegate_method(:preferred_date_format).to(:user_preference) }
-    it { is_expected.to delegate_method(:preferred_time_format).to(:user_preference) }
-    it { is_expected.to delegate_method(:preferred_datetime_format).to(:user_preference) }
-    it { is_expected.to delegate_method(:first_day_of_week).to(:user_preference) }
-    it { is_expected.to delegate_method(:are_notifications_enabled).to(:user_preference) }
-    it { is_expected.to delegate_method(:enable_keyboard_shortcuts).to(:user_preference) }
+    it { is_expected.to delegate_method(:full_name).to(:detail) }
+    it { is_expected.to delegate_method(:first_name).to(:detail) }
+    it { is_expected.to delegate_method(:last_name).to(:detail) }
+    it { is_expected.to delegate_method(:mobile_number).to(:detail) }
+    it { is_expected.to delegate_method(:alternate_contact_number).to(:detail) }
+    it { is_expected.to delegate_method(:alternate_email).to(:detail) }
+    it { is_expected.to delegate_method(:preferred_locale).to(:preference) }
+    it { is_expected.to delegate_method(:preferred_time_zone).to(:preference) }
+    it { is_expected.to delegate_method(:preferred_color_scheme).to(:preference) }
+    it { is_expected.to delegate_method(:preferred_currency).to(:preference) }
+    it { is_expected.to delegate_method(:preferred_date_format).to(:preference) }
+    it { is_expected.to delegate_method(:preferred_time_format).to(:preference) }
+    it { is_expected.to delegate_method(:preferred_datetime_format).to(:preference) }
+    it { is_expected.to delegate_method(:first_day_of_week).to(:preference) }
+    it { is_expected.to delegate_method(:are_notifications_enabled).to(:preference) }
+    it { is_expected.to delegate_method(:enable_keyboard_shortcuts).to(:preference) }
   end
 
   include_examples "apply default scope on created_at:desc"
 
   describe "nested attributes" do
     it { is_expected.to accept_nested_attributes_for(:address).update_only(true) }
-    it { is_expected.to accept_nested_attributes_for(:user_detail).update_only(true) }
-    it { is_expected.to accept_nested_attributes_for(:user_preference).update_only(true) }
+    it { is_expected.to accept_nested_attributes_for(:detail).update_only(true) }
+    it { is_expected.to accept_nested_attributes_for(:preference).update_only(true) }
   end
 
   describe "validations" do

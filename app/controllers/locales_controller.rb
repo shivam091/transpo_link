@@ -32,7 +32,7 @@ class LocalesController < ApplicationController
 
   def locale_params
     params.require(:user).permit(
-      user_preference_attributes: [
+      preference_attributes: [
         :preferred_locale,
       ]
     )

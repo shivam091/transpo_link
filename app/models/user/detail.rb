@@ -2,7 +2,7 @@
 # -*- frozen_string_literal: true -*-
 # -*- warn_indent: true -*-
 
-class UserDetail < ApplicationRecord
+class User::Detail < ApplicationRecord
   include NullifyIfBlank, Sanitizable
 
   self.primary_key = :user_id
@@ -27,7 +27,7 @@ class UserDetail < ApplicationRecord
             allow_blank: true,
             reduce: true
 
-  belongs_to :user, inverse_of: :user_detail, touch: true
+  belongs_to :user, inverse_of: :detail, touch: true
 
   def full_name
     "#{try(:first_name)} #{try(:last_name)}"

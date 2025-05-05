@@ -13,7 +13,7 @@ RSpec.describe Preferences::UpdateService, type: :service do
 
   describe ".call" do
     context "when provided attributes are valid" do
-      let(:preference_attributes) { {user_preference_attributes: {preferred_currency: "GBP"}} }
+      let(:preference_attributes) { {preference_attributes: {preferred_currency: "GBP"}} }
 
       it "updates the user preferences" do
         expect { service_response }.to change { user.reload.preferred_currency }.to("GBP")
@@ -23,7 +23,7 @@ RSpec.describe Preferences::UpdateService, type: :service do
     end
 
     context "when provided attributes are invalid" do
-      let(:preference_attributes) { {user_preference_attributes: {preferred_currency: ""}} }
+      let(:preference_attributes) { {preference_attributes: {preferred_currency: ""}} }
 
       it "does not update the user preferences" do
         expect { service_response }.to not_change { user.reload.preferred_currency }

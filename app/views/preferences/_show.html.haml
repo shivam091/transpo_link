@@ -1,60 +1,60 @@
 .widget-row
   .widget-row-content
     .widget-row-title
-      = UserPreference.human_attribute_name(:preferred_locale)
+      = User::Preference.human_attribute_name(:preferred_locale)
     .widget-row-body
       = TranspoLink::I18n.display_name(user.preferred_locale)
 .widget-row
   .widget-row-content
     .widget-row-title
-      = UserPreference.human_attribute_name(:preferred_time_zone)
+      = User::Preference.human_attribute_name(:preferred_time_zone)
     .widget-row-body
       = TranspoLink::TimeZone.formatted_time_zone(user.preferred_time_zone)
 .widget-row
   .widget-row-content
     .widget-row-title
-      = UserPreference.human_attribute_name(:preferred_currency)
+      = User::Preference.human_attribute_name(:preferred_currency)
     .widget-row-body
       = TranspoLink::Currency.formatted_currency(user.preferred_currency)
 .widget-row
   .widget-row-content
     .widget-row-title
-      = UserPreference.human_attribute_name(:preferred_color_scheme)
+      = User::Preference.human_attribute_name(:preferred_color_scheme)
     .widget-row-body
       = enum_l(user, :preferred_color_scheme)
 .widget-row
   .widget-row-content
     .widget-row-title
-      = UserPreference.human_attribute_name(:preferred_date_format)
+      = User::Preference.human_attribute_name(:preferred_date_format)
     .widget-row-body
       = l(Date.today, format: current_user.preferred_date_format.to_sym)
 .widget-row
   .widget-row-content
     .widget-row-title
-      = UserPreference.human_attribute_name(:preferred_time_format)
+      = User::Preference.human_attribute_name(:preferred_time_format)
     .widget-row-body
       = l(Time.current, format: current_user.preferred_time_format.to_sym)
 .widget-row
   .widget-row-content
     .widget-row-title
-      = UserPreference.human_attribute_name(:preferred_datetime_format)
+      = User::Preference.human_attribute_name(:preferred_datetime_format)
     .widget-row-body
       = l(Time.current, format: current_user.preferred_datetime_format.to_sym)
 .widget-row
   .widget-row-content
     .widget-row-title
-      = UserPreference.human_attribute_name(:first_day_of_week)
+      = User::Preference.human_attribute_name(:first_day_of_week)
     .widget-row-body
       = enum_l(user, :first_day_of_week)
 .widget-row
   .widget-row-content
     .widget-row-title
-      = UserPreference.human_attribute_name(:are_notifications_enabled)
+      = User::Preference.human_attribute_name(:are_notifications_enabled)
     .widget-row-body
       = humanize_boolean(user.are_notifications_enabled)
 .widget-row
   .widget-row-content
     .widget-row-title
-      = UserPreference.human_attribute_name(:enable_keyboard_shortcuts)
+      = User::Preference.human_attribute_name(:enable_keyboard_shortcuts)
     .widget-row-body
       = humanize_boolean(user.enable_keyboard_shortcuts)

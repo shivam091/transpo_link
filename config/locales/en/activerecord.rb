@@ -59,7 +59,7 @@
           created_at: "User since",
           updated_at: "Last updated at",
         },
-        user_detail: {
+        "user/detail" => {
           user_id: "User",
           full_name: "Full name",
           first_name: "First name",
@@ -68,7 +68,7 @@
           alternate_contact_number: "Alternate contact number",
           alternate_email: "Alternate email address",
         },
-        user_preference: {
+        "user/preference" => {
           preferred_locale: "Preferred language",
           preferred_time_zone: "Preferred time zone",
           preferred_currency: "Preferred currency",

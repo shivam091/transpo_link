@@ -31,7 +31,7 @@
 .col-sm-12.col-md-6.col-lg-4
   = form.label :preferred_color_scheme, class: "form-label required"
   .col
-    - enum_options_for_select(UserPreference, :preferred_color_schemes).each do |label, color_scheme|
+    - enum_options_for_select(User::Preference, :preferred_color_schemes).each do |label, color_scheme|
       .form-check.form-check-inline.mt-1
         = form.radio_button :preferred_color_scheme, color_scheme, id: "preferred_color_scheme_#{color_scheme}",
           checked: (form.object.preferred_color_scheme == color_scheme)
@@ -49,6 +49,6 @@
   = help_text(t(".enable_keyboard_shortcuts_help_text"))
 .col-sm-12.col-md-6.col-lg-4
   = form.label :first_day_of_week, class: "form-label required"
-  = form.select :first_day_of_week, options_for_select(enum_options_for_select(UserPreference, :first_day_of_weeks), form.object.first_day_of_week),
+  = form.select :first_day_of_week, options_for_select(enum_options_for_select(User::Preference, :first_day_of_weeks), form.object.first_day_of_week),
     {include_blank: t(".select_first_day_of_week")}
   = help_text(t(".first_day_of_week_help_text"))

@@ -8,7 +8,7 @@ class RequestLogsController < ApplicationController
 
   # GET /request-logs
   def index
-    @request_logs = RequestLog.includes(user: :user_detail)
+    @request_logs = RequestLog.includes(user: :detail)
     @request_logs, @pagination_metadata = @request_logs.paginate(page: params[:page])
   end
 

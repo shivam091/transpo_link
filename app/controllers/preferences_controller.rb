@@ -38,7 +38,7 @@ class PreferencesController < ApplicationController
 
   def preference_params
     params.require(:user).permit(
-      user_preference_attributes: [
+      preference_attributes: [
         :preferred_locale,
         :preferred_time_zone,
         :preferred_currency,

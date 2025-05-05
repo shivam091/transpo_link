@@ -2,11 +2,11 @@
 # -*- frozen_string_literal: true -*-
 # -*- warn_indent: true -*-
 
-# spec/models/user_detail_spec.rb
+# spec/models/user/detail_spec.rb
 
 require "spec_helper"
 
-RSpec.describe UserDetail, type: :model do
+RSpec.describe User::Detail, type: :model do
   subject(:user_detail) { build(:user_detail) }
 
   describe "valid factory" do
@@ -62,7 +62,7 @@ RSpec.describe UserDetail, type: :model do
   end
 
   describe "associations" do
-    it { is_expected.to belong_to(:user).inverse_of(:user_detail).touch }
+    it { is_expected.to belong_to(:user).inverse_of(:detail).touch }
   end
 
   describe "validations" do

@@ -10,14 +10,14 @@ RSpec.describe "Preferences", type: :request do
   let(:valid_params) do
     {
       user: {
-        user_preference_attributes: attributes_for(:user_preference)
+        preference_attributes: attributes_for(:user_preference)
       }
     }
   end
   let(:invalid_params) do
     {
       user: {
-        user_preference_attributes: attributes_for(:user_preference, preferred_currency: "")
+        preference_attributes: attributes_for(:user_preference, preferred_currency: "")
       }
     }
   end

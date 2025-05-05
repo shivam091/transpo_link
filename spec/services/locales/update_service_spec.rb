@@ -15,7 +15,7 @@ RSpec.describe Locales::UpdateService, type: :service do
 
   describe ".call" do
     context "when provided attributes are valid" do
-      let(:preference_attributes) { {user_preference_attributes: {preferred_locale: "es"}} }
+      let(:preference_attributes) { {preference_attributes: {preferred_locale: "es"}} }
 
       it "updates the language" do
         expect { service_response }.to change { user.reload.preferred_locale }.to("es")
@@ -25,7 +25,7 @@ RSpec.describe Locales::UpdateService, type: :service do
     end
 
     context "when provided attributes are invalid" do
-      let(:preference_attributes) { {user_preference_attributes: {preferred_locale: ""}} }
+      let(:preference_attributes) { {preference_attributes: {preferred_locale: ""}} }
 
       it "does not update the language" do
         expect { service_response }.to not_change { user.reload.preferred_locale }

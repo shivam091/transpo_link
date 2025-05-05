@@ -46,13 +46,13 @@
             .widget-row-title
               = Warehouse.human_attribute_name(:manager_ids)
             .widget-row-body
-              = safe_join(@warehouse.managers.includes(:user_detail).map { |manager| link_to(manager.full_name, user_path(manager)) }, ", ")
+              = safe_join(@warehouse.managers.includes(:detail).map { |manager| link_to(manager.full_name, user_path(manager)) }, ", ")
         .widget-row
           .widget-row-content
             .widget-row-title
               = Warehouse.human_attribute_name(:supplier_ids)
             .widget-row-body
-              = safe_join(@warehouse.suppliers.includes(:user_detail).map { |supplier| link_to(supplier.full_name, user_path(supplier)) }, ", ")
+              = safe_join(@warehouse.suppliers.includes(:detail).map { |supplier| link_to(supplier.full_name, user_path(supplier)) }, ", ")
         .widget-row
           .widget-row-content
             .widget-row-title

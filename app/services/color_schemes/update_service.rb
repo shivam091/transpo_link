@@ -21,7 +21,7 @@ class ColorSchemes::UpdateService < ApplicationService
   def update_color_scheme
     if user.update(preferred_color_scheme: color_scheme)
       ServiceResponse.success(payload: {color_scheme:, icon: color_scheme_icon_for(color_scheme)})
-    elsif !UserPreference.preferred_color_schemes.key?(color_scheme)
+    elsif !User::Preference.preferred_color_schemes.key?(color_scheme)
       ServiceResponse.error(http_status: :bad_request)
     else
       ServiceResponse.error(payload: {user:})

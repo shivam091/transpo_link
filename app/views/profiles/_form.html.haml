@@ -3,8 +3,8 @@
   = form_errors(@user)
   .subheader
     = t(".profile_details")
-  = form.fields_for :user_detail, include_id: false do |user_detail_form|
-    = safe_render.partial("profiles/user_detail_form_fields", form: user_detail_form)
+  = form.fields_for :detail, include_id: false do |detail_form|
+    = safe_render.partial("profiles/detail_form_fields", form: detail_form)
   .subheader
     = t(".address")
   = form.fields_for :address, include_id: false do |address_form|

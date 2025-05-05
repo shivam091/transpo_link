@@ -13,19 +13,19 @@
 .widget-row
   .widget-row-content
     .widget-row-title
-      = UserDetail.human_attribute_name(:mobile_number)
+      = User::Detail.human_attribute_name(:mobile_number)
     .widget-row-body
       = user.mobile_number || "-"
 .widget-row
   .widget-row-content
     .widget-row-title
-      = UserDetail.human_attribute_name(:alternate_contact_number)
+      = User::Detail.human_attribute_name(:alternate_contact_number)
     .widget-row-body
       = user.alternate_contact_number || "-"
 .widget-row
   .widget-row-content
     .widget-row-title
-      = UserDetail.human_attribute_name(:alternate_email)
+      = User::Detail.human_attribute_name(:alternate_email)
     .widget-row-body
       = user.alternate_email.present? ? mail_to(user.alternate_email) : "-"
 .widget-row

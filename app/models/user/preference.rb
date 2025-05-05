@@ -2,7 +2,7 @@
 # -*- frozen_string_literal: true -*-
 # -*- warn_indent: true -*-
 
-class UserPreference < ApplicationRecord
+class User::Preference < ApplicationRecord
   self.primary_key = :user_id
 
   enum :preferred_color_scheme, {
@@ -42,5 +42,5 @@ class UserPreference < ApplicationRecord
             presence: true,
             reduce: true
 
-  belongs_to :user, inverse_of: :user_preference, touch: true
+  belongs_to :user, inverse_of: :preference, touch: true
 end

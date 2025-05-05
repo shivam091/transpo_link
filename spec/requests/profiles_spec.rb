@@ -10,14 +10,14 @@ RSpec.describe "Profiles", type: :request do
   let(:valid_params) do
     {
       user: {
-        user_detail_attributes: attributes_for(:user_detail)
+        detail_attributes: attributes_for(:user_detail)
       }
     }
   end
   let(:invalid_params) do
     {
       user: {
-        user_detail_attributes: attributes_for(:user_detail, first_name: "")
+        detail_attributes: attributes_for(:user_detail, first_name: "")
       }
     }
   end

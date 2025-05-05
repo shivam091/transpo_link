@@ -13,7 +13,7 @@ RSpec.describe Profiles::UpdateService, type: :service do
 
   describe ".call" do
     context "when provided attributes are valid" do
-      let(:profile_attributes) { {user_detail_attributes: {first_name: "First"}} }
+      let(:profile_attributes) { {detail_attributes: {first_name: "First"}} }
 
       it "updates the user profile" do
         expect { service_response }.to change { user.reload.first_name }.to("First")
@@ -23,7 +23,7 @@ RSpec.describe Profiles::UpdateService, type: :service do
     end
 
     context "when provided attributes are invalid" do
-      let(:profile_attributes) { {user_detail_attributes: {first_name: ""}} }
+      let(:profile_attributes) { {detail_attributes: {first_name: ""}} }
 
       it "does not update the user profile" do
         expect { service_response }.to not_change { user.reload.first_name }

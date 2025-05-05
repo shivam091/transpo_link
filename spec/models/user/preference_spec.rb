@@ -2,11 +2,11 @@
 # -*- frozen_string_literal: true -*-
 # -*- warn_indent: true -*-
 
-# spec/models/user_preference_spec.rb
+# spec/models/user/preference_spec.rb
 
 require "spec_helper"
 
-RSpec.describe UserPreference, type: :model do
+RSpec.describe User::Preference, type: :model do
   subject(:user_preference) { build(:user_preference) }
 
   describe "valid factory" do
@@ -94,7 +94,7 @@ RSpec.describe UserPreference, type: :model do
   end
 
   describe "associations" do
-    it { is_expected.to belong_to(:user).inverse_of(:user_preference).touch }
+    it { is_expected.to belong_to(:user).inverse_of(:preference).touch }
   end
 
   describe "validations" do

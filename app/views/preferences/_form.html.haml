@@ -1,6 +1,6 @@
 = pretty_form_with model: @user, url: preference_path, class: "row g-3" do |form|
   = form_errors(@user)
-  = form.fields_for :user_preference, include_id: false do |preference_form|
+  = form.fields_for :preference, include_id: false do |preference_form|
     = safe_render.partial("preferences/preference_form", form: preference_form)
   .actions
     = button_tag type: :submit, class: "btn btn-primary" do

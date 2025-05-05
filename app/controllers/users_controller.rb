@@ -8,7 +8,7 @@ class UsersController < ApplicationController
 
   # GET /users
   def index
-    @users = User.includes(:role, :user_detail)
+    @users = User.includes(:role, :detail)
     @users = case params[:status]
              when "active"    then @users.active
              when "inactive"  then @users.inactive

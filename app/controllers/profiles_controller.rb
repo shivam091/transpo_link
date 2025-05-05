@@ -38,7 +38,7 @@ class ProfilesController < ApplicationController
 
   def profile_params
     params.require(:user).permit(
-      user_detail_attributes: [
+      detail_attributes: [
         :first_name,
         :last_name,
         :mobile_number,

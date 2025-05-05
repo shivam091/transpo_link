@@ -10,7 +10,7 @@ RSpec.describe "Locales", type: :request do
   let(:valid_params) do
     {
       user: {
-        user_preference_attributes: attributes_for(:user_preference,
+        preference_attributes: attributes_for(:user_preference,
           preferred_locale: "es"
         )
       }
@@ -19,7 +19,7 @@ RSpec.describe "Locales", type: :request do
   let(:invalid_params) do
     {
       user: {
-        user_preference_attributes: attributes_for(:user_preference,
+        preference_attributes: attributes_for(:user_preference,
           preferred_locale: ""
         )
       }
@@ -35,7 +35,7 @@ RSpec.describe "Locales", type: :request do
       expect(response).to have_http_status(:ok)
       expect(response.body).to include("<turbo-frame id=\"edit_locale_form_frame\" target=\"_top\">")
       expect(response.body).to include("modal")
-      expect(response.body).to include("name=\"user[user_preference_attributes][preferred_locale]\"")
+      expect(response.body).to include("name=\"user[preference_attributes][preferred_locale]\"")
     end
   end
 
