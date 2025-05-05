@@ -115,11 +115,11 @@
           manager_ids: "Managers",
           supplier_ids: "Suppliers",
         },
-        warehouse_manager: {
+        "warehouse/manager" => {
           warehouse_id: "Warehouse",
           manager_id: "Manager",
         },
-        warehouse_supplier: {
+        "warehouse/supplier" => {
           warehouse_id: "Warehouse",
           supplier_id: "Supplier",
         },

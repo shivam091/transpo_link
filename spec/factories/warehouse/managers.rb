@@ -3,8 +3,8 @@
 # -*- warn_indent: true -*-
 
 FactoryBot.define do
-  factory :warehouse_supplier do
+  factory :warehouse_manager, class: "Warehouse::Manager" do
     association :warehouse
-    association :supplier, factory: :supplier
+    association :manager, factory: :manager
   end
 end

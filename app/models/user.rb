@@ -49,8 +49,8 @@ class User < ApplicationRecord
   with_options dependent: :restrict_with_exception do |a|
     a.has_many :purchase_orders, inverse_of: :manager
     a.has_many :supplied_purchase_orders, inverse_of: :supplier, class_name: "PurchaseOrder"
-    a.has_many :warehouse_managers, inverse_of: :manager, foreign_key: :manager_id
-    a.has_many :warehouse_suppliers, inverse_of: :supplier, foreign_key: :supplier_id
+    a.has_many :warehouse_managers, class_name: "Warehouse::Manager", inverse_of: :manager, foreign_key: :manager_id
+    a.has_many :warehouse_suppliers, class_name: "Warehouse::Supplier", inverse_of: :supplier, foreign_key: :supplier_id
   end
 
   has_one :address, as: :addressable, inverse_of: :addressable, dependent: :destroy

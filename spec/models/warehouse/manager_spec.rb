@@ -2,11 +2,11 @@
 # -*- frozen_string_literal: true -*-
 # -*- warn_indent: true -*-
 
-# spec/models/warehouse_manager_spec.rb
+# spec/models/warehouse/manager_spec.rb
 
 require "spec_helper"
 
-RSpec.describe WarehouseManager, type: :model do
+RSpec.describe Warehouse::Manager, type: :model do
   subject(:warehouse_manager) { build(:warehouse_manager) }
 
   describe "valid factory" do

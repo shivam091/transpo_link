@@ -63,10 +63,10 @@ class Warehouse < ApplicationRecord
     a.has_many :purchase_order_items, through: :purchase_orders
   end
 
-  has_many :warehouse_managers, inverse_of: :warehouse, dependent: :destroy
+  has_many :warehouse_managers, class_name: "Warehouse::Manager", inverse_of: :warehouse, dependent: :destroy
   has_many :managers, through: :warehouse_managers, inverse_of: :managed_warehouses, source: :manager
 
-  has_many :warehouse_suppliers, inverse_of: :warehouse, dependent: :destroy
+  has_many :warehouse_suppliers, class_name: "Warehouse::Supplier", inverse_of: :warehouse, dependent: :destroy
   has_many :suppliers, through: :warehouse_suppliers, inverse_of: :supplied_warehouses, source: :supplier
 
   has_many :products, through: :inventories, inverse_of: :warehouses

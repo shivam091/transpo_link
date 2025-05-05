@@ -104,9 +104,10 @@ RSpec.describe User, type: :model do
     it { is_expected.to have_many(:purchase_orders).inverse_of(:manager).dependent(:restrict_with_exception) }
     it { is_expected.to have_many(:supplied_purchase_orders).inverse_of(:supplier).class_name("PurchaseOrder").dependent(:restrict_with_exception) }
 
-    it { is_expected.to have_many(:warehouse_managers).inverse_of(:manager).with_foreign_key(:manager_id).dependent(:restrict_with_exception) }
+    it { is_expected.to have_many(:warehouse_managers).class_name("Warehouse::Manager").inverse_of(:manager).with_foreign_key(:manager_id).dependent(:restrict_with_exception) }
     it { is_expected.to have_many(:managed_warehouses).through(:warehouse_managers).inverse_of(:managers).source(:warehouse) }
-    it { is_expected.to have_many(:warehouse_suppliers).inverse_of(:supplier).with_foreign_key(:supplier_id).dependent(:restrict_with_exception) }
+
+    it { is_expected.to have_many(:warehouse_suppliers).class_name("Warehouse::Supplier").inverse_of(:supplier).with_foreign_key(:supplier_id).dependent(:restrict_with_exception) }
     it { is_expected.to have_many(:supplied_warehouses).through(:warehouse_suppliers).inverse_of(:suppliers).source(:warehouse) }
 
     it { is_expected.to belong_to(:role).inverse_of(:users) }

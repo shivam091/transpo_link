@@ -85,10 +85,10 @@ RSpec.describe Warehouse, type: :model do
   describe "associations" do
     it { is_expected.to have_one(:address).inverse_of(:addressable).dependent(:destroy) }
 
-    it { is_expected.to have_many(:warehouse_managers).inverse_of(:warehouse).dependent(:destroy) }
+    it { is_expected.to have_many(:warehouse_managers).class_name("Warehouse::Manager").inverse_of(:warehouse).dependent(:destroy) }
     it { is_expected.to have_many(:managers).through(:warehouse_managers).inverse_of(:managed_warehouses).source(:manager) }
 
-    it { is_expected.to have_many(:warehouse_suppliers).inverse_of(:warehouse).dependent(:destroy) }
+    it { is_expected.to have_many(:warehouse_suppliers).class_name("Warehouse::Supplier").inverse_of(:warehouse).dependent(:destroy) }
     it { is_expected.to have_many(:suppliers).through(:warehouse_suppliers).inverse_of(:supplied_warehouses).source(:supplier) }
 
     it { is_expected.to have_many(:purchase_order_items).through(:purchase_orders).inverse_of(:warehouse).dependent(:restrict_with_exception) }
