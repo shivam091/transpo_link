@@ -88,14 +88,16 @@ RSpec.describe Toggleable do
     describe ".activate" do
       it "activates all records" do
         ToggleableModel.deactivate  # First ensure all are inactive
-        expect { ToggleableModel.activate }.to change { ToggleableModel.active.count }.from(0).to(2)
+
+        expect { ToggleableModel.activate }.to change { ToggleableModel.active.count }.by(2)
       end
     end
 
     describe ".deactivate" do
       it "deactivates all records" do
         ToggleableModel.activate  # First ensure all are active
-        expect { ToggleableModel.deactivate }.to change { ToggleableModel.inactive.count }.from(0).to(2)
+
+        expect { ToggleableModel.deactivate }.to change { ToggleableModel.inactive.count }.by(2)
       end
     end
   end

@@ -29,6 +29,20 @@ class ServiceResponse
     status == :error
   end
 
+  # === Hooks ===
+
+  def on_success
+    yield self if success?
+
+    self
+  end
+
+  def on_error
+    yield self if error?
+
+    self
+  end
+
   private
 
   attr_writer :status, :http_status, :payload

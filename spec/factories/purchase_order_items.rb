@@ -9,11 +9,26 @@ FactoryBot.define do
     association :product
     quantity { Faker::Number.between(from: 1, to: 100) }
     unit { find_or_create_unit("item") }
+    status { PurchaseOrderItem.statuses[:pending] }
 
-    PurchaseOrderItem.statuses.each_key do |status|
-      trait status do
-        status { PurchaseOrderItem.statuses[status] }
-      end
+    trait :pending do
+      status { PurchaseOrderItem.statuses[:pending] }
+    end
+
+    trait :ordered do
+      status { PurchaseOrderItem.statuses[:ordered] }
+    end
+
+    trait :partially_delivered do
+      status { PurchaseOrderItem.statuses[:partially_delivered] }
+    end
+
+    trait :delivered do
+      status { PurchaseOrderItem.statuses[:delivered] }
+    end
+
+    trait :cancelled do
+      status { PurchaseOrderItem.statuses[:cancelled] }
     end
   end
 end

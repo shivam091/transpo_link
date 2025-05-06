@@ -3,9 +3,11 @@
 # -*- warn_indent: true -*-
 
 class ProductPrice < ApplicationRecord
-  include Sortable, ActsAsMoney
+  include Sortable, ActsAsMoney, ScaleEnforcer
 
   LISTING_ATTRIBUTES = %i[warehouse_id min_quantity unit_price].freeze
+
+  scale_attributes :min_quantity, :unit_price
 
   validates :min_quantity,
             presence: true,
@@ -30,11 +32,11 @@ class ProductPrice < ApplicationRecord
   private
 
   def warehouse_unit_is_in_product_unit_category
-    return unless warehouse.present? && product.present?
+    return unless warehouse && product
 
     allowed_units = Unit.for_category(product.unit_category).symbols
 
-    if allowed_units.blank? || !allowed_units.include?(warehouse.unit_symbol)
+    if allowed_units.blank? || allowed_units.exclude?(warehouse.unit_symbol)
       errors.add(:warehouse_id, :unit_category_mismatch)
     end
   end

@@ -26,13 +26,17 @@ module TranspoLink
       status: {
         unapproved:          "#F8D210FF", # Turbo
         draft:               "#D4C5F9FF", # Lavender blue
-        pending:             "#FBCA04FF", # Tangerine yellow
+        submitted:           "#FBCA04FF", # Tangerine yellow
         approved:            "#43FF2CFF", # Harlequin
         cancelled:           "#E57F84FF", # Carissma
         rejected:            "#B60205FF", # Guardsman red
         partially_delivered: "#2FF3E0FF", # Bright turquoise
         fully_delivered:     "#006622FF", # British racing green
         delivered:           "#36EEE0FF", # Turquoise
+        pending:             "#BFD4F2FF", # Pale Cornflower Blue
+        closed:              "#3D550CFF", # Verdun Green
+        on_hold:             "#FBC740FF", # Sunglow
+        ordered:             "#5DA9E9FF", # Blue Jeans
       },
       tax_type: {
         exclusive:           "#F26B38FF", # Water leaf
@@ -57,7 +61,7 @@ module TranspoLink
     #
     # @param key [String, Symbol] The lookup key (e.g., `:approved`, `:fifo`, etc.)
     # @return [String] The hex color code with alpha (e.g., "#43FF2CFF"), or fallback ("#D3D3D3FF") if not found.
-    # 
+    #
     def for(key)
       COLOR_MAPS.dig(@type, key.to_s) || "#D3D3D3FF"
     end

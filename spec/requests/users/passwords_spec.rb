@@ -7,8 +7,9 @@
 require "spec_helper"
 
 RSpec.describe "Users::Passwords", type: :request do
-  let(:user) { create(:admin) }
   let(:dummy_password) { Rails.application.credentials.config[:TEST_PASSWORD] }
+
+  let!(:user) { create(:admin) }
 
   describe "GET /users/password/new" do
     it "renders the password reset page" do
@@ -23,7 +24,7 @@ RSpec.describe "Users::Passwords", type: :request do
     context "when the user has not recently requested a password reset" do
       it "sends password reset instructions and redirects" do
         expect {
-          post user_password_path, params: {user: {email: user.email}}
+          post user_password_path, params: {user: {email: user.email}}, as: :turbo_stream
         }.to change { ActionMailer::Base.deliveries.count }.by(0)
 
         expect(response).to redirect_to(new_user_session_path)
@@ -38,7 +39,7 @@ RSpec.describe "Users::Passwords", type: :request do
         allow_any_instance_of(User).to receive(:recently_sent_password_reset_instructions?) { true }
 
         expect {
-          post user_password_path, params: {user: {email: user.email}}
+          post user_password_path, params: {user: {email: user.email}}, as: :turbo_stream
         }.to not_change { ActionMailer::Base.deliveries.count }
 
         expect(response).to redirect_to(new_user_session_path)
@@ -51,7 +52,7 @@ RSpec.describe "Users::Passwords", type: :request do
     context "when the email does not exist" do
       it "does not send password reset instructions but responds as if it did (for security)" do
         expect {
-          post user_password_path, params: {user: {email: "nonexistent@example.com"}}
+          post user_password_path, params: {user: {email: "nonexistent@example.com"}}, as: :turbo_stream
         }.to not_change { ActionMailer::Base.deliveries.count }
 
         expect(response).to have_http_status(:unprocessable_entity)
@@ -82,7 +83,7 @@ RSpec.describe "Users::Passwords", type: :request do
             password: dummy_password,
             password_confirmation: dummy_password
           }
-        }
+        }, as: :turbo_stream
 
         expect(response).to redirect_to(new_user_session_path)
         expect(response).to have_http_status(:see_other)
@@ -99,7 +100,7 @@ RSpec.describe "Users::Passwords", type: :request do
             password: dummy_password,
             password_confirmation: dummy_password
           }
-        }
+        }, as: :turbo_stream
 
         expect(response).to have_http_status(:unprocessable_entity)
         expect(response.body).to include("Reset password token is invalid")
@@ -114,7 +115,7 @@ RSpec.describe "Users::Passwords", type: :request do
             password: dummy_password,
             password_confirmation: "MismatchPassword123"
           }
-        }
+        }, as: :turbo_stream
 
         expect(response).to have_http_status(:unprocessable_entity)
         expect(response.body).to include("Password confirmation doesn't match Password")

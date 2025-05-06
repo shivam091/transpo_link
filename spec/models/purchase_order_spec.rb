@@ -7,7 +7,7 @@
 require "spec_helper"
 
 RSpec.describe PurchaseOrder, type: :model do
-  subject { build_stubbed(:purchase_order) }
+  subject(:purchase_order) { build_stubbed(:purchase_order) }
 
   describe "valid factory" do
     it { is_expected.to have_a_valid_factory(:purchase_order) }
@@ -82,15 +82,22 @@ RSpec.describe PurchaseOrder, type: :model do
   end
 
   describe "state machines" do
+    let!(:purchase_order) { create(:purchase_order) }
+
     it { is_expected.to have_state(:draft) }
+    it { is_expected.to transition_from(:draft).to(:submitted).on_event(:submit) }
+    it { is_expected.to transition_from(:submitted).to(:approved).on_event(:approve) }
+    it { is_expected.to transition_from(:submitted).to(:rejected).on_event(:reject) }
     it { is_expected.to transition_from(:draft).to(:cancelled).on_event(:cancel) }
-    it { is_expected.to transition_from(:pending).to(:cancelled).on_event(:cancel) }
-    it { is_expected.to transition_from(:draft).to(:pending).on_event(:submit) }
-    it { is_expected.to transition_from(:pending).to(:approved).on_event(:approve) }
-    it { is_expected.to transition_from(:pending).to(:rejected).on_event(:reject) }
+    it { is_expected.to transition_from(:submitted).to(:cancelled).on_event(:cancel) }
+    it { is_expected.to transition_from(:on_hold).to(:cancelled).on_event(:cancel) }
+    it { is_expected.to transition_from(:submitted).to(:on_hold).on_event(:hold) }
+    it { is_expected.to transition_from(:approved).to(:on_hold).on_event(:hold) }
+    it { is_expected.to transition_from(:on_hold).to(:approved).on_event(:resume) }
     it { is_expected.to transition_from(:approved).to(:partially_delivered).on_event(:partially_deliver) }
     it { is_expected.to transition_from(:approved).to(:fully_delivered).on_event(:fully_deliver) }
     it { is_expected.to transition_from(:partially_delivered).to(:fully_delivered).on_event(:fully_deliver) }
+    it { is_expected.to transition_from(:fully_delivered).to(:closed).on_event(:close) }
   end
 
   describe "associations" do
@@ -209,6 +216,156 @@ RSpec.describe PurchaseOrder, type: :model do
           expect {
             purchase_order.update(purchase_order_items_attributes: {id: purchase_order_item.id, _destroy: true})
           }.to change(PurchaseOrderItem, :count).by(-1)
+        end
+      end
+    end
+
+    describe "#all_items_delivered?" do
+      let(:purchase_order) { create(:purchase_order, :with_po_items) }
+
+      context "when all items are delivered" do
+        before { purchase_order.purchase_order_items.each(&:deliver!) }
+
+        it "returns true" do
+          expect(purchase_order.send(:all_items_delivered?)).to be_truthy
+        end
+      end
+
+      context "when some items are not delivered" do
+        before { purchase_order.purchase_order_items.first.cancel! }
+
+        it "returns false" do
+          expect(purchase_order.send(:all_items_delivered?)).to be_falsy
+        end
+      end
+
+      context "when no items are delivered" do
+        before { purchase_order.purchase_order_items.each(&:cancel!) }
+
+        it "returns false" do
+          expect(purchase_order.send(:all_items_delivered?)).to be_falsy
+        end
+      end
+    end
+
+    describe "#some_items_delivered_or_partially_delivered?" do
+      let(:purchase_order) { create(:purchase_order, :with_po_items) }
+
+      context "when some items are delivered" do
+        before { purchase_order.purchase_order_items.first.deliver! }
+
+        it "returns true" do
+          expect(purchase_order.send(:some_items_delivered_or_partially_delivered?)).to be_truthy
+        end
+      end
+
+      context "when some items are partially delivered" do
+        before { purchase_order.purchase_order_items.first.partially_deliver! }
+
+        it "returns true" do
+          expect(purchase_order.send(:some_items_delivered_or_partially_delivered?)).to be_truthy
+        end
+      end
+
+      context "when no items are delivered or partially delivered" do
+        before { purchase_order.purchase_order_items.each(&:cancel!) }
+
+        it "returns false" do
+          expect(purchase_order.send(:some_items_delivered_or_partially_delivered?)).to be_falsy
+        end
+      end
+    end
+
+    describe "#synchronize_delivery_status!" do
+      let(:purchase_order) { create(:purchase_order, :with_po_items) }
+
+      context "when all items are delivered" do
+        before do
+          purchase_order.purchase_order_items.each(&:deliver!)
+
+          allow(purchase_order).to receive(:may_fully_deliver?) { true }
+          allow(purchase_order).to receive(:fully_deliver!).and_call_original
+          allow(purchase_order).to receive(:partially_deliver!)
+
+          purchase_order.synchronize_delivery_status!
+        end
+
+        it "sets the status to fully_delivered" do
+          expect(purchase_order).to have_received(:fully_deliver!).once
+        end
+
+        it "does not change status if fully_deliver cannot transition" do
+          allow(purchase_order).to receive(:may_fully_deliver?) { false }
+
+          expect { purchase_order.synchronize_delivery_status! }.not_to change { purchase_order.status }
+        end
+      end
+
+      context "when some items are delivered or partially delivered" do
+        before do
+          purchase_order.purchase_order_items.first.deliver!  # Deliver the first item
+
+          allow(purchase_order).to receive(:may_partially_deliver?) { true }
+          allow(purchase_order).to receive(:fully_deliver!)
+          allow(purchase_order).to receive(:partially_deliver!).and_call_original
+
+          purchase_order.synchronize_delivery_status!
+        end
+
+        it "sets the status to partially_delivered" do
+          expect(purchase_order).to have_received(:partially_deliver!).once
+        end
+
+        it "does not change status if partially_deliver cannot transition" do
+          allow(purchase_order).to receive(:may_partially_deliver?) { false }
+
+          expect { purchase_order.synchronize_delivery_status! }.not_to change { purchase_order.status }
+        end
+      end
+
+      context "when no items are delivered or partially delivered" do
+        before do
+          purchase_order.purchase_order_items.each(&:cancel!)  # Ensure all items are cancelled
+
+          allow(purchase_order).to receive(:fully_deliver!)  # Spy on fully_deliver! method
+          allow(purchase_order).to receive(:partially_deliver!)  # Spy on partially_deliver! method
+
+          purchase_order.synchronize_delivery_status!  # Explicitly call the method
+        end
+
+        it "does not change the status" do
+          # Ensure no method is called since the status shouldn't change
+          expect(purchase_order).not_to have_received(:fully_deliver!)
+          expect(purchase_order).not_to have_received(:partially_deliver!)
+        end
+      end
+
+      context "when an invalid transition occurs" do
+        before do
+          purchase_order.purchase_order_items.each(&:deliver!)  # Deliver items to make the transition possible
+
+          # Simulate invalid transition by allowing a failed transition
+          allow(purchase_order).to receive(:may_fully_deliver?).and_raise(AASM::InvalidTransition.new(purchase_order, :draft, :default))
+        end
+
+        it "logs the error for invalid transition" do
+          expect(Rails.logger).to receive(:error).with("Failed to synchronize PO delivery status: Event 'draft' cannot transition from 'draft'.")
+
+          purchase_order.synchronize_delivery_status!
+        end
+      end
+    end
+
+    describe "#update_actual_delivery_date" do
+      let(:purchase_order) { create(:purchase_order, :approved, actual_delivery_date: nil) }
+
+      it "sets actual_delivery_date to current time on delivery" do
+        freeze_time do
+          expect {
+            purchase_order.fully_deliver!
+          }.to change {
+            purchase_order.reload.actual_delivery_date
+          }.from(nil).to(Date.current)
         end
       end
     end

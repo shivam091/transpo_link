@@ -7,7 +7,7 @@
 require "spec_helper"
 
 RSpec.describe RequestLog, type: :model do
-  subject { build(:request_log) }
+  subject(:request_log) { build(:request_log) }
 
   describe "attributes, indexes, foreign keys, and check constraints" do
     it { is_expected.to have_db_column(:id).of_type(:uuid) }
@@ -70,6 +70,12 @@ RSpec.describe RequestLog, type: :model do
     it { is_expected.to include_module(Pageable) }
     it { is_expected.to include_module(Sortable) }
     it { is_expected.to include_module(Navigable) }
+    it { is_expected.to include_module(ScaleEnforcer) }
+  end
+
+  describe "scaled attributes" do
+    it { is_expected.to apply_scale_to(:cpu_usage) }
+    it { is_expected.to apply_scale_to(:elapsed_time) }
   end
 
   include_examples "apply default scope on created_at:desc"

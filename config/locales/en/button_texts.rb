@@ -29,6 +29,9 @@
       next: "Next &rsaquo;",
       approve: "Approve",
       reject: "Reject",
+      close: "Close",
+      deliver: "Deliver",
+      confirm_delivery: "Confirm delivery",
     },
   }
 }

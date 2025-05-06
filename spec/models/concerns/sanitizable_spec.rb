@@ -33,6 +33,10 @@ RSpec.describe Sanitizable do
   it { is_expected.to sanitize_attribute(:name) }
   it { is_expected.to sanitize_attribute(:bio).allow_html }
 
+  describe "callbacks" do
+    it { expect(SanitizableModel).to have_callback(:before, :validation, :sanitize_attributes) }
+  end
+
   describe "#sanitize_attributes" do
     it "removes all HTML when allow_html is false" do
       subject.name = "<b>Jane Doe</b> <script>alert('XSS');</script>"

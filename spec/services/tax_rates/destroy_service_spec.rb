@@ -12,12 +12,12 @@ RSpec.describe TaxRates::DestroyService, type: :service do
   subject(:service_response) { described_class.(tax_rate) }
 
   describe ".call" do
-    context "when destroy is successful" do
+    context "when deletion is successful" do
       include_examples "deletes a record", TaxRate
       include_examples "returns a success response"
     end
 
-    context "when destroy fails" do
+    context "when deletion is unsuccessful" do
       before { allow(tax_rate).to receive(:destroy) { false } }
 
       include_examples "does not change record count", TaxRate

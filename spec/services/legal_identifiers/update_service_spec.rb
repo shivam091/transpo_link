@@ -8,12 +8,13 @@ require "spec_helper"
 
 RSpec.describe LegalIdentifiers::UpdateService, type: :service do
   let!(:legal_identifier) { create(:legal_identifier) }
-  let(:legal_identifier_attributes) { {tax_identifier: "32AAHHS1234A2Z4"} }
 
   subject(:service_response) { described_class.(legal_identifier, legal_identifier_attributes) }
 
   describe ".call" do
-    context "when update is successful" do
+    context "when provided attributes are valid" do
+      let(:legal_identifier_attributes) { {tax_identifier: "32AAHHS1234A2Z4"} }
+
       it "updates the legal identifier" do
         expect { service_response }.to change { legal_identifier.reload.tax_identifier }.to("32AAHHS1234A2Z4")
       end
@@ -21,8 +22,8 @@ RSpec.describe LegalIdentifiers::UpdateService, type: :service do
       include_examples "returns a success response"
     end
 
-    context "when update fails" do
-      before { allow(legal_identifier).to receive(:update) { false } }
+    context "when provided attributes are invalid" do
+      let(:legal_identifier_attributes) { {tax_identifier: ""} }
 
       it "does not update the legal identifier" do
         expect { service_response }.to not_change { legal_identifier.reload.tax_identifier }

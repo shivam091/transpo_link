@@ -20,7 +20,7 @@ class ApplicationController < ActionController::Base
   rescue_from ApplicationError, with: :handle_application_error
 
   prepend_before_action :authenticate_user!
-  before_action :set_main_breadcrumb
+  before_action :set_current_attributes, :set_main_breadcrumb
   before_action :check_if_banned, :update_last_activity_at, if: :user_signed_in?
 
   around_action :with_locale, :with_time_zone
@@ -66,5 +66,9 @@ class ApplicationController < ActionController::Base
 
   def update_last_activity_at
     current_user.update_last_activity_at
+  end
+
+  def set_current_attributes
+    Current.user = current_user
   end
 end

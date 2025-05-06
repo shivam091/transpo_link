@@ -8,7 +8,7 @@ require "spec_helper"
 
 # Check consistency of db/schema.rb version, migrations' timestamps, and the latest migration timestamp
 # stored in the database's schema_migrations table.
-RSpec.describe ActiveRecord::Schema do
+RSpec.describe ActiveRecord::Schema, type: :migration do
   let(:all_migrations) do
     migrations_directories = Rails.application.paths["db/migrate"].paths.map(&:to_s)
     migrations_paths = migrations_directories.map { |path| File.join(path, "*") }

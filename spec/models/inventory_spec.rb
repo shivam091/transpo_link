@@ -7,7 +7,7 @@
 require "spec_helper"
 
 RSpec.describe Inventory, type: :model do
-  subject { create(:inventory) }
+  subject(:inventory) { build(:inventory) }
 
   describe "valid factory" do
     it { is_expected.to have_a_valid_factory(:inventory) }
@@ -71,6 +71,12 @@ RSpec.describe Inventory, type: :model do
     it { is_expected.to include_module(Sortable) }
     it { is_expected.to include_module(ActsAsMoney) }
     it { is_expected.to include_module(Navigable) }
+    it { is_expected.to include_module(ScaleEnforcer) }
+  end
+
+  describe "scaled attributes" do
+    it { is_expected.to apply_scale_to(:low_stock_threshold) }
+    it { is_expected.to apply_scale_to(:average_cost_price) }
   end
 
   describe "associations" do
@@ -82,7 +88,7 @@ RSpec.describe Inventory, type: :model do
     it { is_expected.to have_many(:inventory_batches).inverse_of(:inventory).dependent(:destroy) }
 
     it { is_expected.to belong_to(:warehouse).inverse_of(:inventories) }
-    it { is_expected.to belong_to(:product).inverse_of(:inventories).touch }
+    it { is_expected.to belong_to(:product).inverse_of(:inventories) }
     it { is_expected.to belong_to(:unit).inverse_of(:inventories) }
   end
 
@@ -92,6 +98,8 @@ RSpec.describe Inventory, type: :model do
     end
 
     describe "#product_id" do
+      let!(:inventory) { create(:inventory) }
+
       it { is_expected.to validate_presence_of(:product_id) }
       it { is_expected.to validate_uniqueness_of(:product_id).scoped_to(:warehouse_id).with_message("already has inventory for the selected warehouse").ignoring_case_sensitivity }
     end
@@ -107,12 +115,55 @@ RSpec.describe Inventory, type: :model do
 
     describe "#low_stock_threshold" do
       it { is_expected.to validate_presence_of(:low_stock_threshold) }
-      it { is_expected.to validate_numericality_of(:low_stock_threshold).is_greater_than(0.0) }
+
+      context "when low_stock_threshold is invalid" do
+        it "is invalid" do
+          inventory.low_stock_threshold = "abcd"
+          inventory.validate
+
+          expect(inventory.errors[:low_stock_threshold]).to include("must be greater than 0.0")
+        end
+      end
+
+      context "when low_stock_threshold <= 0.0" do
+        it "is invalid" do
+          inventory.low_stock_threshold = 0.0
+          inventory.validate
+
+          expect(inventory.errors[:low_stock_threshold]).to include("must be greater than 0.0")
+        end
+      end
+
+      context "when low_stock_threshold > 0.0" do
+        it "is valid" do
+          inventory.low_stock_threshold = 1.0
+          inventory.validate
+
+          expect(inventory.errors[:low_stock_threshold]).to be_empty
+        end
+      end
     end
 
     describe "#average_cost_price" do
       it { is_expected.to validate_presence_of(:average_cost_price) }
-      it { is_expected.to validate_numericality_of(:average_cost_price).is_greater_than_or_equal_to(0.0) }
+
+      context "when average_cost_price < 0.0" do
+        it "is invalid" do
+          inventory.average_cost_price = -0.5
+          inventory.validate
+
+          expect(inventory.errors[:average_cost_price]).to include("must be greater than or equal to 0.0")
+        end
+      end
+
+      context "when average_cost_price >= 0.0" do
+        it "is valid" do
+          inventory.average_cost_price = 0.0
+          inventory.validate
+
+          expect(inventory.errors[:average_cost_price]).to be_empty
+        end
+      end
     end
   end
 
@@ -131,42 +182,6 @@ RSpec.describe Inventory, type: :model do
 
       it "returns array of key associations" do
         expect(inventory.key_associations).to eq([inventory.product, inventory.warehouse])
-      end
-    end
-
-    describe "#inventory_unit_matches_product_unit_category" do
-      let!(:product) { create(:product) }
-
-      let(:invalid_unit) { build_stubbed(:kilometre_unit) }
-
-      context "when the unit is in the valid category" do
-        let(:inventory) { build(:inventory, product:, unit: product.unit) }
-
-        it "does not add validation errors" do
-          inventory.validate
-
-          expect(inventory.errors[:unit_id]).to be_blank
-        end
-      end
-
-      context "when the unit is not in the valid category" do
-        let(:inventory) { build(:inventory, product:, unit: invalid_unit) }
-
-        it "adds an error on unit_id" do
-          inventory.validate
-
-          expect(inventory.errors[:unit_id]).to include("is incompatible for the selected product")
-        end
-      end
-
-      context "when product is not present" do
-        let(:inventory) { build(:inventory, product: nil) }
-
-        it "skips validation when product is nil" do
-          inventory.validate
-
-          expect(inventory.errors[:unit_id]).to be_blank
-        end
       end
     end
 

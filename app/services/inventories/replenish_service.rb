@@ -17,23 +17,18 @@ class Inventories::ReplenishService < ApplicationService
 
   def replenish_inventory
     purchase_order.purchase_order_items.each do |item|
-      warehouse, product = purchase_order.warehouse, item.product
-      inventory = warehouse.inventories.for_product(product)
-      raise_missing_inventory!(warehouse, product) if inventory.nil?
+      warehouse, product, inventory = purchase_order.warehouse, item.product, item.inventory
+
+      raise_missing_inventory_error!(warehouse, product) if inventory.nil?
 
       source_unit, target_unit = item.unit, inventory.unit
       quantity = UnitConversion.convert(source_unit, target_unit, item.quantity)
-      raise_unit_conversion_error!(source_unit, target_unit) if quantity.nil?
 
       Replenishments::UpdateService.(inventory, quantity, :increment)
     end
   end
 
-  def raise_missing_inventory!(warehouse, product)
+  def raise_missing_inventory_error!(warehouse, product)
     raise PurchaseOrders::MissingInventoryError.new(warehouse, product)
-  end
-
-  def raise_unit_conversion_error!(source_unit, target_unit)
-    raise PurchaseOrders::UnitConversionError.new(source_unit, target_unit)
   end
 end

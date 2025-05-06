@@ -21,9 +21,16 @@ FactoryBot.define do
       total_capacity { 1000000000000.0 }
     end
 
-    before(:create) do |warehouse|
-      warehouse.managers << create(:manager)
-      warehouse.suppliers << create(:supplier)
+    trait :with_manager do
+      after(:create) do |warehouse|
+        warehouse.managers << create(:manager)
+      end
+    end
+
+    trait :with_supplier do
+      after(:create) do |warehouse|
+        warehouse.suppliers << create(:supplier)
+      end
     end
   end
 end

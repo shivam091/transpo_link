@@ -3,7 +3,7 @@
 # -*- warn_indent: true -*-
 
 class Inventory < ApplicationRecord
-  include HasReferenceCode, Pageable, Sortable, ActsAsMoney, Navigable
+  include HasReferenceCode, Pageable, Sortable, ActsAsMoney, Navigable, ScaleEnforcer
 
   LISTING_ATTRIBUTES = %i[
     reference_code product_id warehouse_id tracking_method low_stock_threshold
@@ -18,6 +18,8 @@ class Inventory < ApplicationRecord
 
   attribute :average_cost_price, default: 0.0
   attribute :tracking_method, :enum, default: tracking_methods[:average_cost]
+
+  scale_attributes :average_cost_price, :low_stock_threshold
 
   validates :warehouse_id, :unit_id, presence: true, reduce: true
   validates :product_id,
@@ -37,8 +39,9 @@ class Inventory < ApplicationRecord
             numericality: {greater_than_or_equal_to: 0.0},
             reduce: true
 
-  validate :inventory_unit_matches_product_unit_category
   validate :product_unit_category_matches_warehouse_capacity
+
+  validates_with UnitIsInProductUnitCategoryValidator
 
   with_options inverse_of: :inventory, dependent: :destroy do |a|
     a.has_one :stock
@@ -51,7 +54,7 @@ class Inventory < ApplicationRecord
 
   with_options inverse_of: :inventories do |a|
     a.belongs_to :warehouse
-    a.belongs_to :product, touch: true
+    a.belongs_to :product
     a.belongs_to :unit
   end
 
@@ -60,12 +63,6 @@ class Inventory < ApplicationRecord
   delegate :quantity_in_hand, :quantity_pending_to_buyer, to: :stock
   delegate :quantity_pending_from_supplier, to: :replenishment
   delegate :symbol, to: :unit, prefix: true
-
-  class << self
-    def for_product(product)
-      find_by(arel_table[:product_id].eq(product.id))
-    end
-  end
 
   def key_associations
     [product, warehouse]
@@ -81,22 +78,12 @@ class Inventory < ApplicationRecord
     Replenishments::CreateService.(self)
   end
 
-  def inventory_unit_matches_product_unit_category
-    return unless product.present? && unit.present?
-
-    allowed_units = Unit.for_category(product.unit_category).symbols
-
-    if allowed_units.blank? || !allowed_units.include?(unit_symbol)
-      errors.add(:unit_id, :incompatible_unit_category)
-    end
-  end
-
   def product_unit_category_matches_warehouse_capacity
-    return unless warehouse.present? && product.present?
+    return unless warehouse && product
 
     allowed_units = Unit.for_category(warehouse.unit_category).symbols
 
-    if allowed_units.blank? || !allowed_units.include?(product.unit_symbol)
+    if allowed_units.blank? || allowed_units.exclude?(product.unit_symbol)
       errors.add(:product_id, :incompatible_unit_category)
     end
   end

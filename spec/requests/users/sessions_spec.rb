@@ -8,7 +8,6 @@ require "spec_helper"
 
 RSpec.describe "Users::Sessions", type: :request do
   let(:user) { create(:admin, :active, :confirmed) }
-  let(:dummy_password) { Rails.application.credentials.config[:TEST_PASSWORD] }
 
   describe "GET /users/sign-in" do
     it "renders the sign in page" do
@@ -22,7 +21,7 @@ RSpec.describe "Users::Sessions", type: :request do
   describe "POST /users/sign-in" do
     context "when valid credentials" do
       it "signs in the user and redirects" do
-        post user_session_path, params: {user: {email: user.email, password: dummy_password}}
+        post user_session_path, params: {user: {email: user.email, password: user.password}}, as: :turbo_stream
 
         expect(response).to redirect_to(root_path)
         follow_redirect!
@@ -33,7 +32,7 @@ RSpec.describe "Users::Sessions", type: :request do
       it "clears reset_password_token if present" do
         user.update!(reset_password_token: "dummy_token", reset_password_sent_at: 1.hour.ago)
 
-        post user_session_path, params: {user: {email: user.email, password: dummy_password}}
+        post user_session_path, params: {user: {email: user.email, password: user.password}}, as: :turbo_stream
 
         user.reload
         expect(user.reset_password_token).to be_nil
@@ -45,7 +44,7 @@ RSpec.describe "Users::Sessions", type: :request do
 
     context "when invalid credentials" do
       it "does not sign in the user and re-renders the sign-in page with errors" do
-        post user_session_path, params: {user: {email: user.email, password: "WrongPassword"}}
+        post user_session_path, params: {user: {email: user.email, password: "WrongPassword"}}, as: :turbo_stream
 
         expect(flash[:alert]).to eq("It looks like your email address and password combination isn't quite right, please try again.")
         expect(response).to have_http_status(:unprocessable_entity)
@@ -54,7 +53,7 @@ RSpec.describe "Users::Sessions", type: :request do
 
     context "when email is missing" do
       it "redirects with an error message" do
-        post user_session_path, params: {user: {email: "", password: "Password123"}}
+        post user_session_path, params: {user: {email: "", password: "Password123"}}, as: :turbo_stream
 
         expect(response).to redirect_to(new_user_session_path)
         follow_redirect!
@@ -65,7 +64,7 @@ RSpec.describe "Users::Sessions", type: :request do
 
     context "when password is missing" do
       it "redirects with an error message" do
-        post user_session_path, params: {user: {email: user.email, password: ""}}
+        post user_session_path, params: {user: {email: user.email, password: ""}}, as: :turbo_stream
 
         expect(response).to redirect_to(new_user_session_path)
         follow_redirect!
@@ -76,7 +75,7 @@ RSpec.describe "Users::Sessions", type: :request do
 
     context "when inexistant email" do
       it "redirects with an error message" do
-        post user_session_path, params: {user: {email: "test@example.com", password: "Dummy_password"}}
+        post user_session_path, params: {user: {email: "test@example.com", password: "Dummy_password"}}, as: :turbo_stream
 
         expect(flash[:alert]).to eq("We could not find an account with that email address.")
         expect(response).to have_http_status(:unprocessable_entity)
@@ -87,7 +86,7 @@ RSpec.describe "Users::Sessions", type: :request do
       it "redirects with an error message" do
         user.toggle!(:is_banned)
 
-        post user_session_path, params: {user: {email: user.email, password: dummy_password}}
+        post user_session_path, params: {user: {email: user.email, password: user.password}}, as: :turbo_stream
 
         expect(response).to redirect_to(new_user_session_path)
         follow_redirect!
@@ -100,7 +99,7 @@ RSpec.describe "Users::Sessions", type: :request do
       it "redirects with an error message" do
         user.toggle!(:is_active)
 
-        post user_session_path, params: {user: {email: user.email, password: dummy_password}}
+        post user_session_path, params: {user: {email: user.email, password: user.password}}, as: :turbo_stream
 
         expect(response).to redirect_to(new_user_session_path)
         follow_redirect!
@@ -128,7 +127,7 @@ RSpec.describe "Users::Sessions", type: :request do
 
     context "when user is not signed out" do
       it "signs out the user and redirects" do
-        delete destroy_user_session_path
+        delete destroy_user_session_path, as: :turbo_stream
 
         expect(response).to redirect_to(new_user_session_path)
         follow_redirect!
@@ -141,7 +140,7 @@ RSpec.describe "Users::Sessions", type: :request do
       it "handles multiple sign-out attempts gracefully" do
         sign_out(user)
 
-        delete destroy_user_session_path
+        delete destroy_user_session_path, as: :turbo_stream
 
         expect(response).to redirect_to(new_user_session_path)
         follow_redirect!

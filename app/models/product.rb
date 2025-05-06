@@ -4,7 +4,7 @@
 
 class Product < ApplicationRecord
   include Toggleable, HasReferenceCode, Pageable, Sortable, ActsAsMoney,
-          NullifyIfBlank, Sanitizable, Navigable
+          NullifyIfBlank, Sanitizable, Navigable, ScaleEnforcer
 
   LISTING_ATTRIBUTES = %i[
     reference_code name sku barcode cost_price product_category_id
@@ -15,6 +15,8 @@ class Product < ApplicationRecord
   nullify_if_blank :description, :barcode
 
   sanitize_attributes :name, :description, :sku, :barcode
+
+  scale_attributes :min_stock_threshold, :cost_price
 
   validates :name,
             presence: true,
