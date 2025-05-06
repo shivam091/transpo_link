@@ -11,6 +11,6 @@ FactoryBot.define do
     unit { find_or_create_unit("item") }
     currency { Faker::Currency.code }
     cost_price { Faker::Commerce.price(range: 5.0..1000.0) }
-    association :restockable, factory: :purchase_order_item
+    association :source, factory: :purchase_order_item
   end
 end
