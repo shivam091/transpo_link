@@ -10,14 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_29_134028) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_02_140259) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
 
   # Custom types defined in this database.
   # Note that some types may not work with other database engines. Be careful if changing database.
-  create_enum "batch_processing_statuses", ["pending", "queued", "processing", "succeeded", "failed"]
   create_enum "business_categories", ["b2b", "b2c"]
   create_enum "color_schemes", ["auto", "dark", "light"]
   create_enum "entity_types", ["business", "individual"]
@@ -129,24 +128,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_29_134028) do
     t.index ["user_id"], name: "index_inventory_batch_audit_logs_on_user_id"
     t.check_constraint "new_quantity IS NOT NULL", name: "check_inventory_batch_audit_logs_new_quantity_presence"
     t.check_constraint "previous_quantity IS NOT NULL", name: "check_inventory_batch_audit_logs_previous_quantity_presence"
-  end
-
-  create_table "inventory_batch_processing_logs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.uuid "inventory_batch_id", null: false
-    t.enum "status", enum_type: "batch_processing_statuses"
-    t.jsonb "error_logs", default: {}
-    t.jsonb "metadata", default: {}
-    t.uuid "user_id", null: false
-    t.timestamptz "created_at", null: false
-    t.timestamptz "updated_at", null: false
-    t.index ["error_logs"], name: "index_inventory_batch_processing_logs_on_error_logs", using: :gin
-    t.index ["inventory_batch_id", "user_id"], name: "idx_on_inventory_batch_id_user_id_0cc004d3e8"
-    t.index ["inventory_batch_id"], name: "index_inventory_batch_processing_logs_on_inventory_batch_id"
-    t.index ["metadata"], name: "index_inventory_batch_processing_logs_on_metadata", using: :gin
-    t.index ["status"], name: "index_inventory_batch_processing_logs_on_status"
-    t.index ["user_id"], name: "index_inventory_batch_processing_logs_on_user_id"
-    t.check_constraint "status = ANY (ARRAY['pending'::batch_processing_statuses, 'queued'::batch_processing_statuses, 'processing'::batch_processing_statuses, 'succeeded'::batch_processing_statuses, 'failed'::batch_processing_statuses])", name: "check_inventory_batch_processing_logs_status_in_enum_values"
-    t.check_constraint "status IS NOT NULL", name: "check_inventory_batch_processing_logs_status_presence"
   end
 
   create_table "inventory_batches", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -293,6 +274,19 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_29_134028) do
     t.check_constraint "min_stock_threshold IS NOT NULL", name: "check_products_min_stock_threshold_presence"
     t.check_constraint "name IS NOT NULL AND name::text <> ''::text", name: "check_products_name_presence"
     t.check_constraint "sku IS NOT NULL AND sku::text <> ''::text", name: "check_products_sku_presence"
+  end
+
+  create_table "purchase_order_item_deliveries", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "purchase_order_item_id", null: false
+    t.uuid "unit_id", null: false
+    t.decimal "quantity", precision: 12, scale: 2
+    t.timestamptz "created_at", null: false
+    t.timestamptz "updated_at", null: false
+    t.index ["purchase_order_item_id"], name: "index_purchase_order_item_deliveries_on_purchase_order_item_id"
+    t.index ["quantity"], name: "index_purchase_order_item_deliveries_on_quantity"
+    t.index ["unit_id"], name: "index_purchase_order_item_deliveries_on_unit_id"
+    t.check_constraint "quantity > 0.0", name: "check_purchase_order_item_deliveries_quantity_positive"
+    t.check_constraint "quantity IS NOT NULL", name: "check_purchase_order_item_deliveries_quantity_presence"
   end
 
   create_table "purchase_order_items", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -609,8 +603,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_29_134028) do
   add_foreign_key "inventory_audit_logs", "users", name: "fk_inventory_audit_logs_user_id_on_users", on_delete: :nullify
   add_foreign_key "inventory_batch_audit_logs", "inventory_batches", name: "fk_inventory_batch_audit_logs_inventory_batch_id_on_inventory_b", on_delete: :nullify
   add_foreign_key "inventory_batch_audit_logs", "users", name: "fk_inventory_batch_audit_logs_user_id_on_users", on_delete: :nullify
-  add_foreign_key "inventory_batch_processing_logs", "inventory_batches", name: "fk_inventory_batch_processing_logs_inventory_batch_id_on_invent", on_delete: :nullify
-  add_foreign_key "inventory_batch_processing_logs", "users", name: "fk_inventory_batch_processing_logs_user_id_on_users", on_delete: :nullify
   add_foreign_key "inventory_batches", "inventories", name: "fk_inventory_batches_inventory_id_on_inventories", on_delete: :cascade
   add_foreign_key "inventory_batches", "units", name: "fk_inventory_batches_unit_id_on_units", on_delete: :restrict
   add_foreign_key "inventory_movements", "inventories", name: "fk_inventory_movements_inventory_id_on_inventories", on_delete: :cascade
@@ -621,6 +613,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_29_134028) do
   add_foreign_key "product_prices", "warehouses", name: "fk_product_prices_warehouse_id_on_warehouses", on_delete: :restrict
   add_foreign_key "products", "product_categories", name: "fk_products_product_category_id_on_product_categories", on_delete: :restrict
   add_foreign_key "products", "units", name: "fk_products_unit_id_on_units", on_delete: :restrict
+  add_foreign_key "purchase_order_item_deliveries", "purchase_order_items", name: "fk_purchase_order_item_deliveries_purchase_order_item_id_on_pur", on_delete: :cascade
+  add_foreign_key "purchase_order_item_deliveries", "units", name: "fk_purchase_order_item_deliveries_unit_id_on_units", on_delete: :restrict
   add_foreign_key "purchase_order_items", "products", name: "fk_purchase_order_items_product_id_on_products", on_delete: :restrict
   add_foreign_key "purchase_order_items", "purchase_orders", name: "fk_purchase_order_items_purchase_order_id_on_purchase_orders", on_delete: :cascade
   add_foreign_key "purchase_order_items", "units", name: "fk_purchase_order_items_unit_id_on_units", on_delete: :restrict

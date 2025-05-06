@@ -91,6 +91,8 @@ RSpec.describe Warehouse, type: :model do
     it { is_expected.to have_many(:warehouse_suppliers).inverse_of(:warehouse).dependent(:destroy) }
     it { is_expected.to have_many(:suppliers).through(:warehouse_suppliers).inverse_of(:supplied_warehouses).source(:supplier) }
 
+    it { is_expected.to have_many(:purchase_order_items).through(:purchase_orders).inverse_of(:warehouse).dependent(:restrict_with_exception) }
+
     it { is_expected.to have_many(:inventories).inverse_of(:warehouse).dependent(:restrict_with_exception) }
     it { is_expected.to have_many(:products).through(:inventories).inverse_of(:warehouses) }
 

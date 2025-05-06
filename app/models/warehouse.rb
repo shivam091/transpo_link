@@ -60,6 +60,7 @@ class Warehouse < ApplicationRecord
     a.has_many :product_prices
     a.has_many :inventories
     a.has_many :purchase_orders
+    a.has_many :purchase_order_items, through: :purchase_orders
   end
 
   has_many :warehouse_managers, inverse_of: :warehouse, dependent: :destroy

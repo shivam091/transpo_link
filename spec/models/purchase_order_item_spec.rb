@@ -83,18 +83,43 @@ RSpec.describe PurchaseOrderItem, type: :model do
   end
 
   describe "associations" do
+    let(:source) { create(:purchase_order_item) }
+    let(:unit) { source.unit }
+
+    let!(:restock_movement) { create(:inventory_movement, :restock, source:, unit:) }
+    let!(:purchase_movement) { create(:inventory_movement, :purchase, source:, unit:) }
+
+    it { is_expected.to have_one(:warehouse).through(:purchase_order).inverse_of(:purchase_order_items).dependent(:restrict_with_exception) }
+
     it { is_expected.to have_many(:inventory_movements).dependent(:restrict_with_exception) }
+    it { is_expected.to have_many(:deliveries).class_name("PurchaseOrderItem::Delivery").inverse_of(:purchase_order_item).dependent(:destroy) }
     it { is_expected.to have_many(:restocks).class_name("InventoryMovement").dependent(:restrict_with_exception) }
 
     describe "#restocks" do
-      let(:source) { create(:purchase_order_item) }
-      let(:unit) { source.unit }
+      let(:association) { described_class.reflect_on_association(:restocks) }
 
-      let!(:restock_movement) { create(:inventory_movement, :restock, source:, unit:) }
-      let!(:other_movement) { create(:inventory_movement, :purchase, source:, unit:) }
+      it "has many purchases" do
+        expect(association.macro).to eq(:has_many)
+        expect(association.options[:class_name]).to eq("InventoryMovement")
+        expect(association.options[:dependent]).to eq(:restrict_with_exception)
+      end
 
-      it "returns only restock inventory movements" do
-        expect(source.restocks).to contain_exactly(restock_movement)
+      it "returns only purchase inventory movements" do
+        expect(source.purchases).to contain_exactly(purchase_movement)
+      end
+    end
+
+    describe "#purchases" do
+      let(:association) { described_class.reflect_on_association(:purchases) }
+
+      it "has many purchases" do
+        expect(association.macro).to eq(:has_many)
+        expect(association.options[:class_name]).to eq("InventoryMovement")
+        expect(association.options[:dependent]).to eq(:restrict_with_exception)
+      end
+
+      it "returns only purchase inventory movements" do
+        expect(source.purchases).to contain_exactly(purchase_movement)
       end
     end
 
@@ -298,6 +323,48 @@ RSpec.describe PurchaseOrderItem, type: :model do
         purchase_order_item = build(:purchase_order_item, quantity: 3.0, received_quantity: 4.0)
 
         expect(purchase_order_item.remaining_quantity).to eq(-1.0)
+      end
+    end
+
+    describe "#inventory" do
+      let(:warehouse) { create(:warehouse) }
+      let(:product) { create(:product) }
+      let(:purchase_order) { create(:purchase_order, warehouse:) }
+      let(:purchase_order_item) { create(:purchase_order_item, purchase_order:, product:) }
+
+      context "when matching inventory exists" do
+        let!(:inventory) { create(:inventory, warehouse:, product:) }
+
+        it "returns the matching inventory record" do
+          expect(purchase_order_item.inventory).to eq(inventory)
+        end
+
+        it "memoizes the result" do
+          # force multiple calls to check memoization
+          expect(Inventory).to receive(:find_by).once.and_call_original
+
+          2.times { purchase_order_item.inventory }
+        end
+      end
+
+      context "when no matching inventory exists" do
+        it "returns nil" do
+          expect(purchase_order_item.inventory).to be_nil
+        end
+      end
+
+      context "when purchase_order or product is missing" do
+        it "returns nil if purchase_order is nil" do
+          item = build(:purchase_order_item, purchase_order: nil, product:)
+
+          expect(item.inventory).to be_nil
+        end
+
+        it "returns nil if product is nil" do
+          item = build(:purchase_order_item, purchase_order:, product: nil)
+
+          expect(item.inventory).to be_nil
+        end
       end
     end
 
