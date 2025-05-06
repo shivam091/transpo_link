@@ -79,6 +79,8 @@ class PurchaseOrderItem < ApplicationRecord
     a.belongs_to :purchase_order, touch: true
     a.belongs_to :product
     a.belongs_to :unit
+
+    a.has_one :warehouse, through: :purchase_order, dependent: :restrict_with_exception
   end
 
   has_many :inventory_batches, as: :restockable, dependent: :restrict_with_exception
@@ -90,6 +92,17 @@ class PurchaseOrderItem < ApplicationRecord
            class_name: "InventoryMovement",
            as: :source,
            dependent: :restrict_with_exception
+  has_many :purchases,
+           -> {
+             where(InventoryMovement.arel_table[:movement_type].eq(InventoryMovement.movement_types[:purchase]))
+           },
+           class_name: "InventoryMovement",
+           as: :source,
+           dependent: :restrict_with_exception
+  has_many :deliveries,
+           class_name: "PurchaseOrderItem::Delivery",
+           inverse_of: :purchase_order_item,
+           dependent: :destroy
 
   before_validation :set_unit_cost_and_currency
 
@@ -102,6 +115,17 @@ class PurchaseOrderItem < ApplicationRecord
 
   def remaining_quantity
     quantity - received_quantity
+  end
+
+  def inventory
+    return unless purchase_order&.warehouse && product
+
+    inventory_arel = Inventory.arel_table
+
+    @inventory ||= Inventory.find_by(
+      inventory_arel[:warehouse_id].eq(purchase_order.warehouse_id)
+        .and(inventory_arel[:product_id].eq(product_id))
+    )
   end
 
   private
