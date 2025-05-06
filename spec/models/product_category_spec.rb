@@ -7,7 +7,7 @@
 require "spec_helper"
 
 RSpec.describe ProductCategory, type: :model do
-  subject { create(:product_category) }
+  subject(:product_category) { build(:product_category) }
 
   describe "valid factory" do
     it { is_expected.to have_a_valid_factory(:product_category) }
@@ -63,6 +63,8 @@ RSpec.describe ProductCategory, type: :model do
 
   describe "validations" do
     describe "#name" do
+      let!(:product_category) { create(:product_category) }
+
       it { is_expected.to validate_presence_of(:name) }
       it { is_expected.to validate_length_of(:name).is_at_least(2).is_at_most(255) }
       it { is_expected.to validate_uniqueness_of(:name).scoped_to(:parent_category_id).ignoring_case_sensitivity }

@@ -14,7 +14,7 @@ class LocalesController < ApplicationController
 
     if response.success?
       set_flash_message(:notice, :success)
-      redirect_to request.referrer
+      redirect_back fallback_location: root_path, status: :see_other
     else
       set_flash_message(:alert, :error, immediate: true)
       respond_to do |format|

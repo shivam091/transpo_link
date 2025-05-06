@@ -7,12 +7,14 @@ class CreateEnumPurchaseOrderStatuses < ActiveRecord::Migration[8.0]
     create_enum :purchase_order_statuses,
                 %i[
                   draft
-                  pending
+                  submitted
                   approved
-                  cancelled
-                  rejected
                   partially_delivered
                   fully_delivered
+                  cancelled
+                  rejected
+                  closed
+                  on_hold
                 ]
   end
 end

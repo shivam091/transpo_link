@@ -7,7 +7,7 @@
 require "spec_helper"
 require_migration!
 
-RSpec.describe CreateFeedbackReferenceCodeSequence do
+RSpec.describe CreateFeedbackReferenceCodeSequence, type: :migration do
   let(:sequence_name) { "feedback_reference_code_seq" }
 
   describe ".up" do

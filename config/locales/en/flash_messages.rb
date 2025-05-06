@@ -174,7 +174,19 @@
           success: "Purchase order item has been successfully cancelled.",
           error: "We encountered a problem cancelling the purchase order item. Please try again."
         },
-      }
+      },
+      color_schemes: {
+        update: {
+          bad_request: "Invalid color scheme",
+          unprocessable_entity: "Failed to update the color scheme"
+        }
+      },
+      deliveries: {
+        create: {
+          success: "The item delivery has been recorded.",
+          error: "Unable to record the item delivery. Please check the details and try again."
+        },
+      },
     }
   }
 }

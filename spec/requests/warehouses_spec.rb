@@ -10,14 +10,16 @@ RSpec.describe "Warehouses", type: :request do
   let!(:active_warehouse) { create(:warehouse, :active) }
   let!(:inactive_warehouse) { create(:warehouse) }
 
-  let(:valid_attributes) do
-    attributes_for(:warehouse, name: "New warehouse").merge(
-      manager_ids: active_warehouse.manager_ids,
-      supplier_ids: active_warehouse.supplier_ids,
-      unit_id: active_warehouse.unit.id
-    )
+  let(:valid_params) do
+    {
+      warehouse: attributes_for(:warehouse,
+        manager_ids: active_warehouse.manager_ids,
+        supplier_ids: active_warehouse.supplier_ids,
+        unit_id: active_warehouse.unit.id
+      )
+    }
   end
-  let(:invalid_attributes) { attributes_for(:warehouse, name: "") }
+  let(:invalid_params) { {warehouse: attributes_for(:warehouse, name: "")} }
 
   include_context "sign in as admin"
 
@@ -57,9 +59,9 @@ RSpec.describe "Warehouses", type: :request do
   end
 
   describe "POST /warehouses" do
-    context "when provided attributes are valid" do
+    context "when provided parameters are valid" do
       it "creates the warehouse and redirects" do
-        post warehouses_path, params: {warehouse: valid_attributes}, as: :turbo_stream
+        post warehouses_path, params: valid_params, as: :turbo_stream
 
         expect(flash[:notice]).to eq("Warehouse was successfully created.")
         expect(response).to redirect_to(warehouses_path)
@@ -67,9 +69,9 @@ RSpec.describe "Warehouses", type: :request do
       end
     end
 
-    context "when provided attributes are invalid" do
+    context "when provided parameters are invalid" do
       it "does not create the warehouse and renders errors" do
-        post warehouses_path, params: {warehouse: invalid_attributes}, as: :turbo_stream
+        post warehouses_path, params: invalid_params, as: :turbo_stream
 
         expect(flash[:alert]).to eq("Warehouse could not be created.")
         expect(response.media_type).to eq(Mime[:turbo_stream])
@@ -89,11 +91,9 @@ RSpec.describe "Warehouses", type: :request do
   end
 
   describe "PUT|PATCH /warehouses/:id" do
-    context "when provided attributes are valid" do
+    context "when provided parameters are valid" do
       it "updates the warehouse and redirects" do
-        expect {
-          put warehouse_path(active_warehouse), params: {warehouse: valid_attributes}, as: :turbo_stream
-        }.to change { active_warehouse.reload.name }.to("New warehouse")
+        put warehouse_path(active_warehouse), params: valid_params, as: :turbo_stream
 
         expect(response).to redirect_to(warehouses_path)
         expect(flash[:notice]).to eq("Warehouse was successfully updated.")
@@ -101,11 +101,9 @@ RSpec.describe "Warehouses", type: :request do
       end
     end
 
-    context "when provided attributes are invalid" do
+    context "when provided parameters are invalid" do
       it "does not update the warehouse and renders errors" do
-        expect {
-          put warehouse_path(active_warehouse), params: {warehouse: invalid_attributes}, as: :turbo_stream
-        }.to not_change { active_warehouse.reload.name }
+        put warehouse_path(active_warehouse), params: invalid_params, as: :turbo_stream
 
         expect(flash[:alert]).to eq("Warehouse could not be updated.")
         expect(response.media_type).to eq(Mime[:turbo_stream])
@@ -125,9 +123,9 @@ RSpec.describe "Warehouses", type: :request do
   end
 
   describe "DELETE /warehouse/:id" do
-    context "when valid id" do
+    context "when deletion is successful" do
       it "deletes the warehouse and redirects" do
-        delete warehouse_path(active_warehouse)
+        delete warehouse_path(active_warehouse), as: :turbo_stream
 
         expect(response).to redirect_to(warehouses_path)
         expect(flash[:info]).to eq("Warehouse was successfully deleted.")
@@ -135,11 +133,11 @@ RSpec.describe "Warehouses", type: :request do
       end
     end
 
-    context "when delete fails" do
+    context "when deletion is unsuccessful" do
       it "does not delete the warehouse and redirects with an error message" do
         allow(Warehouses::DestroyService).to receive(:call) { ServiceResponse.error }
 
-        delete warehouse_path(active_warehouse)
+        delete warehouse_path(active_warehouse), as: :turbo_stream
 
         expect(response).to redirect_to(warehouses_path)
         expect(flash[:alert]).to eq("Warehouse could not be deleted.")

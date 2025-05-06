@@ -7,7 +7,7 @@
 require "spec_helper"
 
 RSpec.describe Unit, type: :model do
-  subject { create(:unit) }
+  subject(:unit) { create(:unit) }
 
   describe "valid factory" do
     it { is_expected.to have_a_valid_factory(:item_unit) }
@@ -54,15 +54,33 @@ RSpec.describe Unit, type: :model do
     it { is_expected.to have_many(:inventory_batches).inverse_of(:unit).dependent(:restrict_with_exception) }
     it { is_expected.to have_many(:inventory_movements).inverse_of(:unit).dependent(:restrict_with_exception) }
     it { is_expected.to have_many(:purchase_order_items).inverse_of(:unit).dependent(:restrict_with_exception) }
+    it { is_expected.to have_many(:delivered_po_items).inverse_of(:unit).class_name("PurchaseOrderItem::Delivery").dependent(:restrict_with_exception) }
   end
 
   describe "validations" do
     describe "#category" do
       it { is_expected.to validate_presence_of(:category) }
-      # it { is_expected.to validate_inclusion_of(:category).in_array(described_class.categories.keys) }
+
+      context "when category is valid" do
+        it "is valid" do
+          described_class.categories.keys.each do |category|
+            expect(build(:unit, category:)).to be_valid
+          end
+        end
+      end
+
+      context "when category is invalid" do
+        it "is invalid" do
+          expect {
+            build(:unit, category: "invalid_category")
+          }.to raise_error(ArgumentError, /is not a valid category/)
+        end
+      end
     end
 
     describe "#symbol" do
+      let!(:unit) { create(:unit) }
+
       it { is_expected.to validate_presence_of(:symbol) }
       it { is_expected.to validate_uniqueness_of(:symbol).scoped_to(:category).with_message("already exists for the selected category") }
     end

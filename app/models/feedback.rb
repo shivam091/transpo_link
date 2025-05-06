@@ -35,6 +35,8 @@ class Feedback < ApplicationRecord
 
   class << self
     def accessible(user)
+      return user.feedbacks unless user.admin?
+
       all
     end
 
@@ -76,8 +78,8 @@ class Feedback < ApplicationRecord
   private
 
   def rating_in_valid_steps
-    return if rating.nil?
+    return unless rating.present?
 
-    errors.add(:rating, :invalid) unless (rating * 2) == (rating * 2).floor
+    errors.add(:rating, :invalid) unless (rating % 0.5).zero?
   end
 end

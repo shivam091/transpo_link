@@ -3,10 +3,6 @@
 # -*- warn_indent: true -*-
 
 module MigrationHelpers
-  def connection
-    ActiveRecord::Base.connection
-  end
-
   def quote(name)
     connection.quote(name)
   end

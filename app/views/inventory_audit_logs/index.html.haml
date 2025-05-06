@@ -1,0 +1,12 @@
+.table-wrapper
+  .table-container
+    .table-header
+      .table-cell.cell-narrow #
+      - InventoryAuditLog::LISTING_ATTRIBUTES.each do |attribute|
+        .table-cell
+          = InventoryAuditLog.human_attribute_name(attribute)
+    .table-body
+      - if @inventory_audit_logs&.each.with_index(1) do |inventory_audit_log, index|
+        = safe_render.partial("inventory_audit_logs/inventory_audit_log", inventory_audit_log:, index:)
+      - end.empty?
+        = safe_render.partial("shared/no_records", resource: InventoryAuditLog)

@@ -14,5 +14,13 @@ FactoryBot.define do
     movement_date { Faker::Date.backward(days: 14) }
     metadata { {movement_type:} }
     association :source, factory: :inventory
+
+    trait :restock do
+      movement_type { InventoryMovement.movement_types[:restock] }
+    end
+
+    trait :purchase do
+      movement_type { InventoryMovement.movement_types[:purchase] }
+    end
   end
 end
