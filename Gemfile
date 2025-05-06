@@ -91,7 +91,7 @@ group :development, :test do
   gem "rubocop-rails-omakase", require: false
 
   # Alternative testing tool for Ruby on Rails
-  gem "rspec-rails", "~> 7.1"
+  gem "rspec-rails", "~> 8.0"
 
   # Provides one-liners to test common Rails functionality
   gem "shoulda-matchers", "~> 6.5"
