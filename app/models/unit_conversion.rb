@@ -3,9 +3,11 @@
 # -*- warn_indent: true -*-
 
 class UnitConversion < ApplicationRecord
-  include Pageable
+  include Pageable, ScaleEnforcer
 
   LISTING_ATTRIBUTES = %i[source_unit_id target_unit_id multiplier].freeze
+
+  scale_attributes :multiplier
 
   validates :source_unit_id,
             presence: true,
@@ -38,17 +40,23 @@ class UnitConversion < ApplicationRecord
 
   class << self
     def convert(source_unit, target_unit, quantity)
-      return quantity if source_unit == target_unit
+      source_unit = Unit.find_by(id: source_unit) unless source_unit.is_a?(Unit)
+      target_unit = Unit.find_by(id: target_unit) unless target_unit.is_a?(Unit)
 
-      unit_conversion = find_by(
-        arel_table[:source_unit_id].eq(source_unit.id)
-          .and(arel_table[:target_unit_id].eq(target_unit.id))
-      )
+      quantity = BigDecimal(quantity.to_s) rescue nil
 
-      # raise error if no conversion exists
-      raise UnitConversionError.new(source_unit, target_unit) unless unit_conversion
+      if source_unit != target_unit
+        unit_conversion = find_by(
+          arel_table[:source_unit_id].eq(source_unit.id)
+            .and(arel_table[:target_unit_id].eq(target_unit.id))
+        )
 
-      quantity * unit_conversion.multiplier
+        raise UnitConversionError.new(source_unit, target_unit) unless unit_conversion
+
+        quantity *= unit_conversion.multiplier
+      end
+
+      quantity
     end
   end
 

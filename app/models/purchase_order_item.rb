@@ -8,34 +8,29 @@
 # ordered: Item has been included in an approved order.
 # partially_delivered: Some quantity of the item has been received.
 # delivered: Entire quantity of the item has been received.
-# backordered: Item is on backorder, waiting for vendor stock.
 # cancelled: Item was removed from the order or no longer needed.
-# returned: Item was received and later returned.
-# damaged: Item was received in poor condition and flagged.
 
 class PurchaseOrderItem < ApplicationRecord
-  include AASM, ActsAsMoney, Sortable
+  include AASM, ActsAsMoney, Sortable, ScaleEnforcer
 
-  LISTING_ATTRIBUTES = %i[product_id quantity unit_cost total_cost status].freeze
+  LISTING_ATTRIBUTES = %i[product_id ordered_quantity remaining_quantity unit_cost total_cost status].freeze
 
   enum :status, {
     pending: "pending",
     ordered: "ordered",
     partially_delivered: "partially_delivered",
     delivered: "delivered",
-    backordered: "backordered",
     cancelled: "cancelled",
-    returned: "returned",
-    damaged: "damaged",
   }
 
   attribute :received_quantity, default: 0.0
   attribute :status, :enum, default: statuses[:pending]
 
+  scale_attributes :quantity, :unit_cost, :received_quantity
+
   aasm column: :status, enum: true, requires_lock: true do
     state :pending, initial: true
-    state :ordered, :partially_delivered, :delivered, :cancelled, :returned,
-          :damaged, :backordered
+    state :ordered, :partially_delivered, :delivered, :cancelled
 
     event :place_order do
       transitions from: :pending, to: :ordered
@@ -47,22 +42,14 @@ class PurchaseOrderItem < ApplicationRecord
 
     event :partially_deliver do
       transitions from: :pending, to: :partially_delivered
+
+      after :synchronize_po_delivery_status!
     end
 
     event :deliver do
-      transitions from: :pending, to: :delivered
-    end
+      transitions from: [:pending, :partially_delivered], to: :delivered
 
-    event :return_item do
-      transitions from: :delivered, to: :returned
-    end
-
-    event :mark_damaged do
-      transitions from: :delivered, to: :damaged
-    end
-
-    event :backorder do
-      transitions from: [:pending, :partially_delivered], to: :backordered
+      after :synchronize_po_delivery_status!
     end
   end
 
@@ -92,7 +79,30 @@ class PurchaseOrderItem < ApplicationRecord
     a.belongs_to :purchase_order, touch: true
     a.belongs_to :product
     a.belongs_to :unit
+
+    a.has_one :warehouse, through: :purchase_order, dependent: :restrict_with_exception
   end
+
+  has_many :inventory_batches, as: :restockable, dependent: :restrict_with_exception
+  has_many :inventory_movements, as: :source, dependent: :restrict_with_exception
+  has_many :restocks,
+           -> {
+             where(InventoryMovement.arel_table[:movement_type].eq(InventoryMovement.movement_types[:restock]))
+           },
+           class_name: "InventoryMovement",
+           as: :source,
+           dependent: :restrict_with_exception
+  has_many :purchases,
+           -> {
+             where(InventoryMovement.arel_table[:movement_type].eq(InventoryMovement.movement_types[:purchase]))
+           },
+           class_name: "InventoryMovement",
+           as: :source,
+           dependent: :restrict_with_exception
+  has_many :deliveries,
+           class_name: "PurchaseOrderItem::Delivery",
+           inverse_of: :purchase_order_item,
+           dependent: :destroy
 
   before_validation :set_unit_cost_and_currency
 
@@ -105,6 +115,17 @@ class PurchaseOrderItem < ApplicationRecord
 
   def remaining_quantity
     quantity - received_quantity
+  end
+
+  def inventory
+    return unless purchase_order&.warehouse && product
+
+    inventory_arel = Inventory.arel_table
+
+    @inventory ||= Inventory.find_by(
+      inventory_arel[:warehouse_id].eq(purchase_order.warehouse_id)
+        .and(inventory_arel[:product_id].eq(product_id))
+    )
   end
 
   private
@@ -125,5 +146,9 @@ class PurchaseOrderItem < ApplicationRecord
     if product
       assign_attributes(unit_cost: product.cost_price, currency: product.currency)
     end
+  end
+
+  def synchronize_po_delivery_status!
+    purchase_order.synchronize_delivery_status!
   end
 end

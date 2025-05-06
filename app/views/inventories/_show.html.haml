@@ -1,0 +1,49 @@
+- product, warehouse = @inventory.key_associations
+.widget-row
+  .widget-row-content
+    .widget-row-title
+      = Inventory.human_attribute_name(:product_id)
+    .widget-row-body
+      = link_to product.name, product_path(product), target: :_blank
+.widget-row
+  .widget-row-content
+    .widget-row-title
+      = Inventory.human_attribute_name(:warehouse_id)
+    .widget-row-body
+      = link_to warehouse.name, warehouse_path(warehouse), target: :_blank
+.widget-row
+  .widget-row-content
+    .widget-row-title
+      = Inventory.human_attribute_name(:tracking_method)
+    .widget-row-body
+      = enum_l(@inventory, :tracking_method)
+.widget-row
+  .widget-row-content
+    .widget-row-title
+      = Inventory.human_attribute_name(:low_stock_threshold)
+    .widget-row-body
+      = number_to_measurement_unit(@inventory.low_stock_threshold, @inventory.unit_symbol)
+.widget-row
+  .widget-row-content
+    .widget-row-title
+      = Inventory.human_attribute_name(:average_cost_price)
+    .widget-row-body
+      = number_to_currency(@inventory.average_cost_price, unit: @inventory.currency.symbol)
+.widget-row
+  .widget-row-content
+    .widget-row-title
+      = Stock.human_attribute_name(:quantity_in_hand)
+    .widget-row-body
+      = number_to_measurement_unit(@inventory.quantity_in_hand, @inventory.unit_symbol)
+.widget-row
+  .widget-row-content
+    .widget-row-title
+      = Stock.human_attribute_name(:quantity_pending_to_buyer)
+    .widget-row-body
+      = number_to_measurement_unit(@inventory.quantity_pending_to_buyer, @inventory.unit_symbol)
+.widget-row
+  .widget-row-content
+    .widget-row-title
+      = Replenishment.human_attribute_name(:quantity_pending_from_supplier)
+    .widget-row-body
+      = number_to_measurement_unit(@inventory.quantity_pending_from_supplier, @inventory.unit_symbol)

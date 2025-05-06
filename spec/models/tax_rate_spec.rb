@@ -7,7 +7,7 @@
 require "spec_helper"
 
 RSpec.describe TaxRate, type: :model do
-  subject { build(:tax_rate) }
+  subject(:tax_rate) { build(:tax_rate) }
 
   describe "valid factory" do
     it { is_expected.to have_a_valid_factory(:tax_rate) }
@@ -70,6 +70,11 @@ RSpec.describe TaxRate, type: :model do
     it { is_expected.to include_module(Pageable) }
     it { is_expected.to include_module(Taxable) }
     it { is_expected.to include_module(NullifyIfBlank) }
+    it { is_expected.to include_module(ScaleEnforcer) }
+  end
+
+  describe "scaled attributes" do
+    it { is_expected.to apply_scale_to(:rate) }
   end
 
   describe "nullified attributes" do
@@ -98,7 +103,33 @@ RSpec.describe TaxRate, type: :model do
 
     describe "#rate" do
       it { is_expected.to validate_presence_of(:rate) }
-      it { is_expected.to validate_numericality_of(:rate).is_greater_than_or_equal_to(0).is_less_than_or_equal_to(100) }
+
+      context "when rate < 0.0" do
+        it "is invalid" do
+          tax_rate.rate = -1.0
+          tax_rate.validate
+
+          expect(tax_rate.errors[:rate]).to include("must be greater than or equal to 0.0")
+        end
+      end
+
+      context "when rate > 100.0" do
+        it "is invalid" do
+          tax_rate.rate = 101.0
+          tax_rate.validate
+
+          expect(tax_rate.errors[:rate]).to include("must be less than or equal to 100.0")
+        end
+      end
+
+      context "when rate <= 100.0 and rate >= 0.0" do
+        it "is valid" do
+          tax_rate.rate = 16.0
+          tax_rate.validate
+
+          expect(tax_rate.errors[:rate]).to be_empty
+        end
+      end
     end
 
     describe "#valid_from" do

@@ -11,7 +11,7 @@ ruby "3.3.7"
 gem "rails", "~> 8.0.2"
 
 # Add bootstrap support
-gem "bootstrap", "~> 5.3.3"
+gem "bootstrap", "~> 5.3.5"
 
 gem "dartsass-rails"
 

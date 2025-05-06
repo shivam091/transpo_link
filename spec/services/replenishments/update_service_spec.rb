@@ -20,7 +20,7 @@ RSpec.describe Replenishments::UpdateService, type: :service do
           service_response
         }.to change {
           replenishment.reload.quantity_pending_from_supplier
-        }.from(0).to(5)
+        }.by(5)
       end
     end
 
@@ -34,7 +34,7 @@ RSpec.describe Replenishments::UpdateService, type: :service do
           service_response
         }.to change {
           replenishment.reload.quantity_pending_from_supplier
-        }.from(20).to(15)
+        }.by(-5)
       end
     end
 

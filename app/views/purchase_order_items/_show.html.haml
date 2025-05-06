@@ -1,9 +1,10 @@
+- product = @purchase_order_item.product
 .col-md-12.col-lg-6
   %dl
     %dt
       = PurchaseOrderItem.human_attribute_name(:product_id)
     %dd
-      = @purchase_order_item.product_name
+      = link_to product.name, product_path(product), target: :_blank
 .col-md-12.col-lg-6
   %dl
     %dt

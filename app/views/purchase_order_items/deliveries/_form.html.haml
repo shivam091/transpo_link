@@ -1,0 +1,20 @@
+= pretty_form_with model: [@purchase_order_item, @delivery], scope: :delivery, class: "row g-2",
+  url: purchase_order_item_deliveries_path(@purchase_order_item) do |form|
+  = safe_render.partial "purchase_order_items/show"
+  .col-md-12.col-lg-6
+    = form.label :quantity, class: "form-label required"
+    = form.number_field :quantity, step: 0.01, value: (@delivery.original_quantity || @delivery.quantity)
+    = help_text(t(".quantity_help_text"))
+  .col-md-12.col-lg-6
+    = form.label :unit_id, class: "form-label required"
+    = form.measurement_unit_select :unit_id, category: @purchase_order_item.unit.category,
+      selected: (@delivery.original_unit_id || @delivery.unit_id),
+      include_blank: t(".select_unit_of_measure")
+    = help_text(t(".unit_id_help_text"))
+  .modal-actions
+    = button_tag type: :submit, class: "btn btn-primary" do
+      = sprite_icon("check")
+      = button_text(:confirm_delivery)
+    = button_tag type: :button, class: "btn btn-secondary", data: {action: "click->remote-modal#hide"} do
+      = sprite_icon("times")
+      = button_text(:cancel)

@@ -8,9 +8,9 @@ require "spec_helper"
 
 RSpec.describe PurchaseOrders::CreateService, type: :service do
   let!(:warehouse) { create(:warehouse) }
+  let!(:manager) { create(:manager) }
 
-  let(:manager) { warehouse.managers.first }
-  let(:supplier) { warehouse.suppliers.first }
+  let(:supplier) { create(:supplier) }
 
   subject(:service_response) { described_class.(manager, purchase_order_attributes) }
 

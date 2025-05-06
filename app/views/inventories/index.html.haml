@@ -15,7 +15,7 @@
               = Inventory.human_attribute_name(attribute)
           .table-cell.cell-narrow
             = t("shared.actions")
-        .table-body
+        .table-body{data: {controller: "lazy-turbo-frame", lazy_turbo_frame_hidden_class: "d-none"}}
           - if @inventories&.each.with_index(1) do |inventory, index|
             = safe_render.partial("inventories/inventory", inventory:, index:)
           - end.empty?

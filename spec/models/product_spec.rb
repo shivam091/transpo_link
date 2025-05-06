@@ -7,7 +7,7 @@
 require "spec_helper"
 
 RSpec.describe Product, type: :model do
-  subject { create(:product) }
+  subject(:product) { build(:product) }
 
   describe "valid factory" do
     it { is_expected.to have_a_valid_factory(:product) }
@@ -72,6 +72,7 @@ RSpec.describe Product, type: :model do
     it { is_expected.to include_module(NullifyIfBlank) }
     it { is_expected.to include_module(Sanitizable) }
     it { is_expected.to include_module(Navigable) }
+    it { is_expected.to include_module(ScaleEnforcer) }
   end
 
   describe "nullified attributes" do
@@ -84,6 +85,11 @@ RSpec.describe Product, type: :model do
     it { is_expected.to sanitize_attribute(:description) }
     it { is_expected.to sanitize_attribute(:sku) }
     it { is_expected.to sanitize_attribute(:barcode) }
+  end
+
+  describe "scaled attributes" do
+    it { is_expected.to apply_scale_to(:min_stock_threshold) }
+    it { is_expected.to apply_scale_to(:cost_price) }
   end
 
   describe "associations" do
@@ -119,19 +125,49 @@ RSpec.describe Product, type: :model do
     end
 
     describe "#sku" do
+      let!(:product) { create(:product) }
+
       it { is_expected.to validate_presence_of(:sku) }
       it { is_expected.to validate_length_of(:sku).is_at_most(50) }
       it { is_expected.to validate_uniqueness_of(:sku) }
     end
 
     describe "#barcode" do
+      let!(:product) { create(:product) }
+
       it { is_expected.to validate_length_of(:barcode).is_at_most(50).allow_blank }
       it { is_expected.to validate_uniqueness_of(:barcode).case_insensitive }
     end
 
     describe "#min_stock_threshold" do
       it { is_expected.to validate_presence_of(:min_stock_threshold) }
-      it { is_expected.to validate_numericality_of(:min_stock_threshold).is_greater_than(0.0) }
+
+      context "when min_stock_threshold is invalid" do
+        it "is invalid" do
+          product.min_stock_threshold = "abcd"
+          product.validate
+
+          expect(product.errors[:min_stock_threshold]).to include("must be greater than 0.0")
+        end
+      end
+
+      context "when min_stock_threshold <= 0.0" do
+        it "is invalid" do
+          product.min_stock_threshold = 0.0
+          product.validate
+
+          expect(product.errors[:min_stock_threshold]).to include("must be greater than 0.0")
+        end
+      end
+
+      context "when min_stock_threshold > 0.0" do
+        it "is valid" do
+          product.min_stock_threshold = 1.0
+          product.validate
+
+          expect(product.errors[:min_stock_threshold]).to be_empty
+        end
+      end
     end
 
     describe "#unit_id" do
@@ -140,7 +176,33 @@ RSpec.describe Product, type: :model do
 
     describe "#cost_price" do
       it { is_expected.to validate_presence_of(:cost_price) }
-      it { is_expected.to validate_numericality_of(:cost_price).is_greater_than(0.0) }
+
+      context "when cost_price is invalid" do
+        it "is invalid" do
+          product.cost_price = "abcd"
+          product.validate
+
+          expect(product.errors[:cost_price]).to include("must be greater than 0.0")
+        end
+      end
+
+      context "when cost_price <= 0.0" do
+        it "is invalid" do
+          product.cost_price = 0.0
+          product.validate
+
+          expect(product.errors[:cost_price]).to include("must be greater than 0.0")
+        end
+      end
+
+      context "when cost_price > 0.0" do
+        it "is valid" do
+          product.cost_price = 1.0
+          product.validate
+
+          expect(product.errors[:cost_price]).to be_empty
+        end
+      end
     end
 
     describe "#product_category_id" do

@@ -34,9 +34,6 @@ module TranspoLink
         fully_delivered:     "#006622FF", # British racing green
         delivered:           "#36EEE0FF", # Turquoise
         pending:             "#BFD4F2FF", # Pale Cornflower Blue
-        returned:            "#F652A0FF", # French Rose
-        damaged:             "#F51720FF", # Torch Red
-        backordered:         "#C5DEF5FF", # Tropical Blue
         closed:              "#3D550CFF", # Verdun Green
         on_hold:             "#FBC740FF", # Sunglow
         ordered:             "#5DA9E9FF", # Blue Jeans

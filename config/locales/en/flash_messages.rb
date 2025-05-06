@@ -181,6 +181,12 @@
           unprocessable_entity: "Failed to update the color scheme"
         }
       },
+      deliveries: {
+        create: {
+          success: "The item delivery has been recorded.",
+          error: "Unable to record the item delivery. Please check the details and try again."
+        },
+      },
     }
   }
 }

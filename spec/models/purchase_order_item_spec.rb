@@ -7,7 +7,7 @@
 require "spec_helper"
 
 RSpec.describe PurchaseOrderItem, type: :model do
-  subject { create(:purchase_order_item) }
+  subject(:purchase_order_item) { build(:purchase_order_item) }
 
   describe "valid factory" do
     it { is_expected.to have_a_valid_factory(:purchase_order_item) }
@@ -57,6 +57,7 @@ RSpec.describe PurchaseOrderItem, type: :model do
     it { is_expected.to include_module(AASM) }
     it { is_expected.to include_module(ActsAsMoney) }
     it { is_expected.to include_module(Sortable) }
+    it { is_expected.to include_module(ScaleEnforcer) }
   end
 
   describe "enum" do
@@ -75,7 +76,53 @@ RSpec.describe PurchaseOrderItem, type: :model do
     end
   end
 
+  describe "scaled attributes" do
+    it { is_expected.to apply_scale_to(:quantity) }
+    it { is_expected.to apply_scale_to(:unit_cost) }
+    it { is_expected.to apply_scale_to(:received_quantity) }
+  end
+
   describe "associations" do
+    let(:source) { create(:purchase_order_item) }
+    let(:unit) { source.unit }
+
+    let!(:restock_movement) { create(:inventory_movement, :restock, source:, unit:) }
+    let!(:purchase_movement) { create(:inventory_movement, :purchase, source:, unit:) }
+
+    it { is_expected.to have_one(:warehouse).through(:purchase_order).inverse_of(:purchase_order_items).dependent(:restrict_with_exception) }
+
+    it { is_expected.to have_many(:inventory_movements).dependent(:restrict_with_exception) }
+    it { is_expected.to have_many(:deliveries).class_name("PurchaseOrderItem::Delivery").inverse_of(:purchase_order_item).dependent(:destroy) }
+    it { is_expected.to have_many(:restocks).class_name("InventoryMovement").dependent(:restrict_with_exception) }
+
+    describe "#restocks" do
+      let(:association) { described_class.reflect_on_association(:restocks) }
+
+      it "has many purchases" do
+        expect(association.macro).to eq(:has_many)
+        expect(association.options[:class_name]).to eq("InventoryMovement")
+        expect(association.options[:dependent]).to eq(:restrict_with_exception)
+      end
+
+      it "returns only purchase inventory movements" do
+        expect(source.purchases).to contain_exactly(purchase_movement)
+      end
+    end
+
+    describe "#purchases" do
+      let(:association) { described_class.reflect_on_association(:purchases) }
+
+      it "has many purchases" do
+        expect(association.macro).to eq(:has_many)
+        expect(association.options[:class_name]).to eq("InventoryMovement")
+        expect(association.options[:dependent]).to eq(:restrict_with_exception)
+      end
+
+      it "returns only purchase inventory movements" do
+        expect(source.purchases).to contain_exactly(purchase_movement)
+      end
+    end
+
     it { is_expected.to belong_to(:purchase_order).inverse_of(:purchase_order_items).touch }
     it { is_expected.to belong_to(:product).inverse_of(:purchase_order_items) }
     it { is_expected.to belong_to(:unit).inverse_of(:purchase_order_items) }
@@ -88,10 +135,7 @@ RSpec.describe PurchaseOrderItem, type: :model do
     it { is_expected.to transition_from(:ordered).to(:cancelled).on_event(:cancel) }
     it { is_expected.to transition_from(:pending).to(:partially_delivered).on_event(:partially_deliver) }
     it { is_expected.to transition_from(:pending).to(:delivered).on_event(:deliver) }
-    it { is_expected.to transition_from(:delivered).to(:returned).on_event(:return_item) }
-    it { is_expected.to transition_from(:delivered).to(:damaged).on_event(:mark_damaged) }
-    it { is_expected.to transition_from(:pending).to(:backordered).on_event(:backorder) }
-    it { is_expected.to transition_from(:partially_delivered).to(:backordered).on_event(:backorder) }
+    it { is_expected.to transition_from(:partially_delivered).to(:delivered).on_event(:deliver) }
   end
 
   describe "callbacks" do
@@ -112,17 +156,86 @@ RSpec.describe PurchaseOrderItem, type: :model do
 
     describe "#quantity" do
       it { is_expected.to validate_presence_of(:quantity) }
-      it { is_expected.to validate_numericality_of(:quantity).is_greater_than(0.0) }
+
+      context "when quantity is invalid" do
+        it "is invalid" do
+          purchase_order_item.quantity = "abcd"
+          purchase_order_item.validate
+
+          expect(purchase_order_item.errors[:quantity]).to include("must be greater than 0.0")
+        end
+      end
+
+      context "when quantity <= 0.0" do
+        it "is invalid" do
+          purchase_order_item.quantity = 0.0
+          purchase_order_item.validate
+
+          expect(purchase_order_item.errors[:quantity]).to include("must be greater than 0.0")
+        end
+      end
+
+      context "when quantity > 0.0" do
+        it "is valid" do
+          purchase_order_item.quantity = 1.0
+          purchase_order_item.validate
+
+          expect(purchase_order_item.errors[:quantity]).to be_empty
+        end
+      end
     end
 
     describe "#received_quantity" do
       it { is_expected.to validate_presence_of(:received_quantity) }
-      it { is_expected.to validate_numericality_of(:received_quantity).is_greater_than_or_equal_to(0.0) }
+
+      context "when received_quantity < 0.0" do
+        it "is invalid" do
+          purchase_order_item.received_quantity = -0.5
+          purchase_order_item.validate
+
+          expect(purchase_order_item.errors[:received_quantity]).to include("must be greater than or equal to 0.0")
+        end
+      end
+
+      context "when received_quantity >= 0.0" do
+        it "is valid" do
+          purchase_order_item.received_quantity = 0.0
+          purchase_order_item.validate
+
+          expect(purchase_order_item.errors[:received_quantity]).to be_empty
+        end
+      end
     end
 
     describe "#unit_cost" do
       it { is_expected.to validate_presence_of(:unit_cost) }
-      it { is_expected.to validate_numericality_of(:unit_cost).is_greater_than(0.0) }
+
+      context "when unit_cost is invalid" do
+        it "is invalid" do
+          purchase_order_item.unit_cost = "abcd"
+          purchase_order_item.validate
+
+          expect(purchase_order_item.errors[:unit_cost]).to include("must be greater than 0.0")
+        end
+      end
+
+      context "when unit_cost <= 0.0" do
+        it "is invalid" do
+          purchase_order_item.unit_cost = 0.0
+          purchase_order_item.validate
+
+          expect(purchase_order_item.errors[:unit_cost]).to include("must be greater than 0.0")
+        end
+      end
+
+      context "when unit_cost > 0.0" do
+        it "is valid" do
+          purchase_order_item.unit_cost = 1.0
+          purchase_order_item.validate
+
+          expect(purchase_order_item.errors[:unit_cost]).to be_empty
+        end
+      end
     end
 
     describe "#unit_id" do
@@ -136,50 +249,14 @@ RSpec.describe PurchaseOrderItem, type: :model do
   end
 
   describe "instance methods" do
-    describe "#set_unit_cost_and_currency" do
-      let!(:product) { create(:product, cost_price: 100.5, currency: "USD") }
-      let!(:purchase_order) { create(:purchase_order) }
+    describe "#synchronize_po_delivery_status!" do
+      let(:purchase_order) { create(:purchase_order) }
+      let(:purchase_order_item) { create(:purchase_order_item, purchase_order:) }
 
-      context "when #unit_cost & #currency are not set" do
-        let(:purchase_order_item) { build(:purchase_order_item, purchase_order:, product:) }
+      it "calls synchronize_delivery_status! on associated purchase_order" do
+        expect(purchase_order).to receive(:synchronize_delivery_status!)
 
-        it "sets unit_cost and currency from the product" do
-          expect(purchase_order_item.unit_cost).to be_nil
-          expect(purchase_order_item.currency.iso_code).to eq("INR")
-
-          purchase_order_item.valid?
-
-          expect(purchase_order_item.unit_cost).to eq(100.5)
-          expect(purchase_order_item.currency.iso_code).to eq("USD")
-        end
-      end
-
-      context "when #unit_cost & #currency are already set" do
-        let(:purchase_order_item) { build(:purchase_order_item, unit_cost: 120.75, currency: "EUR", purchase_order:, product:) }
-
-        it "overrides unit_cost and currency & sets them from the product" do
-          expect(purchase_order_item.unit_cost).to eq(120.75)
-          expect(purchase_order_item.currency.iso_code).to eq("EUR")
-
-          purchase_order_item.valid?
-
-          expect(purchase_order_item.unit_cost).to eq(100.5)
-          expect(purchase_order_item.currency.iso_code).to eq("USD")
-        end
-      end
-
-      context "when product is not set" do
-        let(:purchase_order_item) { build(:purchase_order_item, product: nil) }
-
-        it "does nothing" do
-          expect(purchase_order_item.unit_cost).to be_nil
-          expect(purchase_order_item.currency.iso_code).to eq("INR")
-
-          purchase_order_item.valid?
-
-          expect(purchase_order_item.unit_cost).to be_nil
-          expect(purchase_order_item.currency.iso_code).to eq("INR")
-        end
+        purchase_order_item.send(:synchronize_po_delivery_status!)
       end
     end
 
@@ -246,6 +323,95 @@ RSpec.describe PurchaseOrderItem, type: :model do
         purchase_order_item = build(:purchase_order_item, quantity: 3.0, received_quantity: 4.0)
 
         expect(purchase_order_item.remaining_quantity).to eq(-1.0)
+      end
+    end
+
+    describe "#inventory" do
+      let(:warehouse) { create(:warehouse) }
+      let(:product) { create(:product) }
+      let(:purchase_order) { create(:purchase_order, warehouse:) }
+      let(:purchase_order_item) { create(:purchase_order_item, purchase_order:, product:) }
+
+      context "when matching inventory exists" do
+        let!(:inventory) { create(:inventory, warehouse:, product:) }
+
+        it "returns the matching inventory record" do
+          expect(purchase_order_item.inventory).to eq(inventory)
+        end
+
+        it "memoizes the result" do
+          # force multiple calls to check memoization
+          expect(Inventory).to receive(:find_by).once.and_call_original
+
+          2.times { purchase_order_item.inventory }
+        end
+      end
+
+      context "when no matching inventory exists" do
+        it "returns nil" do
+          expect(purchase_order_item.inventory).to be_nil
+        end
+      end
+
+      context "when purchase_order or product is missing" do
+        it "returns nil if purchase_order is nil" do
+          item = build(:purchase_order_item, purchase_order: nil, product:)
+
+          expect(item.inventory).to be_nil
+        end
+
+        it "returns nil if product is nil" do
+          item = build(:purchase_order_item, purchase_order:, product: nil)
+
+          expect(item.inventory).to be_nil
+        end
+      end
+    end
+
+    describe "#set_unit_cost_and_currency" do
+      let!(:product) { create(:product, cost_price: 100.5, currency: "USD") }
+      let!(:purchase_order) { create(:purchase_order) }
+
+      context "when #unit_cost & #currency are not set" do
+        let(:purchase_order_item) { build(:purchase_order_item, purchase_order:, product:) }
+
+        it "sets unit_cost and currency from the product" do
+          expect(purchase_order_item.unit_cost).to be_nil
+          expect(purchase_order_item.currency.iso_code).to eq("INR")
+
+          purchase_order_item.valid?
+
+          expect(purchase_order_item.unit_cost).to eq(100.5)
+          expect(purchase_order_item.currency.iso_code).to eq("USD")
+        end
+      end
+
+      context "when #unit_cost & #currency are already set" do
+        let(:purchase_order_item) { build(:purchase_order_item, unit_cost: 120.75, currency: "EUR", purchase_order:, product:) }
+
+        it "overrides unit_cost and currency & sets them from the product" do
+          expect(purchase_order_item.unit_cost).to eq(120.75)
+          expect(purchase_order_item.currency.iso_code).to eq("EUR")
+
+          purchase_order_item.valid?
+
+          expect(purchase_order_item.unit_cost).to eq(100.5)
+          expect(purchase_order_item.currency.iso_code).to eq("USD")
+        end
+      end
+
+      context "when product is not set" do
+        let(:purchase_order_item) { build(:purchase_order_item, product: nil) }
+
+        it "does nothing" do
+          expect(purchase_order_item.unit_cost).to be_nil
+          expect(purchase_order_item.currency.iso_code).to eq("INR")
+
+          purchase_order_item.valid?
+
+          expect(purchase_order_item.unit_cost).to be_nil
+          expect(purchase_order_item.currency.iso_code).to eq("INR")
+        end
       end
     end
   end

@@ -167,10 +167,7 @@
           ordered: "Ordered",
           partially_delivered: "Partially delivered",
           delivered: "Delivered",
-          backordered: "Backordered",
           cancelled: "Cancelled",
-          returned: "Returned",
-          damaged: "Damaged",
         },
       },
       unit: {
@@ -181,7 +178,7 @@
           area: "Area",
           volume: "Volume"
         }
-      }
+      },
     }
   }
 }

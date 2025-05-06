@@ -1,5 +1,4 @@
 = title(@inventory.reference_code)
-- product, warehouse = @inventory.key_associations
 .card.card-primary.border.border-primary
   .card-body
     .widget
@@ -17,54 +16,29 @@
         = link_to edit_inventory_path(@inventory), class: "btn btn-secondary" do
           = sprite_icon("pencil")
           = button_text(:edit)
+    .widget
+      .widget-header
+        .widget-title
+          = t(".basic_details")
       .widget-body
-        .widget-row
-          .widget-row-content
-            .widget-row-title
-              = Inventory.human_attribute_name(:product_id)
-            .widget-row-body
-              = link_to product.name, product_path(product), target: :_blank
-        .widget-row
-          .widget-row-content
-            .widget-row-title
-              = Inventory.human_attribute_name(:warehouse_id)
-            .widget-row-body
-              = link_to warehouse.name, warehouse_path(warehouse), target: :_blank
-        .widget-row
-          .widget-row-content
-            .widget-row-title
-              = Inventory.human_attribute_name(:tracking_method)
-            .widget-row-body
-              = enum_l(@inventory, :tracking_method)
-        .widget-row
-          .widget-row-content
-            .widget-row-title
-              = Inventory.human_attribute_name(:low_stock_threshold)
-            .widget-row-body
-              = number_to_measurement_unit(@inventory.low_stock_threshold, @inventory.unit_symbol)
-        .widget-row
-          .widget-row-content
-            .widget-row-title
-              = Inventory.human_attribute_name(:average_cost_price)
-            .widget-row-body
-              = number_to_currency(@inventory.average_cost_price, unit: @inventory.currency.symbol)
-        .widget-row
-          .widget-row-content
-            .widget-row-title
-              = Stock.human_attribute_name(:quantity_in_hand)
-            .widget-row-body
-              = number_to_measurement_unit(@inventory.quantity_in_hand, @inventory.unit_symbol)
-        .widget-row
-          .widget-row-content
-            .widget-row-title
-              = Stock.human_attribute_name(:quantity_pending_to_buyer)
-            .widget-row-body
-              = number_to_measurement_unit(@inventory.quantity_pending_to_buyer, @inventory.unit_symbol)
-        .widget-row
-          .widget-row-content
-            .widget-row-title
-              = Replenishment.human_attribute_name(:quantity_pending_from_supplier)
-            .widget-row-body
-              = number_to_measurement_unit(@inventory.quantity_pending_from_supplier, @inventory.unit_symbol)
+        = safe_render.partial("inventories/show")
+    .widget
+      .widget-header
+        .widget-title
+          = t(".batches")
+      .widget-body
+        = safe_render.template("inventory_batches/index")
+    .widget
+      .widget-header
+        .widget-title
+          = t(".movements")
+      .widget-body
+        = safe_render.template("inventory_movements/index")
+    .widget
+      .widget-header
+        .widget-title
+          = t(".audit_logs")
+      .widget-body
+        = safe_render.template("inventory_audit_logs/index")
   .card-footer
     = safe_render.partial("shared/navigable_links", resource: @inventory)

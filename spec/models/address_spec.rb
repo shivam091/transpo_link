@@ -18,7 +18,7 @@ RSpec.describe Address, type: :model do
     }
   end
 
-  subject { build(:address, **attributes) }
+  subject(:address) { build(:address, **attributes) }
 
   describe "valid factory" do
     it { is_expected.to have_a_valid_factory(:address) }
@@ -90,19 +90,19 @@ RSpec.describe Address, type: :model do
   describe "instance methods" do
     describe "#state_name" do
       it "returns name of the state" do
-        expect(subject.state_name).to eq("Kansas")
+        expect(address.state_name).to eq("Kansas")
       end
     end
 
     describe "#country_name" do
       it "returns name of the country" do
-        expect(subject.country_name).to eq("United States")
+        expect(address.country_name).to eq("United States")
       end
     end
 
     describe "#humanize" do
       it "returns humanized address" do
-        expect(subject.humanize).to eq("Halvorson Rapids, Suite 380, Port Ophelia, Kansas, United States, 79131")
+        expect(address.humanize).to eq("Halvorson Rapids, Suite 380, Port Ophelia, Kansas, United States, 79131")
       end
     end
   end
