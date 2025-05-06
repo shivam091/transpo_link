@@ -8,21 +8,22 @@ require "spec_helper"
 
 RSpec.describe PurchaseOrders::UpdateService, type: :service do
   let!(:purchase_order) { create(:purchase_order) }
-  let(:purchase_order_attributes) { {notes: "Test notes"} }
 
   subject(:service_response) { described_class.(purchase_order, purchase_order_attributes) }
 
   describe ".call" do
-    context "when update is successful" do
+    context "when provided attributes are valid" do
+      let(:purchase_order_attributes) { {status: "submitted"} }
+
       it "updates the purchase order" do
-        expect { service_response }.to change { purchase_order.reload.notes }.to("Test notes")
+        expect { service_response }.to change { purchase_order.reload.status }.to("submitted")
       end
 
       include_examples "returns a success response"
     end
 
-    context "when update fails" do
-      before { allow(purchase_order).to receive(:update) { false } }
+    context "when provided attributes are invalid" do
+      let(:purchase_order_attributes) { {status: ""} }
 
       it "does not update the purchase order" do
         expect { service_response }.to not_change { purchase_order.reload.notes }

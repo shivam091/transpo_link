@@ -9,7 +9,7 @@ require "spec_helper"
 RSpec.describe Feedback, type: :model do
   let(:reviewable) { create(:product) }
 
-  subject { create(:feedback, reviewable:) }
+  subject(:feedback) { build(:feedback, reviewable:) }
 
   describe "valid factory" do
     it { is_expected.to have_a_valid_factory(:feedback) }
@@ -105,7 +105,7 @@ RSpec.describe Feedback, type: :model do
 
   describe "class methods" do
     let!(:user1) { create(:buyer) }
-    let!(:user2) { create(:buyer) }
+    let!(:user2) { create(:admin) }
 
     let!(:feedback1) { create(:feedback, user: user1, rating: 7.0, is_unread: true, reviewable:) }
     let!(:feedback2) { create(:feedback, user: user2, rating: 9.5, is_unread: false, reviewable:) }
@@ -114,7 +114,8 @@ RSpec.describe Feedback, type: :model do
 
     describe ".accessible" do
       it "returns list of accessible feedbacks" do
-        expect(described_class.accessible(subject.user)).to include(subject)
+        expect(described_class.accessible(user1)).to match_array([feedback1, feedback3])
+        expect(described_class.accessible(user2)).to match_array([feedback1, feedback2, feedback3, feedback4])
       end
     end
 
@@ -144,10 +145,12 @@ RSpec.describe Feedback, type: :model do
 
   describe "instance methods" do
     describe "#mark_as_read!" do
-      it "marks feedback as read" do
-        subject.mark_as_read!
+      let!(:feedback) { create(:feedback) }
 
-        expect(subject.reload.is_unread?).to be_falsy
+      it "marks feedback as read" do
+        feedback.mark_as_read!
+
+        expect(feedback.reload.is_unread?).to be_falsy
       end
     end
 

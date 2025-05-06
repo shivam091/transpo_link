@@ -79,7 +79,9 @@ Rails.application.routes.draw do
   resources :product_categories, path: "product-categories", except: :show, concerns: :toggleable
   resources :products, concerns: [:reviewable, :toggleable]
   resources :feedbacks, only: [:index, :show], concerns: :notifiable
-  resources :inventories, except: :destroy
+  resources :inventories, except: :destroy do
+    resources :inventory_batches, path: "inventory-batches", only: :index
+  end
   resources :purchase_orders, path: "purchase-orders" do
     member do
       patch :cancel
@@ -88,10 +90,14 @@ Rails.application.routes.draw do
       patch :reject
     end
 
-    resources :purchase_order_items, path: "purchase-order-items", except: :show do
+    resource :delivery, only: [:new, :create], module: :purchase_orders
+
+    resources :purchase_order_items, path: "purchase-order-items", shallow: true do
       member do
         patch :cancel
       end
+
+      resources :deliveries, only: [:new, :create], module: :purchase_order_items
     end
   end
   resources :units, only: :index

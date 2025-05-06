@@ -1,4 +1,4 @@
-- warehouse, manager, supplier = purchase_order.key_associations
+- warehouse, manager, supplier = @purchase_order.key_associations
 .widget-row
   .widget-row-content
     .widget-row-title
@@ -22,35 +22,35 @@
     .widget-row-title
       = PurchaseOrder.human_attribute_name(:reference_document)
     .widget-row-body
-      = purchase_order.reference_document || "-"
+      = @purchase_order.reference_document || "-"
 .widget-row
   .widget-row-content
     .widget-row-title
       = PurchaseOrder.human_attribute_name(:order_date)
     .widget-row-body
-      = prettify_datetime(purchase_order.order_date)
+      = prettify_datetime(@purchase_order.order_date)
 .widget-row
   .widget-row-content
     .widget-row-title
       = PurchaseOrder.human_attribute_name(:expected_delivery_date)
     .widget-row-body
-      = prettify_date(purchase_order.expected_delivery_date) || "-"
+      = prettify_date(@purchase_order.expected_delivery_date) || "-"
 .widget-row
   .widget-row-content
     .widget-row-title
       = PurchaseOrder.human_attribute_name(:actual_delivery_date)
     .widget-row-body
-      = prettify_date(purchase_order.actual_delivery_date) || "-"
+      = prettify_date(@purchase_order.actual_delivery_date) || "-"
 .widget-row
   .widget-row-content
     .widget-row-title
       = PurchaseOrder.human_attribute_name(:status)
     .widget-row-body
-      = safe_render.partial("shared/badge", color: TranspoLink::ColorMapper.new(:status).for(purchase_order.status)) do
-        = enum_l(purchase_order, :status)
+      = safe_render.partial("shared/badge", color: TranspoLink::ColorMapper.new(:status).for(@purchase_order.status)) do
+        = enum_l(@purchase_order, :status)
 .widget-row
   .widget-row-content
     .widget-row-title
       = PurchaseOrder.human_attribute_name(:notes)
     .widget-row-body
-      = purchase_order.notes || "-"
+      = @purchase_order.notes || "-"

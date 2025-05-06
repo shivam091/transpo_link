@@ -20,7 +20,7 @@ RSpec.describe LegalIdentifiers::CreateService, type: :service do
     end
 
     context "when provided attributes are invalid" do
-      let(:legal_identifier_attributes) { {tax_identifier_type: ""} }
+      let(:legal_identifier_attributes) { attributes_for(:legal_identifier, tax_identifier_type: "") }
 
       include_examples "does not change record count", LegalIdentifier
       include_examples "returns an error response"

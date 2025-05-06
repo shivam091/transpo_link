@@ -2,6 +2,18 @@
 # -*- frozen_string_literal: true -*-
 # -*- warn_indent: true -*-
 
+# == Status Definitions
+#
+# draft: PO is being created but not yet submitted. Editable.
+# submitted: PO has been submitted for approval or processing.
+# approved: PO has been reviewed and approved. Can now be acted on.
+# partially_delivered: Some items in the PO have been received.
+# fully_delivered: All items in the PO have been fully received.
+# cancelled: PO was cancelled before completion. No further processing.
+# rejected: PO was denied during approval
+# closed: PO is manually or automatically marked complete. No further actions.
+# on_hold: PO is temporarily paused (e.g., awaiting funding or clarification).
+
 class PurchaseOrder < ApplicationRecord
   include AASM, HasReferenceCode, Sanitizable, NullifyIfBlank, Pageable, Navigable
 
@@ -12,12 +24,14 @@ class PurchaseOrder < ApplicationRecord
 
   enum :status, {
     draft: "draft",
-    pending: "pending",
+    submitted: "submitted",
     approved: "approved",
+    partially_delivered: "partially_delivered",
+    fully_delivered: "fully_delivered",
     cancelled: "cancelled",
     rejected: "rejected",
-    partially_delivered: "partially_delivered",
-    fully_delivered: "fully_delivered"
+    closed: "closed",
+    on_hold: "on_hold"
   }
 
   attribute :status, :enum, default: statuses[:draft]
@@ -28,26 +42,35 @@ class PurchaseOrder < ApplicationRecord
 
   aasm column: :status, enum: true, requires_lock: true do
     state :draft, initial: true
-    state :pending, :approved, :cancelled, :rejected, :partially_delivered, :fully_delivered
-
-    event :cancel do
-      transitions from: [:draft, :pending], to: :cancelled
-
-      after :cancel_purchase_order_items!
-    end
+    state :submitted, :approved, :cancelled, :rejected, :partially_delivered,
+          :fully_delivered, :closed, :on_hold
 
     event :submit do
-      transitions from: :draft, to: :pending
+      transitions from: :draft, to: :submitted
     end
 
     event :approve do
-      transitions from: :pending, to: :approved
+      transitions from: :submitted, to: :approved
 
       after :replenish_inventory!
     end
 
     event :reject do
-      transitions from: :pending, to: :rejected
+      transitions from: :submitted, to: :rejected
+    end
+
+    event :cancel do
+      transitions from: [:draft, :submitted, :on_hold], to: :cancelled
+
+      after :cancel_purchase_order_items!
+    end
+
+    event :hold do
+      transitions from: [:submitted, :approved], to: :on_hold
+    end
+
+    event :resume do
+      transitions from: :on_hold, to: :approved
     end
 
     event :partially_deliver do
@@ -56,6 +79,13 @@ class PurchaseOrder < ApplicationRecord
 
     event :fully_deliver do
       transitions from: [:approved, :partially_delivered], to: :fully_delivered
+
+      before :update_actual_delivery_date
+      after :deliver_purchase_order_items!
+    end
+
+    event :close do
+      transitions from: :fully_delivered, to: :closed
     end
   end
 
@@ -97,7 +127,28 @@ class PurchaseOrder < ApplicationRecord
     [warehouse, manager, supplier]
   end
 
+  # Method to synchronize PO status based on PO Items' status
+  def synchronize_delivery_status!
+    if all_items_delivered?
+      fully_deliver! if may_fully_deliver?
+    elsif some_items_delivered_or_partially_delivered?
+      partially_deliver! if may_partially_deliver?
+    else
+      # No automatic fallback. Just stay in current status.
+    end
+  rescue AASM::InvalidTransition => e
+    Rails.logger.error("Failed to synchronize PO delivery status: #{e.message}")
+  end
+
   private
+
+  def all_items_delivered?
+    purchase_order_items.all?(&:delivered?)
+  end
+
+  def some_items_delivered_or_partially_delivered?
+    purchase_order_items.any? { |item| item.status.in?(["delivered", "partially_delivered"]) }
+  end
 
   def reject_purchase_order_item?(attributes)
     [
@@ -117,5 +168,15 @@ class PurchaseOrder < ApplicationRecord
     purchase_order_items.each do |purchase_order_item|
       PurchaseOrderItems::CancelService.(purchase_order_item)
     end
+  end
+
+  def deliver_purchase_order_items!
+    purchase_order_items.each do |purchase_order_item|
+      PurchaseOrderItems::DeliverService.(purchase_order_item)
+    end
+  end
+
+  def update_actual_delivery_date
+    update_column(:actual_delivery_date, Date.current)
   end
 end

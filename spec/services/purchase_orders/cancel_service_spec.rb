@@ -7,33 +7,33 @@
 require "spec_helper"
 
 RSpec.describe PurchaseOrders::CancelService, type: :service do
-  let(:purchase_order_count) { 2 }
+  let(:items_count) { 2 }
 
   let!(:purchase_order) { create(:purchase_order) }
-  let!(:purchase_order_items) { create_list(:purchase_order_item, purchase_order_count, purchase_order:) }
+  let!(:purchase_order_items) { create_list(:purchase_order_item, items_count, purchase_order:) }
 
   subject(:service_response) { described_class.(purchase_order) }
 
   describe ".call" do
     context "when cancellation is successful" do
       it "transitions the purchase order to cancelled" do
-        expect { service_response }.to change { purchase_order.reload.cancelled? }.from(false).to(true)
+        expect { service_response }.to change { purchase_order.reload.status }.to("cancelled")
       end
 
       it "calls cancel service on each purchase order item" do
-        expect(PurchaseOrderItems::CancelService).to receive(:call).exactly(purchase_order_count).times.and_call_original
+        expect(PurchaseOrderItems::CancelService).to receive(:call).exactly(items_count).times.and_call_original
 
         expect {
           service_response
         }.to change {
           purchase_order_items.map { |purchase_order_item| purchase_order_item.reload.status }
-        }.from(Array.new(purchase_order_count, "pending")).to(Array.new(purchase_order_count, "cancelled"))
+        }.from(Array.new(items_count, "pending")).to(Array.new(items_count, "cancelled"))
       end
 
       include_examples "returns a success response"
     end
 
-    context "when cancellation fails" do
+    context "when cancellation is unsuccessful" do
       before { allow(purchase_order).to receive(:cancel!) { false } }
 
       it "does not change the status" do

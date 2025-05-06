@@ -7,29 +7,22 @@
 require "spec_helper"
 
 RSpec.describe "FlashMessages", type: :request do
-  let!(:controller_name) { "AnonymousController" }
-  let!(:controller_class) do
-    Class.new(ActionController::Base) do
-      include FlashMessages
+  with_mock_controller(ActionController::Base, name: "Anonymous") do
+    include FlashMessages
 
-      def test_flash
-        set_flash_message(
-          params[:type].to_sym,
-          params[:message_key],
-          immediate: (params[:immediate] == "true"),
-          scope: params[:scope],
-          name: params[:name]
-        )
-        render plain: "OK"
-      end
+    def test_flash
+      set_flash_message(
+        params[:type].to_sym,
+        params[:message_key],
+        immediate: (params[:immediate] == "true"),
+        scope: params[:scope],
+        name: params[:name]
+      )
+      render plain: "OK"
     end
   end
 
   before do
-    stub_const(controller_name, controller_class)
-    controller_class.define_singleton_method(:controller_name) { "anonymous" }
-    controller_class.define_singleton_method(:controller_path) { "anonymous" }
-
     Rails.application.routes.draw do
       get "/anonymous", to: "anonymous#test_flash"
     end
