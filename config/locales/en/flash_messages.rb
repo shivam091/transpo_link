@@ -183,7 +183,7 @@
       },
       deliveries: {
         create: {
-          success: "The item delivery has been recorded and is being processed. It will be available for use shortly.",
+          success: "The item delivery has been recorded.",
           error: "Unable to record the item delivery. Please check the details and try again."
         },
       },

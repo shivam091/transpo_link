@@ -55,6 +55,11 @@ RSpec.describe InventoryMovement, type: :model do
 
   describe "included modules" do
     it { is_expected.to include_module(ScaleEnforcer) }
+    it { is_expected.to include_module(Sortable) }
+  end
+
+  describe "constants" do
+    it { is_expected.to have_constant(:LISTING_ATTRIBUTES) }
   end
 
   describe "scaled attributes" do
@@ -75,6 +80,12 @@ RSpec.describe InventoryMovement, type: :model do
     it { is_expected.to have_callback(:before, :save, :set_default_attributes) }
     it { is_expected.to have_callback(:after, :create, :create_inventory_audit_log) }
   end
+
+  describe "delegates" do
+    it { is_expected.to delegate_method(:symbol).to(:unit).with_prefix }
+  end
+
+  include_examples "apply default scope on created_at:desc"
 
   describe "validations" do
     describe "#quantity" do
@@ -204,6 +215,40 @@ RSpec.describe InventoryMovement, type: :model do
         expect(InventoryAuditLogs::CreateService).to receive(:call).with(instance_of(Inventory), an_instance_of(InventoryMovement))
 
         create(:inventory_movement, inventory:, unit: inventory.unit)
+      end
+    end
+
+    describe "#convert_to_inventory_unit" do
+      let!(:source_unit) { create(:dozen_unit) }
+      let!(:target_unit) { create(:item_unit) }
+
+      let(:inventory) { create(:inventory, unit: target_unit) }
+      let(:purchase_order_item) { create(:purchase_order_item, unit: target_unit) }
+
+      context "when source and target units are the same" do
+        let(:inventory_movement) { build(:inventory_movement, source: purchase_order_item, unit: target_unit, quantity: 10, inventory:) }
+
+        it "does not change quantity or unit" do
+          expect(UnitConversion).not_to receive(:convert)
+
+          inventory_movement.save!
+
+          expect(inventory_movement.quantity).to eq(10)
+          expect(inventory_movement.unit).to eq(target_unit)
+        end
+      end
+
+      context "when source and target units are different and conversion succeeds" do
+        let(:inventory_movement) { build(:inventory_movement, source: purchase_order_item, unit: source_unit, quantity: 5, inventory:) }
+
+        it "converts the quantity and sets unit to target unit" do
+          allow(UnitConversion).to receive(:convert).with(source_unit, target_unit, 5) { 60 }
+
+          inventory_movement.save!
+
+          expect(inventory_movement.quantity).to eq(60)
+          expect(inventory_movement.unit).to eq(target_unit)
+        end
       end
     end
   end

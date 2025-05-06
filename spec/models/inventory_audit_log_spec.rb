@@ -41,6 +41,14 @@ RSpec.describe InventoryAuditLog, type: :model do
     it { is_expected.to have_check_constraint(:check_inventory_audit_logs_previous_quantity_presence).with_expression("previous_quantity IS NOT NULL") }
   end
 
+  describe "included modules" do
+    it { is_expected.to include_module(Sortable) }
+  end
+
+  describe "constants" do
+    it { is_expected.to have_constant(:LISTING_ATTRIBUTES) }
+  end
+
   describe "associations" do
     it { is_expected.to belong_to(:inventory).inverse_of(:inventory_audit_logs) }
     it { is_expected.to belong_to(:inventory_movement).inverse_of(:inventory_audit_logs).optional }
@@ -60,4 +68,6 @@ RSpec.describe InventoryAuditLog, type: :model do
       end
     end
   end
+
+  include_examples "apply default scope on created_at:desc"
 end

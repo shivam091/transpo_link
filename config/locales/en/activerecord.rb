@@ -207,13 +207,6 @@
           new_quantity: "New quantity",
           metadata: "Metadata",
         },
-        inventory_batch_processing_log: {
-          inventory_batch_id: "Inventory batch",
-          user_id: "Triggered by",
-          status: "Status",
-          error_message: "Error message",
-          metadata: "Metadata",
-        },
         inventory_movement: {
           inventory_id: "Inventory",
           quantity: "Quantity",
@@ -271,6 +264,10 @@
           status: "Status",
           ordered_quantity: "Ordered quantity",
           remaining_quantity: "Remaining quantity",
+        },
+        "purchase_order_item/delivery" => {
+          quantity: "Quantity",
+          unit_id: "Unit of measure",
         },
       },
       errors: {
@@ -411,6 +408,13 @@
               unit_id: {
                 incompatible_unit_category: "is incompatible for the selected product"
               },
+            }
+          },
+          "purchase_order_item/delivery" => {
+            attributes: {
+              quantity: {
+                exceeds_remaining_quantity: "cannot exceed remaining quantity of the purchase order item"
+              }
             }
           },
         },

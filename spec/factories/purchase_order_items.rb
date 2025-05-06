@@ -27,20 +27,8 @@ FactoryBot.define do
       status { PurchaseOrderItem.statuses[:delivered] }
     end
 
-    trait :backordered do
-      status { PurchaseOrderItem.statuses[:backordered] }
-    end
-
     trait :cancelled do
       status { PurchaseOrderItem.statuses[:cancelled] }
-    end
-
-    trait :returned do
-      status { PurchaseOrderItem.statuses[:returned] }
-    end
-
-    trait :damaged do
-      status { PurchaseOrderItem.statuses[:damaged] }
     end
   end
 end
