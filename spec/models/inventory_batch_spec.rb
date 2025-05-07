@@ -78,6 +78,22 @@ RSpec.describe InventoryBatch, type: :model do
     it { is_expected.to delegate_method(:symbol).to(:unit).with_prefix }
   end
 
+  describe "nested attributes" do
+    it { is_expected.to accept_nested_attributes_for(:restocks).allow_destroy(false) }
+  end
+
+  describe "associations" do
+    it { is_expected.to have_one(:product) }
+    it { is_expected.to have_one(:warehouse) }
+
+    it { is_expected.to have_many(:inventory_batch_audit_logs).inverse_of(:inventory_batch).dependent(:nullify) }
+    it { is_expected.to have_many(:restocks).class_name("Inventory::Restock").inverse_of(:inventory_batch).dependent(:destroy) }
+
+    it { is_expected.to belong_to(:inventory).inverse_of(:inventory_batches).touch }
+    it { is_expected.to belong_to(:unit).inverse_of(:inventory_batches) }
+    it { is_expected.to belong_to(:source).optional }
+  end
+
   describe "validations" do
     describe "#batch_number" do
       let!(:inventory_batch) { create(:inventory_batch, batch_number: "ABC123") }
@@ -156,17 +172,6 @@ RSpec.describe InventoryBatch, type: :model do
     describe "#unit_id" do
       it { is_expected.to validate_presence_of(:unit_id) }
     end
-  end
-
-  describe "associations" do
-    it { is_expected.to have_one(:product) }
-    it { is_expected.to have_one(:warehouse) }
-
-    it { is_expected.to have_many(:inventory_batch_audit_logs).inverse_of(:inventory_batch).dependent(:nullify) }
-
-    it { is_expected.to belong_to(:inventory).inverse_of(:inventory_batches).touch }
-    it { is_expected.to belong_to(:unit).inverse_of(:inventory_batches) }
-    it { is_expected.to belong_to(:source).optional }
   end
 
   describe "scopes" do
