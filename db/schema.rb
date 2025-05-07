@@ -298,11 +298,17 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_07_113346) do
     t.uuid "purchase_order_item_id", null: false
     t.uuid "unit_id", null: false
     t.decimal "quantity", precision: 12, scale: 2
+    t.text "comment"
+    t.text "note"
+    t.string "reference_document"
     t.timestamptz "created_at", null: false
     t.timestamptz "updated_at", null: false
     t.index ["purchase_order_item_id"], name: "index_purchase_order_item_deliveries_on_purchase_order_item_id"
-    t.index ["quantity"], name: "index_purchase_order_item_deliveries_on_quantity"
     t.index ["unit_id"], name: "index_purchase_order_item_deliveries_on_unit_id"
+    t.check_constraint "char_length(comment) <= 1000 AND char_length(comment) > 0", name: "check_purchase_order_item_deliveries_comment_length"
+    t.check_constraint "char_length(note) <= 1000", name: "check_purchase_order_item_deliveries_note_length"
+    t.check_constraint "char_length(reference_document::text) <= 55", name: "check_purchase_order_item_deliveries_reference_document_length"
+    t.check_constraint "comment IS NOT NULL AND comment <> ''::text", name: "check_purchase_order_item_deliveries_comment_presence"
     t.check_constraint "quantity > 0.0", name: "check_purchase_order_item_deliveries_quantity_positive"
     t.check_constraint "quantity IS NOT NULL", name: "check_purchase_order_item_deliveries_quantity_presence"
   end
