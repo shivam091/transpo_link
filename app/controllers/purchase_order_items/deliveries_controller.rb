@@ -37,7 +37,7 @@ class PurchaseOrderItems::DeliveriesController < ApplicationController
   end
 
   def delivery_params
-    params.require(:delivery).permit(:quantity, :unit_id, :comment)
+    params.require(:delivery).permit(:quantity, :unit_id, :comment, :note)
   end
 
   def form_frame_id
