@@ -194,6 +194,7 @@
           batch_number: "Batch number",
           expiration_date: "Expiration date",
           quantity: "Quantity",
+          consumed_quantity: "Consumed quantity",
           unit_id: "Inventory unit",
           cost_price: "Cost price",
           currency: "Currency",
@@ -202,6 +203,8 @@
         },
         "inventory/restock" => {
           inventory_batch_id: "Inventory batch",
+          quantity: "Quantity",
+          unit_id: "Unit",
           comment: "Restock comment",
           note: "Restock note",
         },
@@ -273,6 +276,9 @@
         "purchase_order_item/delivery" => {
           quantity: "Quantity",
           unit_id: "Unit of measure",
+          comment: "Delivery comment",
+          note: "Delivery note",
+          reference_document: "Reference document",
         },
       },
       errors: {

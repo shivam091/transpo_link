@@ -21,7 +21,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_07_113346) do
   create_enum "color_schemes", ["auto", "dark", "light"]
   create_enum "entity_types", ["business", "individual"]
   create_enum "legal_identifier_statuses", ["unapproved", "approved", "rejected"]
-  create_enum "movement_types", ["restock", "purchase", "sale", "return", "transfer_in", "transfer_out", "adjustment", "reservation"]
+  create_enum "movement_types", ["restock", "purchase", "sale", "customer_return", "supplier_return", "transfer_in", "transfer_out", "adjustment", "correction", "reservation", "release_reservation", "initial_stock", "inspection", "quarantine", "release_from_quarantine"]
   create_enum "purchase_order_item_statuses", ["pending", "ordered", "partially_delivered", "delivered", "cancelled"]
   create_enum "purchase_order_statuses", ["draft", "submitted", "approved", "partially_delivered", "fully_delivered", "cancelled", "rejected", "closed", "on_hold"]
   create_enum "tax_types", ["exclusive", "inclusive"]
@@ -135,6 +135,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_07_113346) do
     t.string "batch_number"
     t.date "expiration_date"
     t.decimal "quantity", precision: 12, scale: 2
+    t.decimal "consumed_quantity", precision: 12, scale: 2, default: "0.0"
     t.uuid "unit_id", null: false
     t.decimal "cost_price", precision: 12, scale: 2
     t.string "currency"
@@ -176,7 +177,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_07_113346) do
     t.index ["source_type", "source_id"], name: "index_inventory_movements_on_source"
     t.index ["unit_id"], name: "index_inventory_movements_on_unit_id"
     t.check_constraint "currency IS NOT NULL AND currency::text <> ''::text", name: "check_inventory_movements_currency_presence"
-    t.check_constraint "movement_type = ANY (ARRAY['restock'::movement_types, 'purchase'::movement_types, 'sale'::movement_types, 'return'::movement_types, 'transfer_in'::movement_types, 'transfer_out'::movement_types, 'adjustment'::movement_types, 'reservation'::movement_types])", name: "check_inventory_movements_movement_type_in_enum_values"
+    t.check_constraint "movement_type = ANY (ARRAY['restock'::movement_types, 'purchase'::movement_types, 'sale'::movement_types, 'customer_return'::movement_types, 'supplier_return'::movement_types, 'transfer_in'::movement_types, 'transfer_out'::movement_types, 'adjustment'::movement_types, 'correction'::movement_types, 'reservation'::movement_types, 'release_reservation'::movement_types, 'initial_stock'::movement_types, 'inspection'::movement_types, 'quarantine'::movement_types, 'release_from_quarantine'::movement_types])", name: "check_inventory_movements_movement_type_in_enum_values"
     t.check_constraint "movement_type IS NOT NULL", name: "check_inventory_movements_movement_type_presence"
     t.check_constraint "quantity <> 0.0", name: "check_inventory_movements_quantity_nonzero"
     t.check_constraint "quantity IS NOT NULL", name: "check_inventory_movements_quantity_presence"
@@ -188,14 +189,19 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_07_113346) do
 
   create_table "inventory_restocks", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "inventory_batch_id", null: false
+    t.uuid "unit_id", null: false
+    t.decimal "quantity", precision: 12, scale: 2
     t.text "comment"
     t.text "note"
     t.timestamptz "created_at", null: false
     t.timestamptz "updated_at", null: false
     t.index ["inventory_batch_id"], name: "index_inventory_restocks_on_inventory_batch_id"
+    t.index ["unit_id"], name: "index_inventory_restocks_on_unit_id"
     t.check_constraint "char_length(comment) <= 1000 AND char_length(comment) > 0", name: "check_inventory_restocks_comment_length"
-    t.check_constraint "char_length(note) <= 1000", name: "check_purchase_orders_note_length"
+    t.check_constraint "char_length(note) <= 1000", name: "check_inventory_restocks_note_length"
     t.check_constraint "comment IS NOT NULL AND comment <> ''::text", name: "check_inventory_restocks_comment_presence"
+    t.check_constraint "quantity > 0.0", name: "check_inventory_restocks_quantity_positive"
+    t.check_constraint "quantity IS NOT NULL", name: "check_inventory_restocks_quantity_presence"
   end
 
   create_table "legal_identifiers", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -292,11 +298,17 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_07_113346) do
     t.uuid "purchase_order_item_id", null: false
     t.uuid "unit_id", null: false
     t.decimal "quantity", precision: 12, scale: 2
+    t.text "comment"
+    t.text "note"
+    t.string "reference_document"
     t.timestamptz "created_at", null: false
     t.timestamptz "updated_at", null: false
     t.index ["purchase_order_item_id"], name: "index_purchase_order_item_deliveries_on_purchase_order_item_id"
-    t.index ["quantity"], name: "index_purchase_order_item_deliveries_on_quantity"
     t.index ["unit_id"], name: "index_purchase_order_item_deliveries_on_unit_id"
+    t.check_constraint "char_length(comment) <= 1000 AND char_length(comment) > 0", name: "check_purchase_order_item_deliveries_comment_length"
+    t.check_constraint "char_length(note) <= 1000", name: "check_purchase_order_item_deliveries_note_length"
+    t.check_constraint "char_length(reference_document::text) <= 55", name: "check_purchase_order_item_deliveries_reference_document_length"
+    t.check_constraint "comment IS NOT NULL AND comment <> ''::text", name: "check_purchase_order_item_deliveries_comment_presence"
     t.check_constraint "quantity > 0.0", name: "check_purchase_order_item_deliveries_quantity_positive"
     t.check_constraint "quantity IS NOT NULL", name: "check_purchase_order_item_deliveries_quantity_presence"
   end
@@ -620,6 +632,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_07_113346) do
   add_foreign_key "inventory_movements", "inventories", name: "fk_inventory_movements_inventory_id_on_inventories", on_delete: :cascade
   add_foreign_key "inventory_movements", "units", name: "fk_inventory_movements_unit_id_on_units", on_delete: :restrict
   add_foreign_key "inventory_restocks", "inventory_batches", name: "fk_inventory_restocks_inventory_batch_id_on_inventory_batches", on_delete: :cascade
+  add_foreign_key "inventory_restocks", "units", name: "fk_inventory_restocks_unit_id_on_units", on_delete: :restrict
   add_foreign_key "legal_identifiers", "users", name: "fk_legal_identifiers_user_id_on_users", on_delete: :cascade
   add_foreign_key "product_categories", "product_categories", column: "parent_category_id", name: "fk_product_categories_parent_category_id_on_product_categories", on_delete: :cascade
   add_foreign_key "product_prices", "products", name: "fk_product_prices_product_id_on_products", on_delete: :cascade

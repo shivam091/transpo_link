@@ -8,7 +8,7 @@ require "spec_helper"
 
 RSpec.describe "PurchaseOrderItems::Deliveries", type: :request do
   let(:unit) { create(:dozen_unit) }
-  let(:valid_params) { {delivery: {quantity: 12, unit_id: unit.id}} }
+  let(:valid_params) { {delivery: {quantity: 12, unit_id: unit.id, comment: "Test comments"}} }
   let(:invalid_params) { {delivery: {quantity: nil, unit_id: nil}} }
 
   let!(:purchase_order) { create(:purchase_order, :submitted) }

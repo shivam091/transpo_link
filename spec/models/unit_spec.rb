@@ -55,6 +55,7 @@ RSpec.describe Unit, type: :model do
     it { is_expected.to have_many(:inventory_movements).inverse_of(:unit).dependent(:restrict_with_exception) }
     it { is_expected.to have_many(:purchase_order_items).inverse_of(:unit).dependent(:restrict_with_exception) }
     it { is_expected.to have_many(:delivered_po_items).inverse_of(:unit).class_name("PurchaseOrderItem::Delivery").dependent(:restrict_with_exception) }
+    it { is_expected.to have_many(:restocks).inverse_of(:unit).class_name("Inventory::Restock").dependent(:restrict_with_exception) }
   end
 
   describe "validations" do

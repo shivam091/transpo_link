@@ -4,7 +4,8 @@
   .table-cell
     = prettify_datetime(inventory_movement.movement_date)
   .table-cell
-    = enum_l(inventory_movement, :movement_type)
+    = safe_render.partial("shared/badge", color: TranspoLink::ColorMapper.new(:movement_type).for(inventory_movement.movement_type)) do
+      = enum_l(inventory_movement, :movement_type)
   .table-cell
     = number_to_measurement_unit(inventory_movement.quantity, inventory_movement.unit_symbol)
   .table-cell
