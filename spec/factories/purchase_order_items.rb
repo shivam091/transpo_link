@@ -30,5 +30,15 @@ FactoryBot.define do
     trait :cancelled do
       status { PurchaseOrderItem.statuses[:cancelled] }
     end
+
+    trait :with_deliveries do
+      transient do
+        deliveries_count { 2 }
+      end
+
+      after(:create) do |purchase_order_item, evaluator|
+        create_list(:po_item_delivery, evaluator.deliveries_count, purchase_order_item:)
+      end
+    end
   end
 end

@@ -9,6 +9,6 @@
         = t("shared.actions")
     .table-body
       - if @inventory.inventory_batches&.each.with_index(1) do |inventory_batch, index|
-        = safe_render.partial("inventory_batches/inventory_batch", inventory_batch:, index:)
+        = safe_render.partial("inventories/inventory_batches/inventory_batch", inventory_batch:, index:)
       - end.empty?
         = safe_render.partial("shared/no_records", resource: InventoryBatch)

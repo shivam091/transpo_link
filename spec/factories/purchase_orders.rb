@@ -50,8 +50,12 @@ FactoryBot.define do
     end
 
     trait :with_po_items do
-      after(:create) do |purchase_order|
-        create_list(:purchase_order_item, 3, purchase_order: purchase_order)
+      transient do
+        items_count { 2 }
+      end
+
+      after(:create) do |purchase_order, evaluator|
+        create_list(:purchase_order_item, evaluator.items_count, purchase_order:)
       end
     end
   end
