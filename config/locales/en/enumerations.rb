@@ -148,6 +148,25 @@
           average_cost: "Weighted average costing"
         },
       },
+      inventory_movement: {
+        movement_types: {
+          restock: "Restock",
+          purchase: "Purchase",
+          sale: "Sale",
+          customer_return: "Customer return",
+          supplier_return: "Supplier return",
+          transfer_in: "Transfer in",
+          transfer_out: "Transfer out",
+          adjustment: "Adjustment",
+          correction: "Correction",
+          reservation: "Reservation",
+          release_reservation: "Release reservation",
+          initial_stock: "Initial stock",
+          inspection: "Inspection",
+          quarantine: "Quarantine",
+          release_from_quarantine: "Release from quarantine",
+        },
+      },
       purchase_order: {
         statuses: {
           draft: "Draft",

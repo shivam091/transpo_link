@@ -2,6 +2,24 @@
 # -*- frozen_string_literal: true -*-
 # -*- warn_indent: true -*-
 
+# == Movement types definitions
+#
+# restock: When new stock is added to inventory, usually from a purchase order.
+# purchase: Represents items acquired from a vendor/supplier. Sometimes combined with restock.
+# sale: Outgoing stock due to customer purchase.
+# customer_return: Goods returned by customer.
+# supplier_return: Goods returned to supplier.
+# transfer_in: Stock coming in from another location or warehouse.
+# transfer_out: Stock sent to another location or warehouse.
+# adjustment: Manual inventory corrections (e.g., damaged, stolen, or lost goods).
+# correction: Data/system-level fix.
+# reservation: Temporarily earmarking inventory for an order or project, reducing available quantity.
+# release_reservation: Release previously reserved stock.
+# initial_stock: For initializing the inventory count when the system is first set up.
+# inspection: Items under quality check and not yet available for sale/use.
+# quarantine: Segregated stock (damaged, expired, under investigation, etc.)
+# release_from_quarantine: Returned to usable stock.
+
 class InventoryMovement < ApplicationRecord
   include ScaleEnforcer, Sortable
 
@@ -11,11 +29,18 @@ class InventoryMovement < ApplicationRecord
     restock: "restock",
     purchase: "purchase",
     sale: "sale",
-    return: "return",
+    customer_return: "customer_return",
+    supplier_return: "supplier_return",
     transfer_in: "transfer_in",
     transfer_out: "transfer_out",
     adjustment: "adjustment",
-    reservation: "reservation"
+    correction: "correction",
+    reservation: "reservation",
+    release_reservation: "release_reservation",
+    initial_stock: "initial_stock",
+    inspection: "inspection",
+    quarantine: "quarantine",
+    release_from_quarantine: "release_from_quarantine"
   }
 
   scale_attributes :quantity, :unit_cost, :total_cost

@@ -2,11 +2,11 @@
 # -*- frozen_string_literal: true -*-
 # -*- warn_indent: true -*-
 
-# spec/requests/inventory_batches_spec.rb
+# spec/requests/inventories/inventory_batches_spec.rb
 
 require "spec_helper"
 
-RSpec.describe "InventoryBatches", type: :request do
+RSpec.describe "Inventories::InventoryBatches", type: :request do
   let(:inventory) { create(:inventory) }
   let!(:batch1) { create(:inventory_batch, inventory:) }
   let!(:batch2) { create(:inventory_batch, inventory:) }

@@ -35,6 +35,8 @@ class InventoryBatch < ApplicationRecord
             reduce: true
   validates :unit_id, presence: true, reduce: true
 
+  validates_associated :restocks
+
   with_options inverse_of: :inventory_batch do |a|
     a.has_many :inventory_batch_audit_logs, dependent: :nullify
   end
@@ -49,6 +51,8 @@ class InventoryBatch < ApplicationRecord
   has_one :product, through: :inventory
   has_one :warehouse, through: :inventory
 
+  has_many :restocks, class_name: "Inventory::Restock", inverse_of: :inventory_batch, dependent: :destroy
+
   before_create :convert_to_inventory_unit
   after_save :update_inventory_average_cost_price
 
@@ -62,6 +66,8 @@ class InventoryBatch < ApplicationRecord
         .and(arel_table[:expiration_date].eq(expiry))
     )
   end
+
+  accepts_nested_attributes_for :restocks, allow_destroy: false
 
   def previous_quantity
     quantity_previously_was || 0.0

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_02_140259) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_07_113346) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -184,6 +184,18 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_02_140259) do
     t.check_constraint "total_cost IS NOT NULL", name: "check_inventory_movements_total_cost_presence"
     t.check_constraint "unit_cost > 0.0", name: "check_inventory_movements_unit_cost_positive"
     t.check_constraint "unit_cost IS NOT NULL", name: "check_inventory_movements_unit_cost_presence"
+  end
+
+  create_table "inventory_restocks", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "inventory_batch_id", null: false
+    t.text "comment"
+    t.text "note"
+    t.timestamptz "created_at", null: false
+    t.timestamptz "updated_at", null: false
+    t.index ["inventory_batch_id"], name: "index_inventory_restocks_on_inventory_batch_id"
+    t.check_constraint "char_length(comment) <= 1000 AND char_length(comment) > 0", name: "check_inventory_restocks_comment_length"
+    t.check_constraint "char_length(note) <= 1000", name: "check_purchase_orders_note_length"
+    t.check_constraint "comment IS NOT NULL AND comment <> ''::text", name: "check_inventory_restocks_comment_presence"
   end
 
   create_table "legal_identifiers", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -607,6 +619,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_02_140259) do
   add_foreign_key "inventory_batches", "units", name: "fk_inventory_batches_unit_id_on_units", on_delete: :restrict
   add_foreign_key "inventory_movements", "inventories", name: "fk_inventory_movements_inventory_id_on_inventories", on_delete: :cascade
   add_foreign_key "inventory_movements", "units", name: "fk_inventory_movements_unit_id_on_units", on_delete: :restrict
+  add_foreign_key "inventory_restocks", "inventory_batches", name: "fk_inventory_restocks_inventory_batch_id_on_inventory_batches", on_delete: :cascade
   add_foreign_key "legal_identifiers", "users", name: "fk_legal_identifiers_user_id_on_users", on_delete: :cascade
   add_foreign_key "product_categories", "product_categories", column: "parent_category_id", name: "fk_product_categories_parent_category_id_on_product_categories", on_delete: :cascade
   add_foreign_key "product_prices", "products", name: "fk_product_prices_product_id_on_products", on_delete: :cascade

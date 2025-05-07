@@ -4,6 +4,7 @@
 
 class FeedbacksController < ApplicationController
   before_action :set_breadcrumbs
+  before_action :find_reviewable, only: [:new, :create]
   before_action :find_feedback, only: [:show, :mark_as_read]
 
   # GET /feedbacks
@@ -19,13 +20,11 @@ class FeedbacksController < ApplicationController
 
   # GET /feedbacks/:reviewable_id/new
   def new
-    @reviewable = find_reviewable
     @feedback = @reviewable.feedbacks.build
   end
 
   # POST /feedbacks/:reviewable_id
   def create
-    @reviewable = find_reviewable
     response = Feedbacks::CreateService.(current_user, @reviewable, feedback_params)
     @feedback = response.payload[:feedback]
 
@@ -70,7 +69,7 @@ class FeedbacksController < ApplicationController
   end
 
   def find_reviewable
-    if params[:product_id]
+    @reviewable = if params[:product_id]
       Product.find(params[:product_id])
     end
   end

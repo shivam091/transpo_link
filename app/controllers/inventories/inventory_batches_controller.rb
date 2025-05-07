@@ -2,14 +2,14 @@
 # -*- frozen_string_literal: true -*-
 # -*- warn_indent: true -*-
 
-class InventoryBatchesController < ApplicationController
+class Inventories::InventoryBatchesController < ApplicationController
   before_action :find_inventory
 
   # GET /inventories/:inventory_id/inventory-batches
   def index
     @inventory_batches = @inventory.inventory_batches
 
-    render partial: "inventory_batches/list"
+    render partial: "inventories/inventory_batches/list"
   end
 
   private

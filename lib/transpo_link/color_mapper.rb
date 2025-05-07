@@ -24,28 +24,45 @@ module TranspoLink
     #
     COLOR_MAPS = {
       status: {
-        unapproved:          "#F8D210FF", # Turbo
-        draft:               "#D4C5F9FF", # Lavender blue
-        submitted:           "#FBCA04FF", # Tangerine yellow
-        approved:            "#43FF2CFF", # Harlequin
-        cancelled:           "#E57F84FF", # Carissma
-        rejected:            "#B60205FF", # Guardsman red
-        partially_delivered: "#2FF3E0FF", # Bright turquoise
-        fully_delivered:     "#006622FF", # British racing green
-        delivered:           "#36EEE0FF", # Turquoise
-        pending:             "#BFD4F2FF", # Pale Cornflower Blue
-        closed:              "#3D550CFF", # Verdun Green
-        on_hold:             "#FBC740FF", # Sunglow
-        ordered:             "#5DA9E9FF", # Blue Jeans
+        unapproved:              "#F8D210FF", # Turbo
+        draft:                   "#D4C5F9FF", # Lavender blue
+        submitted:               "#FBCA04FF", # Tangerine yellow
+        approved:                "#43FF2CFF", # Harlequin
+        cancelled:               "#E57F84FF", # Carissma
+        rejected:                "#B60205FF", # Guardsman red
+        partially_delivered:     "#2FF3E0FF", # Bright turquoise
+        fully_delivered:         "#006622FF", # British racing green
+        delivered:               "#36EEE0FF", # Turquoise
+        pending:                 "#BFD4F2FF", # Pale Cornflower Blue
+        closed:                  "#3D550CFF", # Verdun Green
+        on_hold:                 "#FBC740FF", # Sunglow
+        ordered:                 "#5DA9E9FF", # Blue Jeans
       },
       tax_type: {
-        exclusive:           "#F26B38FF", # Water leaf
-        inclusive:           "#FBCA04FF", # Tangerine yellow
+        exclusive:               "#F26B38FF", # Water leaf
+        inclusive:               "#FBCA04FF", # Tangerine yellow
       },
       tracking_method: {
-        fifo:                "#2CFFFBFF", # Aqua
-        lifo:                "#0C2D48FF", # Cyprus
-        average_cost:        "#BFDADCFF", # Iceberg
+        fifo:                    "#2CFFFBFF", # Aqua
+        lifo:                    "#0C2D48FF", # Cyprus
+        average_cost:            "#BFDADCFF", # Iceberg
+      },
+      movement_type: {
+        restock:                 "#006622FF", # British Racing Green
+        purchase:                "#43FF2CFF", # Harlequin
+        sale:                    "#F51720FF", # Torch Red
+        customer_return:         "#C2E0C6FF", # Granny Apple
+        supplier_return:         "#D5006EFF", # Razzmatazz
+        transfer_in:             "#2697FFFF", # Dodger Blue
+        transfer_out:            "#FB6090FF", # Brink Pink
+        adjustment:              "#FBCA04FF", # Tangerine Yellow
+        correction:              "#D4C5F9FF", # Lavender Blue
+        reservation:             "#5319E7FF", # Han Purple
+        release_reservation:     "#66D2D6FF", # Spray
+        initial_stock:           "#FBC740FF", # Sunglow
+        inspection:              "#FADCD9FF", # Pale Pink
+        quarantine:              "#DF362DFF", # Cinnabar
+        release_from_quarantine: "#36EEE0FF", # Turquoise
       }
     }.deep_stringify_keys.freeze
 
