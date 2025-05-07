@@ -138,13 +138,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_02_140259) do
     t.uuid "unit_id", null: false
     t.decimal "cost_price", precision: 12, scale: 2
     t.string "currency"
-    t.string "restockable_type"
-    t.uuid "restockable_id"
+    t.string "source_type"
+    t.uuid "source_id"
     t.timestamptz "created_at", null: false
     t.timestamptz "updated_at", null: false
     t.index ["inventory_id", "batch_number"], name: "index_inventory_batches_on_inventory_id_and_batch_number", unique: true
     t.index ["inventory_id"], name: "index_inventory_batches_on_inventory_id"
-    t.index ["restockable_type", "restockable_id"], name: "index_inventory_batches_on_restockable"
+    t.index ["source_type", "source_id"], name: "index_inventory_batches_on_source"
     t.index ["unit_id"], name: "index_inventory_batches_on_unit_id"
     t.check_constraint "batch_number IS NOT NULL AND batch_number::text <> ''::text", name: "check_inventory_batches_batch_number_presence"
     t.check_constraint "char_length(batch_number::text) <= 55", name: "check_inventory_batches_batch_number_length"
