@@ -202,6 +202,8 @@
         },
         "inventory/restock" => {
           inventory_batch_id: "Inventory batch",
+          quantity: "Quantity",
+          unit_id: "Unit",
           comment: "Restock comment",
           note: "Restock note",
         },

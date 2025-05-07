@@ -39,6 +39,7 @@ class Unit < ApplicationRecord
     a.has_many :inventory_movements
     a.has_many :purchase_order_items
     a.has_many :delivered_po_items, class_name: "PurchaseOrderItem::Delivery"
+    a.has_many :restocks, class_name: "Inventory::Restock"
   end
 
   scope :for_category, ->(category) { where(arel_table[:category].eq(category)) }

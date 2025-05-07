@@ -14,6 +14,16 @@ class CreateInventoryRestocks < ActiveRecord::Migration[8.0]
                    },
                    null: false,
                    index: {using: :btree}
+      t.references :unit,
+                   type: :uuid,
+                   foreign_key: {
+                     to_table: :units,
+                     name: :fk_inventory_restocks_unit_id_on_units,
+                     on_delete: :restrict
+                   },
+                   null: false,
+                   index: {using: :btree}
+      t.decimal :quantity, precision: 12, scale: 2
       t.text :comment
       t.text :note
       t.timestamps_with_timezone null: false
@@ -21,7 +31,10 @@ class CreateInventoryRestocks < ActiveRecord::Migration[8.0]
       t.check_constraint "comment IS NOT NULL AND comment <> ''", name: :check_inventory_restocks_comment_presence
       t.check_constraint "CHAR_LENGTH(comment) <= 1000 AND CHAR_LENGTH(comment) > 0", name: :check_inventory_restocks_comment_length
 
-      t.check_constraint "CHAR_LENGTH(note) <= 1000", name: :check_purchase_orders_note_length
+      t.check_constraint "CHAR_LENGTH(note) <= 1000", name: :check_inventory_restocks_note_length
+
+      t.check_constraint "quantity IS NOT NULL", name: :check_inventory_restocks_quantity_presence
+      t.check_constraint "quantity > 0.0", name: :check_inventory_restocks_quantity_positive
     end
   end
 end
