@@ -17,6 +17,7 @@ class CreateInventoryBatches < ActiveRecord::Migration[8.0]
       t.string :batch_number
       t.date :expiration_date # Useful for perishable products
       t.decimal :quantity, precision: 12, scale: 2 # quantity in this batch
+      t.decimal :consumed_quantity, precision: 12, scale: 2, default: 0.0 # Consumed (Restocked) quantity
       t.references :unit,
                    type: :uuid,
                    foreign_key: {
