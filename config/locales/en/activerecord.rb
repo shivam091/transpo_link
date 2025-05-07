@@ -200,6 +200,11 @@
           created_at: "Created at",
           updated_at: "Updated at",
         },
+        "inventory/restock" => {
+          inventory_batch_id: "Inventory batch",
+          comment: "Restock comment",
+          note: "Restock note",
+        },
         inventory_batch_audit_log: {
           inventory_batch_id: "Inventory batch",
           user_id: "Action by",
