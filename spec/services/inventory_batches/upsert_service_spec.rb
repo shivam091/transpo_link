@@ -11,6 +11,8 @@ RSpec.describe InventoryBatches::UpsertService, type: :service do
 
   let(:purchase_order_item) { create(:purchase_order_item, quantity: 3) }
 
+  include_context "with current user"
+
   subject(:service_response) { described_class.(inventory, inventory_batch_attributes) }
 
   describe ".call" do

@@ -12,6 +12,7 @@ RSpec.describe "Inventories::InventoryBatches", type: :request do
   let!(:batch2) { create(:inventory_batch, inventory:) }
 
   include_context "sign in as manager"
+  include_context "with current user"
 
   describe "GET /inventories/:inventory_id/inventory-batches" do
     it "renders list of all inventory batches in turbo frame" do

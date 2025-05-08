@@ -9,6 +9,8 @@ require "spec_helper"
 RSpec.describe InventoryBatch, type: :model do
   subject(:inventory_batch) { build(:inventory_batch) }
 
+  include_context "with current user"
+
   describe "valid factory" do
     it { is_expected.to have_a_valid_factory(:inventory_batch) }
   end

@@ -21,6 +21,8 @@ RSpec.describe Inventories::UpdateAverageCostPriceService, type: :service do
     total_cost / total_quantity
   end
 
+  include_context "with current user"
+
   subject(:service_response) { described_class.(inventory) }
 
   before { allow_any_instance_of(InventoryBatch).to receive(:update_inventory_average_cost_price) }

@@ -15,6 +15,8 @@ RSpec.describe InventoryBatches::MergeService, type: :service do
 
   let!(:inventory_batch) { create(:inventory_batch, quantity: 5, unit:) }
 
+  include_context "with current user"
+
   subject(:service_response) { described_class.(inventory_batch, inventory_batch_attributes) }
 
   describe ".call" do
