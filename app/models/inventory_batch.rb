@@ -55,6 +55,7 @@ class InventoryBatch < ApplicationRecord
 
   has_many :restocks, class_name: "Inventory::Restock", inverse_of: :inventory_batch, dependent: :destroy
 
+  before_validation :auto_fill_cost_and_currency
   before_create :convert_to_inventory_unit
   after_save :record_audit_logs, :update_inventory_average_cost_price
 
@@ -98,6 +99,23 @@ class InventoryBatch < ApplicationRecord
   end
 
   private
+
+  def manual_restock?
+    source.nil?
+  end
+
+  def auto_fill_cost_and_currency
+    return if manual_restock?
+
+    if from_purchase_order_item?
+      self.cost_price ||= source.unit_cost
+      self.currency   ||= source.currency
+    end
+  end
+
+  def from_purchase_order_item?
+    source.is_a?(PurchaseOrderItem)
+  end
 
   def update_inventory_average_cost_price
     Inventories::UpdateAverageCostPriceService.(inventory)

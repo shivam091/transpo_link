@@ -414,5 +414,31 @@ RSpec.describe PurchaseOrderItem, type: :model do
         end
       end
     end
+
+    describe "#available_batch_quantity" do
+      let!(:dozen_item_conversion) { create(:dozen_item_conversion) }
+
+      let(:target_unit) { dozen_item_conversion.target_unit }
+
+      let(:purchase_order_item) { create(:purchase_order_item, unit: target_unit, received_quantity: 10.0) }
+
+      context "when there are no inventory batches" do
+        it "returns the full received_quantity" do
+          expect(purchase_order_item.available_batch_quantity).to eq(10.0)
+        end
+      end
+
+      context "when there are inventory batches" do
+        include_context "with current user"
+
+        before do
+          create(:inventory_batch, source: purchase_order_item, unit: target_unit, quantity: 5.0)
+        end
+
+        it "returns received_quantity minus total batched quantity after conversion" do
+          expect(purchase_order_item.available_batch_quantity).to eq(5.0)
+        end
+      end
+    end
   end
 end

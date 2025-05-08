@@ -7,7 +7,11 @@
 require "spec_helper"
 
 RSpec.describe InventoryBatch, type: :model do
-  subject(:inventory_batch) { build(:inventory_batch) }
+  let(:purchase_order_item) do
+    create(:purchase_order_item, :delivered, quantity: 1000, received_quantity: 1000)
+  end
+
+  subject(:inventory_batch) { build(:inventory_batch, source: purchase_order_item) }
 
   include_context "with current user"
 
@@ -81,7 +85,9 @@ RSpec.describe InventoryBatch, type: :model do
   end
 
   describe "callbacks" do
+    it { is_expected.to have_callback(:before, :validation, :auto_fill_cost_and_currency) }
     it { is_expected.to have_callback(:before, :create, :convert_to_inventory_unit) }
+    it { is_expected.to have_callback(:after, :save, :record_audit_logs) }
     it { is_expected.to have_callback(:after, :save, :update_inventory_average_cost_price) }
   end
 
@@ -150,6 +156,8 @@ RSpec.describe InventoryBatch, type: :model do
     end
 
     describe "#cost_price" do
+      before { allow(inventory_batch).to receive(:auto_fill_cost_and_currency) }
+
       it { is_expected.to validate_presence_of(:cost_price) }
 
       context "when cost_price is invalid" do
@@ -341,6 +349,76 @@ RSpec.describe InventoryBatch, type: :model do
           expect {
             inventory_batch.merge_with!({})
           }.to raise_error(ArgumentError, "Quantity must be present")
+        end
+      end
+    end
+
+    describe "#manual_restock?" do
+      context "when source is nil" do
+        subject(:inventory_batch) { build(:inventory_batch, source: nil) }
+
+        it "returns true" do
+          expect(inventory_batch.send(:manual_restock?)).to be_truthy
+        end
+      end
+
+      context "when source is present" do
+        subject(:inventory_batch) { build(:inventory_batch, source: purchase_order_item) }
+
+        it "returns false" do
+          expect(inventory_batch.send(:manual_restock?)).to be_falsy
+        end
+      end
+    end
+
+    describe "#from_purchase_order_item?" do
+      context "when source is nil" do
+        subject(:inventory_batch) { build(:inventory_batch, source: nil) }
+
+        it "returns true" do
+          expect(inventory_batch.send(:from_purchase_order_item?)).to be_falsy
+        end
+      end
+
+      context "when source is purchase order item" do
+        subject(:inventory_batch) { build(:inventory_batch, source: purchase_order_item) }
+
+        it "returns false" do
+          expect(inventory_batch.send(:from_purchase_order_item?)).to be_truthy
+        end
+      end
+    end
+
+    describe "#auto_fill_cost_and_currency" do
+      context "when source is nil (manual restock)" do
+        let(:inventory_batch) { build(:inventory_batch, source: nil, cost_price: nil, currency: nil) }
+
+        it "does not modify cost_price or currency" do
+          inventory_batch.validate
+
+          expect(inventory_batch.cost_price).to be_nil
+          expect(inventory_batch.currency).to be_nil
+        end
+      end
+
+      context "when source is a PurchaseOrderItem" do
+        let(:inventory_batch) { build(:inventory_batch, source: purchase_order_item, cost_price: nil, currency: nil) }
+
+        it "sets cost_price and currency from the source" do
+          inventory_batch.validate
+
+          expect(inventory_batch.cost_price).to eq(purchase_order_item.unit_cost)
+          expect(inventory_batch.currency).to eq(purchase_order_item.currency)
+        end
+
+        it "does not overwrite existing values" do
+          inventory_batch.cost_price = 123.45
+          inventory_batch.currency = "USD"
+
+          inventory_batch.validate
+
+          expect(inventory_batch.cost_price).to eq(123.45)
+          expect(inventory_batch.currency).to eq("USD")
         end
       end
     end
