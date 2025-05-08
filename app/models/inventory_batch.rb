@@ -37,6 +37,8 @@ class InventoryBatch < ApplicationRecord
             reduce: true
   validates :unit_id, presence: true, reduce: true
 
+  validate :validate_quantity_does_not_exceed_item_received_quantity
+
   validates_associated :restocks
 
   with_options inverse_of: :inventory_batch do |a|
@@ -132,5 +134,16 @@ class InventoryBatch < ApplicationRecord
     return unless saved_change_to_quantity?
 
     InventoryBatchAuditLogs::CreateService.(self)
+  end
+
+  def validate_quantity_does_not_exceed_item_received_quantity
+    return unless from_purchase_order_item? && unit
+
+    available_quantity = source.available_batch_quantity
+    converted_batch_quantity = UnitConversion.convert(unit, source.unit, quantity.to_f)
+
+    if converted_batch_quantity > available_quantity
+      errors.add(:quantity, :exceeds_purchase_quantity, message: "exceeds the available quantity for this item")
+    end
   end
 end

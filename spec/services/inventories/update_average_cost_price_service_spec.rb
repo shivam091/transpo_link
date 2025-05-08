@@ -7,11 +7,14 @@
 require "spec_helper"
 
 RSpec.describe Inventories::UpdateAverageCostPriceService, type: :service do
+  let(:purchase_order_item) do
+    create(:purchase_order_item, :delivered, quantity: 1000, received_quantity: 1000)
+  end
   let(:inventory) do
     create(:inventory).tap do |inventory|
-      create(:inventory_batch, inventory:, quantity: 100, cost_price: 10.0)
-      create(:inventory_batch, inventory:, quantity: 200, cost_price: 12.0)
-      create(:inventory_batch, inventory:, quantity: 150, cost_price: 11.0)
+      create(:inventory_batch, quantity: 100, cost_price: 10.0, source: purchase_order_item, inventory:)
+      create(:inventory_batch, quantity: 200, cost_price: 12.0, source: purchase_order_item, inventory:)
+      create(:inventory_batch, quantity: 150, cost_price: 11.0, source: purchase_order_item, inventory:)
     end
   end
 

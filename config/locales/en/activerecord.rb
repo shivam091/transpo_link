@@ -398,6 +398,9 @@
               expiration_date: {
                 greater_than_or_equal_to: "must be today or a future date"
               },
+              quantity: {
+                exceeds_purchase_quantity: "exceeds the available quantity for this item",
+              },
             }
           },
           purchase_order: {

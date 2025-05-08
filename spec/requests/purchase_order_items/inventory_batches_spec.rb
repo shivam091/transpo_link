@@ -21,7 +21,6 @@ RSpec.describe "PurchaseOrderItems::InventoryBatches", type: :request do
   let(:invalid_params) { {inventory_batch: attributes_for(:inventory_batch, quantity: nil, unit_id: nil)} }
 
   include_context "sign in as manager"
-  include_context "with current user"
 
   describe "GET /purchase-order-items/:purchase_order_item_id/inventory-batches/new" do
     before { get new_purchase_order_item_inventory_batch_path(purchase_order_item), as: :turbo_stream }
