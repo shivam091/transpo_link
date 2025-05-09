@@ -82,8 +82,10 @@ class Product < ApplicationRecord
     [
       attributes[:warehouse_id],
       attributes[:min_quantity],
+      attributes[:unit_id],
       attributes[:unit_price],
-      attributes[:currency]
+      attributes[:effective_from],
+      attributes[:effective_until]
     ].all?(&:blank?)
   end
 end

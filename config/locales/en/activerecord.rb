@@ -174,8 +174,12 @@
         product_price: {
           warehouse_id: "Warehouse",
           min_quantity: "Min. quantity",
+          unit_id: "Unit",
           cost_price: "Cost price",
           currency: "Currency",
+          effective_from: "Effective from",
+          effective_until: "Effective until",
+          effective_period: "Effective period",
         },
         inventory: {
           reference_code: "Reference code",

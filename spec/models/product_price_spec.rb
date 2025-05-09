@@ -52,6 +52,7 @@ RSpec.describe ProductPrice, type: :model do
 
   describe "constants" do
     it { is_expected.to have_constant(:LISTING_ATTRIBUTES) }
+    it { is_expected.to have_constant(:GLOBAL_WAREHOUSE_ID).with_value("00000000-0000-0000-0000-000000000000") }
   end
 
   describe "scaled attributes" do
@@ -67,6 +68,10 @@ RSpec.describe ProductPrice, type: :model do
 
   describe "delegates" do
     it { is_expected.to delegate_method(:name).to(:warehouse).with_prefix.allow_nil }
+  end
+
+  describe "callbacks" do
+    it { is_expected.to have_callback(:before, :validation, :set_effective_period_from_virtual_fields) }
   end
 
   describe "validations" do
@@ -131,6 +136,40 @@ RSpec.describe ProductPrice, type: :model do
         end
       end
     end
+
+    describe "#unit_id" do
+      it { is_expected.to validate_presence_of(:unit_id) }
+    end
+
+    describe "#effective_from" do
+      context "when effective_from is blank" do
+        it "is invalid" do
+          product_price.effective_period = nil
+          product_price.effective_from = nil
+
+          product_price.validate
+
+          expect(product_price.errors[:effective_from]).to include("is required")
+        end
+      end
+
+      it { is_expected.to validate_comparison_of(:effective_from).is_greater_than_or_equal_to(Date.current) }
+    end
+
+    describe "#effective_until" do
+      context "when effective_until is blank" do
+        it "is invalid" do
+          product_price.effective_period = nil
+          product_price.effective_until = nil
+
+          product_price.validate
+
+          expect(product_price.errors[:effective_until]).to include("is required")
+        end
+      end
+
+      it { is_expected.to validate_comparison_of(:effective_until).is_greater_than_or_equal_to(:effective_from) }
+    end
   end
 
   include_examples "apply default scope on created_at:desc"
@@ -170,6 +209,66 @@ RSpec.describe ProductPrice, type: :model do
 
           expect(product_price.errors[:warehouse_id]).to be_blank
         end
+      end
+    end
+
+    describe "#effective_from" do
+      context "when virtual effective_from is set" do
+        let(:product_price) { build(:product_price, effective_from: Date.tomorrow) }
+
+        it "returns the virtual effective_from" do
+          expect(product_price.effective_from).to eq(Date.tomorrow)
+        end
+      end
+
+      context "when effective_from is not set but effective_period is set" do
+        let(:range) { Date.today..Date.today + 5 }
+        let(:product_price) { build(:product_price, effective_period: range, effective_from: nil) }
+
+        it "returns the beginning of effective_period" do
+          expect(product_price.effective_from).to eq(range.begin)
+        end
+      end
+    end
+
+    describe "#effective_until" do
+      context "when virtual effective_until is set" do
+        let(:product_price) { build(:product_price, effective_until: Date.today + 7) }
+
+        it "returns the virtual effective_until" do
+          expect(product_price.effective_until).to eq(Date.today + 7)
+        end
+      end
+
+      context "when effective_period is open-ended or inclusive" do
+        let(:range) { Date.today..(Date.today + 5) }
+        let(:product_price) { build(:product_price, effective_period: range) }
+
+        it "returns the end of the range" do
+          expect(product_price.effective_until).to eq(Date.today + 5)
+        end
+      end
+
+      context "when effective_period is exclusive" do
+        let(:range) { (Date.today...(Date.today + 5)) }
+        let(:product_price) { build(:product_price, effective_period: range) }
+
+        it "returns one day before the exclusive end" do
+          expect(product_price.effective_until).to eq(Date.today + 4)
+        end
+      end
+    end
+
+    describe "#set_effective_period_from_virtual_fields" do
+      let(:from) { Date.today + 1 }
+      let(:to) { Date.today + 5 }
+
+      it "sets effective_period from effective_from and effective_until" do
+        product_price = build(:product_price, effective_from: from, effective_until: to)
+
+        product_price.validate
+
+        expect(product_price.effective_period).to eq(from..to)
       end
     end
   end
