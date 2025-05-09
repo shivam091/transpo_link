@@ -250,17 +250,25 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_07_113346) do
     t.uuid "product_id", null: false
     t.uuid "warehouse_id"
     t.decimal "min_quantity", precision: 12, scale: 2
+    t.uuid "unit_id", null: false
     t.decimal "unit_price", precision: 12, scale: 2
     t.string "currency"
+    t.daterange "effective_period"
     t.timestamptz "created_at", null: false
     t.timestamptz "updated_at", null: false
+    t.index "((product_id)::text), currency, ((unit_id)::text), ((COALESCE(warehouse_id, '00000000-0000-0000-0000-000000000000'::uuid))::text), effective_period", name: "index_product_prices_on_validity_overlap", using: :gist
+    t.index ["effective_period"], name: "index_product_prices_on_effective_period", using: :gist
     t.index ["product_id"], name: "index_product_prices_on_product_id"
+    t.index ["unit_id"], name: "index_product_prices_on_unit_id"
     t.index ["warehouse_id"], name: "index_product_prices_on_warehouse_id"
     t.check_constraint "currency IS NOT NULL AND currency::text <> ''::text", name: "check_product_prices_currency_presence"
+    t.check_constraint "lower(effective_period) < upper(effective_period)", name: "check_product_prices_effective_period_order"
+    t.check_constraint "lower(effective_period) IS NOT NULL AND upper(effective_period) IS NOT NULL", name: "check_product_prices_effective_period_bounds"
     t.check_constraint "min_quantity > 0.0", name: "check_product_prices_min_quantity_positive"
     t.check_constraint "min_quantity IS NOT NULL", name: "check_product_prices_min_quantity_presence"
     t.check_constraint "unit_price > 0.0", name: "check_product_prices_unit_price_positive"
     t.check_constraint "unit_price IS NOT NULL", name: "check_product_prices_unit_price_presence"
+    t.exclusion_constraint "((product_id)::text) WITH =, currency WITH =, ((unit_id)::text) WITH =, ((COALESCE(warehouse_id, '00000000-0000-0000-0000-000000000000'::uuid))::text) WITH =, effective_period WITH &&", using: :gist, name: "check_product_prices_no_overlapping_effective_period"
   end
 
   create_table "products", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -637,6 +645,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_07_113346) do
   add_foreign_key "legal_identifiers", "users", name: "fk_legal_identifiers_user_id_on_users", on_delete: :cascade
   add_foreign_key "product_categories", "product_categories", column: "parent_category_id", name: "fk_product_categories_parent_category_id_on_product_categories", on_delete: :cascade
   add_foreign_key "product_prices", "products", name: "fk_product_prices_product_id_on_products", on_delete: :cascade
+  add_foreign_key "product_prices", "units", name: "fk_product_prices_unit_id_on_units", on_delete: :restrict
   add_foreign_key "product_prices", "warehouses", name: "fk_product_prices_warehouse_id_on_warehouses", on_delete: :restrict
   add_foreign_key "products", "product_categories", name: "fk_products_product_category_id_on_product_categories", on_delete: :restrict
   add_foreign_key "products", "units", name: "fk_products_unit_id_on_units", on_delete: :restrict

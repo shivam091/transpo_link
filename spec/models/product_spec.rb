@@ -222,7 +222,7 @@ RSpec.describe Product, type: :model do
         context "when valid attributes are provided" do
           it "creates a product price" do
             expect {
-              product.update(product_prices_attributes: {0 => {min_quantity: 10, unit_price: 202, currency: "INR"}})
+              product.update(product_prices_attributes: {0 => {min_quantity: 10, unit_id: product.unit_id, unit_price: 200, currency: "INR", effective_period: Date.current..(Date.current + 1.week)}})
             }.to change(ProductPrice, :count).by(1)
           end
         end
@@ -239,7 +239,7 @@ RSpec.describe Product, type: :model do
       context "when updating product prices" do
         it "updates the existing product price without changing the count" do
           expect {
-            product.update(product_prices_attributes: {id: product_price.id, min_quantity: 10, unit_price: 202, currency: "USD"})
+            product.update(product_prices_attributes: {id: product_price.id, min_quantity: 10, unit_price: 202, currency: "USD", effective_period: Date.current..(Date.current + 1.month)})
           }.to not_change(ProductPrice, :count)
 
           expect(product_price.reload.currency).to eq("USD")

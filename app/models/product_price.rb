@@ -23,6 +23,7 @@ class ProductPrice < ApplicationRecord
   with_options inverse_of: :product_prices do |a|
     a.belongs_to :product, touch: true
     a.belongs_to :warehouse, optional: true
+    a.belongs_to :unit
   end
 
   delegate :name, to: :warehouse, prefix: true, allow_nil: true
