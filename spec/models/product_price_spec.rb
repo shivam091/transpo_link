@@ -71,7 +71,7 @@ RSpec.describe ProductPrice, type: :model do
   end
 
   describe "callbacks" do
-    it { is_expected.to have_callback(:before, :validation, :set_effective_period_from_virtual_fields) }
+    it { is_expected.to have_callback(:before, :validation, :set_effective_period_from_virtual_attributes) }
   end
 
   describe "validations" do
@@ -173,6 +173,27 @@ RSpec.describe ProductPrice, type: :model do
   end
 
   include_examples "apply default scope on created_at:desc"
+
+  describe "class methods and scopes" do
+    describe ".with_normalized_warehouse" do
+      let!(:product_price_with_nil_warehouse) { create(:product_price, warehouse_id: nil) }
+      let!(:product_price_with_specific_warehouse) { create(:product_price) }
+
+      it "returns product_prices with either nil or matching warehouse_id" do
+        result = ProductPrice.with_normalized_warehouse(nil)
+
+        expect(result).to include(product_price_with_nil_warehouse)
+        expect(result).not_to include(product_price_with_specific_warehouse)
+      end
+
+      it "matches product_prices with provided warehouse_id" do
+        result = ProductPrice.with_normalized_warehouse(product_price_with_specific_warehouse.warehouse_id)
+
+        expect(result).to include(product_price_with_specific_warehouse)
+        expect(result).not_to include(product_price_with_nil_warehouse)
+      end
+    end
+  end
 
   describe "instance methods" do
     describe "#warehouse_unit_is_in_product_unit_category" do

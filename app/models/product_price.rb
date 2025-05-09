@@ -33,6 +33,8 @@ class ProductPrice < ApplicationRecord
 
   validate :warehouse_unit_is_in_product_unit_category
 
+  validates_with ProductPriceOverlapValidator
+
   with_options inverse_of: :product_prices do |a|
     a.belongs_to :product, touch: true
     a.belongs_to :warehouse, optional: true
@@ -43,6 +45,12 @@ class ProductPrice < ApplicationRecord
 
   delegate :name, to: :warehouse, prefix: true, allow_nil: true
 
+  scope :with_normalized_warehouse, ->(warehouse_id) {
+    where(
+      "COALESCE(warehouse_id::text, ?) = ?",
+      GLOBAL_WAREHOUSE_ID, (warehouse_id || GLOBAL_WAREHOUSE_ID)
+    )
+  }
   default_scope { order_created_desc }
 
   def effective_from
