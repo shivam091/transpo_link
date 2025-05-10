@@ -180,17 +180,84 @@ RSpec.describe ProductPrice, type: :model do
       let!(:product_price_with_specific_warehouse) { create(:product_price) }
 
       it "returns product_prices with either nil or matching warehouse_id" do
-        result = ProductPrice.with_normalized_warehouse(nil)
+        result = described_class.with_normalized_warehouse(nil)
 
         expect(result).to include(product_price_with_nil_warehouse)
         expect(result).not_to include(product_price_with_specific_warehouse)
       end
 
       it "matches product_prices with provided warehouse_id" do
-        result = ProductPrice.with_normalized_warehouse(product_price_with_specific_warehouse.warehouse_id)
+        result = described_class.with_normalized_warehouse(product_price_with_specific_warehouse.warehouse_id)
 
         expect(result).to include(product_price_with_specific_warehouse)
         expect(result).not_to include(product_price_with_nil_warehouse)
+      end
+    end
+
+    describe ".effective_on" do
+      let!(:product_price) do
+        create(:product_price, effective_period: Date.current..(Date.current + 1.month))
+      end
+
+      it "returns the product prices effective on given date" do
+        expect(described_class.effective_on(Date.current)).to include(product_price)
+        expect(described_class.effective_on(Date.current + 1.month)).to include(product_price)
+        expect(described_class.effective_on(Date.yesterday)).to be_empty
+      end
+    end
+
+    describe ".overlapping_with" do
+      let(:unit) { create(:unit) }
+      let(:currency) { "USD" }
+      let(:product) { create(:product, unit:, currency:) }
+      let(:warehouse) { create(:warehouse, unit:) }
+      let(:default_attributes) { {product:, warehouse:, unit:, currency:} }
+
+      let!(:existing_product_price) do
+        create(:product_price, effective_period: Date.current..(Date.current + 1.month), **default_attributes)
+      end
+
+      let(:overlapping_product_price) do
+        build(:product_price, effective_period: (Date.current + 15.days)..(Date.current + 45.days), **default_attributes)
+      end
+
+      context "when effective_period is nil" do
+        it "returns none" do
+          allow(existing_product_price).to receive(:effective_period) { nil }
+
+          expect(described_class.overlapping_with(existing_product_price)).to be_empty
+        end
+      end
+
+      context "when there is an overlapping record" do
+        it "returns overlapping records excluding the input record" do
+          result = described_class.overlapping_with(overlapping_product_price)
+
+          expect(result).to include(existing_product_price)
+          expect(result).not_to include(overlapping_product_price)
+        end
+      end
+
+      context "when there is no overlap" do
+        let(:non_overlapping_record) do
+          build(:product_price, effective_period: (Date.today + 2.months)..(Date.today + 3.months), **default_attributes)
+        end
+
+        it "does not return non-overlapping records" do
+          result = described_class.overlapping_with(non_overlapping_record)
+
+          expect(result).to be_empty
+        end
+      end
+
+      context "when warehouse is nil" do
+        it "returns overlapping records with nil warehouse" do
+          allow(overlapping_product_price).to receive(:warehouse) { nil }
+
+          result = described_class.overlapping_with(overlapping_product_price)
+
+          expect(result).to include(existing_product_price)
+        end
       end
     end
   end
@@ -263,7 +330,7 @@ RSpec.describe ProductPrice, type: :model do
 
       context "when effective_period is open-ended or inclusive" do
         let(:range) { Date.today..(Date.today + 5) }
-        let(:product_price) { build(:product_price, effective_period: range) }
+        let(:product_price) { build(:product_price, effective_period: range, effective_from: nil, effective_until: nil) }
 
         it "returns the end of the range" do
           expect(product_price.effective_until).to eq(Date.today + 5)
@@ -272,7 +339,7 @@ RSpec.describe ProductPrice, type: :model do
 
       context "when effective_period is exclusive" do
         let(:range) { (Date.today...(Date.today + 5)) }
-        let(:product_price) { build(:product_price, effective_period: range) }
+        let(:product_price) { build(:product_price, effective_period: range, effective_from: nil, effective_until: nil) }
 
         it "returns one day before the exclusive end" do
           expect(product_price.effective_until).to eq(Date.today + 4)

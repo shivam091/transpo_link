@@ -7,13 +7,9 @@ class ProductPriceOverlapValidator < ActiveModel::Validator
     return unless (product_id = record.product_id) && (effective_period = record.effective_period)
 
     # We are checking for overlapping periods with existing prices in the same product
-    overlapping = ProductPrice
-      .where(product_id: record.product_id, unit_id: record.unit_id, currency: record.currency&.iso_code)
-      .with_normalized_warehouse(record.warehouse_id)
-      .where.not(id: record.id)
-      .where("effective_period && daterange(?, ?, '[]')", effective_period.begin, effective_period.end) # '&&' checks for overlap
+    overlapping_prices = ProductPrice.overlapping_with(record)
 
-    if overlapping.exists?
+    if overlapping_prices.exists?
       record.errors.add(:effective_from, :overlaps_with_existing_price_tier)
       record.errors.add(:effective_until, :overlaps_with_existing_price_tier)
     end

@@ -51,7 +51,24 @@ class ProductPrice < ApplicationRecord
       GLOBAL_WAREHOUSE_ID, (warehouse_id || GLOBAL_WAREHOUSE_ID)
     )
   }
+  scope :effective_on, ->(date) { where("effective_period @> DATE(?)", date) }
   default_scope { order_created_desc }
+
+  class << self
+    def overlapping_with(record)
+      return none unless record.effective_period
+
+      daterange = Arel.sql("daterange('#{record.effective_period.begin}', '#{record.effective_period.end}', '[]')")
+
+      condition = self[:product_id].eq(record.product_id)
+        .and(self[:unit_id].eq(record.unit_id))
+        .and(self[:currency].eq(record.currency&.iso_code))
+        .and(self[:id].not_eq(record.id))
+        .and(Arel.sql("effective_period && #{daterange}"))
+
+      with_normalized_warehouse(record.warehouse_id).where(condition)
+    end
+  end
 
   def effective_from
     super || effective_period&.begin

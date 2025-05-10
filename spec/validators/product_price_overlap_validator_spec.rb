@@ -7,22 +7,21 @@
 require "spec_helper"
 
 RSpec.describe ProductPriceOverlapValidator do
-  let!(:unit) { create(:unit) }
-  let!(:product) { create(:product, unit:) }
-  let!(:warehouse) { create(:warehouse, unit:) }
-  let!(:currency) { "USD" }
-
+  let(:unit) { create(:unit) }
+  let(:currency) { "USD" }
+  let(:product) { create(:product, unit:, currency:) }
+  let(:warehouse) { create(:warehouse, unit:) }
   let(:default_attributes) { {product:, warehouse:, unit:, currency:} }
 
   let!(:existing_product_price) do
     create(:product_price, effective_period: Date.current..(Date.current + 1.month), **default_attributes)
   end
 
-  let!(:overlapping_product_price) do
+  let(:overlapping_product_price) do
     build(:product_price, effective_period: (Date.current + 15.days)..(Date.current + 45.days), **default_attributes)
   end
 
-  let!(:new_product_price) do
+  let(:new_product_price) do
     build(:product_price, effective_period: Date.current..(Date.current + 1.month), **default_attributes)
   end
 
