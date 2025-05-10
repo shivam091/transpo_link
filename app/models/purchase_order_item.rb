@@ -120,12 +120,22 @@ class PurchaseOrderItem < ApplicationRecord
   def inventory
     return unless purchase_order&.warehouse && product
 
-    inventory_arel = Inventory.arel_table
+    inventories = Inventory.arel_table
 
     @inventory ||= Inventory.find_by(
-      inventory_arel[:warehouse_id].eq(purchase_order.warehouse_id)
-        .and(inventory_arel[:product_id].eq(product_id))
+      inventories[:warehouse_id].eq(purchase_order.warehouse_id)
+        .and(inventories[:product_id].eq(product_id))
     )
+  end
+
+  def available_batch_quantity
+    return received_quantity.to_f unless inventory_batches.any?
+
+    total_batched_quantity = inventory_batches.sum do |batch|
+      UnitConversion.convert(batch.unit, unit, batch.quantity.to_f)
+    end
+
+    received_quantity.to_f - total_batched_quantity
   end
 
   private

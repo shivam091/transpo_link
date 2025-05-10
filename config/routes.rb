@@ -98,6 +98,8 @@ Rails.application.routes.draw do
       end
 
       resources :deliveries, only: [:new, :create], module: :purchase_order_items
+
+      resources :inventory_batches, path: "inventory-batches", only: [:new, :create], module: :purchase_order_items
     end
   end
   resources :units, only: :index

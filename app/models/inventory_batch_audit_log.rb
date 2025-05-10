@@ -7,4 +7,12 @@ class InventoryBatchAuditLog < ApplicationRecord
     a.belongs_to :inventory_batch
     a.belongs_to :user
   end
+
+  before_validation :set_default_attributes
+
+  private
+
+  def set_default_attributes
+    self.user = Current.user
+  end
 end

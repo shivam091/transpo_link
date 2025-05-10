@@ -37,6 +37,8 @@ class InventoryBatch < ApplicationRecord
             reduce: true
   validates :unit_id, presence: true, reduce: true
 
+  validate :validate_quantity_does_not_exceed_item_received_quantity
+
   validates_associated :restocks
 
   with_options inverse_of: :inventory_batch do |a|
@@ -55,8 +57,9 @@ class InventoryBatch < ApplicationRecord
 
   has_many :restocks, class_name: "Inventory::Restock", inverse_of: :inventory_batch, dependent: :destroy
 
+  before_validation :auto_fill_cost_and_currency
   before_create :convert_to_inventory_unit
-  after_save :update_inventory_average_cost_price
+  after_save :record_audit_logs, :update_inventory_average_cost_price
 
   with_options prefix: true do |d|
     d.delegate :symbol, to: :unit
@@ -99,6 +102,23 @@ class InventoryBatch < ApplicationRecord
 
   private
 
+  def manual_restock?
+    source.nil?
+  end
+
+  def auto_fill_cost_and_currency
+    return if manual_restock?
+
+    if from_purchase_order_item?
+      self.cost_price ||= source.unit_cost
+      self.currency   ||= source.currency
+    end
+  end
+
+  def from_purchase_order_item?
+    source.is_a?(PurchaseOrderItem)
+  end
+
   def update_inventory_average_cost_price
     Inventories::UpdateAverageCostPriceService.(inventory)
   end
@@ -108,5 +128,22 @@ class InventoryBatch < ApplicationRecord
 
     self.quantity = UnitConversion.convert(source_unit, target_unit, quantity)
     self.unit = target_unit # Store in default unit
+  end
+
+  def record_audit_logs
+    return unless saved_change_to_quantity?
+
+    InventoryBatchAuditLogs::CreateService.(self)
+  end
+
+  def validate_quantity_does_not_exceed_item_received_quantity
+    return unless from_purchase_order_item? && unit
+
+    available_quantity = source.available_batch_quantity
+    converted_batch_quantity = UnitConversion.convert(unit, source.unit, quantity.to_f)
+
+    if converted_batch_quantity > available_quantity
+      errors.add(:quantity, :exceeds_purchase_quantity, message: "exceeds the available quantity for this item")
+    end
   end
 end
