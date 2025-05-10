@@ -76,6 +76,13 @@ class Product < ApplicationRecord
     end
   end
 
+  def price_for(quantity, warehouse, date: Date.current)
+    @price_for ||= {}
+    @price_for[[quantity, warehouse&.id, date]] ||= begin
+      product_prices.best_price_for(warehouse:, quantity:, date:)&.unit_price || cost_price
+    end
+  end
+
   private
 
   def reject_product_price?(attributes)

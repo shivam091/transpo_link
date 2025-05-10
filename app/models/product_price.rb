@@ -45,6 +45,10 @@ class ProductPrice < ApplicationRecord
 
   delegate :name, to: :warehouse, prefix: true, allow_nil: true
 
+  scope :for_product, ->(product_id) { where(arel_table[:product_id].eq(product_id)) }
+  scope :for_unit, ->(unit_id) { where(arel_table[:unit_id].eq(unit_id)) }
+  scope :for_warehouse, ->(warehouse_id) { where(arel_table[:warehouse_id].eq(warehouse_id)) }
+  scope :for_quantity, ->(quantity) { where(arel_table[:min_quantity].lteq(quantity)) }
   scope :with_normalized_warehouse, ->(warehouse_id) {
     where(
       "COALESCE(warehouse_id::text, ?) = ?",
@@ -67,6 +71,14 @@ class ProductPrice < ApplicationRecord
       with_normalized_warehouse(record.warehouse_id)
         .where(condition)
         .where("effective_period && daterange(?, ?, '[]')", effective_period.begin, effective_period.end) # '&&' checks for overlap
+    end
+
+    def best_price_for(quantity:, warehouse: nil, date: Date.current)
+      for_warehouse(warehouse&.id)
+        .for_quantity(quantity)
+        .effective_on(date)
+        .reorder(unit_price: :asc, min_quantity: :desc) # prefer better price, then better min_quantity
+        .first
     end
   end
 
