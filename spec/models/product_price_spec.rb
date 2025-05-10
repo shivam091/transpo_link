@@ -29,7 +29,7 @@ RSpec.describe ProductPrice, type: :model do
     it { is_expected.to have_db_index(:warehouse_id) }
     it { is_expected.to have_db_index(:unit_id) }
     it { is_expected.to have_db_index(:effective_period) }
-    it { is_expected.to have_db_index("((product_id)::text), currency, ((unit_id)::text), ((COALESCE(warehouse_id, '00000000-0000-0000-0000-000000000000'::uuid))::text), effective_period") }
+    it { is_expected.to have_db_index("((product_id)::text), currency, min_quantity, ((unit_id)::text), ((COALESCE(warehouse_id, '00000000-0000-0000-0000-000000000000'::uuid))::text), effective_period") }
 
     it { is_expected.to have_foreign_key(:product_id).with_name(:fk_product_prices_product_id_on_products).on_delete(:cascade) }
     it { is_expected.to have_foreign_key(:warehouse_id).with_name(:fk_product_prices_warehouse_id_on_warehouses).on_delete(:restrict) }
@@ -211,7 +211,7 @@ RSpec.describe ProductPrice, type: :model do
       let(:currency) { "USD" }
       let(:product) { create(:product, unit:, currency:) }
       let(:warehouse) { create(:warehouse, unit:) }
-      let(:default_attributes) { {product:, warehouse:, unit:, currency:} }
+      let(:default_attributes) { {min_quantity: 15.0, product:, warehouse:, unit:, currency:} }
 
       let!(:existing_product_price) do
         create(:product_price, effective_period: Date.current..(Date.current + 1.month), **default_attributes)

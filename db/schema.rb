@@ -256,7 +256,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_07_113346) do
     t.daterange "effective_period"
     t.timestamptz "created_at", null: false
     t.timestamptz "updated_at", null: false
-    t.index "((product_id)::text), currency, ((unit_id)::text), ((COALESCE(warehouse_id, '00000000-0000-0000-0000-000000000000'::uuid))::text), effective_period", name: "index_product_prices_on_validity_overlap", using: :gist
+    t.index "((product_id)::text), currency, min_quantity, ((unit_id)::text), ((COALESCE(warehouse_id, '00000000-0000-0000-0000-000000000000'::uuid))::text), effective_period", name: "index_product_prices_on_validity_overlap", using: :gist
     t.index ["effective_period"], name: "index_product_prices_on_effective_period", using: :gist
     t.index ["product_id"], name: "index_product_prices_on_product_id"
     t.index ["unit_id"], name: "index_product_prices_on_unit_id"
@@ -268,7 +268,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_07_113346) do
     t.check_constraint "min_quantity IS NOT NULL", name: "check_product_prices_min_quantity_presence"
     t.check_constraint "unit_price > 0.0", name: "check_product_prices_unit_price_positive"
     t.check_constraint "unit_price IS NOT NULL", name: "check_product_prices_unit_price_presence"
-    t.exclusion_constraint "((product_id)::text) WITH =, currency WITH =, ((unit_id)::text) WITH =, ((COALESCE(warehouse_id, '00000000-0000-0000-0000-000000000000'::uuid))::text) WITH =, effective_period WITH &&", using: :gist, name: "check_product_prices_no_overlapping_effective_period"
+    t.exclusion_constraint "((product_id)::text) WITH =, currency WITH =, min_quantity WITH =, ((unit_id)::text) WITH =, ((COALESCE(warehouse_id, '00000000-0000-0000-0000-000000000000'::uuid))::text) WITH =, effective_period WITH &&", using: :gist, name: "check_product_prices_no_overlapping_effective_period"
   end
 
   create_table "products", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

@@ -11,7 +11,7 @@ RSpec.describe ProductPriceOverlapValidator do
   let(:currency) { "USD" }
   let(:product) { create(:product, unit:, currency:) }
   let(:warehouse) { create(:warehouse, unit:) }
-  let(:default_attributes) { {product:, warehouse:, unit:, currency:} }
+  let(:default_attributes) { {min_quantity: 15.0, product:, warehouse:, unit:, currency:} }
 
   let!(:existing_product_price) do
     create(:product_price, effective_period: Date.current..(Date.current + 1.month), **default_attributes)

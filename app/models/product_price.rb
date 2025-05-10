@@ -56,17 +56,17 @@ class ProductPrice < ApplicationRecord
 
   class << self
     def overlapping_with(record)
-      return none unless record.effective_period
-
-      daterange = Arel.sql("daterange('#{record.effective_period.begin}', '#{record.effective_period.end}', '[]')")
+      return none unless (effective_period = record.effective_period)
 
       condition = self[:product_id].eq(record.product_id)
         .and(self[:unit_id].eq(record.unit_id))
+        .and(self[:min_quantity].eq(record.min_quantity))
         .and(self[:currency].eq(record.currency&.iso_code))
         .and(self[:id].not_eq(record.id))
-        .and(Arel.sql("effective_period && #{daterange}"))
 
-      with_normalized_warehouse(record.warehouse_id).where(condition)
+      with_normalized_warehouse(record.warehouse_id)
+        .where(condition)
+        .where("effective_period && daterange(?, ?, '[]')", effective_period.begin, effective_period.end) # '&&' checks for overlap
     end
   end
 

@@ -21,6 +21,7 @@ class ProductPriceOverlapValidator < ActiveModel::Validator
           pp.new_record? &&
           !pp.marked_for_destruction? &&
           pp.unit_id == record.unit_id &&
+          pp.min_quantity == record.min_quantity &&
           pp.currency == record.currency&.iso_code &&
           (pp.warehouse_id.presence || ProductPrice::GLOBAL_WAREHOUSE_ID) == record.warehouse_id &&
           pp.effective_period.present?

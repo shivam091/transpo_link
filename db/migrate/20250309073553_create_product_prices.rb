@@ -43,6 +43,7 @@ class CreateProductPrices < ActiveRecord::Migration[8.0]
       t.index <<~SQL, name: "index_product_prices_on_validity_overlap", using: :gist
         ((product_id)::text),
         currency,
+        min_quantity,
         ((unit_id)::text),
         ((COALESCE(warehouse_id, '00000000-0000-0000-0000-000000000000'::uuid))::text),
         effective_period
@@ -63,6 +64,7 @@ class CreateProductPrices < ActiveRecord::Migration[8.0]
       t.exclusion_constraint <<~SQL, using: :gist, name: :check_product_prices_no_overlapping_effective_period
         (product_id::text) WITH =,
         (currency) WITH =,
+        (min_quantity) WITH =,
         (unit_id::text) WITH =,
         (coalesce(warehouse_id, '00000000-0000-0000-0000-000000000000')::text) WITH =,
         effective_period WITH &&
