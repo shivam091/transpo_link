@@ -141,10 +141,12 @@ class PurchaseOrderItem < ApplicationRecord
   end
 
   def set_unit_cost_and_currency
-    return unless will_save_change_to_product_id?
+    return unless will_save_change_to_product_id? && (warehouse = purchase_order&.warehouse)
 
     if product
-      assign_attributes(unit_cost: product.cost_price, currency: product.currency)
+      unit_cost = product.price_for(quantity, warehouse)
+
+      assign_attributes(unit_cost: unit_cost, currency: product.currency)
     end
   end
 
