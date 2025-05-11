@@ -3,9 +3,13 @@
 # -*- warn_indent: true -*-
 
 class PurchaseOrderItem::Delivery < ApplicationRecord
-  include ScaleEnforcer
+  include ScaleEnforcer, NullifyIfBlank, Sanitizable
 
   scale_attributes :quantity
+
+  nullify_if_blank :note
+
+  sanitize_attributes :comment, :note
 
   # Virtual attributes to preserve user input
   attr_accessor :original_quantity, :original_unit_id
@@ -16,6 +20,14 @@ class PurchaseOrderItem::Delivery < ApplicationRecord
             reduce: true
   validates :unit_id,
             presence: true,
+            reduce: true
+  validates :comment,
+            presence: true,
+            length: {maximum: 1000},
+            reduce: true
+  validates :note,
+            length: {maximum: 1000},
+            allow_blank: true,
             reduce: true
 
   validate :converted_quantity_must_not_exceed_remaining_quantity

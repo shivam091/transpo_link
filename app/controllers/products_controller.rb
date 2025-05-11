@@ -106,8 +106,11 @@ class ProductsController < ApplicationController
         :_destroy,
         :warehouse_id,
         :min_quantity,
+        :unit_id,
         :unit_price,
-        :currency
+        :currency,
+        :effective_from,
+        :effective_until
       ]
     )
   end

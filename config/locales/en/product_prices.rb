@@ -11,6 +11,7 @@
         tabular_field: {
           select_warehouse: "Select warehouse",
           select_currency: "Select currency",
+          select_unit: "Select unit",
         },
       },
     },

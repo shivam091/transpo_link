@@ -174,8 +174,12 @@
         product_price: {
           warehouse_id: "Warehouse",
           min_quantity: "Min. quantity",
+          unit_id: "Unit",
           cost_price: "Cost price",
           currency: "Currency",
+          effective_from: "Effective from",
+          effective_until: "Effective until",
+          effective_period: "Effective period",
         },
         inventory: {
           reference_code: "Reference code",
@@ -202,6 +206,8 @@
         },
         "inventory/restock" => {
           inventory_batch_id: "Inventory batch",
+          quantity: "Quantity",
+          unit_id: "Unit",
           comment: "Restock comment",
           note: "Restock note",
         },
@@ -273,6 +279,9 @@
         "purchase_order_item/delivery" => {
           quantity: "Quantity",
           unit_id: "Unit of measure",
+          comment: "Delivery comment",
+          note: "Delivery note",
+          reference_document: "Reference document",
         },
       },
       errors: {
@@ -345,7 +354,15 @@
             attributes: {
               warehouse_id: {
                 unit_category_mismatch: "is incompatible with this product due to a capacity unit mismatch"
-              }
+              },
+              effective_from: {
+                overlaps_with_existing_price_tier: "overlaps with an existing price tier",
+                overlaps_with_new_price_tier: "overlaps with an another new price tier",
+              },
+              effective_until: {
+                overlaps_with_existing_price_tier: "overlaps with an existing price tier",
+                overlaps_with_new_price_tier: "overlaps with an another new price tier",
+              },
             },
           },
           unit: {
@@ -391,6 +408,9 @@
               },
               expiration_date: {
                 greater_than_or_equal_to: "must be today or a future date"
+              },
+              quantity: {
+                exceeds_purchase_quantity: "exceeds the available quantity for this item",
               },
             }
           },

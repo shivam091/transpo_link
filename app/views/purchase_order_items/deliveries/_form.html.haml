@@ -11,6 +11,12 @@
       selected: (@delivery.original_unit_id || @delivery.unit_id),
       include_blank: t(".select_unit_of_measure")
     = help_text(t(".unit_id_help_text"))
+  .col-12
+    = form.label :comment, class: "form-label required"
+    = form.text_area :comment, rows: 2
+  .col-12
+    = form.label :note, class: "form-label"
+    = form.text_area :note, rows: 2
   .modal-actions
     = button_tag type: :submit, class: "btn btn-primary" do
       = sprite_icon("check")
