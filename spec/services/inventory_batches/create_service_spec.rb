@@ -9,6 +9,8 @@ require "spec_helper"
 RSpec.describe InventoryBatches::CreateService, type: :service do
   let!(:inventory) { create(:inventory) }
 
+  include_context "with current user"
+
   subject(:service_response) { described_class.(inventory, inventory_batch_attributes) }
 
   describe ".call" do

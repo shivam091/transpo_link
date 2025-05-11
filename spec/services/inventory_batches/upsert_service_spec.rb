@@ -9,9 +9,13 @@ require "spec_helper"
 RSpec.describe InventoryBatches::UpsertService, type: :service do
   let!(:inventory) { create(:inventory) }
 
-  let(:purchase_order_item) { create(:purchase_order_item, quantity: 3) }
+  let(:purchase_order_item) do
+    create(:purchase_order_item, :delivered, quantity: 10, received_quantity: 100, unit: inventory.unit)
+  end
 
   subject(:service_response) { described_class.(inventory, inventory_batch_attributes) }
+
+  include_context "with current user"
 
   describe ".call" do
     context "when batch_number and expiration_date are provided" do
@@ -47,7 +51,8 @@ RSpec.describe InventoryBatches::UpsertService, type: :service do
             expiration_date: 1.year.from_now,
             unit: purchase_order_item.unit,
             quantity: purchase_order_item.quantity,
-            cost_price: purchase_order_item.unit_cost
+            cost_price: purchase_order_item.unit_cost,
+            source: purchase_order_item
           )
         end
 
@@ -71,7 +76,7 @@ RSpec.describe InventoryBatches::UpsertService, type: :service do
         end
 
         it "merges quantity into the existing batch" do
-          expect { service_response }.to change { existing_batch.reload.quantity }.by(3)
+          expect { service_response }.to change { existing_batch.reload.quantity }.by(10)
         end
 
         include_examples "returns a success response"
@@ -111,7 +116,8 @@ RSpec.describe InventoryBatches::UpsertService, type: :service do
             expiration_date: nil,
             unit: purchase_order_item.unit,
             quantity: 5,
-            cost_price: purchase_order_item.unit_cost
+            cost_price: purchase_order_item.unit_cost,
+            source: purchase_order_item
           )
         end
 

@@ -12,9 +12,15 @@
         .table-cell
           = ProductPrice.human_attribute_name(:min_quantity)
         .table-cell
+          = ProductPrice.human_attribute_name(:unit_id)
+        .table-cell
           = ProductPrice.human_attribute_name(:unit_price)
         .table-cell
           = ProductPrice.human_attribute_name(:currency)
+        .table-cell
+          = ProductPrice.human_attribute_name(:effective_from)
+        .table-cell
+          = ProductPrice.human_attribute_name(:effective_until)
         .table-cell.cell-narrow
           = t("shared.actions")
       .table-body

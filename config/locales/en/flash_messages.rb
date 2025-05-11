@@ -187,6 +187,12 @@
           error: "Unable to record the item delivery. Please check the details and try again."
         },
       },
+      inventory_batches: {
+        create: {
+          success: "The inventory batch has been successfully created.",
+          error: "We encountered a problem creating the inventory batch. Please try again.",
+        },
+      },
     }
   }
 }

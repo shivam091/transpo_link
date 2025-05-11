@@ -6,6 +6,10 @@ class ProductPrice < ApplicationRecord
   include Sortable, ActsAsMoney, ScaleEnforcer
 
   LISTING_ATTRIBUTES = %i[warehouse_id min_quantity unit_price].freeze
+  GLOBAL_WAREHOUSE_ID = "00000000-0000-0000-0000-000000000000".freeze
+
+  attribute :effective_from, :date
+  attribute :effective_until, :date
 
   scale_attributes :min_quantity, :unit_price
 
@@ -13,28 +17,95 @@ class ProductPrice < ApplicationRecord
             presence: true,
             numericality: {greater_than: 0.0},
             reduce: true
+  validates :unit_id, presence: true, reduce: true
   validates :unit_price,
             presence: true,
             numericality: {greater_than: 0.0},
             reduce: true
+  validates :effective_from,
+            presence: true,
+            comparison: {greater_than_or_equal_to: Date.current},
+            reduce: true
+  validates :effective_until,
+            presence: true,
+            comparison: {greater_than_or_equal_to: :effective_from},
+            reduce: true
 
   validate :warehouse_unit_is_in_product_unit_category
+
+  validates_with ProductPriceOverlapValidator
 
   with_options inverse_of: :product_prices do |a|
     a.belongs_to :product, touch: true
     a.belongs_to :warehouse, optional: true
+    a.belongs_to :unit
   end
+
+  before_validation :set_effective_period_from_virtual_attributes
 
   delegate :name, to: :warehouse, prefix: true, allow_nil: true
 
+  scope :for_product, ->(product_id) { where(arel_table[:product_id].eq(product_id)) }
+  scope :for_unit, ->(unit_id) { where(arel_table[:unit_id].eq(unit_id)) }
+  scope :for_warehouse, ->(warehouse_id) { where(arel_table[:warehouse_id].eq(warehouse_id)) }
+  scope :for_quantity, ->(quantity) { where(arel_table[:min_quantity].lteq(quantity)) }
+  scope :with_normalized_warehouse, ->(warehouse_id) {
+    where(
+      "COALESCE(warehouse_id::text, ?) = ?",
+      GLOBAL_WAREHOUSE_ID, (warehouse_id || GLOBAL_WAREHOUSE_ID)
+    )
+  }
+  scope :effective_on, ->(date) { where("effective_period @> DATE(?)", date) }
   default_scope { order_created_desc }
 
+  class << self
+    def overlapping_with(record)
+      return none unless (effective_period = record.effective_period)
+
+      condition = self[:product_id].eq(record.product_id)
+        .and(self[:unit_id].eq(record.unit_id))
+        .and(self[:min_quantity].eq(record.min_quantity))
+        .and(self[:currency].eq(record.currency&.iso_code))
+        .and(self[:id].not_eq(record.id))
+
+      with_normalized_warehouse(record.warehouse_id)
+        .where(condition)
+        .where("effective_period && daterange(?, ?, '[]')", effective_period.begin, effective_period.end) # '&&' checks for overlap
+    end
+
+    def best_price_for(quantity:, warehouse: nil, date: Date.current)
+      for_warehouse(warehouse&.id)
+        .for_quantity(quantity)
+        .effective_on(date)
+        .reorder(unit_price: :asc, min_quantity: :desc) # prefer better price, then better min_quantity
+        .first
+    end
+  end
+
+  def effective_from
+    super || effective_period&.begin
+  end
+
+  def effective_until
+    ep = effective_period
+    return super if super.present?
+    return nil if ep.nil?
+
+    ep.exclude_end? ? ep.end.prev_day : ep.end
+  end
+
   private
+
+  def set_effective_period_from_virtual_attributes
+    return unless effective_from && effective_until
+
+    self.effective_period = effective_from..effective_until
+  end
 
   def warehouse_unit_is_in_product_unit_category
     return unless warehouse && product
 
-    allowed_units = Unit.for_category(product.unit_category).symbols
+    allowed_units ||= Unit.for_category(product.unit_category).symbols
 
     if allowed_units.blank? || allowed_units.exclude?(warehouse.unit_symbol)
       errors.add(:warehouse_id, :unit_category_mismatch)
