@@ -33,4 +33,15 @@ class InventoryBatch::Stock < ApplicationRecord
                    :available_quantity, :used_quantity
 
   belongs_to :inventory_batch, inverse_of: :stock
+
+  before_save :recalculate_quantities
+
+  private
+
+  def recalculate_quantities
+    batch_qty = inventory_batch&.quantity.to_d
+
+    self.restockable_quantity = batch_qty - restocked_quantity
+    self.available_quantity = batch_qty - used_quantity
+  end
 end

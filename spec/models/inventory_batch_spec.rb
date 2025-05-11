@@ -468,5 +468,13 @@ RSpec.describe InventoryBatch, type: :model do
         end
       end
     end
+
+    describe "#create_stock" do
+      it "creates stock after batch is created" do
+        expect {
+          create(:inventory_batch, source: purchase_order_item)
+        }.to change(InventoryBatch::Stock, :count).by(1)
+      end
+    end
   end
 end

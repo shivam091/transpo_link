@@ -4,6 +4,7 @@
 
 FactoryBot.define do
   factory :inventory_batch_stock, class: "InventoryBatch::Stock" do
+    association :inventory_batch
     ordered_quantity { 0.0 }
     reserved_quantity { 0.0 }
     damaged_quantity { 0.0 }
@@ -41,6 +42,22 @@ FactoryBot.define do
 
     trait :closed do
       status { InventoryBatch::Stock.statuses[:closed] }
+    end
+
+    # Transient attributes
+    transient do
+      batch_quantity { 1000.0 }  # Set this only when needed
+      auto_calculate_quantities { false }
+    end
+
+    # Dynamic setup using transient attributes
+    before(:create) do |stock, evaluator|
+      if evaluator.auto_calculate_quantities
+        stock.restocked_quantity = evaluator.restocked_quantity || 30
+        stock.used_quantity = evaluator.used_quantity || 20
+        stock.restockable_quantity = evaluator.batch_quantity - stock.restocked_quantity
+        stock.available_quantity = evaluator.batch_quantity - stock.used_quantity
+      end
     end
   end
 end

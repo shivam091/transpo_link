@@ -75,4 +75,20 @@ RSpec.describe InventoryBatch::Stock, type: :model do
   describe "associations" do
     it { is_expected.to belong_to(:inventory_batch).inverse_of(:stock) }
   end
+
+  describe "instance methods" do
+    describe "#recalculate_quantities" do
+      let(:purchase_order_item) { create(:purchase_order_item, :delivered, quantity: 100, received_quantity: 1000) }
+      let(:inventory_batch) { create(:inventory_batch, quantity: 100, source: purchase_order_item) }
+
+      include_context "with current user"
+
+      it "recalculates restockable_quantity and available_quantity" do
+        inventory_batch.stock.update!(restocked_quantity: 30, used_quantity: 20)
+
+        expect(inventory_batch.restockable_quantity).to eq(70.0) # 100 - 30
+        expect(inventory_batch.available_quantity).to eq(80.0) # 100 - 20
+      end
+    end
+  end
 end
