@@ -132,6 +132,41 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_02_140259) do
     t.check_constraint "previous_quantity IS NOT NULL", name: "check_inventory_batch_audit_logs_previous_quantity_presence"
   end
 
+  create_table "inventory_batch_stocks", primary_key: "inventory_batch_id", id: :uuid, default: nil, force: :cascade do |t|
+    t.decimal "ordered_quantity", precision: 12, scale: 2, default: "0.0"
+    t.decimal "reserved_quantity", precision: 12, scale: 2, default: "0.0"
+    t.decimal "damaged_quantity", precision: 12, scale: 2, default: "0.0"
+    t.decimal "returned_quantity", precision: 12, scale: 2, default: "0.0"
+    t.decimal "restocked_quantity", precision: 12, scale: 2, default: "0.0"
+    t.decimal "restockable_quantity", precision: 12, scale: 2, default: "0.0"
+    t.decimal "available_quantity", precision: 12, scale: 2, default: "0.0"
+    t.virtual "used_quantity", type: :decimal, precision: 12, scale: 2, as: "(((ordered_quantity + reserved_quantity) + damaged_quantity) + returned_quantity)", stored: true
+    t.enum "status", enum_type: "inventory_batch_stock_statuses"
+    t.boolean "is_locked", default: false
+    t.timestamptz "created_at", null: false
+    t.timestamptz "updated_at", null: false
+    t.index ["inventory_batch_id"], name: "index_inventory_batch_stocks_on_inventory_batch_id", unique: true
+    t.index ["is_locked"], name: "index_inventory_batch_stocks_on_is_locked"
+    t.index ["status", "is_locked"], name: "index_inventory_batch_stocks_on_status_and_is_locked"
+    t.index ["status"], name: "index_inventory_batch_stocks_on_status"
+    t.check_constraint "available_quantity >= 0.0", name: "check_inventory_batch_stocks_available_quantity_non_negative"
+    t.check_constraint "available_quantity IS NOT NULL", name: "check_inventory_batch_stocks_available_quantity_presence"
+    t.check_constraint "damaged_quantity >= 0.0", name: "check_inventory_batch_stocks_damaged_quantity_non_negative"
+    t.check_constraint "damaged_quantity IS NOT NULL", name: "check_inventory_batch_stocks_damaged_quantity_presence"
+    t.check_constraint "ordered_quantity >= 0.0", name: "check_inventory_batch_stocks_ordered_quantity_non_negative"
+    t.check_constraint "ordered_quantity IS NOT NULL", name: "check_inventory_batch_stocks_ordered_quantity_presence"
+    t.check_constraint "reserved_quantity >= 0.0", name: "check_inventory_batch_stocks_reserved_quantity_non_negative"
+    t.check_constraint "reserved_quantity IS NOT NULL", name: "check_inventory_batch_stocks_reserved_quantity_presence"
+    t.check_constraint "restockable_quantity >= 0.0", name: "check_inventory_batch_stocks_restockable_quantity_non_negative"
+    t.check_constraint "restockable_quantity IS NOT NULL", name: "check_inventory_batch_stocks_restockable_quantity_presence"
+    t.check_constraint "restocked_quantity >= 0.0", name: "check_inventory_batch_stocks_restocked_quantity_non_negative"
+    t.check_constraint "restocked_quantity IS NOT NULL", name: "check_inventory_batch_stocks_restocked_quantity_presence"
+    t.check_constraint "returned_quantity >= 0.0", name: "check_inventory_batch_stocks_returned_quantity_non_negative"
+    t.check_constraint "returned_quantity IS NOT NULL", name: "check_inventory_batch_stocks_returned_quantity_presence"
+    t.check_constraint "status = ANY (ARRAY['available'::inventory_batch_stock_statuses, 'reserved'::inventory_batch_stock_statuses, 'partially_used'::inventory_batch_stock_statuses, 'exhausted'::inventory_batch_stock_statuses, 'locked'::inventory_batch_stock_statuses, 'damaged'::inventory_batch_stock_statuses, 'closed'::inventory_batch_stock_statuses])", name: "check_inventory_batch_stocks_status_in_enum_values"
+    t.check_constraint "status IS NOT NULL", name: "check_inventory_batch_stocks_status_presence"
+  end
+
   create_table "inventory_batches", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "inventory_id", null: false
     t.string "batch_number"
@@ -636,6 +671,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_02_140259) do
   add_foreign_key "inventory_audit_logs", "users", name: "fk_inventory_audit_logs_user_id_on_users", on_delete: :nullify
   add_foreign_key "inventory_batch_audit_logs", "inventory_batches", name: "fk_inventory_batch_audit_logs_inventory_batch_id_on_inventory_b", on_delete: :nullify
   add_foreign_key "inventory_batch_audit_logs", "users", name: "fk_inventory_batch_audit_logs_user_id_on_users", on_delete: :nullify
+  add_foreign_key "inventory_batch_stocks", "inventory_batches", name: "fk_inventory_batch_stocks_inventory_batch_id_on_inventory_batch", on_delete: :cascade
   add_foreign_key "inventory_batches", "inventories", name: "fk_inventory_batches_inventory_id_on_inventories", on_delete: :cascade
   add_foreign_key "inventory_batches", "units", name: "fk_inventory_batches_unit_id_on_units", on_delete: :restrict
   add_foreign_key "inventory_movements", "inventories", name: "fk_inventory_movements_inventory_id_on_inventories", on_delete: :cascade
