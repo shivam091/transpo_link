@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_07_113346) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_02_140259) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_catalog.plpgsql"
@@ -136,7 +136,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_07_113346) do
     t.string "batch_number"
     t.date "expiration_date"
     t.decimal "quantity", precision: 12, scale: 2
-    t.decimal "consumed_quantity", precision: 12, scale: 2, default: "0.0"
     t.uuid "unit_id", null: false
     t.decimal "cost_price", precision: 12, scale: 2
     t.string "currency"
