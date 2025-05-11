@@ -7,13 +7,11 @@ class InventoryBatch < ApplicationRecord
 
   LISTING_ATTRIBUTES = %i[batch_number expiration_date quantity cost_price].freeze
 
-  attribute :consumed_quantity, default: 0.0
-
   nullify_if_blank :expiration_date
 
   sanitize_attributes :batch_number
 
-  scale_attributes :quantity, :consumed_quantity, :cost_price
+  scale_attributes :quantity, :cost_price
 
   validates :batch_number,
             presence: true,

@@ -51,14 +51,6 @@ RSpec.describe InventoryBatch, type: :model do
     it { is_expected.to have_check_constraint(:check_inventory_batches_quantity_presence).with_expression("quantity IS NOT NULL") }
   end
 
-  describe "default values" do
-    let(:inventory_batch) { described_class.new }
-
-    it "should set 0.0 as default value for #consumed_quantity" do
-      expect(inventory_batch.consumed_quantity).to eq(0.0)
-    end
-  end
-
   describe "included modules" do
     it { is_expected.to include_module(ActsAsMoney) }
     it { is_expected.to include_module(Sanitizable) }
@@ -80,7 +72,6 @@ RSpec.describe InventoryBatch, type: :model do
 
   describe "scaled attributes" do
     it { is_expected.to apply_scale_to(:quantity) }
-    it { is_expected.to apply_scale_to(:consumed_quantity) }
     it { is_expected.to apply_scale_to(:cost_price) }
   end
 
