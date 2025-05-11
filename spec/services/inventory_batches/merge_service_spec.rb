@@ -8,14 +8,20 @@ require "spec_helper"
 
 RSpec.describe InventoryBatches::MergeService, type: :service do
   let!(:unit) do
-    create(:dozen_unit).tap do |dozen_unit|
-      create(:dozen_item_conversion, source_unit: dozen_unit)
+    create(:item_unit).tap do |item_unit|
+      create(:dozen_item_conversion, target_unit: item_unit)
     end
   end
 
-  let!(:inventory_batch) { create(:inventory_batch, quantity: 5, unit:) }
+  let(:purchase_order_item) do
+    create(:purchase_order_item, :delivered, quantity: 10, received_quantity: 100, unit:)
+  end
+
+  let!(:inventory_batch) { create(:inventory_batch, quantity: 5, source: purchase_order_item, unit:) }
 
   subject(:service_response) { described_class.(inventory_batch, inventory_batch_attributes) }
+
+  include_context "with current user"
 
   describe ".call" do
     context "when merge succeeds after unit conversion" do

@@ -32,6 +32,7 @@
       close: "Close",
       deliver: "Deliver",
       confirm_delivery: "Confirm delivery",
+      create_batch: "Create batch",
     },
   }
 }

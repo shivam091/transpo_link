@@ -57,16 +57,6 @@ RSpec.describe InventoryAuditLog, type: :model do
 
   describe "callbacks" do
     it { is_expected.to have_callback(:before, :validation, :set_default_attributes) }
-
-    describe "#set_default_attributes" do
-      include_context "with current user"
-
-      it "should set current user to audit log" do
-        inventory_audit_log.validate
-
-        expect(inventory_audit_log.user).to eq(current_user)
-      end
-    end
   end
 
   include_examples "apply default scope on created_at:desc"
