@@ -15,14 +15,14 @@ RSpec.describe InventoryBatches::Stocks::CreateService, type: :service do
   end
 
   describe ".call" do
-    context "with a valid inventory" do
+    context "with a valid inventory batch" do
       let(:purchase_order_item) { create(:purchase_order_item, :delivered) }
       let(:inventory_batch) { create(:inventory_batch, quantity: 10, source: purchase_order_item) }
 
       include_examples "creates a record", InventoryBatch::Stock
     end
 
-    context "with an invalid inventory (nil)" do
+    context "with an invalid inventory batch (nil)" do
       let(:inventory_batch) { nil }
 
       it "raises ActiveRecord::RecordInvalid" do
