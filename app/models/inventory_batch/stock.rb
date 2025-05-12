@@ -61,6 +61,16 @@ class InventoryBatch::Stock < ApplicationRecord
     end
   end
 
+  validates :ordered_quantity, :reserved_quantity, :damaged_quantity,
+            :returned_quantity, :restocked_quantity, :restockable_quantity,
+            :available_quantity, :used_quantity,
+            presence: true,
+            numericality: {greater_than_or_equal_to: 0.0},
+            reduce: true
+  validates :status, presence: true, reduce: true
+
+  validate :restocked_quantity_less_than_batch_quantity
+
   belongs_to :inventory_batch, inverse_of: :stock
 
   before_save :recalculate_quantities, :auto_update_status
@@ -98,6 +108,14 @@ class InventoryBatch::Stock < ApplicationRecord
       errors.add(:base, :cannot_modify_locked_batch)
 
       throw :abort
+    end
+  end
+
+  def restocked_quantity_less_than_batch_quantity
+    return unless inventory_batch && restocked_quantity
+
+    if restocked_quantity > inventory_batch.quantity
+      errors.add(:restocked_quantity, :exceeds_batch_quantity)
     end
   end
 

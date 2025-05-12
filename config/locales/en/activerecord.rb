@@ -434,6 +434,9 @@
               base: {
                 cannot_modify_locked_batch: "cannot modify a locked batch",
               },
+              restocked_quantity: {
+                exceeds_batch_quantity: "exceeds batch quantity",
+              },
             }
           },
           purchase_order: {
