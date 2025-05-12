@@ -52,16 +52,23 @@ class InventoryBatch < ApplicationRecord
 
   has_one :product, through: :inventory
   has_one :warehouse, through: :inventory
+  has_one :stock, class_name: "InventoryBatch::Stock", inverse_of: :inventory_batch, dependent: :destroy
 
   has_many :restocks, class_name: "Inventory::Restock", inverse_of: :inventory_batch, dependent: :destroy
 
   before_validation :auto_fill_cost_and_currency
   before_create :convert_to_inventory_unit
   after_save :record_audit_logs, :update_inventory_average_cost_price
+  after_create :create_stock
 
   with_options prefix: true do |d|
     d.delegate :symbol, to: :unit
   end
+
+  delegate :ordered_quantity, :reserved_quantity, :damaged_quantity,
+           :returned_quantity, :restocked_quantity, :restockable_quantity,
+           :available_quantity, :used_quantity,
+           to: :stock
 
   scope :by_batch_number_and_expiry, ->(batch_number, expiry) do
     where(
@@ -143,5 +150,9 @@ class InventoryBatch < ApplicationRecord
     if converted_batch_quantity > available_quantity
       errors.add(:quantity, :exceeds_purchase_quantity, message: "exceeds the available quantity for this item")
     end
+  end
+
+  def create_stock
+    InventoryBatch::Stock.create!(inventory_batch: self)
   end
 end

@@ -193,17 +193,6 @@
           created_at: "Created at",
           updated_at: "Updated at",
         },
-        inventory_batch: {
-          inventory_id: "Inventory",
-          batch_number: "Batch number",
-          expiration_date: "Expiration date",
-          quantity: "Quantity",
-          unit_id: "Inventory unit",
-          cost_price: "Cost price",
-          currency: "Currency",
-          created_at: "Created at",
-          updated_at: "Updated at",
-        },
         "inventory/restock" => {
           inventory_batch_id: "Inventory batch",
           quantity: "Quantity",
@@ -217,6 +206,32 @@
           previous_quantity: "Previous quantity",
           new_quantity: "New quantity",
           metadata: "Metadata",
+        },
+        inventory_batch: {
+          inventory_id: "Inventory",
+          batch_number: "Batch number",
+          expiration_date: "Expiration date",
+          quantity: "Quantity",
+          unit_id: "Inventory unit",
+          cost_price: "Cost price",
+          currency: "Currency",
+          created_at: "Created at",
+          updated_at: "Updated at",
+        },
+        "inventory_batch/stock" => {
+          inventory_batch_id: "Inventory batch",
+          ordered_quantity: "Ordered quantity",
+          reserved_quantity: "Reserved quantity",
+          damaged_quantity: "Damaged quantity",
+          returned_quantity: "Returned quantity",
+          restocked_quantity: "Restocked quantity",
+          restockable_quantity: "Restockable quantity",
+          available_quantity: "Available quantity",
+          used_quantity: "Used quantity",
+          status: "Status",
+          is_locked: "Is locked",
+          created_at: "Created at",
+          updated_at: "Updated at",
         },
         inventory_movement: {
           inventory_id: "Inventory",
@@ -411,6 +426,16 @@
               },
               quantity: {
                 exceeds_purchase_quantity: "exceeds the available quantity for this item",
+              },
+            }
+          },
+          "inventory_batch/stock" => {
+            attributes: {
+              base: {
+                cannot_modify_locked_batch: "cannot modify a locked batch",
+              },
+              restocked_quantity: {
+                exceeds_batch_quantity: "exceeds batch quantity",
               },
             }
           },
