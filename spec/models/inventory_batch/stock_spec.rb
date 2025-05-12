@@ -289,7 +289,7 @@ RSpec.describe InventoryBatch::Stock, type: :model do
   end
 
   describe "instance methods" do
-    let(:purchase_order_item) { create(:purchase_order_item, :delivered, quantity: 100, received_quantity: 1000) }
+    let(:purchase_order_item) { create(:purchase_order_item, :delivered) }
     let(:inventory_batch) { create(:inventory_batch, quantity: 100, source: purchase_order_item) }
     let(:stock) { inventory_batch.stock }
 
