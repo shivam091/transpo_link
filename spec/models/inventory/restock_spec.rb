@@ -55,6 +55,10 @@ RSpec.describe Inventory::Restock, type: :model do
     it { is_expected.to sanitize_attribute(:note) }
   end
 
+  describe "callbacks" do
+    it { is_expected.to have_callback(:after, :create, :restock_inventory) }
+  end
+
   describe "associations" do
     describe "#restocks" do
       let(:source) { create(:purchase_order_item) }
@@ -136,6 +140,17 @@ RSpec.describe Inventory::Restock, type: :model do
 
   describe "instance methods" do
     before { allow_any_instance_of(InventoryBatch).to receive(:record_audit_logs) }
+
+    describe "#restock_inventory" do
+      let(:purchase_order_item) { create(:purchase_order_item, :delivered) }
+      let(:inventory_batch) { create(:inventory_batch, quantity: 10, source: purchase_order_item) }
+
+      it "calls Inventories::RestockService" do
+        expect(Inventories::RestockService).to receive(:call).with(an_instance_of(InventoryBatch), an_instance_of(Inventory::Restock))
+
+        create(:inventory_restock, inventory_batch:)
+      end
+    end
 
     describe "#quantity_cannot_exceed_stock_restockable_quantity" do
       let(:purchase_order_item) { create(:purchase_order_item, :delivered) }
