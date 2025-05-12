@@ -429,6 +429,13 @@
               },
             }
           },
+          "inventory_batch/stock" => {
+            attributes: {
+              base: {
+                cannot_modify_locked_batch: "cannot modify a locked batch",
+              },
+            }
+          },
           purchase_order: {
             attributes: {
               status: {

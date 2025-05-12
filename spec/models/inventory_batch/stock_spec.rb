@@ -76,18 +76,94 @@ RSpec.describe InventoryBatch::Stock, type: :model do
     it { is_expected.to belong_to(:inventory_batch).inverse_of(:stock) }
   end
 
+  describe "state machines" do
+    it { is_expected.to have_state(:available) }
+    it { is_expected.to transition_from(:available).to(:reserved).on_event(:reserve) }
+    it { is_expected.to transition_from(:available).to(:partially_used).on_event(:consume_partially) }
+    it { is_expected.to transition_from(:reserved).to(:partially_used).on_event(:consume_partially) }
+    it { is_expected.to transition_from(:available).to(:exhausted).on_event(:consume_fully) }
+    it { is_expected.to transition_from(:reserved).to(:exhausted).on_event(:consume_fully) }
+    it { is_expected.to transition_from(:partially_used).to(:exhausted).on_event(:consume_fully) }
+    it { is_expected.to transition_from(:available).to(:locked).on_event(:lock) }
+    it { is_expected.to transition_from(:reserved).to(:locked).on_event(:lock) }
+    it { is_expected.to transition_from(:partially_used).to(:locked).on_event(:lock) }
+    it { is_expected.to transition_from(:exhausted).to(:locked).on_event(:lock) }
+    it { is_expected.to transition_from(:available).to(:damaged).on_event(:damage) }
+    it { is_expected.to transition_from(:reserved).to(:damaged).on_event(:damage) }
+    it { is_expected.to transition_from(:exhausted).to(:closed).on_event(:close) }
+    it { is_expected.to transition_from(:locked).to(:closed).on_event(:close) }
+  end
   describe "instance methods" do
+    let(:purchase_order_item) { create(:purchase_order_item, :delivered, quantity: 100, received_quantity: 1000) }
+    let(:inventory_batch) { create(:inventory_batch, quantity: 100, source: purchase_order_item) }
+    let(:stock) { inventory_batch.stock }
+
+    include_context "with current user"
+
     describe "#recalculate_quantities" do
-      let(:purchase_order_item) { create(:purchase_order_item, :delivered, quantity: 100, received_quantity: 1000) }
-      let(:inventory_batch) { create(:inventory_batch, quantity: 100, source: purchase_order_item) }
-
-      include_context "with current user"
-
       it "recalculates restockable_quantity and available_quantity" do
-        inventory_batch.stock.update!(restocked_quantity: 30, used_quantity: 20)
+        stock.update!(restocked_quantity: 30, used_quantity: 20)
 
         expect(inventory_batch.restockable_quantity).to eq(70.0) # 100 - 30
         expect(inventory_batch.available_quantity).to eq(80.0) # 100 - 20
+      end
+    end
+
+    describe "#auto_update_status" do
+      it "sets status to :available when stock is unused" do
+        expect(stock.status).to eq("available")
+      end
+
+      it "sets status to :locked when is_locked is true" do
+        stock.update!(is_locked: true)
+
+        expect(stock.status).to eq("locked")
+      end
+
+      it "sets status to :exhausted when available_quantity is 0.0" do
+        stock.update!(used_quantity: 100)
+
+        expect(stock.status).to eq("exhausted")
+      end
+
+      it "sets status to :partially_used when reserved_quantity > 0.0" do
+        stock.update!(reserved_quantity: 5)
+
+        expect(stock.status).to eq("partially_used")
+      end
+
+      it "sets status to :partially_used when ordered_quantity > 0.0" do
+        stock.update!(ordered_quantity: 5)
+
+        expect(stock.status).to eq("partially_used")
+      end
+
+      it "sets status to :closed when exhausted and used_quantity >= batch quantity" do
+        stock.update!(status: :exhausted, used_quantity: 100)
+
+        expect(stock.status).to eq("closed")
+      end
+
+      it "does not change status if already locked" do
+        stock.update!(status: :locked, is_locked: false)
+
+        expect(stock.status).to eq("locked")
+      end
+    end
+
+    describe "#prevent_updates_if_locked" do
+      it "prevents update if locked and modifying restricted fields" do
+        expect {
+          stock.update!(is_locked: true, reserved_quantity: 10)
+        }.to raise_error(ActiveRecord::RecordNotSaved)
+
+        expect(stock.errors[:base]).to include("cannot modify a locked batch")
+      end
+
+      it "allows update if locked but modifying non restricted fields" do
+        expect {
+          stock.update!(is_locked: true, used_quantity: 5)
+        }.not_to raise_error
       end
     end
   end
