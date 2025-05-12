@@ -174,8 +174,12 @@
         product_price: {
           warehouse_id: "Warehouse",
           min_quantity: "Min. quantity",
+          unit_id: "Unit",
           cost_price: "Cost price",
           currency: "Currency",
+          effective_from: "Effective from",
+          effective_until: "Effective until",
+          effective_period: "Effective period",
         },
         inventory: {
           reference_code: "Reference code",
@@ -186,18 +190,6 @@
           average_cost_price: "Average cost price",
           currency: "Currency",
           low_stock_threshold: "Low stock threshold",
-          created_at: "Created at",
-          updated_at: "Updated at",
-        },
-        inventory_batch: {
-          inventory_id: "Inventory",
-          batch_number: "Batch number",
-          expiration_date: "Expiration date",
-          quantity: "Quantity",
-          consumed_quantity: "Consumed quantity",
-          unit_id: "Inventory unit",
-          cost_price: "Cost price",
-          currency: "Currency",
           created_at: "Created at",
           updated_at: "Updated at",
         },
@@ -214,6 +206,32 @@
           previous_quantity: "Previous quantity",
           new_quantity: "New quantity",
           metadata: "Metadata",
+        },
+        inventory_batch: {
+          inventory_id: "Inventory",
+          batch_number: "Batch number",
+          expiration_date: "Expiration date",
+          quantity: "Quantity",
+          unit_id: "Inventory unit",
+          cost_price: "Cost price",
+          currency: "Currency",
+          created_at: "Created at",
+          updated_at: "Updated at",
+        },
+        "inventory_batch/stock" => {
+          inventory_batch_id: "Inventory batch",
+          ordered_quantity: "Ordered quantity",
+          reserved_quantity: "Reserved quantity",
+          damaged_quantity: "Damaged quantity",
+          returned_quantity: "Returned quantity",
+          restocked_quantity: "Restocked quantity",
+          restockable_quantity: "Restockable quantity",
+          available_quantity: "Available quantity",
+          used_quantity: "Used quantity",
+          status: "Status",
+          is_locked: "Is locked",
+          created_at: "Created at",
+          updated_at: "Updated at",
         },
         inventory_movement: {
           inventory_id: "Inventory",
@@ -351,7 +369,15 @@
             attributes: {
               warehouse_id: {
                 unit_category_mismatch: "is incompatible with this product due to a capacity unit mismatch"
-              }
+              },
+              effective_from: {
+                overlaps_with_existing_price_tier: "overlaps with an existing price tier",
+                overlaps_with_new_price_tier: "overlaps with an another new price tier",
+              },
+              effective_until: {
+                overlaps_with_existing_price_tier: "overlaps with an existing price tier",
+                overlaps_with_new_price_tier: "overlaps with an another new price tier",
+              },
             },
           },
           unit: {
@@ -397,6 +423,19 @@
               },
               expiration_date: {
                 greater_than_or_equal_to: "must be today or a future date"
+              },
+              quantity: {
+                exceeds_purchase_quantity: "exceeds the available quantity for this item",
+              },
+            }
+          },
+          "inventory_batch/stock" => {
+            attributes: {
+              base: {
+                cannot_modify_locked_batch: "cannot modify a locked batch",
+              },
+              restocked_quantity: {
+                exceeds_batch_quantity: "exceeds batch quantity",
               },
             }
           },

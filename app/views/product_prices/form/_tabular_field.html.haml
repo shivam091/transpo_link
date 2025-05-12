@@ -7,12 +7,18 @@
     = form.select :warehouse_id, options_for_select(Warehouse.select_options, form.object.warehouse_id),
       {include_blank: t(".select_warehouse")}, {}
   .table-cell.flex-column
-    = form.number_field :min_quantity, step: 1
+    = form.number_field :min_quantity, step: 0.01
+  .table-cell.flex-column
+    = form.measurement_unit_select :unit_id, {include_blank: t(".select_unit")}, {}
   .table-cell.flex-column
     = form.number_field :unit_price, step: 0.01
   .table-cell.flex-column
     = form.select :currency, options_for_select(TranspoLink::Currency.select_options, form.object.currency),
       {include_blank: t(".select_currency")}
+  .table-cell.flex-column
+    = form.date_field :effective_from
+  .table-cell.flex-column
+    = form.date_field :effective_until
   .table-cell.cell-narrow
     = button_tag type: :button, class: "btn btn-sm btn-danger", data: {action: "click->nested-forms#removeAssociation"} do
       = sprite_icon("trash")

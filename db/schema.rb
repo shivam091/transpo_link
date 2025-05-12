@@ -10,8 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_07_113346) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_02_140259) do
   # These are extensions that must be enabled in order to support this database
+  enable_extension "btree_gist"
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
 
@@ -20,6 +21,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_07_113346) do
   create_enum "business_categories", ["b2b", "b2c"]
   create_enum "color_schemes", ["auto", "dark", "light"]
   create_enum "entity_types", ["business", "individual"]
+  create_enum "inventory_batch_stock_statuses", ["available", "reserved", "partially_used", "exhausted", "locked", "damaged", "closed"]
   create_enum "legal_identifier_statuses", ["unapproved", "approved", "rejected"]
   create_enum "movement_types", ["restock", "purchase", "sale", "customer_return", "supplier_return", "transfer_in", "transfer_out", "adjustment", "correction", "reservation", "release_reservation", "initial_stock", "inspection", "quarantine", "release_from_quarantine"]
   create_enum "purchase_order_item_statuses", ["pending", "ordered", "partially_delivered", "delivered", "cancelled"]
@@ -130,12 +132,46 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_07_113346) do
     t.check_constraint "previous_quantity IS NOT NULL", name: "check_inventory_batch_audit_logs_previous_quantity_presence"
   end
 
+  create_table "inventory_batch_stocks", primary_key: "inventory_batch_id", id: :uuid, default: nil, force: :cascade do |t|
+    t.decimal "ordered_quantity", precision: 12, scale: 2, default: "0.0"
+    t.decimal "reserved_quantity", precision: 12, scale: 2, default: "0.0"
+    t.decimal "damaged_quantity", precision: 12, scale: 2, default: "0.0"
+    t.decimal "returned_quantity", precision: 12, scale: 2, default: "0.0"
+    t.decimal "restocked_quantity", precision: 12, scale: 2, default: "0.0"
+    t.decimal "restockable_quantity", precision: 12, scale: 2, default: "0.0"
+    t.decimal "available_quantity", precision: 12, scale: 2, default: "0.0"
+    t.virtual "used_quantity", type: :decimal, precision: 12, scale: 2, as: "(((ordered_quantity + reserved_quantity) + damaged_quantity) + returned_quantity)", stored: true
+    t.enum "status", enum_type: "inventory_batch_stock_statuses"
+    t.boolean "is_locked", default: false
+    t.timestamptz "created_at", null: false
+    t.timestamptz "updated_at", null: false
+    t.index ["inventory_batch_id"], name: "index_inventory_batch_stocks_on_inventory_batch_id", unique: true
+    t.index ["is_locked"], name: "index_inventory_batch_stocks_on_is_locked"
+    t.index ["status", "is_locked"], name: "index_inventory_batch_stocks_on_status_and_is_locked"
+    t.index ["status"], name: "index_inventory_batch_stocks_on_status"
+    t.check_constraint "available_quantity >= 0.0", name: "check_inventory_batch_stocks_available_quantity_non_negative"
+    t.check_constraint "available_quantity IS NOT NULL", name: "check_inventory_batch_stocks_available_quantity_presence"
+    t.check_constraint "damaged_quantity >= 0.0", name: "check_inventory_batch_stocks_damaged_quantity_non_negative"
+    t.check_constraint "damaged_quantity IS NOT NULL", name: "check_inventory_batch_stocks_damaged_quantity_presence"
+    t.check_constraint "ordered_quantity >= 0.0", name: "check_inventory_batch_stocks_ordered_quantity_non_negative"
+    t.check_constraint "ordered_quantity IS NOT NULL", name: "check_inventory_batch_stocks_ordered_quantity_presence"
+    t.check_constraint "reserved_quantity >= 0.0", name: "check_inventory_batch_stocks_reserved_quantity_non_negative"
+    t.check_constraint "reserved_quantity IS NOT NULL", name: "check_inventory_batch_stocks_reserved_quantity_presence"
+    t.check_constraint "restockable_quantity >= 0.0", name: "check_inventory_batch_stocks_restockable_quantity_non_negative"
+    t.check_constraint "restockable_quantity IS NOT NULL", name: "check_inventory_batch_stocks_restockable_quantity_presence"
+    t.check_constraint "restocked_quantity >= 0.0", name: "check_inventory_batch_stocks_restocked_quantity_non_negative"
+    t.check_constraint "restocked_quantity IS NOT NULL", name: "check_inventory_batch_stocks_restocked_quantity_presence"
+    t.check_constraint "returned_quantity >= 0.0", name: "check_inventory_batch_stocks_returned_quantity_non_negative"
+    t.check_constraint "returned_quantity IS NOT NULL", name: "check_inventory_batch_stocks_returned_quantity_presence"
+    t.check_constraint "status = ANY (ARRAY['available'::inventory_batch_stock_statuses, 'reserved'::inventory_batch_stock_statuses, 'partially_used'::inventory_batch_stock_statuses, 'exhausted'::inventory_batch_stock_statuses, 'locked'::inventory_batch_stock_statuses, 'damaged'::inventory_batch_stock_statuses, 'closed'::inventory_batch_stock_statuses])", name: "check_inventory_batch_stocks_status_in_enum_values"
+    t.check_constraint "status IS NOT NULL", name: "check_inventory_batch_stocks_status_presence"
+  end
+
   create_table "inventory_batches", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "inventory_id", null: false
     t.string "batch_number"
     t.date "expiration_date"
     t.decimal "quantity", precision: 12, scale: 2
-    t.decimal "consumed_quantity", precision: 12, scale: 2, default: "0.0"
     t.uuid "unit_id", null: false
     t.decimal "cost_price", precision: 12, scale: 2
     t.string "currency"
@@ -249,17 +285,25 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_07_113346) do
     t.uuid "product_id", null: false
     t.uuid "warehouse_id"
     t.decimal "min_quantity", precision: 12, scale: 2
+    t.uuid "unit_id", null: false
     t.decimal "unit_price", precision: 12, scale: 2
     t.string "currency"
+    t.daterange "effective_period"
     t.timestamptz "created_at", null: false
     t.timestamptz "updated_at", null: false
+    t.index "((product_id)::text), currency, min_quantity, ((unit_id)::text), ((COALESCE(warehouse_id, '00000000-0000-0000-0000-000000000000'::uuid))::text), effective_period", name: "index_product_prices_on_validity_overlap", using: :gist
+    t.index ["effective_period"], name: "index_product_prices_on_effective_period", using: :gist
     t.index ["product_id"], name: "index_product_prices_on_product_id"
+    t.index ["unit_id"], name: "index_product_prices_on_unit_id"
     t.index ["warehouse_id"], name: "index_product_prices_on_warehouse_id"
     t.check_constraint "currency IS NOT NULL AND currency::text <> ''::text", name: "check_product_prices_currency_presence"
+    t.check_constraint "lower(effective_period) < upper(effective_period)", name: "check_product_prices_effective_period_order"
+    t.check_constraint "lower(effective_period) IS NOT NULL AND upper(effective_period) IS NOT NULL", name: "check_product_prices_effective_period_bounds"
     t.check_constraint "min_quantity > 0.0", name: "check_product_prices_min_quantity_positive"
     t.check_constraint "min_quantity IS NOT NULL", name: "check_product_prices_min_quantity_presence"
     t.check_constraint "unit_price > 0.0", name: "check_product_prices_unit_price_positive"
     t.check_constraint "unit_price IS NOT NULL", name: "check_product_prices_unit_price_presence"
+    t.exclusion_constraint "((product_id)::text) WITH =, currency WITH =, min_quantity WITH =, ((unit_id)::text) WITH =, ((COALESCE(warehouse_id, '00000000-0000-0000-0000-000000000000'::uuid))::text) WITH =, effective_period WITH &&", using: :gist, name: "check_product_prices_no_overlapping_effective_period"
   end
 
   create_table "products", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -627,6 +671,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_07_113346) do
   add_foreign_key "inventory_audit_logs", "users", name: "fk_inventory_audit_logs_user_id_on_users", on_delete: :nullify
   add_foreign_key "inventory_batch_audit_logs", "inventory_batches", name: "fk_inventory_batch_audit_logs_inventory_batch_id_on_inventory_b", on_delete: :nullify
   add_foreign_key "inventory_batch_audit_logs", "users", name: "fk_inventory_batch_audit_logs_user_id_on_users", on_delete: :nullify
+  add_foreign_key "inventory_batch_stocks", "inventory_batches", name: "fk_inventory_batch_stocks_inventory_batch_id_on_inventory_batch", on_delete: :cascade
   add_foreign_key "inventory_batches", "inventories", name: "fk_inventory_batches_inventory_id_on_inventories", on_delete: :cascade
   add_foreign_key "inventory_batches", "units", name: "fk_inventory_batches_unit_id_on_units", on_delete: :restrict
   add_foreign_key "inventory_movements", "inventories", name: "fk_inventory_movements_inventory_id_on_inventories", on_delete: :cascade
@@ -636,6 +681,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_07_113346) do
   add_foreign_key "legal_identifiers", "users", name: "fk_legal_identifiers_user_id_on_users", on_delete: :cascade
   add_foreign_key "product_categories", "product_categories", column: "parent_category_id", name: "fk_product_categories_parent_category_id_on_product_categories", on_delete: :cascade
   add_foreign_key "product_prices", "products", name: "fk_product_prices_product_id_on_products", on_delete: :cascade
+  add_foreign_key "product_prices", "units", name: "fk_product_prices_unit_id_on_units", on_delete: :restrict
   add_foreign_key "product_prices", "warehouses", name: "fk_product_prices_warehouse_id_on_warehouses", on_delete: :restrict
   add_foreign_key "products", "product_categories", name: "fk_products_product_category_id_on_product_categories", on_delete: :restrict
   add_foreign_key "products", "units", name: "fk_products_unit_id_on_units", on_delete: :restrict

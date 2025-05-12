@@ -222,7 +222,7 @@ RSpec.describe Product, type: :model do
         context "when valid attributes are provided" do
           it "creates a product price" do
             expect {
-              product.update(product_prices_attributes: {0 => {min_quantity: 10, unit_price: 202, currency: "INR"}})
+              product.update(product_prices_attributes: {0 => {min_quantity: 10, unit_id: product.unit_id, unit_price: 200, currency: "INR", effective_period: Date.current..(Date.current + 1.week)}})
             }.to change(ProductPrice, :count).by(1)
           end
         end
@@ -239,7 +239,7 @@ RSpec.describe Product, type: :model do
       context "when updating product prices" do
         it "updates the existing product price without changing the count" do
           expect {
-            product.update(product_prices_attributes: {id: product_price.id, min_quantity: 10, unit_price: 202, currency: "USD"})
+            product.update(product_prices_attributes: {id: product_price.id, min_quantity: 10, unit_price: 202, currency: "USD", effective_period: Date.current..(Date.current + 1.month)})
           }.to not_change(ProductPrice, :count)
 
           expect(product_price.reload.currency).to eq("USD")
@@ -251,6 +251,72 @@ RSpec.describe Product, type: :model do
           expect {
             product.update(product_prices_attributes: {id: product_price.id, _destroy: true})
           }.to change(ProductPrice, :count).by(-1)
+        end
+      end
+    end
+
+    describe "#price_for" do
+      let(:unit) { create(:unit) }
+      let(:currency) { "USD" }
+      let(:warehouse) { create(:warehouse, unit:) }
+      let(:default_attributes) { {effective_period: Date.current..(Date.current + 1.month), warehouse:, unit:, currency:} }
+
+      let(:product) do
+        create(:product, unit:, currency:).tap do |product|
+          create(:product_price, min_quantity: 1, unit_price: 100, product:, **default_attributes)
+          create(:product_price, min_quantity: 10, unit_price: 90, product:, **default_attributes)
+          create(:product_price, min_quantity: 50, unit_price: 80, product:, **default_attributes)
+        end
+      end
+
+      context "when matching price tiers exist" do
+        it "returns the correct price tier based on quantity" do
+          expect(product.price_for(1, warehouse)).to eq(100)
+          expect(product.price_for(10, warehouse)).to eq(90)
+          expect(product.price_for(50, warehouse)).to eq(80)
+          expect(product.price_for(100, warehouse)).to eq(80) # highest tier
+        end
+      end
+
+      context "when no matching price tier exists for the given warehouse" do
+        let(:other_warehouse) { create(:warehouse, unit:) }
+
+        it "returns the product's cost_price" do
+          expect(product.price_for(10, other_warehouse)).to eq(product.cost_price)
+        end
+      end
+
+      context "when memoization is used" do
+        it "caches the result for the same input" do
+          expect(product.product_prices).to receive(:best_price_for).once.and_call_original
+
+          price1 = product.price_for(10, warehouse)
+          price2 = product.price_for(10, warehouse)
+
+          expect(price1).to eq(price2)
+        end
+
+        it "caches results separately for different quantity/warehouse combinations" do
+          other_warehouse = create(:warehouse, unit:)
+
+          expect(product.product_prices).to receive(:best_price_for).twice.and_call_original
+
+          price1 = product.price_for(10, warehouse)
+          price2 = product.price_for(10, other_warehouse)
+
+          expect(price1).not_to eq(price2)
+        end
+
+        it "caches results separately for different dates" do
+          future_date = Date.current + 1.month
+
+          expect(product.product_prices).to receive(:best_price_for).twice.and_call_original
+
+          price_today = product.price_for(10, warehouse, date: Date.current)
+          price_future = product.price_for(10, warehouse, date: future_date)
+
+          expect(price_today).to eq(90)
+          expect(price_future).to eq(90)
         end
       end
     end
