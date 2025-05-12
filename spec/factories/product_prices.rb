@@ -8,7 +8,7 @@ FactoryBot.define do
     association :warehouse
     min_quantity { Faker::Number.between(from: 1, to: 100) }
     unit { find_or_create_unit("item") }
-    unit_price { product.cost_price * 0.8 }
+    unit_price { 150.0 }
     currency { Faker::Currency.code }
     effective_period { Date.current..(Date.current + 1.month) }
 
