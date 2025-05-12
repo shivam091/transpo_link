@@ -153,6 +153,6 @@ class InventoryBatch < ApplicationRecord
   end
 
   def create_stock
-    InventoryBatch::Stock.create!(inventory_batch: self)
+    InventoryBatches::Stocks::CreateService.(self)
   end
 end
