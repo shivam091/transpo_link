@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   favicon_redirect = redirect do |_params, _request|
     ActionController::Base.helpers.asset_url(TranspoLink::Favicon.main)
   end
+
   get "favicon.png", to: favicon_redirect, as: :favicon_png
   get "favicon.ico", to: favicon_redirect, as: :favicon_ico
 
@@ -39,36 +40,47 @@ Rails.application.routes.draw do
       get :read, action: :index, defaults: {status: "read"}
       get :unread, action: :index, defaults: {status: "unread"}
     end
+
     member do
       match :mark_as_read, path: "mark-as-read", via: [:put, :patch]
     end
   end
 
   resource :profile, only: [:show, :edit, :update]
+
   resource :preference, only: [:show, :edit, :update]
+
   resource :color_scheme, path: "color-scheme", only: :update
+
   resource :locale, only: [:edit, :update]
 
   resources :states, only: :index
+
   resources :roles, except: [:new, :create, :destroy]
+
   resources :users, only: [:index, :show], concerns: :toggleable do
     collection do
       get :suspended, action: :index, defaults: {status: "suspended"}
     end
   end
+
   resources :request_logs, path: "request-logs", only: [:index, :show]
+
   resources :warehouses, concerns: :toggleable
+
   resources :legal_identifiers, path: "legal-identifiers", except: :show do
     member do
       patch :approve
       patch :reject
     end
+
     collection do
       get :approved, action: :index, defaults: {status: "approved"}
       get :unapproved, action: :index, defaults: {status: "unapproved"}
       get :rejected, action: :index, defaults: {status: "rejected"}
     end
   end
+
   resources :tax_rates, path: "tax-rates", except: :show do
     collection do
       get :active, action: :index, defaults: {status: "active"}
@@ -76,14 +88,19 @@ Rails.application.routes.draw do
       get :expired, action: :index, defaults: {status: "expired"}
     end
   end
+
   resources :product_categories, path: "product-categories", except: :show, concerns: :toggleable
+
   resources :products, concerns: [:reviewable, :toggleable]
+
   resources :feedbacks, only: [:index, :show], concerns: :notifiable
+
   resources :inventories, except: :destroy do
     resources :inventory_batches, path: "inventory-batches", only: :index, module: :inventories, shallow: true do
       resources :inventory_restocks, path: "restocks", only: [:new, :create]
     end
   end
+
   resources :purchase_orders, path: "purchase-orders" do
     member do
       patch :cancel
@@ -104,7 +121,9 @@ Rails.application.routes.draw do
       resources :inventory_batches, path: "inventory-batches", only: [:new, :create], module: :purchase_order_items
     end
   end
+
   resources :units, only: :index
+
   resources :unit_conversions, path: "unit-conversions", only: :index
 
   root to: "dashboards#show"
