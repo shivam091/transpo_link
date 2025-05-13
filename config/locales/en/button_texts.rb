@@ -33,6 +33,8 @@
       deliver: "Deliver",
       confirm_delivery: "Confirm delivery",
       create_batch: "Create batch",
+      restock: "Restock",
+      confirm_restock: "Confirm restock",
     },
   }
 }

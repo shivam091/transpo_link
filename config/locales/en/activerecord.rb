@@ -416,6 +416,13 @@
               },
             }
           },
+          "inventory/restock" => {
+            attributes: {
+              quantity: {
+                exceeds_available_batch_quantity: "exceeds the restockable quantity of the batch",
+              },
+            },
+          },
           inventory_batch: {
             attributes: {
               batch_number: {

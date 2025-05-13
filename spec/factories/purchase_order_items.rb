@@ -7,9 +7,10 @@ FactoryBot.define do
     # unit_cost & currency will be set automatically from Product#cost_price & Product#currency, respectively.
     association :purchase_order
     association :product
-    quantity { Faker::Number.between(from: 1, to: 100) }
+    quantity { 100 }
     unit { find_or_create_unit("item") }
     status { PurchaseOrderItem.statuses[:pending] }
+    received_quantity { 0 }
 
     trait :pending do
       status { PurchaseOrderItem.statuses[:pending] }
@@ -20,10 +21,12 @@ FactoryBot.define do
     end
 
     trait :partially_delivered do
+      received_quantity { 50 }
       status { PurchaseOrderItem.statuses[:partially_delivered] }
     end
 
     trait :delivered do
+      received_quantity { 100 }
       status { PurchaseOrderItem.statuses[:delivered] }
     end
 
@@ -37,7 +40,13 @@ FactoryBot.define do
       end
 
       after(:create) do |purchase_order_item, evaluator|
-        create_list(:po_item_delivery, evaluator.deliveries_count, purchase_order_item:)
+        create_list(
+          :po_item_delivery,
+          evaluator.deliveries_count,
+          quantity: purchase_order_item.quantity / evaluator.deliveries_count,
+          unit: purchase_order_item.unit,
+          purchase_order_item:
+        )
       end
     end
   end

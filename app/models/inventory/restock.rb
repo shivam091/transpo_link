@@ -27,6 +27,34 @@ class Inventory::Restock < ApplicationRecord
             allow_blank: true,
             reduce: true
 
+  validate :quantity_cannot_exceed_stock_restockable_quantity
+
+  has_many :restocks,
+             -> {
+               where(InventoryMovement.arel_table[:movement_type].eq(InventoryMovement.movement_types[:restock]))
+             },
+             as: :source,
+             class_name: "InventoryMovement",
+             dependent: :destroy
+
   belongs_to :inventory_batch, inverse_of: :restocks
   belongs_to :unit, inverse_of: :restocks
+
+  after_create :restock_inventory
+
+  private
+
+  def restock_inventory
+    Inventories::RestockService.(inventory_batch, self)
+  end
+
+  def quantity_cannot_exceed_stock_restockable_quantity
+    return unless inventory_batch && quantity && unit
+
+    converted_quantity = UnitConversion.convert(unit, inventory_batch.unit, quantity)
+
+    if converted_quantity > inventory_batch.restockable_quantity
+      errors.add(:quantity, :exceeds_available_batch_quantity)
+    end
+  end
 end

@@ -13,6 +13,13 @@
     = link_to "javascript:void(0)", class: "text-reset", data: {bs_toggle: "dropdown"}, aria: {expanded: false} do
       = sprite_icon("ellipsis-vertical")
     %ul.dropdown-menu
+      - if inventory_batch.restockable_quantity > 0.0
+        %li
+          = link_to new_inventory_batch_inventory_restock_path(inventory_batch), class: "dropdown-item",
+            data: {turbo_frame: :remote_modal} do
+            = sprite_icon("plus")
+            = button_text(:restock)
+        %li.dropdown-divider
       %li
         = link_to "javascript:void(0)", class: "dropdown-item" do
           = sprite_icon("arrow-right")

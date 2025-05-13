@@ -207,6 +207,12 @@
           error: "We encountered a problem creating the inventory batch. Please try again.",
         },
       },
+      inventory_restocks: {
+        create: {
+          success: "The inventory has been successfully restocked.",
+          error: "Unable to restock the inventory. Please try again later or contact support if the issue persists."
+        }
+      },
     }
   }
 }
