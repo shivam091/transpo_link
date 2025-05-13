@@ -128,7 +128,7 @@ RSpec.describe PurchaseOrderItem::Delivery, type: :model do
     let!(:source_unit) { create(:dozen_unit) }
     let!(:target_unit) { create(:item_unit) }
 
-    let(:purchase_order_item) { create(:purchase_order_item, quantity: 12, unit: target_unit) }
+    let(:purchase_order_item) { create(:purchase_order_item, unit: target_unit) }
 
     describe "#convert_to_item_unit" do
       before { allow(delivery).to receive(:process_delivery) }

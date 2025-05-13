@@ -7,9 +7,7 @@
 require "spec_helper"
 
 RSpec.describe InventoryBatch, type: :model do
-  let(:purchase_order_item) do
-    create(:purchase_order_item, :delivered, quantity: 1000, received_quantity: 1000)
-  end
+  let(:purchase_order_item) { create(:purchase_order_item, :delivered) }
 
   subject(:inventory_batch) { build(:inventory_batch, source: purchase_order_item) }
 
@@ -240,21 +238,20 @@ RSpec.describe InventoryBatch, type: :model do
 
       let(:source_unit) { dozen_item_conversion.source_unit }
       let(:target_unit) { dozen_item_conversion.target_unit }
+      let(:inventory) { create(:inventory, unit: target_unit) }
 
       context "when source and target units are the same" do
-        let(:inventory) { create(:inventory, unit: source_unit) }
-        let(:inventory_batch) { build(:inventory_batch, source: purchase_order_item, unit: source_unit, quantity: 10, inventory:) }
+        let(:inventory_batch) { build(:inventory_batch, source: purchase_order_item, unit: target_unit, quantity: 10, inventory:) }
 
         it "does not change quantity or unit" do
           inventory_batch.save!
 
           expect(inventory_batch.quantity).to eq(10)
-          expect(inventory_batch.unit).to eq(source_unit)
+          expect(inventory_batch.unit).to eq(target_unit)
         end
       end
 
       context "when source and target units are different and conversion succeeds" do
-        let(:inventory) { create(:inventory, unit: target_unit) }
         let(:inventory_batch) { build(:inventory_batch, source: purchase_order_item, unit: source_unit, quantity: 5, inventory:) }
 
         it "converts the quantity and sets unit to target unit" do
@@ -442,8 +439,6 @@ RSpec.describe InventoryBatch, type: :model do
     end
 
     describe "#validate_quantity_does_not_exceed_item_received_quantity" do
-      let!(:dozen_item_conversion) { create(:dozen_item_conversion) }
-
       let(:inventory_batch) do
         build(:inventory_batch, source: purchase_order_item, unit: purchase_order_item.unit, quantity: 100)
       end

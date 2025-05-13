@@ -7,20 +7,10 @@
 require "spec_helper"
 
 RSpec.describe InventoryAuditLogs::BaseService, type: :service do
-  let(:source_unit) { create(:dozen_unit) }
-  let(:target_unit) { create(:item_unit) }
-  let(:unit_conversion) { create(:dozen_item_conversion, source_unit:, target_unit:) }
+  let(:unit) { create(:item_unit) }
 
-  let!(:inventory) { create(:inventory, unit: target_unit) }
-  let!(:inventory_movement) do
-    create(:inventory_movement,
-      :purchase,
-      quantity: 2.0,
-      source: inventory,
-      unit: target_unit,
-      inventory:
-    )
-  end
+  let!(:inventory) { create(:inventory, unit:) }
+  let!(:inventory_movement) { create(:inventory_movement, :purchase, unit:, inventory:) }
 
   subject(:service_instance) { described_class.new(inventory, inventory_movement) }
 

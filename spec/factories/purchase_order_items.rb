@@ -7,7 +7,7 @@ FactoryBot.define do
     # unit_cost & currency will be set automatically from Product#cost_price & Product#currency, respectively.
     association :purchase_order
     association :product
-    quantity { 100 }
+    quantity { 1000 }
     unit { find_or_create_unit("item") }
     status { PurchaseOrderItem.statuses[:pending] }
     received_quantity { 0 }
@@ -21,12 +21,12 @@ FactoryBot.define do
     end
 
     trait :partially_delivered do
-      received_quantity { 50 }
+      received_quantity { 500 }
       status { PurchaseOrderItem.statuses[:partially_delivered] }
     end
 
     trait :delivered do
-      received_quantity { 100 }
+      received_quantity { 1000 }
       status { PurchaseOrderItem.statuses[:delivered] }
     end
 

@@ -8,8 +8,8 @@ require "spec_helper"
 
 RSpec.describe "Inventories::InventoryRestocks", type: :request do
   let(:unit) { create(:item_unit) }
-  let(:purchase_order_item) { create(:purchase_order_item, :delivered, unit:) }
-  let(:inventory_batch) { create(:inventory_batch, quantity: 10, source: purchase_order_item, unit:) }
+  let(:source) { create(:purchase_order_item, :delivered, unit:) }
+  let(:inventory_batch) { create(:inventory_batch, source:, unit:) }
 
   let(:valid_params) { {inventory_restock: attributes_for(:inventory_restock, unit_id: unit.id, inventory_batch_id: inventory_batch.id)} }
   let(:invalid_params) { {inventory_restock: attributes_for(:inventory_restock, comment: "")} }
