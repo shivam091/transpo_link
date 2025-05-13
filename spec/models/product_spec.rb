@@ -320,6 +320,42 @@ RSpec.describe Product, type: :model do
         end
       end
     end
+
+    describe "#low_stock?" do
+      let(:product) { create(:product, min_stock_threshold: 20) }
+
+      before do
+        create(:inventory, :with_quantity_in_hand, quantity: quantity_1, product:)
+        create(:inventory, :with_quantity_in_hand, quantity: quantity_2, product:)
+      end
+
+      context "when total quantity_in_hand is less than threshold" do
+        let(:quantity_1) { 5 }
+        let(:quantity_2) { 10 }
+
+        it "returns true" do
+          expect(product.low_stock?).to be_truthy
+        end
+      end
+
+      context "when total quantity_in_hand is equal to threshold" do
+        let(:quantity_1) { 10 }
+        let(:quantity_2) { 10 }
+
+        it "returns true" do
+          expect(product.low_stock?).to be_truthy
+        end
+      end
+
+      context "when total quantity_in_hand is greater than threshold" do
+        let(:quantity_1) { 15 }
+        let(:quantity_2) { 10 }
+
+        it "returns false" do
+          expect(product.low_stock?).to be_falsy
+        end
+      end
+    end
   end
 
   describe "class methods" do

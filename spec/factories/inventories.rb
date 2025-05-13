@@ -21,5 +21,51 @@ FactoryBot.define do
     trait :average_cost do
       tracking_method { Inventory.tracking_methods[:average_cost] }
     end
+
+    trait :with_quantity_in_hand do
+      transient do
+        quantity { 0 }
+      end
+
+      after(:create) do |inventory, evaluator|
+        inventory.stock.update!(quantity_in_hand: evaluator.quantity)
+      end
+    end
+
+    trait :with_quantity_pending_to_buyer do
+      transient do
+        quantity { 0 }
+      end
+
+      after(:create) do |inventory, evaluator|
+        inventory.stock.update!(quantity_pending_to_buyer: evaluator.quantity)
+      end
+    end
+
+    trait :with_quantity_pending_from_supplier do
+      transient do
+        quantity { 0 }
+      end
+
+      after(:create) do |inventory, evaluator|
+        inventory.replenishment.update!(
+          quantity_pending_from_supplier: evaluator.quantity
+        )
+      end
+    end
+
+    trait :with_stock_quantities do
+      transient do
+        quantity_in_hand { 0 }
+        quantity_pending_to_buyer { 0 }
+      end
+
+      after(:create) do |inventory, evaluator|
+        inventory.stock.update!(
+          quantity_in_hand: evaluator.quantity_in_hand,
+          quantity_pending_to_buyer: evaluator.quantity_pending_to_buyer
+        )
+      end
+    end
   end
 end

@@ -68,6 +68,10 @@ class Inventory < ApplicationRecord
     [product, warehouse]
   end
 
+  def low_stock?
+    quantity_in_hand <= low_stock_threshold
+  end
+
   private
 
   def create_stock
