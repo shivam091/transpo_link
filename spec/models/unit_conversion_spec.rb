@@ -90,12 +90,12 @@ RSpec.describe UnitConversion, type: :model do
   end
 
   describe "class methods" do
-    describe ".convert" do
+    describe ".convert!" do
       let(:source_unit) { create(:kilogramme_unit) }
       let(:target_unit) { create(:gramme_unit) }
 
       context "when source and target units are the same (Unit objects)" do
-        let(:result) { described_class.convert(source_unit, source_unit, 2) }
+        let(:result) { described_class.convert!(source_unit, source_unit, 2) }
 
         it "returns the same quantity as BigDecimal" do
           expect(result).to eq(2.0)
@@ -104,7 +104,7 @@ RSpec.describe UnitConversion, type: :model do
       end
 
       context "when source and target units are the same (Unit IDs)" do
-        let(:result) { described_class.convert(source_unit.id, source_unit.id, 5) }
+        let(:result) { described_class.convert!(source_unit.id, source_unit.id, 5) }
 
         it "returns the same quantity as BigDecimal" do
           expect(result).to eq(5.0)
@@ -115,7 +115,7 @@ RSpec.describe UnitConversion, type: :model do
       context "when conversion exists (using Unit objects)" do
         let!(:conversion) { create(:kilogramme_gramme_conversion, source_unit:, target_unit:) }
 
-        let(:result) { described_class.convert(source_unit, target_unit, 2) }
+        let(:result) { described_class.convert!(source_unit, target_unit, 2) }
 
         it "returns the converted quantity as BigDecimal" do
           expect(result).to eq(2000.0)
@@ -126,7 +126,7 @@ RSpec.describe UnitConversion, type: :model do
       context "when conversion exists (using Unit IDs)" do
         let!(:conversion) { create(:kilogramme_gramme_conversion, source_unit:, target_unit:) }
 
-        let(:result) { described_class.convert(source_unit.id, target_unit.id, 3) }
+        let(:result) { described_class.convert!(source_unit.id, target_unit.id, 3) }
 
         it "returns the converted quantity as BigDecimal" do
           expect(result).to eq(3000.0)
@@ -137,7 +137,7 @@ RSpec.describe UnitConversion, type: :model do
       context "when conversion does not exist" do
         it "raises UnitConversionError" do
           expect {
-            described_class.convert(source_unit, target_unit, 2)
+            described_class.convert!(source_unit, target_unit, 2)
           }.to raise_error(UnitConversionError, /Please ensure a valid unit conversion exists./)
         end
       end

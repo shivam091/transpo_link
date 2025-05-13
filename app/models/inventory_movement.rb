@@ -96,7 +96,7 @@ class InventoryMovement < ApplicationRecord
   def convert_to_inventory_unit
     return if (target_unit = inventory.unit) == (source_unit = unit)
 
-    self.quantity = UnitConversion.convert(source_unit, target_unit, quantity)
+    self.quantity = UnitConversion.convert!(source_unit, target_unit, quantity)
     self.unit = target_unit # Store in default unit
   end
 end

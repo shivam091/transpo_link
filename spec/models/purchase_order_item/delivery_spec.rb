@@ -112,7 +112,7 @@ RSpec.describe PurchaseOrderItem::Delivery, type: :model do
         let(:delivery) { build(:po_item_delivery, unit: target_unit, quantity: 10, purchase_order_item:) }
 
         it "does not change quantity or unit" do
-          expect(UnitConversion).not_to receive(:convert)
+          expect(UnitConversion).not_to receive(:convert!)
 
           delivery.save!
 
@@ -125,7 +125,7 @@ RSpec.describe PurchaseOrderItem::Delivery, type: :model do
         let(:delivery) { build(:po_item_delivery, unit: source_unit, quantity: 1, purchase_order_item:) }
 
         it "converts the quantity and sets unit to target unit" do
-          allow(UnitConversion).to receive(:convert).with(source_unit, target_unit, 1) { 12 }
+          allow(UnitConversion).to receive(:convert!).with(source_unit, target_unit, 1) { 12 }
 
           delivery.save!
 
@@ -148,7 +148,7 @@ RSpec.describe PurchaseOrderItem::Delivery, type: :model do
     describe "#store_original_attributes" do
       let(:delivery) { build(:po_item_delivery, quantity: 5, unit: source_unit) }
 
-      before { allow(UnitConversion).to receive(:convert) }
+      before { allow(UnitConversion).to receive(:convert!) }
 
       it "stores original quantity and unit_id before conversion" do
         expect(delivery.original_quantity).to be_nil
@@ -176,7 +176,7 @@ RSpec.describe PurchaseOrderItem::Delivery, type: :model do
         let(:delivery) { build(:po_item_delivery, quantity: 10, unit: source_unit, purchase_order_item:) }
 
         before do
-          allow(UnitConversion).to receive(:convert) { 20 } # Converted to 20 items
+          allow(UnitConversion).to receive(:convert!) { 20 } # Converted to 20 items
           allow(delivery.purchase_order_item).to receive(:remaining_quantity) { 15 }
         end
 
@@ -198,7 +198,7 @@ RSpec.describe PurchaseOrderItem::Delivery, type: :model do
         end
 
         before do
-          allow(UnitConversion).to receive(:convert) { 10 }
+          allow(UnitConversion).to receive(:convert!) { 10 }
           allow(delivery.purchase_order_item).to receive(:remaining_quantity) { 15 }
         end
 

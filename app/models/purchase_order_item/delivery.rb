@@ -49,7 +49,7 @@ class PurchaseOrderItem::Delivery < ApplicationRecord
     return unless unit && quantity
     return if (source_unit = unit) == (target_unit = purchase_order_item.unit)
 
-    self.quantity = UnitConversion.convert(source_unit, target_unit, quantity)
+    self.quantity = UnitConversion.convert!(source_unit, target_unit, quantity)
     self.unit = target_unit # Store in item unit
   end
 

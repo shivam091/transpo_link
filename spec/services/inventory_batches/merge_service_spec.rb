@@ -47,7 +47,7 @@ RSpec.describe InventoryBatches::MergeService, type: :service do
 
       before do
         allow(inventory_batch).to receive(:unit) { target_unit }
-        allow(UnitConversion).to receive(:convert).and_raise(UnitConversionError.new(source_unit, target_unit))
+        allow(UnitConversion).to receive(:convert!).and_raise(UnitConversionError.new(source_unit, target_unit))
       end
 
       it "raises a UnitConversionError and does not update the quantity" do
@@ -66,7 +66,7 @@ RSpec.describe InventoryBatches::MergeService, type: :service do
       end
 
       before do
-        allow(UnitConversion).to receive(:convert) { 2 }
+        allow(UnitConversion).to receive(:convert!) { 2 }
         allow(inventory_batch).to receive(:merge_with!) { false }
       end
 
