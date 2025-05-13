@@ -54,6 +54,21 @@ class Products::ProductPricesController < ApplicationController
       end
     end
   end
+
+  # DELETE /products/:product_id/product-prices/:id
+  def destroy
+    response = Products::DestroyService.(@product_price)
+    @product_price = response.payload[:product_price]
+
+    if response.success?
+      set_flash_message(:info, :success)
+    else
+      set_flash_message(:alert, :error)
+    end
+
+    redirect_back fallback_location: @product, status: :see_other
+  end
+
   private
 
   def set_product

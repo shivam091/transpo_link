@@ -116,6 +116,10 @@
           success: "Price tier was successfully updated.",
           error: "Price tier could not be updated."
         },
+        destroy: {
+          success: "Price tier was successfully deleted.",
+          error: "Price tier could not be deleted."
+        },
       },
       feedbacks: {
         create: {

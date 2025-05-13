@@ -5,6 +5,9 @@
 {
   en: {
     product_prices: {
+      product_price: {
+        delete_confirmation_text: "Confirm deletion of this price tier. Prices based on this tier will no longer be applied.",
+      },
       form: {
         tabular_view: {
         },

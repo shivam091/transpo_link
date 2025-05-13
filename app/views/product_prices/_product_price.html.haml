@@ -16,3 +16,8 @@
           data: {turbo_frame: :remote_modal} do
           = sprite_icon("pencil")
           = button_text(:edit)
+      %li
+        = link_to product_product_price_path(@product, product_price), class: "dropdown-item",
+          data: {turbo_confirm: t(".delete_confirmation_text"), turbo_method: :delete} do
+          = sprite_icon("trash")
+          = button_text(:delete)

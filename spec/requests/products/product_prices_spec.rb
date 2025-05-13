@@ -80,4 +80,28 @@ RSpec.describe "Products::ProductPrices", type: :request do
       end
     end
   end
+
+  describe "DELETE /products/:product_id/product-prices/:id" do
+    context "when deletion is successful" do
+      it "deletes the price tier and redirects" do
+        delete product_product_price_path(product, product_price), as: :turbo_stream
+
+        expect(response).to redirect_to(product)
+        expect(flash[:info]).to eq("Price tier was successfully deleted.")
+        expect(response).to have_http_status(:see_other)
+      end
+    end
+
+    context "when deletion is unsuccessful" do
+      it "does not delete the price tier and redirects with an error message" do
+        allow(Products::DestroyService).to receive(:call) { ServiceResponse.error }
+
+        delete product_product_price_path(product, product_price), as: :turbo_stream
+
+        expect(response).to redirect_to(product)
+        expect(flash[:alert]).to eq("Price tier could not be deleted.")
+        expect(response).to have_http_status(:see_other)
+      end
+    end
+  end
 end
