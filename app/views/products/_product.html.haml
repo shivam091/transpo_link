@@ -1,6 +1,9 @@
 .table-row
   .table-cell.cell-narrow
     = @pagination_metadata.offset + index
+    - if product.low_stock?
+      .low-stock-notification
+        = sprite_icon("exclamation-triangle")
   .table-cell.cell-narrow
     = check_box_tag "product_ids[]", product.id, false, id: dom_id(product), class: "form-check-input",
       data: {checkbox_selection_target: "itemCheckbox"}
