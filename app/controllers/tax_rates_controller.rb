@@ -30,15 +30,14 @@ class TaxRatesController < ApplicationController
 
     if response.success?
       set_flash_message(:notice, :success)
+
       redirect_to tax_rates_path, status: :see_other
     else
       set_flash_message(:alert, :error, immediate: true)
+
       respond_to do |format|
         format.turbo_stream do
-          render turbo_stream: [
-            turbo_stream.update(:new_tax_rate_form_frame, partial: "tax_rates/form"),
-            render_flash
-          ], status: :unprocessable_entity
+          render turbo_stream: [update_form_frame, render_flash], status: :unprocessable_entity
         end
       end
     end
@@ -56,15 +55,14 @@ class TaxRatesController < ApplicationController
 
     if response.success?
       set_flash_message(:notice, :success)
+
       redirect_to tax_rates_path, status: :see_other
     else
       set_flash_message(:alert, :error, immediate: true)
+
       respond_to do |format|
         format.turbo_stream do
-          render turbo_stream: [
-            turbo_stream.update(:edit_tax_rate_form_frame, partial: "tax_rates/form"),
-            render_flash
-          ], status: :unprocessable_entity
+          render turbo_stream: [update_form_frame, render_flash], status: :unprocessable_entity
         end
       end
     end
@@ -80,6 +78,7 @@ class TaxRatesController < ApplicationController
     else
       set_flash_message(:alert, :error)
     end
+
     redirect_to tax_rates_path, status: :see_other
   end
 
@@ -103,5 +102,13 @@ class TaxRatesController < ApplicationController
 
   def set_breadcrumbs
     add_breadcrumb t("tax_rates.breadcrumb"), tax_rates_path
+  end
+
+  def form_frame_id
+    action_name == "create" ? :new_tax_rate_form_frame : :edit_tax_rate_form_frame
+  end
+
+  def form_partial
+    "tax_rates/form"
   end
 end

@@ -29,15 +29,14 @@ class ProductsController < ApplicationController
 
     if response.success?
       set_flash_message(:notice, :success)
+
       redirect_to products_path, status: :see_other
     else
       set_flash_message(:alert, :error, immediate: true)
+
       respond_to do |format|
         format.turbo_stream do
-          render turbo_stream: [
-            turbo_stream.update(:new_product_form_frame, partial: "products/form"),
-            render_flash
-          ], status: :unprocessable_entity
+          render turbo_stream: [update_form_frame, render_flash], status: :unprocessable_entity
         end
       end
     end
@@ -55,15 +54,14 @@ class ProductsController < ApplicationController
 
     if response.success?
       set_flash_message(:notice, :success)
+
       redirect_to products_path, status: :see_other
     else
       set_flash_message(:alert, :error, immediate: true)
+
       respond_to do |format|
         format.turbo_stream do
-          render turbo_stream: [
-            turbo_stream.update(:edit_product_form_frame, partial: "products/form"),
-            render_flash
-          ], status: :unprocessable_entity
+          render turbo_stream: [update_form_frame, render_flash], status: :unprocessable_entity
         end
       end
     end
@@ -72,6 +70,7 @@ class ProductsController < ApplicationController
   # GET /products/:id
   def show
     add_breadcrumb @product.reference_code, product_path(@product)
+
     @product_prices = @product.product_prices
   end
 
@@ -85,6 +84,7 @@ class ProductsController < ApplicationController
     else
       set_flash_message(:alert, :error)
     end
+
     redirect_to products_path, status: :see_other
   end
 
@@ -122,5 +122,13 @@ class ProductsController < ApplicationController
 
   def set_breadcrumbs
     add_breadcrumb t("products.breadcrumb"), products_path
+  end
+
+  def form_frame_id
+    action_name == "create" ? :new_product_form_frame : :edit_product_form_frame
+  end
+
+  def form_partial
+    "products/form"
   end
 end
