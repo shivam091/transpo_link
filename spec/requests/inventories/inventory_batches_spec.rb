@@ -9,8 +9,8 @@ require "spec_helper"
 RSpec.describe "Inventories::InventoryBatches", type: :request do
   let(:inventory) { create(:inventory) }
   let(:source) { create(:purchase_order_item, :delivered, unit: inventory.unit) }
-  let!(:batch1) { create(:inventory_batch, quantity: 2, source:, inventory:) }
-  let!(:batch2) { create(:inventory_batch, quantity: 2, source:, inventory:) }
+  let!(:batch1) { create(:inventory_batch, source:, inventory:) }
+  let!(:batch2) { create(:inventory_batch, source:, inventory:) }
 
   include_context "sign in as manager"
   include_context "with current user"

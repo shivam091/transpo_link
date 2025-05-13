@@ -6,26 +6,26 @@ FactoryBot.define do
   factory :legal_identifier do
     association :user, factory: :buyer
     country { "IN" }
-    entity_type { LegalIdentifier.entity_types[:individual] }
-    tax_identifier_type { LegalIdentifier.tax_identifier_types[:gstin] }
+    entity_type { :individual }
+    tax_identifier_type { :gstin }
     tax_identifier { "27AAAFI1234A1Z7" }
 
     trait :for_business do
-      entity_type { LegalIdentifier.entity_types[:business] }
-      business_identifier_type { LegalIdentifier.business_identifier_types[:cin] }
+      entity_type { :business }
+      business_identifier_type { :cin }
       business_identifier { "L12345MH2023PLC000789" }
     end
 
     trait :unapproved do
-      status { LegalIdentifier.statuses[:unapproved] }
+      status { :unapproved }
     end
 
     trait :approved do
-      status { LegalIdentifier.statuses[:approved] }
+      status { :approved }
     end
 
     trait :rejected do
-      status { LegalIdentifier.statuses[:rejected] }
+      status { :rejected }
     end
 
     LegalIdentifier.tax_identifier_types.each_key do |tax_identifier_type|

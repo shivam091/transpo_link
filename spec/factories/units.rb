@@ -5,26 +5,26 @@
 FactoryBot.define do
   factory :unit do
     symbol { "u" }
-    category { Unit.categories[:count] }
+    category { :count }
 
     trait :count do
-      category { Unit.categories[:count] }
+      category { :count }
     end
 
     trait :weight do
-      category { Unit.categories[:weight] }
+      category { :weight }
     end
 
     trait :length do
-      category { Unit.categories[:length] }
+      category { :length }
     end
 
     trait :area do
-      category { Unit.categories[:area] }
+      category { :area }
     end
 
     trait :volume do
-      category { Unit.categories[:volume] }
+      category { :volume }
     end
 
     factory :dozen_unit, traits: [:count] do

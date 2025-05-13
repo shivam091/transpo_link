@@ -264,7 +264,7 @@ RSpec.describe InventoryBatch, type: :model do
     end
 
     describe "#previous_quantity" do
-      let(:inventory_batch) { create(:inventory_batch, quantity: 10.0, source: purchase_order_item) }
+      let(:inventory_batch) { create(:inventory_batch, source: purchase_order_item) }
 
       context "when quantity has been updated" do
         before { inventory_batch.update(quantity: 15.0) }
@@ -313,7 +313,7 @@ RSpec.describe InventoryBatch, type: :model do
       let(:source_unit) { dozen_item_conversion.source_unit }
       let(:target_unit) { dozen_item_conversion.target_unit }
       let(:inventory) { create(:inventory, unit: target_unit) }
-      let(:inventory_batch) { create(:inventory_batch, quantity: 10, unit: target_unit, inventory:, source: purchase_order_item) }
+      let(:inventory_batch) { create(:inventory_batch, unit: target_unit, inventory:, source: purchase_order_item) }
 
       context "when source_unit is not provided" do
         it "adds quantity directly and saves the batch" do

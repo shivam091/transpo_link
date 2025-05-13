@@ -83,7 +83,7 @@ RSpec.describe Inventory::Restock, type: :model do
 
   describe "validations" do
     let(:purchase_order_item) { create(:purchase_order_item, :delivered) }
-    let(:inventory_batch) { create(:inventory_batch, quantity: 10, source: purchase_order_item) }
+    let(:inventory_batch) { create(:inventory_batch, source: purchase_order_item) }
 
     before do
       allow_any_instance_of(InventoryBatch).to receive(:record_audit_logs)
@@ -143,7 +143,7 @@ RSpec.describe Inventory::Restock, type: :model do
 
     describe "#restock_inventory" do
       let(:purchase_order_item) { create(:purchase_order_item, :delivered) }
-      let(:inventory_batch) { create(:inventory_batch, quantity: 10, source: purchase_order_item) }
+      let(:inventory_batch) { create(:inventory_batch, source: purchase_order_item) }
 
       it "calls Inventories::RestockService" do
         expect(Inventories::RestockService).to receive(:call).with(an_instance_of(InventoryBatch), an_instance_of(Inventory::Restock))
@@ -154,7 +154,7 @@ RSpec.describe Inventory::Restock, type: :model do
 
     describe "#quantity_cannot_exceed_stock_restockable_quantity" do
       let(:purchase_order_item) { create(:purchase_order_item, :delivered) }
-      let(:inventory_batch) { create(:inventory_batch, quantity: 10, source: purchase_order_item) }
+      let(:inventory_batch) { create(:inventory_batch, source: purchase_order_item) }
 
       before { allow(inventory_restock).to receive(:inventory_batch) { inventory_batch } }
 
