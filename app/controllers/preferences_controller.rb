@@ -20,15 +20,14 @@ class PreferencesController < ApplicationController
 
     if response.success?
       set_flash_message(:notice, :success)
+
       redirect_to preference_path, status: :see_other
     else
       set_flash_message(:alert, :error, immediate: true)
+
       respond_to do |format|
         format.turbo_stream do
-          render turbo_stream: [
-            turbo_stream.update(:edit_preference_form_frame, partial: "preferences/form"),
-            render_flash
-          ], status: :unprocessable_entity
+          render turbo_stream: [update_form_frame, render_flash], status: :unprocessable_entity
         end
       end
     end
@@ -59,5 +58,13 @@ class PreferencesController < ApplicationController
 
   def set_user
     @user = current_user
+  end
+
+  def form_frame_id
+    :edit_preference_form_frame
+  end
+
+  def form_partial
+    "preferences/form"
   end
 end

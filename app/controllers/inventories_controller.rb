@@ -25,15 +25,14 @@ class InventoriesController < ApplicationController
 
     if response.success?
       set_flash_message(:notice, :success)
+
       redirect_to inventories_path, status: :see_other
     else
       set_flash_message(:alert, :error, immediate: true)
+
       respond_to do |format|
         format.turbo_stream do
-          render turbo_stream: [
-            turbo_stream.update(:new_inventory_form_frame, partial: "inventories/form"),
-            render_flash
-          ], status: :unprocessable_entity
+          render turbo_stream: [update_form_frame, render_flash], status: :unprocessable_entity
         end
       end
     end
@@ -51,15 +50,14 @@ class InventoriesController < ApplicationController
 
     if response.success?
       set_flash_message(:notice, :success)
+
       redirect_to inventories_path, status: :see_other
     else
       set_flash_message(:alert, :error, immediate: true)
+
       respond_to do |format|
         format.turbo_stream do
-          render turbo_stream: [
-            turbo_stream.update(:edit_inventory_form_frame, partial: "inventories/form"),
-            render_flash
-          ], status: :unprocessable_entity
+          render turbo_stream: [update_form_frame, render_flash], status: :unprocessable_entity
         end
       end
     end
@@ -94,5 +92,13 @@ class InventoriesController < ApplicationController
 
   def set_breadcrumbs
     add_breadcrumb t("inventories.breadcrumb"), inventories_path
+  end
+
+  def form_frame_id
+    action_name == "create" ? :new_inventory_form_frame : :edit_inventory_form_frame
+  end
+
+  def form_partial
+    "inventories/form"
   end
 end
