@@ -93,6 +93,7 @@ RSpec.describe InventoryBatch, type: :model do
   describe "associations" do
     it { is_expected.to have_one(:product) }
     it { is_expected.to have_one(:warehouse) }
+    it { is_expected.to have_one(:stock).class_name("InventoryBatch::Stock").inverse_of(:inventory_batch).dependent(:destroy) }
 
     it { is_expected.to have_many(:inventory_batch_audit_logs).inverse_of(:inventory_batch).dependent(:nullify) }
     it { is_expected.to have_many(:restocks).class_name("Inventory::Restock").inverse_of(:inventory_batch).dependent(:destroy) }
@@ -100,6 +101,17 @@ RSpec.describe InventoryBatch, type: :model do
     it { is_expected.to belong_to(:inventory).inverse_of(:inventory_batches).touch }
     it { is_expected.to belong_to(:unit).inverse_of(:inventory_batches) }
     it { is_expected.to belong_to(:source).optional }
+  end
+
+  describe "delegates" do
+    it { is_expected.to delegate_method(:ordered_quantity).to(:stock) }
+    it { is_expected.to delegate_method(:reserved_quantity).to(:stock) }
+    it { is_expected.to delegate_method(:damaged_quantity).to(:stock) }
+    it { is_expected.to delegate_method(:returned_quantity).to(:stock) }
+    it { is_expected.to delegate_method(:restocked_quantity).to(:stock) }
+    it { is_expected.to delegate_method(:restockable_quantity).to(:stock) }
+    it { is_expected.to delegate_method(:available_quantity).to(:stock) }
+    it { is_expected.to delegate_method(:used_quantity).to(:stock) }
   end
 
   describe "validations" do
@@ -454,6 +466,20 @@ RSpec.describe InventoryBatch, type: :model do
 
           expect(inventory_batch.errors[:quantity]).to be_empty
         end
+      end
+    end
+
+    describe "#create_stock" do
+      it "calls InventoryBatches::Stocks::CreateService" do
+        expect(InventoryBatches::Stocks::CreateService).to receive(:call).with(an_instance_of(InventoryBatch))
+
+        create(:inventory_batch, source: purchase_order_item)
+      end
+
+      it "creates stock after batch is created" do
+        expect {
+          create(:inventory_batch, source: purchase_order_item)
+        }.to change(InventoryBatch::Stock, :count).by(1)
       end
     end
   end

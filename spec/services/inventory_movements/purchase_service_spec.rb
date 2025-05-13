@@ -13,7 +13,7 @@ RSpec.describe InventoryMovements::PurchaseService, type: :service do
   subject(:service_response) { described_class.call(inventory, source, inventory_movement_attributes) }
 
   describe ".call" do
-    context "with valid attributes" do
+    context "when provided attributes are valid" do
       let(:inventory_movement_attributes) do
         {
           quantity: source.quantity,
@@ -39,7 +39,7 @@ RSpec.describe InventoryMovements::PurchaseService, type: :service do
       include_examples "returns a success response"
     end
 
-    context "with invalid attributes" do
+    context "when provided attributes are invalid" do
       let(:inventory_movement_attributes) { { quantity: nil, unit_id: nil } }
 
       include_examples "does not change record count", InventoryMovement

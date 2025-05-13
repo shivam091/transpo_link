@@ -72,6 +72,7 @@ class ProductsController < ApplicationController
   # GET /products/:id
   def show
     add_breadcrumb @product.reference_code, product_path(@product)
+    @product_prices = @product.product_prices
   end
 
   # DELETE /products/:id
