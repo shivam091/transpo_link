@@ -4,7 +4,7 @@
 
 class ProductsController < ApplicationController
   before_action :set_breadcrumbs
-  before_action :find_product, only: [:edit, :update, :show, :destroy]
+  before_action :set_product, only: [:edit, :update, :show, :destroy]
 
   # GET /products
   def index
@@ -116,7 +116,7 @@ class ProductsController < ApplicationController
     )
   end
 
-  def find_product
+  def set_product
     @product ||= Product.find(params[:id])
   end
 

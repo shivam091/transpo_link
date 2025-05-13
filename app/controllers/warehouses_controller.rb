@@ -4,7 +4,7 @@
 
 class WarehousesController < ApplicationController
   before_action :set_breadcrumbs
-  before_action :find_warehouse, only: [:edit, :update, :show, :destroy]
+  before_action :set_warehouse, only: [:edit, :update, :show, :destroy]
 
   # GET /warehouses
   def index
@@ -112,7 +112,7 @@ class WarehousesController < ApplicationController
     )
   end
 
-  def find_warehouse
+  def set_warehouse
     @warehouse ||= Warehouse.find(params[:id])
   end
 
