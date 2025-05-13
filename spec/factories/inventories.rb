@@ -9,17 +9,18 @@ FactoryBot.define do
     unit { find_or_create_unit("item") }
     currency { Faker::Currency.code }
     low_stock_threshold { 10 }
+    tracking_method { :average_cost }
 
     trait :fifo do
-      tracking_method { Inventory.tracking_methods[:fifo] }
+      tracking_method { :fifo }
     end
 
     trait :lifo do
-      tracking_method { Inventory.tracking_methods[:lifo] }
+      tracking_method { :lifo }
     end
 
     trait :average_cost do
-      tracking_method { Inventory.tracking_methods[:average_cost] }
+      tracking_method { :average_cost }
     end
 
     trait :with_quantity_in_hand do

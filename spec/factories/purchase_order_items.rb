@@ -9,29 +9,29 @@ FactoryBot.define do
     association :product
     quantity { 1000 }
     unit { find_or_create_unit("item") }
-    status { PurchaseOrderItem.statuses[:pending] }
+    status { :pending }
     received_quantity { 0 }
 
     trait :pending do
-      status { PurchaseOrderItem.statuses[:pending] }
+      status { :pending }
     end
 
     trait :ordered do
-      status { PurchaseOrderItem.statuses[:ordered] }
+      status { :ordered }
     end
 
     trait :partially_delivered do
       received_quantity { 500 }
-      status { PurchaseOrderItem.statuses[:partially_delivered] }
+      status { :partially_delivered }
     end
 
     trait :delivered do
       received_quantity { 1000 }
-      status { PurchaseOrderItem.statuses[:delivered] }
+      status { :delivered }
     end
 
     trait :cancelled do
-      status { PurchaseOrderItem.statuses[:cancelled] }
+      status { :cancelled }
     end
 
     trait :with_deliveries do
