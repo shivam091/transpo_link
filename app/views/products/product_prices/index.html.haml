@@ -13,7 +13,7 @@
       .table-cell.cell-narrow
         = t("shared.actions")
     .table-body
-      - if @product.product_prices&.each.with_index(1) do |product_price, index|
-        = safe_render.partial("product_prices/product_price", product_price:, index:)
+      - if @product_prices&.each.with_index(1) do |product_price, index|
+        = safe_render.partial("products/product_prices/product_price", product_price:, index:)
       - end.empty?
         = safe_render.partial("shared/no_records", resource: ProductPrice)
