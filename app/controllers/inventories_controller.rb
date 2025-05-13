@@ -8,7 +8,7 @@ class InventoriesController < ApplicationController
 
   # GET /inventories
   def index
-    @inventories = Inventory.all
+    @inventories = Inventory.includes(:stock)
     @inventories, @pagination_metadata = @inventories.paginate(page: params[:page])
   end
 

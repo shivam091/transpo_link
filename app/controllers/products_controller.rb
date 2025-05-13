@@ -8,10 +8,11 @@ class ProductsController < ApplicationController
 
   # GET /products
   def index
+    @products = Product.includes(:inventories)
     @products = case params[:status]
-                when "active"   then Product.active
-                when "inactive" then Product.inactive
-                else                 Product.all
+                when "active"   then @products.active
+                when "inactive" then @products.inactive
+                else                 @products
                 end
     @products, @pagination_metadata = @products.paginate(page: params[:page])
   end

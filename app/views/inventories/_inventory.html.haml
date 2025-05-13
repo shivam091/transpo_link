@@ -2,6 +2,9 @@
 .table-row
   .table-cell.cell-narrow
     = @pagination_metadata.offset + index
+    - if inventory.low_stock?
+      .low-stock-notification
+        = sprite_icon("exclamation-triangle")
   .table-cell
     = link_to inventory.reference_code, inventory_path(inventory)
   .table-cell
