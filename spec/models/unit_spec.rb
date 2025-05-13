@@ -7,7 +7,7 @@
 require "spec_helper"
 
 RSpec.describe Unit, type: :model do
-  subject(:unit) { create(:unit) }
+  subject(:unit) { build(:unit) }
 
   describe "valid factory" do
     it { is_expected.to have_a_valid_factory(:item_unit) }
