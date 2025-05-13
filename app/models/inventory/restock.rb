@@ -51,7 +51,7 @@ class Inventory::Restock < ApplicationRecord
   def quantity_cannot_exceed_stock_restockable_quantity
     return unless inventory_batch && quantity && unit
 
-    converted_quantity = UnitConversion.convert(unit, inventory_batch.unit, quantity)
+    converted_quantity = UnitConversion.convert!(unit, inventory_batch.unit, quantity)
 
     if converted_quantity > inventory_batch.restockable_quantity
       errors.add(:quantity, :exceeds_available_batch_quantity)

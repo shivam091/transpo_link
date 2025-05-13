@@ -32,6 +32,7 @@ class UnitConversion < ApplicationRecord
     join = arel_table.join(unit_arel)
       .on(arel_table[:source_unit_id].eq(unit_arel[:id]))
       .join_sources
+
     joins(join).order(unit_arel[:symbol].asc)
   end
 
@@ -39,7 +40,7 @@ class UnitConversion < ApplicationRecord
   delegate :symbol, :category, to: :target_unit, prefix: true
 
   class << self
-    def convert(source_unit, target_unit, quantity)
+    def convert!(source_unit, target_unit, quantity)
       source_unit = Unit.find_by(id: source_unit) unless source_unit.is_a?(Unit)
       target_unit = Unit.find_by(id: target_unit) unless target_unit.is_a?(Unit)
 

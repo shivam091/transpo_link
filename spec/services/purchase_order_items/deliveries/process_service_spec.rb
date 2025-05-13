@@ -25,7 +25,7 @@ RSpec.describe PurchaseOrderItems::Deliveries::ProcessService, type: :service do
 
         allow(InventoryMovements::PurchaseService).to receive(:call)
         allow(PurchaseOrderItems::UpdateReceivedQuantityService).to receive(:call)
-        allow(UnitConversion).to receive(:convert) { 4.0 }
+        allow(UnitConversion).to receive(:convert!) { 4.0 }
         allow(Replenishments::UpdateService).to receive(:call)
         allow(PurchaseOrderItems::EvaluateDeliveryStatusService).to receive(:call)
       end
@@ -57,7 +57,7 @@ RSpec.describe PurchaseOrderItems::Deliveries::ProcessService, type: :service do
       it "calls UnitConversion with correct units" do
         service_response
 
-        expect(UnitConversion).to have_received(:convert).with(delivery.unit, inventory.unit, delivery.quantity)
+        expect(UnitConversion).to have_received(:convert!).with(delivery.unit, inventory.unit, delivery.quantity)
       end
 
       it "calls Replenishments::UpdateService with converted quantity" do

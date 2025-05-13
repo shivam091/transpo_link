@@ -193,7 +193,7 @@ RSpec.describe InventoryMovement, type: :model do
         let(:inventory_movement) { build(:inventory_movement, source: purchase_order_item, unit: target_unit, quantity: 10, inventory:) }
 
         it "does not change quantity or unit" do
-          expect(UnitConversion).not_to receive(:convert)
+          expect(UnitConversion).not_to receive(:convert!)
 
           inventory_movement.save!
 
@@ -206,7 +206,7 @@ RSpec.describe InventoryMovement, type: :model do
         let(:inventory_movement) { build(:inventory_movement, source: purchase_order_item, unit: source_unit, quantity: 5, inventory:) }
 
         it "converts the quantity and sets unit to target unit" do
-          allow(UnitConversion).to receive(:convert).with(source_unit, target_unit, 5) { 60 }
+          allow(UnitConversion).to receive(:convert!).with(source_unit, target_unit, 5) { 60 }
 
           inventory_movement.save!
 
