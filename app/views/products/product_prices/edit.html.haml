@@ -1,0 +1,4 @@
+= title(t(".title"))
+= render_modal(title: t(".title"), modal_id: "edit-product-price", size: :lg) do
+  = turbo_frame_tag :edit_product_price_form_frame, target: "_top" do
+    = safe_render.partial("products/product_prices/form/modal_view")

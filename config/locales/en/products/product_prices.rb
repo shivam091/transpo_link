@@ -9,6 +9,9 @@
         new: {
           title: "New product price",
         },
+        edit: {
+          title: "Edit product price",
+        },
         form: {
           modal_view: {
             select_warehouse: "Select warehouse",

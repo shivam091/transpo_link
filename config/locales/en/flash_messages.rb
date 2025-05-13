@@ -112,6 +112,10 @@
           success: "Price tier was successfully created.",
           error: "Price tier could not be created."
         },
+        update: {
+          success: "Price tier was successfully updated.",
+          error: "Price tier could not be updated."
+        },
       },
       feedbacks: {
         create: {

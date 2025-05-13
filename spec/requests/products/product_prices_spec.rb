@@ -48,4 +48,36 @@ RSpec.describe "Products::ProductPrices", type: :request do
       end
     end
   end
+
+  describe "GET /products/:product_id/product-prices/:id/edit" do
+    it "renders edit price tier modal" do
+      get edit_product_product_price_path(product, product_price)
+
+      expect(controller_assigns(:product_price)).to eq(product_price)
+      expect(response).to have_http_status(:ok)
+    end
+  end
+
+  describe "PUT|PATCH /products/:product_id/product-prices/:id" do
+    context "when provided parameters are valid" do
+      it "updates the price tier and redirects" do
+        put product_product_price_path(product, product_price), params: valid_params, as: :turbo_stream
+
+        expect(response).to redirect_to(product)
+        expect(flash[:notice]).to eq("Price tier was successfully updated.")
+        expect(response).to have_http_status(:see_other)
+      end
+    end
+
+    context "when provided parameters are invalid" do
+      it "does not update the price tier and renders errors" do
+        put product_product_price_path(product, product_price), params: invalid_params, as: :turbo_stream
+
+        expect(flash[:alert]).to eq("Price tier could not be updated.")
+        expect(response.media_type).to eq(Mime[:turbo_stream])
+        expect(response.body).to include("<turbo-stream action=\"update\" target=\"edit_product_price_form_frame\">")
+        expect(response).to have_http_status(:unprocessable_entity)
+      end
+    end
+  end
 end

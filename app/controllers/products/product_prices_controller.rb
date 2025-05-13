@@ -4,6 +4,7 @@
 
 class Products::ProductPricesController < ApplicationController
   before_action :set_product
+  before_action :set_product_price, except: [:new, :create]
 
   # GET /products/:product_id/product-prices/new
   def new
@@ -30,10 +31,37 @@ class Products::ProductPricesController < ApplicationController
     end
   end
 
+  # GET /products/:product_id/product-prices/:id/edit
+  def edit
+  end
+
+  # PUT|PATCH /products/:product_id/product-prices/:id
+  def update
+    response = Products::ProductPrices::UpdateService.(@product_price, product_price_params)
+    @product_price = response.payload[:product_price]
+
+    if response.success?
+      set_flash_message(:notice, :success)
+
+      redirect_back fallback_location: @product, status: :see_other
+    else
+      set_flash_message(:alert, :error, immediate: true)
+
+      respond_to do |format|
+        format.turbo_stream do
+          render turbo_stream: [update_form_frame, render_flash], status: :unprocessable_entity
+        end
+      end
+    end
+  end
   private
 
   def set_product
     @product ||= Product.find(params[:product_id])
+  end
+
+  def set_product_price
+    @product_price ||= @product.product_prices.find(params[:id])
   end
 
   def product_price_params
