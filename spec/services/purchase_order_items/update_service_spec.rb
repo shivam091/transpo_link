@@ -7,7 +7,7 @@
 require "spec_helper"
 
 RSpec.describe PurchaseOrderItems::UpdateService, type: :service do
-  let!(:purchase_order_item) { create(:purchase_order_item, quantity: 5) }
+  let!(:purchase_order_item) { create(:purchase_order_item) }
 
   subject(:service_response) { described_class.(purchase_order_item, purchase_order_item_attributes) }
 

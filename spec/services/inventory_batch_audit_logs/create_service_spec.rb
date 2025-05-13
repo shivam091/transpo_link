@@ -7,7 +7,7 @@
 require "spec_helper"
 
 RSpec.describe InventoryBatchAuditLogs::CreateService, type: :service do
-  let!(:purchase_order_item) { create(:purchase_order_item, :delivered, received_quantity: 3, quantity: 3) }
+  let!(:source) { create(:purchase_order_item, :delivered) }
 
   subject(:service_response) { described_class.(inventory_batch) }
 
@@ -16,7 +16,7 @@ RSpec.describe InventoryBatchAuditLogs::CreateService, type: :service do
   include_context "with current user"
 
   describe ".call" do
-    let(:inventory_batch) { create(:inventory_batch, quantity: 3, source: purchase_order_item) }
+    let(:inventory_batch) { create(:inventory_batch, source:) }
 
     include_examples "creates a record", InventoryBatchAuditLog
   end
