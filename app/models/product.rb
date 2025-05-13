@@ -83,6 +83,14 @@ class Product < ApplicationRecord
     end
   end
 
+  def low_stock?
+    total_quantity_in_hand <= min_stock_threshold
+  end
+
+  def total_quantity_in_hand
+    inventories.sum(&:quantity_in_hand)
+  end
+
   private
 
   def reject_product_price?(attributes)

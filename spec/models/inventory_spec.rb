@@ -185,6 +185,34 @@ RSpec.describe Inventory, type: :model do
       end
     end
 
+    describe "#low_stock?" do
+      let(:inventory) { create(:inventory, :with_quantity_in_hand, quantity: quantity_in_hand) }
+
+      context "when quantity_in_hand is less than threshold" do
+        let(:quantity_in_hand) { 5 }
+
+        it "returns true" do
+          expect(inventory.low_stock?).to be_truthy
+        end
+      end
+
+      context "when quantity_in_hand is equal to threshold" do
+        let(:quantity_in_hand) { 10 }
+
+        it "returns true" do
+          expect(inventory.low_stock?).to be_truthy
+        end
+      end
+
+      context "when quantity_in_hand is greater than threshold" do
+        let(:quantity_in_hand) { 20 }
+
+        it "returns false" do
+          expect(inventory.low_stock?).to be_falsy
+        end
+      end
+    end
+
     describe "#product_unit_category_matches_warehouse_capacity" do
       let!(:product) { create(:product) }
       let!(:warehouse) { create(:warehouse) }
