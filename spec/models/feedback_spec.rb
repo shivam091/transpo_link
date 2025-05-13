@@ -7,9 +7,7 @@
 require "spec_helper"
 
 RSpec.describe Feedback, type: :model do
-  let(:reviewable) { create(:product) }
-
-  subject(:feedback) { build(:feedback, reviewable:) }
+  subject(:feedback) { build(:feedback) }
 
   describe "valid factory" do
     it { is_expected.to have_a_valid_factory(:feedback) }
@@ -78,6 +76,8 @@ RSpec.describe Feedback, type: :model do
   include_examples "apply default scope on created_at:desc"
 
   describe "class methods" do
+    let(:reviewable) { create(:product) }
+
     let!(:user1) { create(:buyer) }
     let!(:user2) { create(:admin) }
 
