@@ -96,7 +96,9 @@ Rails.application.routes.draw do
   resources :feedbacks, only: [:index, :show], concerns: :notifiable
 
   resources :inventories, except: :destroy do
-    resources :inventory_batches, path: "inventory-batches", only: :index, module: :inventories
+    resources :inventory_batches, path: "inventory-batches", only: :index, module: :inventories, shallow: true do
+      resources :inventory_restocks, path: "restocks", only: [:new, :create]
+    end
   end
 
   resources :purchase_orders, path: "purchase-orders" do

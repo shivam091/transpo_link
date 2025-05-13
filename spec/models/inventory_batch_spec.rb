@@ -470,6 +470,12 @@ RSpec.describe InventoryBatch, type: :model do
     end
 
     describe "#create_stock" do
+      it "calls InventoryBatches::Stocks::CreateService" do
+        expect(InventoryBatches::Stocks::CreateService).to receive(:call).with(an_instance_of(InventoryBatch))
+
+        create(:inventory_batch, source: purchase_order_item)
+      end
+
       it "creates stock after batch is created" do
         expect {
           create(:inventory_batch, source: purchase_order_item)

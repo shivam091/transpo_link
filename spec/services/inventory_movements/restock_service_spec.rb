@@ -2,11 +2,11 @@
 # -*- frozen_string_literal: true -*-
 # -*- warn_indent: true -*-
 
-# spec/services/inventory_movements/purchase_service_spec.rb
+# spec/services/inventory_movements/restock_service_spec.rb
 
 require "spec_helper"
 
-RSpec.describe InventoryMovements::PurchaseService, type: :service do
+RSpec.describe InventoryMovements::RestockService, type: :service do
   let!(:inventory) { create(:inventory) }
   let!(:source) { create(:purchase_order_item, quantity: 5) }
 
@@ -26,13 +26,13 @@ RSpec.describe InventoryMovements::PurchaseService, type: :service do
 
       include_examples "creates a record", InventoryMovement
 
-      it "sets correct inventory movement attributes for purchase" do
+      it "sets correct inventory movement attributes for restock" do
         inventory_movement = service_response.payload[:inventory_movement]
 
-        expect(inventory_movement.movement_type).to eq("purchase")
+        expect(inventory_movement.movement_type).to eq("restock")
         expect(inventory_movement.inventory).to eq(inventory)
         expect(inventory_movement.source).to eq(source)
-        expect(inventory_movement.quantity).to eq(5.0)
+        expect(inventory_movement.quantity).to eq(5)
         expect(inventory_movement.unit_id).to eq(source.unit_id)
       end
 
