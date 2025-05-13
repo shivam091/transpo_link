@@ -91,7 +91,9 @@ Rails.application.routes.draw do
 
   resources :product_categories, path: "product-categories", except: :show, concerns: :toggleable
 
-  resources :products, concerns: [:reviewable, :toggleable]
+  resources :products, concerns: [:reviewable, :toggleable] do
+    resources :product_prices, path: "product-prices", except: :index, module: :products
+  end
 
   resources :feedbacks, only: [:index, :show], concerns: :notifiable
 

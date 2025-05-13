@@ -3,7 +3,7 @@
 # -*- warn_indent: true -*-
 
 class ProductPrice < ApplicationRecord
-  include Sortable, ActsAsMoney, ScaleEnforcer
+  include ActsAsMoney, ScaleEnforcer
 
   LISTING_ATTRIBUTES = %i[warehouse_id min_quantity unit_price].freeze
   GLOBAL_WAREHOUSE_ID = "00000000-0000-0000-0000-000000000000".freeze
@@ -56,7 +56,7 @@ class ProductPrice < ApplicationRecord
     )
   }
   scope :effective_on, ->(date) { where("effective_period @> DATE(?)", date) }
-  default_scope { order_created_desc }
+  default_scope { order(arel_table[:min_quantity].desc) }
 
   class << self
     def overlapping_with(record)
