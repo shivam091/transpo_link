@@ -13,10 +13,8 @@ FactoryBot.define do
     effective_period { Date.current..(Date.current + 1.month) }
 
     trait :with_virtual_attributes do
-      transient do
-        effective_from { Date.current }
-        effective_until { Date.current + 1.month }
-      end
+      effective_from { Date.current }
+      effective_until { Date.current + 1.month }
     end
   end
 end

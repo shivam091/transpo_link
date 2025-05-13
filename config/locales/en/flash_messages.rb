@@ -107,6 +107,12 @@
           error: "Product could not be deleted."
         },
       },
+      product_prices: {
+        create: {
+          success: "Price tier was successfully created.",
+          error: "Price tier could not be created."
+        },
+      },
       feedbacks: {
         create: {
           success: "Your feedback helps us improve. Thanks for being a part of our community!",
