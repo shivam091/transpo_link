@@ -1,0 +1,23 @@
+.table-row
+  .table-cell.cell-narrow
+    = index
+  .table-cell
+    = product_price.warehouse_name
+  .table-cell
+    = number_to_measurement_unit(product_price.min_quantity, @product.unit_symbol)
+  .table-cell
+    = number_to_currency(product_price.unit_price, unit: product_price.currency.symbol)
+  .table-cell.cell-narrow
+    = link_to "javascript:void(0)", class: "text-reset", data: {bs_toggle: "dropdown"}, aria: {expanded: false} do
+      = sprite_icon("ellipsis-vertical")
+    %ul.dropdown-menu
+      %li
+        = link_to edit_product_product_price_path(@product, product_price), class: "dropdown-item",
+          data: {turbo_frame: :remote_modal} do
+          = sprite_icon("pencil")
+          = button_text(:edit)
+      %li
+        = link_to product_product_price_path(@product, product_price), class: "dropdown-item",
+          data: {turbo_confirm: t(".delete_confirmation_text"), turbo_method: :delete} do
+          = sprite_icon("trash")
+          = button_text(:delete)

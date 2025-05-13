@@ -98,14 +98,14 @@ RSpec.describe PurchaseOrderItem, type: :model do
     describe "#restocks" do
       let(:association) { described_class.reflect_on_association(:restocks) }
 
-      it "has many purchases" do
+      it "has many restocks" do
         expect(association.macro).to eq(:has_many)
         expect(association.options[:class_name]).to eq("InventoryMovement")
         expect(association.options[:dependent]).to eq(:restrict_with_exception)
       end
 
-      it "returns only purchase inventory movements" do
-        expect(source.purchases).to contain_exactly(purchase_movement)
+      it "returns only restock inventory movements" do
+        expect(source.restocks).to contain_exactly(restock_movement)
       end
     end
 

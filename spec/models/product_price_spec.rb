@@ -45,7 +45,6 @@ RSpec.describe ProductPrice, type: :model do
   end
 
   describe "included modules" do
-    it { is_expected.to include_module(Sortable) }
     it { is_expected.to include_module(ActsAsMoney) }
     it { is_expected.to include_module(ScaleEnforcer) }
   end
@@ -172,7 +171,11 @@ RSpec.describe ProductPrice, type: :model do
     end
   end
 
-  include_examples "apply default scope on created_at:desc"
+  describe "default scope" do
+    it "orders by min_quantity DESC" do
+      expect(ProductPrice.all.to_sql).to match(/ORDER BY \"product_prices\".\"min_quantity\" DESC/i)
+    end
+  end
 
   describe "class methods and scopes" do
     describe ".with_normalized_warehouse" do

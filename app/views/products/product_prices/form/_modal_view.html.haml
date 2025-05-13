@@ -1,0 +1,31 @@
+= pretty_form_with model: [@product, @product_price], class: "row g-2" do |form|
+  .col-12
+    = form.label :warehouse_id, class: "form-label"
+    = form.select :warehouse_id, options_for_select(Warehouse.select_options, form.object.warehouse_id),
+      {include_blank: t(".select_warehouse")}, {}
+  .col-md-12.col-lg-6
+    = form.label :min_quantity, class: "form-label required"
+    = form.number_field :min_quantity, step: 0.01
+  .col-md-12.col-lg-6
+    = form.label :unit_id, class: "form-label required"
+    = form.measurement_unit_select :unit_id, category: @product.unit_category, include_blank: t(".select_unit")
+  .col-md-12.col-lg-6
+    = form.label :unit_price, class: "form-label required"
+    = form.number_field :unit_price, step: 0.01
+  .col-md-12.col-lg-6
+    = form.label :currency, class: "form-label required"
+    = form.select :currency, options_for_select(TranspoLink::Currency.select_options, form.object.currency),
+    {include_blank: t(".select_currency")}
+  .col-md-12.col-lg-6
+    = form.label :effective_from, class: "form-label required"
+    = form.date_field :effective_from
+  .col-md-12.col-lg-6
+    = form.label :effective_until, class: "form-label required"
+    = form.date_field :effective_until
+  .modal-actions
+    = button_tag type: :submit, class: "btn btn-primary" do
+      = sprite_icon("floppy")
+      = form.object.new_record? ? button_text(:create) : button_text(:update)
+    = button_tag type: :button, class: "btn btn-secondary", data: {action: "click->remote-modal#hide"} do
+      = sprite_icon("times")
+      = button_text(:cancel)

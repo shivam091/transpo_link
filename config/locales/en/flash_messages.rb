@@ -107,6 +107,20 @@
           error: "Product could not be deleted."
         },
       },
+      product_prices: {
+        create: {
+          success: "Price tier was successfully created.",
+          error: "Price tier could not be created."
+        },
+        update: {
+          success: "Price tier was successfully updated.",
+          error: "Price tier could not be updated."
+        },
+        destroy: {
+          success: "Price tier was successfully deleted.",
+          error: "Price tier could not be deleted."
+        },
+      },
       feedbacks: {
         create: {
           success: "Your feedback helps us improve. Thanks for being a part of our community!",
@@ -192,6 +206,12 @@
           success: "The inventory batch has been successfully created.",
           error: "We encountered a problem creating the inventory batch. Please try again.",
         },
+      },
+      inventory_restocks: {
+        create: {
+          success: "The inventory has been successfully restocked.",
+          error: "Unable to restock the inventory. Please try again later or contact support if the issue persists."
+        }
       },
     }
   }
