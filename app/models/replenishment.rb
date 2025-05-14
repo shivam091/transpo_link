@@ -7,8 +7,6 @@ class Replenishment < ApplicationRecord
 
   self.primary_key = :inventory_id
 
-  attribute :quantity_pending_from_supplier, default: 0.0
-
   scale_attributes :quantity_pending_from_supplier
 
   validates :quantity_pending_from_supplier,

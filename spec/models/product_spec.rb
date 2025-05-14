@@ -13,14 +13,6 @@ RSpec.describe Product, type: :model do
     it { is_expected.to have_a_valid_factory(:product) }
   end
 
-  describe "default values" do
-    let(:product) { described_class.new }
-
-    it "should set 10.0 as default value for #min_stock_threshold" do
-      expect(product.min_stock_threshold).to eq(10.0)
-    end
-  end
-
   describe "constants" do
     it { is_expected.to have_constant(:LISTING_ATTRIBUTES) }
   end

@@ -31,10 +31,6 @@ RSpec.describe PurchaseOrderItem, type: :model do
   describe "default values" do
     let(:purchase_order_item) { described_class.new }
 
-    it "should set 0.0 as default value for #received_quantity" do
-      expect(purchase_order_item.received_quantity).to eq(0.0)
-    end
-
     it "should set pending as default value for #status" do
       expect(purchase_order_item.status).to eq("pending")
     end

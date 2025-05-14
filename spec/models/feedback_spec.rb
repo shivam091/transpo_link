@@ -13,14 +13,6 @@ RSpec.describe Feedback, type: :model do
     it { is_expected.to have_a_valid_factory(:feedback) }
   end
 
-  describe "default values" do
-    let(:feedback) { described_class.new }
-
-    it "should set true as default value for #is_unread" do
-      expect(feedback.is_unread).to be_truthy
-    end
-  end
-
   describe "constants" do
     it { is_expected.to have_constant(:LISTING_ATTRIBUTES) }
   end
