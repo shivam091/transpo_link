@@ -425,5 +425,44 @@ RSpec.describe User, type: :model do
         end
       end
     end
+
+    describe "#last_active_at" do
+      let(:last_activity_at) { 5.days.ago.to_date }
+      let(:current_sign_in_at) { 8.days.ago }
+
+      context "for a user that has `last_activity_at` set" do
+        let(:user) { create(:manager, last_activity_at: last_activity_at) }
+
+        it "returns `last_activity_at` with current time zone" do
+          expect(user.last_active_at).to eq(last_activity_at.to_time.in_time_zone)
+        end
+      end
+
+      context "for a user that has `current_sign_in_at` set" do
+        let(:user) { create(:manager, current_sign_in_at: current_sign_in_at) }
+
+        it "returns `current_sign_in_at`" do
+          expect(user.last_active_at).to eq(current_sign_in_at)
+        end
+      end
+
+      context "for a user that has both `current_sign_in_at` & ``last_activity_at`` set" do
+        let(:user) { create(:manager, current_sign_in_at: current_sign_in_at, last_activity_at: last_activity_at) }
+
+        it "returns the latest among `current_sign_in_at` & `last_activity_at`" do
+          latest_event = [current_sign_in_at, last_activity_at.to_time.in_time_zone].max
+
+          expect(user.last_active_at).to eq(latest_event)
+        end
+      end
+
+      context "for a user that does not have both `current_sign_in_at` & `last_activity_at` set" do
+        let(:user) { create(:manager, current_sign_in_at: nil, last_activity_at: nil) }
+
+        it "returns nil" do
+          expect(user.last_active_at).to eq(nil)
+        end
+      end
+    end
   end
 end
