@@ -52,12 +52,12 @@ RSpec.describe TaxRate, type: :model do
 
   describe "validations" do
     describe "#tax_identifier_type" do
-      # it do
-      #   is_expected.to validate_uniqueness_of(:tax_identifier_type)
-      #     .scoped_to([:country, :business_category, :tax_type, :valid_from])
-      #     .with_message("already exist for this country, tax type, and business category for selected date")
-      #     .case_insensitive
-      # end
+      it do
+        is_expected.to validate_uniqueness_of(:tax_identifier_type)
+          .scoped_to([:country, :business_category, :tax_type, :valid_from])
+          .with_message("already exist for this country, tax type, and business category for selected date range")
+          .ignoring_case_sensitivity
+      end
     end
 
     describe "#business_category" do

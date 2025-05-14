@@ -14,7 +14,7 @@ RSpec.describe Roles::UpdateService, type: :service do
   subject(:service_response) { described_class.(role, role_attributes) }
 
   describe ".call" do
-    context "when updation is successful" do
+    context "when updating is successful" do
       it "updates the role" do
         expect { service_response }.to change { role.reload.is_active }.to be_truthy
       end
@@ -22,7 +22,7 @@ RSpec.describe Roles::UpdateService, type: :service do
       include_examples "returns a success response"
     end
 
-    context "when updation is unsuccessful" do
+    context "when updating is unsuccessful" do
       before { allow(role).to receive(:update) { false } }
 
       it "does not update the role" do
