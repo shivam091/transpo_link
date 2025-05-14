@@ -7,7 +7,7 @@
   .table-cell
     = link_to feedback.reference_code, feedback_path(feedback)
   .table-cell
-    = link_to user.full_name, user_path(user), target: :_blank
+    = link_to_user(user, target: :_blank)
   .table-cell
     = link_to reviewable_name_with_type(reviewable), reviewable_link(reviewable), target: :_blank
   .table-cell

@@ -8,9 +8,9 @@
   .table-cell
     = link_to inventory.reference_code, inventory_path(inventory)
   .table-cell
-    = link_to product.name, product_path(product), target: :_blank
+    = link_to_product(product, target: :_blank)
   .table-cell
-    = link_to warehouse.name, warehouse_path(warehouse), target: :_blank
+    = link_to_warehouse(warehouse, target: :_blank)
   .table-cell
     = safe_render.partial("shared/badge", color: TranspoLink::ColorMapper.new(:tracking_method).for(inventory.tracking_method)) do
       = enum_l(inventory, :tracking_method)

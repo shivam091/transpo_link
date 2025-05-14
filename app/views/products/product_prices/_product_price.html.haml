@@ -2,7 +2,7 @@
   .table-cell.cell-narrow
     = index
   .table-cell
-    = product_price.warehouse_name
+    = link_to_warehouse(product_price.warehouse, target: :_blank)
   .table-cell
     = number_to_measurement_unit(product_price.min_quantity, @product.unit_symbol)
   .table-cell
