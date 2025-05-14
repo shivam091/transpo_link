@@ -7,23 +7,29 @@
 require "spec_helper"
 
 RSpec.describe FeedbacksHelper, type: :helper do
-  let!(:product) { create(:product, name: "Test product") }
+  let!(:product) { build_stubbed(:product, name: "Test product") }
 
-  describe "#reviewable_name_with_type" do
+  describe "#reviewable_label" do
     it "returns name with type for a product" do
-      expect(helper.reviewable_name_with_type(product)).to eq("Test product (Product)")
+      expect(helper.reviewable_label(product)).to eq("Test product (Product)")
     end
   end
 
-  describe "#reviewable_link" do
+  describe "#reviewable_path" do
     it "returns product path for a product" do
-      allow(helper).to receive(:product_path).with(product) { "/products/1" }
-
-      expect(helper.reviewable_link(product)).to eq("/products/1")
+      expect(helper.reviewable_path(product)).to eq(product_path(product))
     end
 
     it "returns javascript:void(0) for unknown reviewable types" do
-      expect(helper.reviewable_link(double("UnknownReviewable"))).to eq("javascript:void(0)")
+      expect(helper.reviewable_path(double("UnknownReviewable"))).to eq("javascript:void(0)")
+    end
+  end
+
+  describe "#link_to_reviewable" do
+    it "returns link for reviewable" do
+      expect(helper.link_to_reviewable(product)).to eq(
+        link_to("Test product (Product)", product_path(product))
+      )
     end
   end
 end
