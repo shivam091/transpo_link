@@ -84,6 +84,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_02_140259) do
     t.index ["product_id", "warehouse_id"], name: "index_inventories_on_product_id_and_warehouse_id", unique: true
     t.index ["product_id"], name: "index_inventories_on_product_id"
     t.index ["reference_code"], name: "index_inventories_on_reference_code", unique: true
+    t.index ["tracking_method"], name: "index_inventories_on_tracking_method"
     t.index ["unit_id"], name: "index_inventories_on_unit_id"
     t.index ["warehouse_id"], name: "index_inventories_on_warehouse_id"
     t.check_constraint "average_cost_price >= 0.0", name: "check_inventories_average_cost_price_non_negative"
@@ -91,7 +92,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_02_140259) do
     t.check_constraint "currency IS NOT NULL AND currency::text <> ''::text", name: "check_inventories_currency_presence"
     t.check_constraint "low_stock_threshold > 0.0", name: "check_inventories_low_stock_threshold_positive"
     t.check_constraint "low_stock_threshold IS NOT NULL", name: "check_inventories_low_stock_threshold_presence"
-    t.check_constraint "tracking_method = ANY (ARRAY['fifo'::tracking_methods, 'lifo'::tracking_methods, 'average_cost'::tracking_methods])", name: "check_inventories_tracking_method_in_enum_values"
+    t.check_constraint "tracking_method = ANY (ARRAY['average_cost'::tracking_methods, 'fifo'::tracking_methods, 'lifo'::tracking_methods])", name: "check_inventories_tracking_method_in_enum_values"
     t.check_constraint "tracking_method IS NOT NULL", name: "check_inventories_tracking_method_presence"
   end
 
@@ -163,7 +164,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_02_140259) do
     t.check_constraint "restocked_quantity IS NOT NULL", name: "check_inventory_batch_stocks_restocked_quantity_presence"
     t.check_constraint "returned_quantity >= 0.0", name: "check_inventory_batch_stocks_returned_quantity_non_negative"
     t.check_constraint "returned_quantity IS NOT NULL", name: "check_inventory_batch_stocks_returned_quantity_presence"
-    t.check_constraint "status = ANY (ARRAY['available'::inventory_batch_stock_statuses, 'reserved'::inventory_batch_stock_statuses, 'partially_used'::inventory_batch_stock_statuses, 'exhausted'::inventory_batch_stock_statuses, 'locked'::inventory_batch_stock_statuses, 'damaged'::inventory_batch_stock_statuses, 'closed'::inventory_batch_stock_statuses])", name: "check_inventory_batch_stocks_status_in_enum_values"
+    t.check_constraint "status = ANY (ARRAY['available'::inventory_batch_stock_statuses, 'closed'::inventory_batch_stock_statuses, 'damaged'::inventory_batch_stock_statuses, 'exhausted'::inventory_batch_stock_statuses, 'locked'::inventory_batch_stock_statuses, 'partially_used'::inventory_batch_stock_statuses, 'reserved'::inventory_batch_stock_statuses])", name: "check_inventory_batch_stocks_status_in_enum_values"
     t.check_constraint "status IS NOT NULL", name: "check_inventory_batch_stocks_status_presence"
   end
 
@@ -210,10 +211,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_02_140259) do
     t.index ["inventory_id", "source_id", "source_type", "movement_type"], name: "idx_on_inventory_id_source_id_source_type_movement__dc133791ed"
     t.index ["inventory_id"], name: "index_inventory_movements_on_inventory_id"
     t.index ["metadata"], name: "index_inventory_movements_on_metadata", using: :gin
+    t.index ["movement_type"], name: "index_inventory_movements_on_movement_type"
     t.index ["source_type", "source_id"], name: "index_inventory_movements_on_source"
     t.index ["unit_id"], name: "index_inventory_movements_on_unit_id"
     t.check_constraint "currency IS NOT NULL AND currency::text <> ''::text", name: "check_inventory_movements_currency_presence"
-    t.check_constraint "movement_type = ANY (ARRAY['restock'::movement_types, 'purchase'::movement_types, 'sale'::movement_types, 'customer_return'::movement_types, 'supplier_return'::movement_types, 'transfer_in'::movement_types, 'transfer_out'::movement_types, 'adjustment'::movement_types, 'correction'::movement_types, 'reservation'::movement_types, 'release_reservation'::movement_types, 'initial_stock'::movement_types, 'inspection'::movement_types, 'quarantine'::movement_types, 'release_from_quarantine'::movement_types])", name: "check_inventory_movements_movement_type_in_enum_values"
+    t.check_constraint "movement_type = ANY (ARRAY['adjustment'::movement_types, 'correction'::movement_types, 'customer_return'::movement_types, 'initial_stock'::movement_types, 'inspection'::movement_types, 'purchase'::movement_types, 'quarantine'::movement_types, 'release_from_quarantine'::movement_types, 'release_reservation'::movement_types, 'reservation'::movement_types, 'restock'::movement_types, 'sale'::movement_types, 'supplier_return'::movement_types, 'transfer_in'::movement_types, 'transfer_out'::movement_types])", name: "check_inventory_movements_movement_type_in_enum_values"
     t.check_constraint "movement_type IS NOT NULL", name: "check_inventory_movements_movement_type_presence"
     t.check_constraint "quantity <> 0.0", name: "check_inventory_movements_quantity_nonzero"
     t.check_constraint "quantity IS NOT NULL", name: "check_inventory_movements_quantity_presence"
@@ -261,7 +263,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_02_140259) do
     t.check_constraint "entity_type = 'business'::entity_types AND business_identifier_type IS NOT NULL AND business_identifier_type::text <> ''::text OR entity_type = 'individual'::entity_types AND business_identifier_type IS NULL", name: "check_legal_identifiers_bi_type_presence_based_on_entity"
     t.check_constraint "entity_type = ANY (ARRAY['business'::entity_types, 'individual'::entity_types])", name: "check_legal_identifiers_entity_type_in_enum_values"
     t.check_constraint "entity_type IS NOT NULL", name: "check_legal_identifiers_entity_type_presence"
-    t.check_constraint "status = ANY (ARRAY['unapproved'::legal_identifier_statuses, 'approved'::legal_identifier_statuses, 'rejected'::legal_identifier_statuses])", name: "check_legal_identifiers_status_in_enum_values"
+    t.check_constraint "status = ANY (ARRAY['approved'::legal_identifier_statuses, 'rejected'::legal_identifier_statuses, 'unapproved'::legal_identifier_statuses])", name: "check_legal_identifiers_status_in_enum_values"
     t.check_constraint "status IS NOT NULL", name: "check_legal_identifiers_status_presence"
     t.check_constraint "tax_identifier IS NOT NULL AND tax_identifier::text <> ''::text", name: "check_legal_identifiers_tax_identifier_presence"
     t.check_constraint "tax_identifier_type IS NOT NULL AND tax_identifier_type::text <> ''::text", name: "check_legal_identifiers_tax_identifier_type_presence"
@@ -374,13 +376,14 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_02_140259) do
     t.index ["purchase_order_id"], name: "index_purchase_order_items_on_purchase_order_id"
     t.index ["quantity"], name: "index_purchase_order_items_on_quantity"
     t.index ["received_quantity"], name: "index_purchase_order_items_on_received_quantity"
+    t.index ["status"], name: "index_purchase_order_items_on_status"
     t.index ["unit_id"], name: "index_purchase_order_items_on_unit_id"
     t.check_constraint "currency IS NOT NULL AND currency::text <> ''::text", name: "check_purchase_order_items_currency_presence"
     t.check_constraint "quantity > 0.0", name: "check_purchase_order_items_quantity_positive"
     t.check_constraint "quantity IS NOT NULL", name: "check_purchase_order_items_quantity_presence"
     t.check_constraint "received_quantity >= 0.0", name: "check_purchase_order_items_received_quantity_non_negative"
     t.check_constraint "received_quantity IS NOT NULL", name: "check_purchase_order_items_received_quantity_presence"
-    t.check_constraint "status = ANY (ARRAY['pending'::purchase_order_item_statuses, 'ordered'::purchase_order_item_statuses, 'partially_delivered'::purchase_order_item_statuses, 'delivered'::purchase_order_item_statuses, 'cancelled'::purchase_order_item_statuses])", name: "check_purchase_order_items_status_in_enum_values"
+    t.check_constraint "status = ANY (ARRAY['cancelled'::purchase_order_item_statuses, 'delivered'::purchase_order_item_statuses, 'ordered'::purchase_order_item_statuses, 'partially_delivered'::purchase_order_item_statuses, 'pending'::purchase_order_item_statuses])", name: "check_purchase_order_items_status_in_enum_values"
     t.check_constraint "status IS NOT NULL", name: "check_purchase_order_items_status_presence"
     t.check_constraint "unit_cost > 0.0", name: "check_purchase_order_items_unit_cost_positive"
     t.check_constraint "unit_cost IS NOT NULL", name: "check_purchase_order_items_unit_cost_presence"
@@ -402,12 +405,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_02_140259) do
     t.index ["manager_id"], name: "index_purchase_orders_on_manager_id"
     t.index ["order_date"], name: "index_purchase_orders_on_order_date"
     t.index ["reference_code"], name: "index_purchase_orders_on_reference_code", unique: true
+    t.index ["status"], name: "index_purchase_orders_on_status"
     t.index ["supplier_id"], name: "index_purchase_orders_on_supplier_id"
     t.index ["warehouse_id"], name: "index_purchase_orders_on_warehouse_id"
     t.check_constraint "char_length(notes) <= 1000", name: "check_purchase_orders_notes_length"
     t.check_constraint "char_length(reference_document::text) <= 55", name: "check_purchase_orders_reference_document_length"
     t.check_constraint "expected_delivery_date >= order_date", name: "check_purchase_orders_expected_delivery_after_order"
-    t.check_constraint "status = ANY (ARRAY['draft'::purchase_order_statuses, 'submitted'::purchase_order_statuses, 'approved'::purchase_order_statuses, 'partially_delivered'::purchase_order_statuses, 'fully_delivered'::purchase_order_statuses, 'cancelled'::purchase_order_statuses, 'rejected'::purchase_order_statuses, 'closed'::purchase_order_statuses, 'on_hold'::purchase_order_statuses])", name: "check_purchase_orders_status_in_enum_values"
+    t.check_constraint "status = ANY (ARRAY['approved'::purchase_order_statuses, 'cancelled'::purchase_order_statuses, 'closed'::purchase_order_statuses, 'draft'::purchase_order_statuses, 'fully_delivered'::purchase_order_statuses, 'on_hold'::purchase_order_statuses, 'partially_delivered'::purchase_order_statuses, 'rejected'::purchase_order_statuses, 'submitted'::purchase_order_statuses])", name: "check_purchase_orders_status_in_enum_values"
     t.check_constraint "status IS NOT NULL", name: "check_purchase_orders_status_presence"
   end
 
@@ -492,6 +496,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_02_140259) do
     t.date "valid_to"
     t.timestamptz "created_at", null: false
     t.timestamptz "updated_at", null: false
+    t.index ["business_category"], name: "index_tax_rates_on_business_category"
     t.index ["country", "tax_identifier_type"], name: "index_tax_rates_on_country_and_tax_identifier_type"
     t.index ["tax_identifier_type", "country", "tax_type", "business_category", "valid_from"], name: "idx_on_tax_identifier_type_country_tax_type_busines_d6f6f9ae1e", unique: true
     t.index ["tax_type"], name: "index_tax_rates_on_tax_type"

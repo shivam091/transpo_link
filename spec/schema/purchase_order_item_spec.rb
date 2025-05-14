@@ -30,6 +30,7 @@ RSpec.describe PurchaseOrderItem, type: :model do
     it { is_expected.to have_db_index(:unit_id) }
     it { is_expected.to have_db_index(:purchase_order_id) }
     it { is_expected.to have_db_index(:received_quantity) }
+    it { is_expected.to have_db_index(:status) }
     it { is_expected.to have_db_index([:purchase_order_id, :product_id]).unique }
   end
 

@@ -17,7 +17,7 @@ class CreateInventoryMovements < ActiveRecord::Migration[8.0]
                    null: false,
                    index: {using: :btree}
       t.decimal :quantity, precision: 12, scale: 2, default: 0.0 # +ve for incoming, -ve for outgoing
-      t.enum :movement_type, enum_type: :movement_types
+      t.enum :movement_type, enum_type: :movement_types, index: {using: :btree}
       t.references :unit,
                    type: :uuid,
                    foreign_key: {

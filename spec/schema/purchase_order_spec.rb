@@ -31,6 +31,7 @@ RSpec.describe PurchaseOrder, type: :model do
     it { is_expected.to have_db_index(:reference_code).unique }
     it { is_expected.to have_db_index(:supplier_id) }
     it { is_expected.to have_db_index(:warehouse_id) }
+    it { is_expected.to have_db_index(:status) }
   end
 
   describe "foreign keys" do
