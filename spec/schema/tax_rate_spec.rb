@@ -26,6 +26,7 @@ RSpec.describe TaxRate, type: :model do
     it { is_expected.to have_db_index(:tax_type) }
     it { is_expected.to have_db_index(:valid_from) }
     it { is_expected.to have_db_index(:valid_to) }
+    it { is_expected.to have_db_index(:business_category) }
     it { is_expected.to have_db_index([:country, :tax_identifier_type]) }
     it { is_expected.to have_db_index([:tax_identifier_type, :country, :tax_type, :business_category, :valid_from]).unique }
   end

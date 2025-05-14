@@ -26,6 +26,7 @@ RSpec.describe Inventory, type: :model do
   describe "indexes" do
     it { is_expected.to have_db_index(:reference_code).unique }
     it { is_expected.to have_db_index(:product_id) }
+    it { is_expected.to have_db_index(:tracking_method) }
     it { is_expected.to have_db_index(:unit_id) }
     it { is_expected.to have_db_index(:warehouse_id) }
     it { is_expected.to have_db_index([:product_id, :warehouse_id]).unique }

@@ -39,7 +39,7 @@ class CreatePurchaseOrders < ActiveRecord::Migration[8.0]
       t.timestamptz :order_date, index: {using: :btree}, default: -> { "CURRENT_TIMESTAMP" }
       t.date :expected_delivery_date
       t.date :actual_delivery_date
-      t.enum :status, enum_type: :purchase_order_statuses
+      t.enum :status, enum_type: :purchase_order_statuses, index: {using: :btree}
       t.text :notes
       t.timestamps_with_timezone null: false
 

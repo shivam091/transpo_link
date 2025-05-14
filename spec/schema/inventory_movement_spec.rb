@@ -31,6 +31,7 @@ RSpec.describe InventoryMovement, type: :model do
     it { is_expected.to have_db_index(:inventory_id) }
     it { is_expected.to have_db_index(:unit_id) }
     it { is_expected.to have_db_index(:metadata) }
+    it { is_expected.to have_db_index(:movement_type) }
     it { is_expected.to have_db_index([:source_type, :source_id]) }
   end
 

@@ -9,16 +9,13 @@ class CreateTaxRates < ActiveRecord::Migration[8.0]
     create_table :tax_rates, id: :uuid do |t|
       t.string :country
       t.string :tax_identifier_type
-      t.enum :tax_type, enum_type: :tax_types
-      t.enum :business_category, enum_type: :business_categories
+      t.enum :tax_type, enum_type: :tax_types, index: {using: :btree}
+      t.enum :business_category, enum_type: :business_categories, index: {using: :btree}
       t.decimal :rate, precision: 5, scale: 2
-      t.date :valid_from
-      t.date :valid_to
+      t.date :valid_from, index: {using: :btree}
+      t.date :valid_to, index: {using: :btree, where: "valid_to IS NULL"}
       t.timestamps_with_timezone null: false
 
-      t.index :tax_type, using: :btree
-      t.index :valid_from, using: :btree
-      t.index :valid_to, using: :btree, where: "valid_to IS NULL"
       t.index [:country, :tax_identifier_type], using: :btree
       t.index [:tax_identifier_type, :country, :tax_type, :business_category, :valid_from], using: :btree, unique: true
 
