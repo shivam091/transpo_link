@@ -32,15 +32,10 @@ class Inventories::UpdateAverageCostPriceService < ApplicationService
   # New Average Cost Price = (1000 + 2400 + 1650) / (100 + 200 + 150) = 11.22
   #
   def update_average_cost_price
-    inventory_batches_table = InventoryBatch.arel_table
+    inventory_batches = InventoryBatch.arel_table
 
-    total_cost_expr = TranspoLink::SqlFunctions.sum_mul(
-      inventory_batches_table[:cost_price],
-      inventory_batches_table[:quantity]
-    )
-    total_quantity_expr = TranspoLink::SqlFunctions.sum(
-      inventory_batches_table[:quantity]
-    )
+    total_cost_expr = TranspoLink::SqlFunctions.sum_mul(inventory_batches[:cost_price], inventory_batches[:quantity])
+    total_quantity_expr = TranspoLink::SqlFunctions.sum(inventory_batches[:quantity])
 
     totals = inventory.inventory_batches.pick(total_cost_expr, total_quantity_expr)
 

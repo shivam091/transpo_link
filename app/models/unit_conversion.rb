@@ -28,12 +28,13 @@ class UnitConversion < ApplicationRecord
   end
 
   default_scope do
-    unit_arel = Unit.arel_table
-    join = arel_table.join(unit_arel)
-      .on(arel_table[:source_unit_id].eq(unit_arel[:id]))
-      .join_sources
+    units, unit_conversions = Unit.arel_table, UnitConversion.arel_table
 
-    joins(join).order(unit_arel[:symbol].asc)
+    join = unit_conversions.join(units)
+             .on(unit_conversions[:source_unit_id].eq(units[:id]))
+             .join_sources
+
+    joins(join).order(units[:symbol].asc)
   end
 
   delegate :symbol, :category, to: :source_unit, prefix: true
