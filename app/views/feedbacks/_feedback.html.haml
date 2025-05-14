@@ -9,7 +9,7 @@
   .table-cell
     = link_to_user(user, target: :_blank)
   .table-cell
-    = link_to reviewable_name_with_type(reviewable), reviewable_link(reviewable), target: :_blank
+    = link_to_reviewable(reviewable, target: :_blank)
   .table-cell
     = feedback.rating
   .table-cell{data: {controller: "collapsible-content", collapsible_content_show_more_text_value: t("shared.show_more"), collapsible_content_show_less_text_value: t("shared.show_less")}}
