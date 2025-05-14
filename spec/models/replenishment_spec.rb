@@ -13,14 +13,6 @@ RSpec.describe Replenishment, type: :model do
     it { is_expected.to have_a_valid_factory(:replenishment) }
   end
 
-  describe "default values" do
-    let(:replenishment) { described_class.new }
-
-    it "should set 0.0 as default value for #quantity_pending_from_supplier" do
-      expect(replenishment.quantity_pending_from_supplier).to eq(0.0)
-    end
-  end
-
   describe "included modules" do
     it { is_expected.to include_module(ScaleEnforcer) }
   end

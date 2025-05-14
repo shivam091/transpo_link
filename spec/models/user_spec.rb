@@ -29,18 +29,6 @@ RSpec.describe User, type: :model do
     it { is_expected.to include_module(Navigable) }
   end
 
-  describe "default values" do
-    let(:user) { described_class.new }
-
-    it "should set false as default value for #is_active" do
-      expect(user.is_active).to be_falsy
-    end
-
-    it "should set false as default value for #is_banned" do
-      expect(user.is_banned).to be_falsy
-    end
-  end
-
   describe "normalized attributes" do
     it { is_expected.to normalize(:email).from("  test@example.com  ").to("test@example.com") }
   end

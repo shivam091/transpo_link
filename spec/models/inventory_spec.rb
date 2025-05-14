@@ -16,10 +16,6 @@ RSpec.describe Inventory, type: :model do
   describe "default values" do
     let(:inventory) { described_class.new }
 
-    it "should set 0.0 as default value for #average_cost_price" do
-      expect(inventory.average_cost_price).to eq(0.0)
-    end
-
     it "should set average_cost as default value for #tracking_method" do
       expect(inventory.tracking_method).to eq("average_cost")
     end

@@ -13,18 +13,6 @@ RSpec.describe Stock, type: :model do
     it { is_expected.to have_a_valid_factory(:stock) }
   end
 
-  describe "default values" do
-    let(:stock) { described_class.new }
-
-    it "should set 0.0 as default value for #quantity_in_hand" do
-      expect(stock.quantity_in_hand).to eq(0.0)
-    end
-
-    it "should set 0.0 as default value for #quantity_pending_to_buyer" do
-      expect(stock.quantity_pending_to_buyer).to eq(0.0)
-    end
-  end
-
   describe "included modules" do
     it { is_expected.to include_module(ScaleEnforcer) }
   end

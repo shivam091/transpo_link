@@ -17,6 +17,18 @@ RSpec.describe InventoryBatch::Stock, type: :model do
     it { is_expected.to define_enum_for(:status).backed_by_column_of_type(:enum) }
   end
 
+  describe "default values" do
+    let(:inventory_batch_stock) { described_class.new }
+
+    it "should set 0.0 as default value for #used_quantity" do
+      expect(inventory_batch_stock.used_quantity).to eq(0.0)
+    end
+
+    it "should set available as default value for #status" do
+      expect(inventory_batch_stock.status).to eq("available")
+    end
+  end
+
   describe "included modules" do
     it { is_expected.to include_module(ScaleEnforcer) }
   end

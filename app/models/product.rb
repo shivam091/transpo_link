@@ -10,8 +10,6 @@ class Product < ApplicationRecord
     reference_code name sku barcode cost_price product_category_id
   ].freeze
 
-  attribute :min_stock_threshold, default: 10.0
-
   nullify_if_blank :description, :barcode
 
   sanitize_attributes :name, :description, :sku, :barcode
