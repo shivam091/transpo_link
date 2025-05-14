@@ -16,7 +16,7 @@
     = time_ago_with_tooltip(request_log.created_at)
   .table-cell
     - if accessed_by.present?
-      = link_to accessed_by&.full_name, user_path(accessed_by), target: :_blank
+      = link_to_user(accessed_by, target: :_blank)
   .table-cell.cell-narrow
     = link_to "javascript:void(0)", class: "text-reset", data: {bs_toggle: "dropdown"}, aria: {expanded: false} do
       = sprite_icon("ellipsis-vertical")
