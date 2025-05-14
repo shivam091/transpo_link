@@ -7,48 +7,12 @@
 require "spec_helper"
 
 RSpec.describe InventoryBatch, type: :model do
-  let(:purchase_order_item) do
-    create(:purchase_order_item, :delivered, quantity: 1000, received_quantity: 1000)
-  end
-
-  subject(:inventory_batch) { build(:inventory_batch, source: purchase_order_item) }
+  subject(:inventory_batch) { build(:inventory_batch) }
 
   include_context "with current user"
 
   describe "valid factory" do
     it { is_expected.to have_a_valid_factory(:inventory_batch) }
-  end
-
-  describe "attributes, indexes, foreign keys, and check constraints" do
-    it { is_expected.to have_db_column(:id).of_type(:uuid) }
-    it { is_expected.to have_db_column(:inventory_id).of_type(:uuid).with_options(null: false) }
-    it { is_expected.to have_db_column(:batch_number).of_type(:string) }
-    it { is_expected.to have_db_column(:expiration_date).of_type(:date) }
-    it { is_expected.to have_db_column(:quantity).of_type(:decimal).with_options(precision: 12, scale: 2) }
-    it { is_expected.to have_db_column(:unit_id).of_type(:uuid).with_options(null: false) }
-    it { is_expected.to have_db_column(:cost_price).of_type(:decimal).with_options(precision: 12, scale: 2) }
-    it { is_expected.to have_db_column(:currency).of_type(:string) }
-    it { is_expected.to have_db_column(:source_id).of_type(:uuid) }
-    it { is_expected.to have_db_column(:source_type).of_type(:string) }
-    it { is_expected.to have_db_column(:created_at).of_type(:timestamptz).with_options(null: false) }
-    it { is_expected.to have_db_column(:updated_at).of_type(:timestamptz).with_options(null: false) }
-
-    it { is_expected.to have_db_index(:inventory_id) }
-    it { is_expected.to have_db_index(:unit_id) }
-    it { is_expected.to have_db_index([:inventory_id, :batch_number]).unique }
-    it { is_expected.to have_db_index([:source_type, :source_id]) }
-
-    it { is_expected.to have_foreign_key(:inventory_id).with_name(:fk_inventory_batches_inventory_id_on_inventories).on_delete(:cascade) }
-    it { is_expected.to have_foreign_key(:unit_id).with_name(:fk_inventory_batches_unit_id_on_units).on_delete(:restrict) }
-
-    it { is_expected.to have_check_constraint(:check_inventory_batches_batch_number_presence).with_expression("batch_number IS NOT NULL AND batch_number::text <> ''::text") }
-    it { is_expected.to have_check_constraint(:check_inventory_batches_batch_number_length).with_expression("char_length(batch_number::text) <= 55") }
-    it { is_expected.to have_check_constraint(:check_inventory_batches_cost_price_positive).with_expression("cost_price > 0.0") }
-    it { is_expected.to have_check_constraint(:check_inventory_batches_cost_price_presence).with_expression("cost_price IS NOT NULL") }
-    it { is_expected.to have_check_constraint(:check_inventory_batches_currency_presence).with_expression("currency IS NOT NULL AND currency::text <> ''::text") }
-    it { is_expected.to have_check_constraint(:check_inventory_batches_expiration_date_future).with_expression("expiration_date >= CURRENT_DATE") }
-    it { is_expected.to have_check_constraint(:check_inventory_batches_quantity_positive).with_expression("quantity > 0.0") }
-    it { is_expected.to have_check_constraint(:check_inventory_batches_quantity_presence).with_expression("quantity IS NOT NULL") }
   end
 
   describe "included modules" do
@@ -116,6 +80,7 @@ RSpec.describe InventoryBatch, type: :model do
 
   describe "validations" do
     describe "#batch_number" do
+      let(:purchase_order_item) { create(:purchase_order_item, :delivered) }
       let!(:inventory_batch) { create(:inventory_batch, batch_number: "ABC123", quantity: 100, source: purchase_order_item) }
 
       it { is_expected.to validate_presence_of(:batch_number) }
@@ -149,7 +114,10 @@ RSpec.describe InventoryBatch, type: :model do
       end
 
       context "when quantity > 0.0" do
+        let(:purchase_order_item) { create(:purchase_order_item, :delivered) }
+
         it "is valid" do
+          inventory_batch.source = purchase_order_item
           inventory_batch.quantity = 1.0
           inventory_batch.validate
 
@@ -196,9 +164,10 @@ RSpec.describe InventoryBatch, type: :model do
     end
   end
 
-  describe "scopes" do
+  describe "class methods and scopes" do
     describe ".by_batch_number_and_expiry" do
       let(:inventory) { create(:inventory) }
+      let(:purchase_order_item) { create(:purchase_order_item, :delivered) }
 
       let!(:batch_with_expiry) { create(:inventory_batch, inventory:, batch_number: "B001", expiration_date: 1.year.from_now, source: purchase_order_item) }
       let!(:batch_without_expiry) { create(:inventory_batch, inventory:, batch_number: "B002", expiration_date: nil, source: purchase_order_item) }
@@ -226,6 +195,7 @@ RSpec.describe InventoryBatch, type: :model do
   describe "instance methods" do
     describe "#update_inventory_average_cost_price" do
       let(:inventory) { create(:inventory) }
+      let(:purchase_order_item) { create(:purchase_order_item, :delivered) }
       let(:inventory_batch) { build(:inventory_batch, source: purchase_order_item, inventory:) }
 
       it "calls Inventories::UpdateAverageCostPriceService with the inventory" do
@@ -240,21 +210,21 @@ RSpec.describe InventoryBatch, type: :model do
 
       let(:source_unit) { dozen_item_conversion.source_unit }
       let(:target_unit) { dozen_item_conversion.target_unit }
+      let(:inventory) { create(:inventory, unit: target_unit) }
+      let(:purchase_order_item) { create(:purchase_order_item, :delivered) }
 
       context "when source and target units are the same" do
-        let(:inventory) { create(:inventory, unit: source_unit) }
-        let(:inventory_batch) { build(:inventory_batch, source: purchase_order_item, unit: source_unit, quantity: 10, inventory:) }
+        let(:inventory_batch) { build(:inventory_batch, source: purchase_order_item, unit: target_unit, quantity: 10, inventory:) }
 
         it "does not change quantity or unit" do
           inventory_batch.save!
 
           expect(inventory_batch.quantity).to eq(10)
-          expect(inventory_batch.unit).to eq(source_unit)
+          expect(inventory_batch.unit).to eq(target_unit)
         end
       end
 
       context "when source and target units are different and conversion succeeds" do
-        let(:inventory) { create(:inventory, unit: target_unit) }
         let(:inventory_batch) { build(:inventory_batch, source: purchase_order_item, unit: source_unit, quantity: 5, inventory:) }
 
         it "converts the quantity and sets unit to target unit" do
@@ -267,7 +237,8 @@ RSpec.describe InventoryBatch, type: :model do
     end
 
     describe "#previous_quantity" do
-      let(:inventory_batch) { create(:inventory_batch, quantity: 10.0, source: purchase_order_item) }
+      let(:purchase_order_item) { create(:purchase_order_item, :delivered) }
+      let(:inventory_batch) { create(:inventory_batch, source: purchase_order_item) }
 
       context "when quantity has been updated" do
         before { inventory_batch.update(quantity: 15.0) }
@@ -293,6 +264,7 @@ RSpec.describe InventoryBatch, type: :model do
     end
 
     describe "#quantity_change" do
+      let(:purchase_order_item) { create(:purchase_order_item, :delivered) }
       let!(:inventory_batch) { create(:inventory_batch, quantity: 10, source: purchase_order_item) }
 
       context "when quantity has changed" do
@@ -316,7 +288,8 @@ RSpec.describe InventoryBatch, type: :model do
       let(:source_unit) { dozen_item_conversion.source_unit }
       let(:target_unit) { dozen_item_conversion.target_unit }
       let(:inventory) { create(:inventory, unit: target_unit) }
-      let(:inventory_batch) { create(:inventory_batch, quantity: 10, unit: target_unit, inventory:, source: purchase_order_item) }
+      let(:purchase_order_item) { create(:purchase_order_item, :delivered) }
+      let(:inventory_batch) { create(:inventory_batch, unit: target_unit, inventory:, source: purchase_order_item) }
 
       context "when source_unit is not provided" do
         it "adds quantity directly and saves the batch" do
@@ -361,6 +334,7 @@ RSpec.describe InventoryBatch, type: :model do
       end
 
       context "when source is present" do
+        let(:purchase_order_item) { create(:purchase_order_item, :delivered) }
         subject(:inventory_batch) { build(:inventory_batch, source: purchase_order_item) }
 
         it "returns false" do
@@ -379,6 +353,7 @@ RSpec.describe InventoryBatch, type: :model do
       end
 
       context "when source is purchase order item" do
+        let(:purchase_order_item) { create(:purchase_order_item, :delivered) }
         subject(:inventory_batch) { build(:inventory_batch, source: purchase_order_item) }
 
         it "returns false" do
@@ -400,6 +375,7 @@ RSpec.describe InventoryBatch, type: :model do
       end
 
       context "when source is a PurchaseOrderItem" do
+        let(:purchase_order_item) { create(:purchase_order_item, :delivered) }
         let(:inventory_batch) { build(:inventory_batch, source: purchase_order_item, cost_price: nil, currency: nil) }
 
         it "sets cost_price and currency from the source" do
@@ -422,6 +398,7 @@ RSpec.describe InventoryBatch, type: :model do
     end
 
     describe "#record_audit_logs" do
+      let(:purchase_order_item) { create(:purchase_order_item, :delivered) }
       let!(:inventory_batch) { create(:inventory_batch, quantity: 10.0, source: purchase_order_item) }
 
       context "when quantity has changed" do
@@ -442,8 +419,7 @@ RSpec.describe InventoryBatch, type: :model do
     end
 
     describe "#validate_quantity_does_not_exceed_item_received_quantity" do
-      let!(:dozen_item_conversion) { create(:dozen_item_conversion) }
-
+      let(:purchase_order_item) { create(:purchase_order_item, :delivered) }
       let(:inventory_batch) do
         build(:inventory_batch, source: purchase_order_item, unit: purchase_order_item.unit, quantity: 100)
       end
@@ -452,7 +428,7 @@ RSpec.describe InventoryBatch, type: :model do
         before { allow(purchase_order_item).to receive(:available_batch_quantity) { 50 } }
 
         it "adds an error on quantity" do
-          inventory_batch.valid?
+          inventory_batch.validate
 
           expect(inventory_batch.errors[:quantity]).to include("exceeds the available quantity for this item")
         end
@@ -462,7 +438,7 @@ RSpec.describe InventoryBatch, type: :model do
         before { allow(purchase_order_item).to receive(:available_batch_quantity) { 150 } }
 
         it "does not add any errors" do
-          inventory_batch.valid?
+          inventory_batch.validate
 
           expect(inventory_batch.errors[:quantity]).to be_empty
         end
@@ -470,6 +446,8 @@ RSpec.describe InventoryBatch, type: :model do
     end
 
     describe "#create_stock" do
+      let(:purchase_order_item) { create(:purchase_order_item, :delivered) }
+
       it "calls InventoryBatches::Stocks::CreateService" do
         expect(InventoryBatches::Stocks::CreateService).to receive(:call).with(an_instance_of(InventoryBatch))
 

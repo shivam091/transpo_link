@@ -23,8 +23,7 @@ class PurchaseOrderItem < ApplicationRecord
     cancelled: "cancelled",
   }
 
-  attribute :received_quantity, default: 0.0
-  attribute :status, :enum, default: statuses[:pending]
+  attribute :status, default: statuses[:pending]
 
   scale_attributes :quantity, :unit_cost, :received_quantity
 
@@ -132,7 +131,7 @@ class PurchaseOrderItem < ApplicationRecord
     return received_quantity.to_f unless inventory_batches.any?
 
     total_batched_quantity = inventory_batches.sum do |batch|
-      UnitConversion.convert(batch.unit, unit, batch.quantity.to_f)
+      UnitConversion.convert!(batch.unit, unit, batch.quantity.to_f)
     end
 
     received_quantity.to_f - total_batched_quantity

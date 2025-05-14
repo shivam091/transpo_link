@@ -34,7 +34,7 @@ class PurchaseOrderItems::Deliveries::ProcessService < ApplicationService
 
     # Decrement replenishment
     source_unit, target_unit = delivery.unit, inventory.unit
-    converted_quantity = UnitConversion.convert(source_unit, target_unit, delivery.quantity)
+    converted_quantity = UnitConversion.convert!(source_unit, target_unit, delivery.quantity)
     Replenishments::UpdateService.(inventory, converted_quantity, :decrement)
 
     # Evaluate delivery status

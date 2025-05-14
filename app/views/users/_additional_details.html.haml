@@ -3,7 +3,7 @@
     .widget-row-title
       = User.human_attribute_name(:last_activity_at)
     .widget-row-body
-      = time_ago_with_tooltip(user.last_activity_at) || "-"
+      = time_ago_with_tooltip(user.last_active_at) || "-"
 .widget-row
   .widget-row-content
     .widget-row-title

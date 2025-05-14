@@ -17,7 +17,7 @@ RSpec.describe InventoryBatches::Stocks::CreateService, type: :service do
   describe ".call" do
     context "with a valid inventory batch" do
       let(:purchase_order_item) { create(:purchase_order_item, :delivered) }
-      let(:inventory_batch) { create(:inventory_batch, quantity: 10, source: purchase_order_item) }
+      let(:inventory_batch) { create(:inventory_batch, source: purchase_order_item) }
 
       include_examples "creates a record", InventoryBatch::Stock
     end

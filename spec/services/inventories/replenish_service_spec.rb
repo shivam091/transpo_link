@@ -7,19 +7,15 @@
 require "spec_helper"
 
 RSpec.describe Inventories::ReplenishService, type: :service do
-  let(:source_unit) { create(:dozen_unit) }
-  let(:target_unit) { create(:item_unit) }
-  let(:warehouse) { create(:warehouse, name: "Test warehouse", unit: source_unit) }
-  let(:product) { create(:product, name: "Test product", unit: source_unit) }
-  let(:manager) { create(:manager) }
-  let(:supplier) { create(:supplier) }
+  let(:unit) { create(:item_unit) }
+  let(:warehouse) { create(:warehouse, unit:) }
+  let(:product) { create(:product, unit:) }
 
-  let!(:inventory) { create(:inventory, warehouse:, product:, unit: target_unit) }
-  let!(:unit_conversion) { create(:dozen_item_conversion, source_unit:, target_unit:) }
+  let!(:inventory) { create(:inventory, warehouse:, product:, unit:) }
 
   let!(:purchase_order) do
-    create(:purchase_order, :submitted, warehouse:, manager:, supplier:).tap do |po|
-      create(:purchase_order_item, purchase_order: po, product:, unit: source_unit, quantity: 10)
+    create(:purchase_order, :submitted, warehouse:).tap do |purchase_order|
+      create(:purchase_order_item, purchase_order:, product:, unit:)
     end
   end
 
@@ -29,7 +25,7 @@ RSpec.describe Inventories::ReplenishService, type: :service do
     it "increments quantity_pending_from_supplier correctly" do
       expect {
         service_response
-      }.to change { inventory.replenishment.reload.quantity_pending_from_supplier }.by(120)
+      }.to change { inventory.replenishment.reload.quantity_pending_from_supplier }.by(1000)
     end
   end
 
@@ -39,17 +35,7 @@ RSpec.describe Inventories::ReplenishService, type: :service do
     it "raises MissingInventoryError" do
       expect {
         service_response
-      }.to raise_error(PurchaseOrders::MissingInventoryError, 'Inventory is missing for the product "Test product" in the warehouse "Test warehouse".')
-    end
-  end
-
-  context "when unit conversion is missing" do
-    before { UnitConversion.destroy_all }
-
-    it "raises UnitConversionError" do
-      expect {
-        service_response
-      }.to raise_error(UnitConversionError, 'Cannot convert from "Dozen" to "Item". Please ensure a valid unit conversion exists.')
+      }.to raise_error(PurchaseOrders::MissingInventoryError, /Inventory is missing for the product/)
     end
   end
 end

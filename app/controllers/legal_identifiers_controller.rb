@@ -4,7 +4,7 @@
 
 class LegalIdentifiersController < ApplicationController
   before_action :set_breadcrumbs, :legal_identifiers
-  before_action :find_legal_identifier, except: [:index, :new, :create]
+  before_action :set_legal_identifier, except: [:index, :new, :create]
 
   # GET /legal-identifiers
   def index
@@ -29,15 +29,14 @@ class LegalIdentifiersController < ApplicationController
 
     if response.success?
       set_flash_message(:notice, :success)
+
       redirect_to legal_identifiers_path, status: :see_other
     else
       set_flash_message(:alert, :error, immediate: true)
+
       respond_to do |format|
         format.turbo_stream do
-          render turbo_stream: [
-            turbo_stream.update(:new_legal_identifier_form_frame, partial: "legal_identifiers/form"),
-            render_flash
-          ], status: :unprocessable_entity
+          render turbo_stream: [update_form_frame, render_flash], status: :unprocessable_entity
         end
       end
     end
@@ -54,15 +53,14 @@ class LegalIdentifiersController < ApplicationController
 
     if response.success?
       set_flash_message(:notice, :success)
+
       redirect_to legal_identifiers_path, status: :see_other
     else
       set_flash_message(:alert, :error, immediate: true)
+
       respond_to do |format|
         format.turbo_stream do
-          render turbo_stream: [
-            turbo_stream.update(:edit_legal_identifier_form_frame, partial: "legal_identifiers/form"),
-            render_flash
-          ], status: :unprocessable_entity
+          render turbo_stream: [update_form_frame, render_flash], status: :unprocessable_entity
         end
       end
     end
@@ -78,6 +76,7 @@ class LegalIdentifiersController < ApplicationController
     else
       set_flash_message(:alert, :error)
     end
+
     redirect_to legal_identifiers_path, status: :see_other
   end
 
@@ -91,6 +90,7 @@ class LegalIdentifiersController < ApplicationController
     else
       set_flash_message(:alert, :error)
     end
+
     redirect_to legal_identifiers_path, status: :see_other
   end
 
@@ -104,6 +104,7 @@ class LegalIdentifiersController < ApplicationController
     else
       set_flash_message(:alert, :error)
     end
+
     redirect_to legal_identifiers_path, status: :see_other
   end
 
@@ -124,11 +125,19 @@ class LegalIdentifiersController < ApplicationController
     @legal_identifiers ||= LegalIdentifier.accessible(current_user)
   end
 
-  def find_legal_identifier
+  def set_legal_identifier
     @legal_identifier ||= @legal_identifiers.find(params[:id])
   end
 
   def set_breadcrumbs
     add_breadcrumb t("legal_identifiers.breadcrumb"), legal_identifiers_path
+  end
+
+  def form_frame_id
+    action_name == "create" ? :new_legal_identifier_form_frame : :edit_legal_identifier_form_frame
+  end
+
+  def form_partial
+    "legal_identifiers/form"
   end
 end

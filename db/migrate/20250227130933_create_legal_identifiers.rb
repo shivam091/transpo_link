@@ -17,7 +17,7 @@ class CreateLegalIdentifiers < ActiveRecord::Migration[8.0]
                    null: false,
                    index: {using: :btree}
       t.string :country
-      t.enum :entity_type, enum_type: :entity_types
+      t.enum :entity_type, enum_type: :entity_types, index: {using: :btree}
       t.string :tax_identifier_type
       t.string :tax_identifier
       t.string :business_identifier_type
@@ -27,7 +27,6 @@ class CreateLegalIdentifiers < ActiveRecord::Migration[8.0]
 
       t.index [:tax_identifier, :tax_identifier_type, :country, :entity_type], unique: true, using: :btree
       t.index [:business_identifier, :business_identifier_type, :country], unique: true, using: :btree
-      t.index :entity_type, using: :btree
 
       t.check_constraint "tax_identifier_type IS NOT NULL AND tax_identifier_type <> ''", name: :check_legal_identifiers_tax_identifier_type_presence
       t.check_constraint "tax_identifier IS NOT NULL AND tax_identifier <> ''", name: :check_legal_identifiers_tax_identifier_presence

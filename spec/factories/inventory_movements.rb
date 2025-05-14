@@ -6,7 +6,7 @@ FactoryBot.define do
   factory :inventory_movement do
     association :inventory
     quantity { Faker::Number.between(from: 1, to: 100) }
-    movement_type { InventoryMovement.movement_types[:restock] }
+    movement_type { :restock }
     association :unit, factory: :dozen_unit
     unit_cost { Faker::Commerce.price(range: 2.0..500.0)  }
     total_cost { quantity * unit_cost.to_f }
@@ -16,11 +16,11 @@ FactoryBot.define do
     association :source, factory: :inventory
 
     trait :restock do
-      movement_type { InventoryMovement.movement_types[:restock] }
+      movement_type { :restock }
     end
 
     trait :purchase do
-      movement_type { InventoryMovement.movement_types[:purchase] }
+      movement_type { :purchase }
     end
   end
 end

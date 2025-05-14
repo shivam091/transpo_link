@@ -12,9 +12,6 @@ class User < ApplicationRecord
   LAST_ACTIVITY_AT_INTERVAL = 2.minutes.freeze
   THROTTLE_RESET_PERIOD = 2.minutes.freeze
 
-  attribute :is_banned, default: false
-  attribute :is_active, default: false
-
   normalizes :email, with: ->(email) { email.strip }
 
   sanitize_attributes :email, :password, :password_confirmation
@@ -104,12 +101,13 @@ class User < ApplicationRecord
     end
 
     def with_role(role_name)
-      role_table = Role.arel_table
-      user_table = User.arel_table
-      join = user_table.join(role_table)
-        .on(user_table[:role_id].eq(role_table[:id]))
-        .join_sources
-      joins(join).where(role_table[:name].eq(role_name))
+      roles, users = Role.arel_table, User.arel_table
+
+      join = users.join(roles)
+               .on(users[:role_id].eq(roles[:id]))
+               .join_sources
+
+      joins(join).where(roles[:name].eq(role_name))
     end
   end
 
@@ -175,6 +173,13 @@ class User < ApplicationRecord
     return time unless time.is_a?(Time) || time.is_a?(DateTime) || time.is_a?(ActiveSupport::TimeWithZone)
 
     preferred_time_zone ? time.in_time_zone(preferred_time_zone) : time.in_time_zone
+  end
+
+  def last_active_at
+    last_activity = last_activity_at&.to_time&.in_time_zone
+    last_sign_in = current_sign_in_at
+
+    [last_activity, last_sign_in].compact.max
   end
 
   private

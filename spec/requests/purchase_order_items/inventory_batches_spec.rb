@@ -7,18 +7,15 @@
 require "spec_helper"
 
 RSpec.describe "PurchaseOrderItems::InventoryBatches", type: :request do
-  let!(:unit_conversion) { create(:dozen_item_conversion) }
-
-  let(:unit) { unit_conversion.target_unit }
-  let(:inventory) { create(:inventory, unit:) }
+  let(:inventory) { create(:inventory) }
   let(:warehouse) { inventory.warehouse }
   let(:product) { inventory.product }
 
   let!(:purchase_order) { create(:purchase_order, warehouse:) }
-  let!(:purchase_order_item) { create(:purchase_order_item, quantity: 5, received_quantity: 100, purchase_order:, unit:, product:) }
+  let!(:purchase_order_item) { create(:purchase_order_item, :delivered, purchase_order:, product:) }
 
-  let(:valid_params) { {inventory_batch: attributes_for(:inventory_batch, unit_id: unit.id, quantity: 10)} }
-  let(:invalid_params) { {inventory_batch: attributes_for(:inventory_batch, quantity: nil, unit_id: nil)} }
+  let(:valid_params) { {inventory_batch: attributes_for(:inventory_batch, unit_id: purchase_order_item.unit_id)} }
+  let(:invalid_params) { {inventory_batch: attributes_for(:inventory_batch, unit_id: nil)} }
 
   include_context "sign in as manager"
 

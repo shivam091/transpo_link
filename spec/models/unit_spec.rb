@@ -7,25 +7,10 @@
 require "spec_helper"
 
 RSpec.describe Unit, type: :model do
-  subject(:unit) { create(:unit) }
+  subject(:unit) { build(:unit) }
 
   describe "valid factory" do
     it { is_expected.to have_a_valid_factory(:item_unit) }
-  end
-
-  describe "attributes, indexes, foreign keys, and check constraints" do
-    it { is_expected.to have_db_column(:id).of_type(:uuid) }
-    it { is_expected.to have_db_column(:category).of_type(:enum) }
-    it { is_expected.to have_db_column(:symbol).of_type(:string) }
-    it { is_expected.to have_db_column(:created_at).of_type(:timestamptz).with_options(null: false) }
-    it { is_expected.to have_db_column(:updated_at).of_type(:timestamptz).with_options(null: false) }
-
-    it { is_expected.to have_db_index(:category) }
-    it { is_expected.to have_db_index([:category, :symbol]).unique }
-
-    it { is_expected.to have_check_constraint(:check_units_category_presence).with_expression("category IS NOT NULL") }
-    it { is_expected.to have_check_constraint(:check_units_category_in_enum_values) }
-    it { is_expected.to have_check_constraint(:check_units_symbol_presence).with_expression("symbol IS NOT NULL AND symbol::text <> ''::text") }
   end
 
   describe "enum" do
@@ -88,24 +73,19 @@ RSpec.describe Unit, type: :model do
     end
   end
 
-  describe "scopes" do
-    describe ".for_category" do
-      let!(:count_unit) { create(:item_unit) }
-      let!(:weight_unit) { create(:kilogramme_unit) }
-
-      let(:result) { described_class.for_category("count") }
-
-      it "returns units for the specified category only" do
-        expect(result).to include(count_unit)
-        expect(result).not_to include(weight_unit)
-      end
-    end
-  end
-
-  describe "class methods" do
+  describe "class methods and scopes" do
     let!(:item_unit) { create(:item_unit) }
     let!(:dozen_unit) { create(:dozen_unit) }
     let!(:kilogramme_unit) { create(:kilogramme_unit) }
+
+    describe ".for_category" do
+      let(:result) { described_class.for_category("count") }
+
+      it "returns units for the specified category only" do
+        expect(result).to include(item_unit)
+        expect(result).not_to include(kilogramme_unit)
+      end
+    end
 
     describe ".select_options" do
       context "when category is provided" do

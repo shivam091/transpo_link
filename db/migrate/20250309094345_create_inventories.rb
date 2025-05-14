@@ -26,7 +26,7 @@ class CreateInventories < ActiveRecord::Migration[8.0]
                    },
                    null: false,
                    index: {using: :btree}
-      t.enum :tracking_method, enum_type: :tracking_methods
+      t.enum :tracking_method, enum_type: :tracking_methods, index: {using: :btree}
       t.references :unit,
                    type: :uuid,
                    foreign_key: {

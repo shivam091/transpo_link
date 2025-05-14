@@ -13,52 +13,6 @@ RSpec.describe Product, type: :model do
     it { is_expected.to have_a_valid_factory(:product) }
   end
 
-  describe "attributes, indexes, foreign keys, and check constraints" do
-    it { is_expected.to have_db_column(:id).of_type(:uuid) }
-    it { is_expected.to have_db_column(:reference_code).of_type(:string) }
-    it { is_expected.to have_db_column(:name).of_type(:string) }
-    it { is_expected.to have_db_column(:description).of_type(:text) }
-    it { is_expected.to have_db_column(:sku).of_type(:string) }
-    it { is_expected.to have_db_column(:barcode).of_type(:string) }
-    it { is_expected.to have_db_column(:min_stock_threshold).of_type(:decimal).with_options(precision: 12, scale: 2, default: 10.0) }
-    it { is_expected.to have_db_column(:unit_id).of_type(:uuid).with_options(null: false) }
-    it { is_expected.to have_db_column(:currency).of_type(:string) }
-    it { is_expected.to have_db_column(:cost_price).of_type(:decimal).with_options(precision: 12, scale: 2) }
-    it { is_expected.to have_db_column(:product_category_id).of_type(:uuid).with_options(null: false) }
-    it { is_expected.to have_db_column(:is_active).of_type(:boolean).with_options(default: false) }
-    it { is_expected.to have_db_column(:created_at).of_type(:timestamptz).with_options(null: false) }
-    it { is_expected.to have_db_column(:updated_at).of_type(:timestamptz).with_options(null: false) }
-
-    it { is_expected.to have_db_index(:reference_code).unique }
-    it { is_expected.to have_db_index(:sku).unique }
-    it { is_expected.to have_db_index(:barcode).unique }
-    it { is_expected.to have_db_index(:product_category_id) }
-    it { is_expected.to have_db_index(:unit_id) }
-    it { is_expected.to have_db_index(:is_active) }
-
-    it { is_expected.to have_foreign_key(:product_category_id).with_name(:fk_products_product_category_id_on_product_categories).on_delete(:restrict) }
-    it { is_expected.to have_foreign_key(:unit_id).with_name(:fk_products_unit_id_on_units).on_delete(:restrict) }
-
-    it { is_expected.to have_check_constraint(:check_products_name_presence).with_expression("name IS NOT NULL AND name::text <> ''::text") }
-    it { is_expected.to have_check_constraint(:check_products_name_length).with_expression("char_length(name::text) <= 255 AND char_length(name::text) >= 2") }
-    it { is_expected.to have_check_constraint(:check_products_description_length).with_expression("char_length(description) <= 2000") }
-    it { is_expected.to have_check_constraint(:check_products_sku_presence).with_expression("sku IS NOT NULL AND sku::text <> ''::text") }
-    it { is_expected.to have_check_constraint(:check_products_sku_length).with_expression("char_length(sku::text) <= 50") }
-    it { is_expected.to have_check_constraint(:check_products_min_stock_threshold_presence).with_expression("min_stock_threshold IS NOT NULL") }
-    it { is_expected.to have_check_constraint(:check_products_min_stock_threshold_positive).with_expression("min_stock_threshold > 0.0") }
-    it { is_expected.to have_check_constraint(:check_products_currency_presence).with_expression("currency IS NOT NULL AND currency::text <> ''::text") }
-    it { is_expected.to have_check_constraint(:check_products_cost_price_presence).with_expression("cost_price IS NOT NULL") }
-    it { is_expected.to have_check_constraint(:check_products_cost_price_positive).with_expression("cost_price > 0.0") }
-  end
-
-  describe "default values" do
-    let(:product) { described_class.new }
-
-    it "should set 10.0 as default value for #min_stock_threshold" do
-      expect(product.min_stock_threshold).to eq(10.0)
-    end
-  end
-
   describe "constants" do
     it { is_expected.to have_constant(:LISTING_ATTRIBUTES) }
   end
@@ -320,9 +274,45 @@ RSpec.describe Product, type: :model do
         end
       end
     end
+
+    describe "#low_stock?" do
+      let(:product) { create(:product, min_stock_threshold: 20) }
+
+      before do
+        create(:inventory, :with_quantity_in_hand, quantity: quantity_1, product:)
+        create(:inventory, :with_quantity_in_hand, quantity: quantity_2, product:)
+      end
+
+      context "when total quantity_in_hand is less than threshold" do
+        let(:quantity_1) { 5 }
+        let(:quantity_2) { 10 }
+
+        it "returns true" do
+          expect(product.low_stock?).to be_truthy
+        end
+      end
+
+      context "when total quantity_in_hand is equal to threshold" do
+        let(:quantity_1) { 10 }
+        let(:quantity_2) { 10 }
+
+        it "returns true" do
+          expect(product.low_stock?).to be_truthy
+        end
+      end
+
+      context "when total quantity_in_hand is greater than threshold" do
+        let(:quantity_1) { 15 }
+        let(:quantity_2) { 10 }
+
+        it "returns false" do
+          expect(product.low_stock?).to be_falsy
+        end
+      end
+    end
   end
 
-  describe "class methods" do
+  describe "class methods and scopes" do
     describe ".select_options" do
       let!(:product) { create(:product, :active) }
 

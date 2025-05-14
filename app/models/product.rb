@@ -10,8 +10,6 @@ class Product < ApplicationRecord
     reference_code name sku barcode cost_price product_category_id
   ].freeze
 
-  attribute :min_stock_threshold, default: 10.0
-
   nullify_if_blank :description, :barcode
 
   sanitize_attributes :name, :description, :sku, :barcode
@@ -81,6 +79,14 @@ class Product < ApplicationRecord
     @price_for[[quantity, warehouse&.id, date]] ||= begin
       product_prices.best_price_for(warehouse:, quantity:, date:)&.unit_price || cost_price
     end
+  end
+
+  def low_stock?
+    total_quantity_in_hand <= min_stock_threshold
+  end
+
+  def total_quantity_in_hand
+    inventories.sum(&:quantity_in_hand)
   end
 
   private

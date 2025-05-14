@@ -7,17 +7,10 @@
 require "spec_helper"
 
 RSpec.describe InventoryBatches::MergeService, type: :service do
-  let!(:unit) do
-    create(:item_unit).tap do |item_unit|
-      create(:dozen_item_conversion, target_unit: item_unit)
-    end
-  end
+  let(:unit) { create(:item_unit) }
+  let(:purchase_order_item) { create(:purchase_order_item, :delivered, unit:) }
 
-  let(:purchase_order_item) do
-    create(:purchase_order_item, :delivered, quantity: 10, received_quantity: 100, unit:)
-  end
-
-  let!(:inventory_batch) { create(:inventory_batch, quantity: 5, source: purchase_order_item, unit:) }
+  let!(:inventory_batch) { create(:inventory_batch, source: purchase_order_item, unit:) }
 
   subject(:service_response) { described_class.(inventory_batch, inventory_batch_attributes) }
 
@@ -54,7 +47,7 @@ RSpec.describe InventoryBatches::MergeService, type: :service do
 
       before do
         allow(inventory_batch).to receive(:unit) { target_unit }
-        allow(UnitConversion).to receive(:convert).and_raise(UnitConversionError.new(source_unit, target_unit))
+        allow(UnitConversion).to receive(:convert!).and_raise(UnitConversionError.new(source_unit, target_unit))
       end
 
       it "raises a UnitConversionError and does not update the quantity" do
@@ -73,7 +66,7 @@ RSpec.describe InventoryBatches::MergeService, type: :service do
       end
 
       before do
-        allow(UnitConversion).to receive(:convert) { 2 }
+        allow(UnitConversion).to receive(:convert!) { 2 }
         allow(inventory_batch).to receive(:merge_with!) { false }
       end
 

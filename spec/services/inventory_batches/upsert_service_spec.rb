@@ -7,11 +7,10 @@
 require "spec_helper"
 
 RSpec.describe InventoryBatches::UpsertService, type: :service do
-  let!(:inventory) { create(:inventory) }
+  let(:unit) { create(:item_unit) }
+  let!(:inventory) { create(:inventory, unit:) }
 
-  let(:purchase_order_item) do
-    create(:purchase_order_item, :delivered, quantity: 10, received_quantity: 100, unit: inventory.unit)
-  end
+  let(:purchase_order_item) { create(:purchase_order_item, :delivered, quantity: 5, unit:) }
 
   subject(:service_response) { described_class.(inventory, inventory_batch_attributes) }
 
@@ -76,7 +75,7 @@ RSpec.describe InventoryBatches::UpsertService, type: :service do
         end
 
         it "merges quantity into the existing batch" do
-          expect { service_response }.to change { existing_batch.reload.quantity }.by(10)
+          expect { service_response }.to change { existing_batch.reload.quantity }.by(5)
         end
 
         include_examples "returns a success response"

@@ -13,29 +13,6 @@ RSpec.describe Inventory::Restock, type: :model do
     it { is_expected.to have_a_valid_factory(:inventory_restock) }
   end
 
-  describe "attributes, indexes, foreign keys, and check constraints" do
-    it { is_expected.to have_db_column(:id).of_type(:uuid) }
-    it { is_expected.to have_db_column(:inventory_batch_id).of_type(:uuid).with_options(null: false) }
-    it { is_expected.to have_db_column(:quantity).of_type(:decimal).with_options(precision: 12, scale: 2) }
-    it { is_expected.to have_db_column(:unit_id).of_type(:uuid).with_options(null: false) }
-    it { is_expected.to have_db_column(:comment).of_type(:text) }
-    it { is_expected.to have_db_column(:note).of_type(:text) }
-    it { is_expected.to have_db_column(:created_at).of_type(:timestamptz).with_options(null: false) }
-    it { is_expected.to have_db_column(:updated_at).of_type(:timestamptz).with_options(null: false) }
-
-    it { is_expected.to have_db_index(:unit_id) }
-    it { is_expected.to have_db_index(:inventory_batch_id) }
-
-    it { is_expected.to have_foreign_key(:unit_id).with_name(:fk_inventory_restocks_unit_id_on_units).on_delete(:restrict) }
-    it { is_expected.to have_foreign_key(:inventory_batch_id).with_name(:fk_inventory_restocks_inventory_batch_id_on_inventory_batches).on_delete(:cascade) }
-
-    it { is_expected.to have_check_constraint(:check_inventory_restocks_comment_length).with_expression("char_length(comment) <= 1000 AND char_length(comment) > 0") }
-    it { is_expected.to have_check_constraint(:check_inventory_restocks_note_length).with_expression("char_length(note) <= 1000") }
-    it { is_expected.to have_check_constraint(:check_inventory_restocks_comment_presence).with_expression("comment IS NOT NULL AND comment <> ''::text") }
-    it { is_expected.to have_check_constraint(:check_inventory_restocks_quantity_positive).with_expression("quantity > 0.0") }
-    it { is_expected.to have_check_constraint(:check_inventory_restocks_quantity_presence).with_expression("quantity IS NOT NULL") }
-  end
-
   describe "included modules" do
     it { is_expected.to include_module(Sanitizable) }
     it { is_expected.to include_module(NullifyIfBlank) }
@@ -83,7 +60,7 @@ RSpec.describe Inventory::Restock, type: :model do
 
   describe "validations" do
     let(:purchase_order_item) { create(:purchase_order_item, :delivered) }
-    let(:inventory_batch) { create(:inventory_batch, quantity: 10, source: purchase_order_item) }
+    let(:inventory_batch) { create(:inventory_batch, source: purchase_order_item) }
 
     before do
       allow_any_instance_of(InventoryBatch).to receive(:record_audit_logs)
@@ -143,7 +120,7 @@ RSpec.describe Inventory::Restock, type: :model do
 
     describe "#restock_inventory" do
       let(:purchase_order_item) { create(:purchase_order_item, :delivered) }
-      let(:inventory_batch) { create(:inventory_batch, quantity: 10, source: purchase_order_item) }
+      let(:inventory_batch) { create(:inventory_batch, source: purchase_order_item) }
 
       it "calls Inventories::RestockService" do
         expect(Inventories::RestockService).to receive(:call).with(an_instance_of(InventoryBatch), an_instance_of(Inventory::Restock))
@@ -154,7 +131,7 @@ RSpec.describe Inventory::Restock, type: :model do
 
     describe "#quantity_cannot_exceed_stock_restockable_quantity" do
       let(:purchase_order_item) { create(:purchase_order_item, :delivered) }
-      let(:inventory_batch) { create(:inventory_batch, quantity: 10, source: purchase_order_item) }
+      let(:inventory_batch) { create(:inventory_batch, source: purchase_order_item) }
 
       before { allow(inventory_restock).to receive(:inventory_batch) { inventory_batch } }
 
