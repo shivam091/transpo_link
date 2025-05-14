@@ -102,8 +102,23 @@ RSpec.describe PurchaseOrder, type: :model do
     end
 
     describe "#status" do
+      let(:warehouse) { build_stubbed(:warehouse) }
+      let(:manager) { build_stubbed(:manager) }
+      let(:supplier) { build_stubbed(:supplier) }
+
       it { is_expected.to validate_presence_of(:status) }
-      # it { is_expected.to validate_inclusion_of(:status).in_array(described_class.statuses.values) }
+
+      it "allows valid status values" do
+        described_class.statuses.keys.each do |status|
+          expect(build(:purchase_order, status:, warehouse:, manager:, supplier:)).to be_valid
+        end
+      end
+
+      it "raises error on invalid status value" do
+        expect {
+          build(:purchase_order, status: "invalid_status")
+        }.to raise_error(ArgumentError, /is not a valid status/)
+      end
     end
 
     describe "#notes" do

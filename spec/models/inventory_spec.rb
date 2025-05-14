@@ -73,8 +73,22 @@ RSpec.describe Inventory, type: :model do
     end
 
     describe "#tracking_method" do
+      let(:warehouse) { build_stubbed(:warehouse) }
+      let(:product) { build_stubbed(:product) }
+
       it { is_expected.to validate_presence_of(:tracking_method) }
-      # it { is_expected.to validate_inclusion_of(:tracking_method).in_array(described_class.tracking_methods.values) }
+
+      it "allows valid tracking method values" do
+        described_class.tracking_methods.keys.each do |tracking_method|
+          expect(build(:inventory, tracking_method:, warehouse:, product:)).to be_valid
+        end
+      end
+
+      it "raises error on invalid tracking method value" do
+        expect {
+          build(:inventory, tracking_method: "invalid_tracking_method")
+        }.to raise_error(ArgumentError, /is not a valid tracking_method/)
+      end
     end
 
     describe "#low_stock_threshold" do

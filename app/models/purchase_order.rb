@@ -34,7 +34,7 @@ class PurchaseOrder < ApplicationRecord
     on_hold: "on_hold"
   }
 
-  attribute :status, :enum, default: statuses[:draft]
+  attribute :status, default: statuses[:draft]
 
   sanitize_attributes :reference_document, :notes
 

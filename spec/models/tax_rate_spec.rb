@@ -62,12 +62,34 @@ RSpec.describe TaxRate, type: :model do
 
     describe "#business_category" do
       it { is_expected.to validate_presence_of(:business_category) }
-      # it { is_expected.to validate_inclusion_of(:business_category).in_array(described_class.business_categories.values) }
+
+      it "allows valid business_category values" do
+        described_class.business_categories.keys.each do |business_category|
+          expect(build(:tax_rate, business_category:)).to be_valid
+        end
+      end
+
+      it "raises error on invalid business_category value" do
+        expect {
+          build(:tax_rate, business_category: "invalid_business_category")
+        }.to raise_error(ArgumentError, /is not a valid business_category/)
+      end
     end
 
     describe "#tax_type" do
       it { is_expected.to validate_presence_of(:tax_type) }
-      # it { is_expected.to validate_inclusion_of(:tax_type).in_array(described_class.tax_types.values) }
+
+      it "allows valid tax_type values" do
+        described_class.tax_types.keys.each do |tax_type|
+          expect(build(:tax_rate, tax_type:)).to be_valid
+        end
+      end
+
+      it "raises error on invalid tax_type value" do
+        expect {
+          build(:tax_rate, tax_type: "invalid_tax_type")
+        }.to raise_error(ArgumentError, /is not a valid tax_type/)
+      end
     end
 
     describe "#rate" do

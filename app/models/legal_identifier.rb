@@ -56,7 +56,7 @@ class LegalIdentifier < ApplicationRecord
     uscc: "uscc"
   }, prefix: true
 
-  attribute :status, :enum, default: statuses[:unapproved]
+  attribute :status, default: statuses[:unapproved]
 
   normalizes :business_identifier, with: ->(business_identifier) { business_identifier.strip.upcase }
 

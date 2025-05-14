@@ -23,7 +23,7 @@ class PurchaseOrderItem < ApplicationRecord
     cancelled: "cancelled",
   }
 
-  attribute :status, :enum, default: statuses[:pending]
+  attribute :status, default: statuses[:pending]
 
   scale_attributes :quantity, :unit_cost, :received_quantity
 
