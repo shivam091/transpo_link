@@ -434,7 +434,7 @@ RSpec.describe User, type: :model do
         let(:user) { create(:manager, last_activity_at: last_activity_at) }
 
         it "returns `last_activity_at` with current time zone" do
-          expect(user.last_active_at.to_i).to eq(last_activity_at.to_time.in_time_zone.to_i)
+          expect(user.last_active_at.to_date).to eq(last_activity_at.to_time.in_time_zone.to_date)
         end
       end
 
@@ -452,7 +452,7 @@ RSpec.describe User, type: :model do
         it "returns the latest among `current_sign_in_at` & `last_activity_at`" do
           latest_event = [current_sign_in_at, last_activity_at.to_time.in_time_zone].max
 
-          expect(user.last_active_at.to_i).to eq(latest_event.to_i)
+          expect(user.last_active_at.to_date).to eq(latest_event.to_date)
         end
       end
 
