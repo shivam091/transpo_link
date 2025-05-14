@@ -111,8 +111,8 @@ RSpec.describe TaxRate, type: :model do
     end
   end
 
-  describe "scopes" do
-    let!(:active_tax_rate) { create(:tax_rate, :pan) }
+  describe "class methods and scopes" do
+    let!(:active_tax_rate) { create(:tax_rate, :gstin) }
     let!(:future_tax_rate) { create(:tax_rate, :inclusive, :b2c, country: "IN", valid_from: Date.current + 1.year, valid_to: Date.current + 5.years) }
 
     describe ".active" do
@@ -138,6 +138,20 @@ RSpec.describe TaxRate, type: :model do
       end
     end
 
+    describe ".active_rate" do
+      it "returns the tax rate for a current date" do
+        expect(described_class.active_rate("IN", "gstin")).to eq(active_tax_rate)
+        expect(described_class.active_rate("IN", "gstin")).to_not eq(future_tax_rate)
+      end
+    end
+
+    describe ".future_rate" do
+      it "returns the tax rate for a future date" do
+        expect(described_class.future_rate("IN", "gstin", Date.current + 1.year)).to eq(future_tax_rate)
+        expect(described_class.future_rate("IN", "gstin", Date.current + 1.year)).to_not eq(active_tax_rate)
+      end
+    end
+
     describe ".for_country" do
       it "returns tax rates for the given country" do
         expect(described_class.for_country("IN")).to include(future_tax_rate)
@@ -147,8 +161,8 @@ RSpec.describe TaxRate, type: :model do
 
     describe ".for_tax_identifier_type" do
       it "returns tax rates for the given tax identifier type" do
-        expect(described_class.for_tax_identifier_type("pan")).to include(active_tax_rate)
-        expect(described_class.for_tax_identifier_type("gstin")).to_not include(active_tax_rate)
+        expect(described_class.for_tax_identifier_type("gstin")).to include(active_tax_rate)
+        expect(described_class.for_tax_identifier_type("pan")).to_not include(active_tax_rate)
       end
     end
 
@@ -168,8 +182,8 @@ RSpec.describe TaxRate, type: :model do
 
     describe ".applicable_rates" do
       it "returns applicable tax rates matching tax identifier type, country, and category" do
-        expect(described_class.applicable_rates("pan", "IN", "b2b")).to include(active_tax_rate)
-        expect(described_class.applicable_rates("gstin", "IN", "b2c")).to_not include(active_tax_rate)
+        expect(described_class.applicable_rates("gstin", "IN", "b2b")).to include(active_tax_rate)
+        expect(described_class.applicable_rates("pan", "IN", "b2c")).to_not include(active_tax_rate)
       end
     end
 
@@ -181,25 +195,6 @@ RSpec.describe TaxRate, type: :model do
     end
 
     include_examples "apply default scope on created_at:desc"
-  end
-
-  describe "class methods" do
-    let!(:active_tax_rate) { create(:tax_rate, :gstin) }
-    let!(:future_tax_rate) { create(:tax_rate, :b2c, country: "IN", valid_from: Date.current + 1.year, valid_to: Date.current + 5.years) }
-
-    describe ".active_rate" do
-      it "returns the tax rate for a current date" do
-        expect(described_class.active_rate("IN", "gstin")).to eq(active_tax_rate)
-        expect(described_class.active_rate("IN", "gstin")).to_not eq(future_tax_rate)
-      end
-    end
-
-    describe ".future_rate" do
-      it "returns the tax rate for a future date" do
-        expect(described_class.future_rate("IN", "gstin", Date.current + 1.year)).to eq(future_tax_rate)
-        expect(described_class.future_rate("IN", "gstin", Date.current + 1.year)).to_not eq(active_tax_rate)
-      end
-    end
   end
 
   describe "instance methods" do

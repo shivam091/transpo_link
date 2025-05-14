@@ -52,7 +52,7 @@ RSpec.describe ProductCategory, type: :model do
     end
   end
 
-  describe "class methods" do
+  describe "class methods and scopes" do
     describe ".select_options" do
       let!(:product_category) { create(:product_category, :active) }
 

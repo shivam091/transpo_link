@@ -339,7 +339,7 @@ RSpec.describe PurchaseOrder, type: :model do
     end
   end
 
-  describe "class methods" do
+  describe "class methods and scopes" do
     describe ".accessible" do
       let!(:purchase_order) { create(:purchase_order) }
 

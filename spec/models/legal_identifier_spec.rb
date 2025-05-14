@@ -181,7 +181,7 @@ RSpec.describe LegalIdentifier, type: :model do
     end
   end
 
-  describe "class methods" do
+  describe "class methods and scopes" do
     describe ".accessible" do
       it "returns list of accessible legal identifiers" do
         expect(described_class.accessible(legal_identifier.user)).to include(legal_identifier)

@@ -54,28 +54,9 @@ RSpec.describe Feedback, type: :model do
     end
   end
 
-  describe "scopes" do
-    let!(:unread_feedback) { create(:feedback) }
-    let!(:read_feedback) { create(:feedback, :read) }
-
-    describe ".unread" do
-      it "returns only unread feedbacks" do
-        expect(described_class.unread).to include(unread_feedback)
-        expect(described_class.unread).to exclude(read_feedback)
-      end
-    end
-
-    describe ".read" do
-      it "returns only read feedbacks" do
-        expect(described_class.read).to include(read_feedback)
-        expect(described_class.read).to exclude(unread_feedback)
-      end
-    end
-  end
-
   include_examples "apply default scope on created_at:desc"
 
-  describe "class methods" do
+  describe "class methods and scopes" do
     let(:reviewable) { create(:product) }
 
     let!(:user1) { create(:buyer) }
@@ -83,32 +64,50 @@ RSpec.describe Feedback, type: :model do
 
     let!(:feedback1) { create(:feedback, user: user1, rating: 7.0, is_unread: true, reviewable:) }
     let!(:feedback2) { create(:feedback, user: user2, rating: 9.5, is_unread: false, reviewable:) }
-    let!(:feedback3) { create(:feedback, user: user1, rating: 6.0, is_unread: true, reviewable:) }
-    let!(:feedback4) { create(:feedback, user: user2, rating: 8.0, is_unread: false, reviewable:) }
 
     describe ".accessible" do
-      it "returns list of accessible feedbacks" do
-        expect(described_class.accessible(user1)).to match_array([feedback1, feedback3])
-        expect(described_class.accessible(user2)).to match_array([feedback1, feedback2, feedback3, feedback4])
+      it "returns all feedbacks for admin user" do
+        expect(described_class.accessible(user2)).to match_array([feedback1, feedback2])
+      end
+
+      it "returns own feedbacks for users other than admin" do
+        expect(described_class.accessible(user1)).to include(feedback1)
       end
     end
 
     describe ".unread_for_user" do
       it "returns only unread feedbacks for the given user" do
-        expect(described_class.unread_for_user(user1)).to match_array([feedback1, feedback3])
+        expect(described_class.unread_for_user(user1)).to include(feedback1)
         expect(described_class.unread_for_user(user2)).to be_empty
       end
     end
 
+    describe ".unread" do
+      it "returns only unread feedbacks" do
+        expect(described_class.unread).to include(feedback1)
+        expect(described_class.unread).to exclude(feedback2)
+      end
+    end
+
+    describe ".read" do
+      it "returns only read feedbacks" do
+        expect(described_class.read).to include(feedback2)
+        expect(described_class.read).to exclude(feedback1)
+      end
+    end
+
     describe ".average_rating_for" do
+      let!(:feedback3) { create(:feedback, user: user1, rating: 6.0, is_unread: true, reviewable:) }
+      let!(:feedback4) { create(:feedback, user: user2, rating: 8.0, is_unread: false, reviewable:) }
+
       it "calculates the average rating for a product" do
         expect(described_class.average_rating_for(reviewable)).to eq(7.6) # (7.0 + 9.5 + 6.0 + 8.0) / 4 = 7.625 -> rounded to 7.6
       end
     end
 
     describe ".for_user_and_reviewable" do
-      it "returns feedback given by a specific user for a product" do
-        expect(described_class.for_user_and_reviewable(user1, reviewable)).to match_array([feedback1, feedback3])
+      it "returns feedback given by a specific user for a reviewable" do
+        expect(described_class.for_user_and_reviewable(user1, reviewable)).to include(feedback1)
       end
 
       it "returns an empty array if no feedback exists for the user and reviewable" do

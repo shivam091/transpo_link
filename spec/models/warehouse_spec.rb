@@ -211,7 +211,7 @@ RSpec.describe Warehouse, type: :model do
     it { is_expected.to accept_nested_attributes_for(:address).update_only(true) }
   end
 
-  describe "class methods" do
+  describe "class methods and scopes" do
     describe ".select_options" do
       let!(:warehouse) { create(:warehouse, :active) }
 

@@ -164,7 +164,7 @@ RSpec.describe InventoryBatch, type: :model do
     end
   end
 
-  describe "scopes" do
+  describe "class methods and scopes" do
     describe ".by_batch_number_and_expiry" do
       let(:inventory) { create(:inventory) }
       let(:purchase_order_item) { create(:purchase_order_item, :delivered) }
