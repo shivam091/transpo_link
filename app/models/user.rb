@@ -175,6 +175,13 @@ class User < ApplicationRecord
     preferred_time_zone ? time.in_time_zone(preferred_time_zone) : time.in_time_zone
   end
 
+  def last_active_at
+    last_activity = last_activity_at&.to_time&.in_time_zone
+    last_sign_in = current_sign_in_at
+
+    [last_activity, last_sign_in].compact.max
+  end
+
   private
 
   def update_password_updated_at
