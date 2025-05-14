@@ -247,8 +247,8 @@ RSpec.describe InventoryBatch::Stock, type: :model do
       it { is_expected.to validate_presence_of(:status) }
 
       it "allows valid status values" do
-        described_class.statuses.keys.each do |valid_status|
-          expect(build(:inventory_batch_stock, status: valid_status)).to be_valid
+        described_class.statuses.keys.each do |status|
+          expect(build(:inventory_batch_stock, status:)).to be_valid
         end
       end
 

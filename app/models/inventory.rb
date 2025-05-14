@@ -16,7 +16,7 @@ class Inventory < ApplicationRecord
     average_cost: "average_cost",
   }
 
-  attribute :tracking_method, :enum, default: tracking_methods[:average_cost]
+  attribute :tracking_method, default: tracking_methods[:average_cost]
 
   scale_attributes :average_cost_price, :low_stock_threshold
 

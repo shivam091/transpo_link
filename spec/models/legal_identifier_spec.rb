@@ -94,8 +94,21 @@ RSpec.describe LegalIdentifier, type: :model do
     end
 
     describe "#status" do
+      let(:user) { build_stubbed(:manager) }
+
       it { is_expected.to validate_presence_of(:status) }
-      # it { is_expected.to validate_inclusion_of(:status).in_array(described_class.statuses.values) }
+
+      it "allows valid status values" do
+        described_class.statuses.keys.each do |status|
+          expect(build(:legal_identifier, status:, user:)).to be_valid
+        end
+      end
+
+      it "raises error on invalid status value" do
+        expect {
+          build(:legal_identifier, status: "invalid_status")
+        }.to raise_error(ArgumentError, /is not a valid status/)
+      end
     end
 
     describe "#business_identifier_type" do

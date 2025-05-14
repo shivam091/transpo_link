@@ -19,8 +19,8 @@ class TaxRate < ApplicationRecord
     inclusive: "inclusive"
   }
 
-  attribute :business_category, :enum, default: business_categories[:b2b]
-  attribute :tax_type, :enum, default: tax_types[:exclusive]
+  attribute :business_category, default: business_categories[:b2b]
+  attribute :tax_type, default: tax_types[:exclusive]
 
   nullify_if_blank :valid_to
 
