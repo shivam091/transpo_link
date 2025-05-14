@@ -89,7 +89,7 @@ RSpec.describe UnitConversion, type: :model do
     end
   end
 
-  describe "class methods" do
+  describe "class methods and scopes" do
     describe ".convert!" do
       let(:source_unit) { create(:kilogramme_unit) }
       let(:target_unit) { create(:gramme_unit) }

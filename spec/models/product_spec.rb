@@ -320,7 +320,7 @@ RSpec.describe Product, type: :model do
     end
   end
 
-  describe "class methods" do
+  describe "class methods and scopes" do
     describe ".select_options" do
       let!(:product) { create(:product, :active) }
 

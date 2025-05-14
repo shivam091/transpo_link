@@ -73,24 +73,19 @@ RSpec.describe Unit, type: :model do
     end
   end
 
-  describe "scopes" do
-    describe ".for_category" do
-      let!(:count_unit) { create(:item_unit) }
-      let!(:weight_unit) { create(:kilogramme_unit) }
-
-      let(:result) { described_class.for_category("count") }
-
-      it "returns units for the specified category only" do
-        expect(result).to include(count_unit)
-        expect(result).not_to include(weight_unit)
-      end
-    end
-  end
-
-  describe "class methods" do
+  describe "class methods and scopes" do
     let!(:item_unit) { create(:item_unit) }
     let!(:dozen_unit) { create(:dozen_unit) }
     let!(:kilogramme_unit) { create(:kilogramme_unit) }
+
+    describe ".for_category" do
+      let(:result) { described_class.for_category("count") }
+
+      it "returns units for the specified category only" do
+        expect(result).to include(item_unit)
+        expect(result).not_to include(kilogramme_unit)
+      end
+    end
 
     describe ".select_options" do
       context "when category is provided" do

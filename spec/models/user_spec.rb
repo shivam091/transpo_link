@@ -157,44 +157,47 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe "scopes" do
-    let(:admin) { create(:admin, :confirmed, :active) }
-    let(:buyer) { create(:buyer, :confirmed, :active) }
-    let(:supplier) { create(:supplier, :confirmed, :active) }
-    let(:manager) { create(:manager, :confirmed, :active, :suspended) }
-
+  describe "class methods and scopes" do
     describe ".admins" do
+      let(:admin) { create(:admin, :confirmed, :active) }
+
       it "returns array of admins" do
         expect(admin).to be_one_of(described_class.admins)
       end
     end
 
     describe ".suppliers" do
+      let(:supplier) { create(:supplier, :confirmed, :active) }
+
       it "returns array of suppliers" do
         expect(supplier).to be_one_of(described_class.suppliers)
       end
     end
 
     describe ".buyers" do
+      let(:buyer) { create(:buyer, :confirmed, :active) }
+
       it "returns array of buyers" do
         expect(buyer).to be_one_of(described_class.buyers)
       end
     end
 
     describe ".managers" do
+      let(:manager) { create(:manager, :confirmed, :active) }
+
       it "returns array of managers" do
         expect(manager).to be_one_of(described_class.managers)
       end
     end
 
     describe ".suspended" do
+      let(:manager) { create(:manager, :confirmed, :active, :suspended) }
+
       it "returns array of suspended users" do
         expect(manager).to be_one_of(described_class.suspended)
       end
     end
-  end
 
-  describe "class methods" do
     describe ".with_email" do
       let(:admin) { create(:admin, :confirmed, :active) }
 
