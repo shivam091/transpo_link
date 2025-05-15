@@ -3,4 +3,14 @@
 # -*- warn_indent: true -*-
 
 class AccessControl::Permission < ApplicationRecord
+  has_many :role_permissions,
+           class_name: "AccessControl::RolePermission",
+           inverse_of: :permission,
+           dependent: :restrict_with_exception
+  has_many :roles, through: :role_permissions, source: :role
+
+  with_options inverse_of: :permissions do |a|
+    a.belongs_to :action, class_name: "AccessControl::Action"
+    a.belongs_to :module, class_name: "AccessControl::Module"
+  end
 end

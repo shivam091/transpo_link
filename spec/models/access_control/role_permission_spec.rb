@@ -12,4 +12,9 @@ RSpec.describe AccessControl::RolePermission, type: :model do
   describe "valid factory" do
     it { is_expected.to have_a_valid_factory(:role_permission) }
   end
+
+  describe "associations" do
+    it { is_expected.to belong_to(:role).inverse_of(:role_permissions) }
+    it { is_expected.to belong_to(:permission).class_name("AccessControl::Permission").inverse_of(:role_permissions) }
+  end
 end
