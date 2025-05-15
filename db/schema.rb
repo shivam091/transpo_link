@@ -52,6 +52,18 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_02_140259) do
     t.check_constraint "label_key IS NOT NULL AND label_key::text <> ''::text", name: "check_access_control_modules_label_key_presence"
   end
 
+  create_table "access_control_permissions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "action_id", null: false
+    t.uuid "module_id", null: false
+    t.boolean "is_active", default: false
+    t.timestamptz "created_at", null: false
+    t.timestamptz "updated_at", null: false
+    t.index ["action_id", "module_id"], name: "index_access_control_permissions_on_action_id_and_module_id", unique: true
+    t.index ["action_id"], name: "index_access_control_permissions_on_action_id"
+    t.index ["is_active"], name: "index_access_control_permissions_on_is_active"
+    t.index ["module_id"], name: "index_access_control_permissions_on_module_id"
+  end
+
   create_table "addresses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "addressable_type", null: false
     t.uuid "addressable_id", null: false
