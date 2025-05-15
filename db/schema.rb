@@ -30,6 +30,17 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_02_140259) do
   create_enum "tracking_methods", ["fifo", "lifo", "average_cost"]
   create_enum "unit_categories", ["count", "length", "weight", "area", "volume"]
 
+  create_table "access_control_actions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "label_key"
+    t.boolean "is_active", default: false
+    t.timestamptz "created_at", null: false
+    t.timestamptz "updated_at", null: false
+    t.index ["is_active"], name: "index_access_control_actions_on_is_active"
+    t.index ["label_key"], name: "index_access_control_actions_on_label_key", unique: true
+    t.check_constraint "char_length(label_key::text) <= 55", name: "check_access_control_actions_label_key_length"
+    t.check_constraint "label_key IS NOT NULL AND label_key::text <> ''::text", name: "check_access_control_actions_label_key_presence"
+  end
+
   create_table "addresses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "addressable_type", null: false
     t.uuid "addressable_id", null: false
