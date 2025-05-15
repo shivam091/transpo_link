@@ -13,6 +13,14 @@ RSpec.describe AccessControl::Module, type: :model do
     it { is_expected.to have_a_valid_factory(:module) }
   end
 
+  describe "validations" do
+    describe "#label_key" do
+      it { is_expected.to validate_presence_of(:label_key) }
+      it { is_expected.to validate_uniqueness_of(:label_key) }
+      it { is_expected.to validate_length_of(:label_key).is_at_most(55) }
+    end
+  end
+
   describe "associations" do
     it { is_expected.to have_many(:permissions).class_name("AccessControl::Permission").inverse_of(:module).dependent(:restrict_with_exception) }
   end

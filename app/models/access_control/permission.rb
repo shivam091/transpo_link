@@ -3,6 +3,12 @@
 # -*- warn_indent: true -*-
 
 class AccessControl::Permission < ApplicationRecord
+  validates :action_id,
+            presence: true,
+            uniqueness: {scope: :module_id},
+            reduce: true
+  validates :module_id, presence: true, reduce: true
+
   has_many :role_permissions,
            class_name: "AccessControl::RolePermission",
            inverse_of: :permission,

@@ -3,6 +3,12 @@
 # -*- warn_indent: true -*-
 
 class AccessControl::Action < ApplicationRecord
+  validates :label_key,
+            presence: true,
+            length: {maximum: 55},
+            uniqueness: true,
+            reduce: true
+
   has_many :permissions,
            class_name: "AccessControl::Permission",
            inverse_of: :action,
