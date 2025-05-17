@@ -7,7 +7,9 @@ module ErrorRescue
 
   included do
     rescue_from ActionController::InvalidAuthenticityToken, with: :perform_sign_out_and_redirect
-    rescue_from Exception, with: :render_internal_server_error
+    unless Rails.application.config.consider_all_requests_local
+      rescue_from Exception, with: :render_internal_server_error
+    end
     rescue_from ActiveRecord::RecordNotFound, with: :render_not_found
     rescue_from ActionController::RoutingError, with: :render_not_found
     rescue_from ApplicationError, with: :handle_application_error
@@ -32,7 +34,9 @@ module ErrorRescue
     redirect_to new_user_session_path
   end
 
-  def render_internal_server_error
+  def render_internal_server_error(exception)
+    Rails.logger.error("[500 Error Rescue] #{exception.message}")
+    
     render "errors/internal_server_error", status: :internal_server_error, layout: "error"
   end
 end
