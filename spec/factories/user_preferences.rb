@@ -4,7 +4,7 @@
 
 FactoryBot.define do
   factory :user_preference do
-    preferred_color_scheme { "light" }
+    preferred_color_scheme { :light }
     preferred_locale { "en" }
     preferred_time_zone { Faker::Address.time_zone }
     preferred_currency { Faker::Currency.code }

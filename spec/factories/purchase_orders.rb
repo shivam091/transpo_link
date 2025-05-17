@@ -11,42 +11,42 @@ FactoryBot.define do
     order_date { Date.current }
     expected_delivery_date { order_date + 1.month }
     notes { Faker::Lorem.paragraph(sentence_count: 3) }
-    status { PurchaseOrder.statuses[:draft] }
+    status { :draft }
 
     trait :draft do
-      status { PurchaseOrder.statuses[:draft] }
+      status { :draft }
     end
 
     trait :submitted do
-      status { PurchaseOrder.statuses[:submitted] }
+      status { :submitted }
     end
 
     trait :approved do
-      status { PurchaseOrder.statuses[:approved] }
+      status { :approved }
     end
 
     trait :partially_delivered do
-      status { PurchaseOrder.statuses[:partially_delivered] }
+      status { :partially_delivered }
     end
 
     trait :fully_delivered do
-      status { PurchaseOrder.statuses[:fully_delivered] }
+      status { :fully_delivered }
     end
 
     trait :cancelled do
-      status { PurchaseOrder.statuses[:cancelled] }
+      status { :cancelled }
     end
 
     trait :rejected do
-      status { PurchaseOrder.statuses[:rejected] }
+      status { :rejected }
     end
 
     trait :closed do
-      status { PurchaseOrder.statuses[:closed] }
+      status { :closed }
     end
 
     trait :on_hold do
-      status { PurchaseOrder.statuses[:on_hold] }
+      status { :on_hold }
     end
 
     trait :with_po_items do

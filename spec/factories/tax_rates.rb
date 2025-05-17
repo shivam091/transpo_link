@@ -5,17 +5,17 @@
 FactoryBot.define do
   factory :tax_rate do
     country { "IN" }
-    tax_identifier_type { LegalIdentifier.tax_identifier_types[:gstin] }
+    tax_identifier_type { :gstin }
     rate { 12.0 }
     valid_from { Date.current }
     valid_to { Date.current + 1.month }
   end
 
   trait :inclusive do
-    tax_type { TaxRate.tax_types[:inclusive] }
+    tax_type { :inclusive }
   end
 
   trait :b2c do
-    business_category { TaxRate.business_categories[:b2c] }
+    business_category { :b2c }
   end
 end

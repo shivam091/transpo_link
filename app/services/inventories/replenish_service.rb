@@ -22,7 +22,7 @@ class Inventories::ReplenishService < ApplicationService
       raise_missing_inventory_error!(warehouse, product) if inventory.nil?
 
       source_unit, target_unit = item.unit, inventory.unit
-      quantity = UnitConversion.convert(source_unit, target_unit, item.quantity)
+      quantity = UnitConversion.convert!(source_unit, target_unit, item.quantity)
 
       Replenishments::UpdateService.(inventory, quantity, :increment)
     end

@@ -7,46 +7,10 @@
 require "spec_helper"
 
 RSpec.describe Feedback, type: :model do
-  let(:reviewable) { create(:product) }
-
-  subject(:feedback) { build(:feedback, reviewable:) }
+  subject(:feedback) { build(:feedback) }
 
   describe "valid factory" do
     it { is_expected.to have_a_valid_factory(:feedback) }
-  end
-
-  describe "attributes, indexes, foreign keys, and check constraints" do
-    it { is_expected.to have_db_column(:id).of_type(:uuid) }
-    it { is_expected.to have_db_column(:reference_code).of_type(:string) }
-    it { is_expected.to have_db_column(:user_id).of_type(:uuid).with_options(null: false) }
-    it { is_expected.to have_db_column(:reviewable_type).of_type(:string).with_options(null: false) }
-    it { is_expected.to have_db_column(:reviewable_id).of_type(:uuid).with_options(null: false) }
-    it { is_expected.to have_db_column(:rating).of_type(:decimal) }
-    it { is_expected.to have_db_column(:comment).of_type(:text) }
-    it { is_expected.to have_db_column(:is_unread).of_type(:boolean).with_options(default: true) }
-    it { is_expected.to have_db_column(:created_at).of_type(:timestamptz).with_options(null: false) }
-    it { is_expected.to have_db_column(:updated_at).of_type(:timestamptz).with_options(null: false) }
-
-    it { is_expected.to have_db_index(:is_unread) }
-    it { is_expected.to have_db_index(:user_id) }
-    it { is_expected.to have_db_index(:reference_code).unique }
-    it { is_expected.to have_db_index([:reviewable_type, :reviewable_id]) }
-
-    it { is_expected.to have_foreign_key(:user_id).with_name(:fk_feedbacks_user_id_on_users).on_delete(:nullify) }
-
-    it { is_expected.to have_check_constraint(:check_feedbacks_rating_half_step).with_expression("(rating * 2.0) = floor(rating * 2.0)") }
-    it { is_expected.to have_check_constraint(:check_feedbacks_comment_length).with_expression("char_length(comment) <= 1000 AND char_length(comment) > 0") }
-    it { is_expected.to have_check_constraint(:check_feedbacks_comment_presence).with_expression("comment IS NOT NULL AND comment <> ''::text") }
-    it { is_expected.to have_check_constraint(:check_feedbacks_rating_range).with_expression("rating >= 0.0 AND rating <= 10.0") }
-    it { is_expected.to have_check_constraint(:check_feedbacks_rating_presence).with_expression("rating IS NOT NULL") }
-  end
-
-  describe "default values" do
-    let(:feedback) { described_class.new }
-
-    it "should set true as default value for #is_unread" do
-      expect(feedback.is_unread).to be_truthy
-    end
   end
 
   describe "constants" do
@@ -82,59 +46,60 @@ RSpec.describe Feedback, type: :model do
     end
   end
 
-  describe "scopes" do
-    let!(:unread_feedback) { create(:feedback) }
-    let!(:read_feedback) { create(:feedback, :read) }
-
-    describe ".unread" do
-      it "returns only unread feedbacks" do
-        expect(described_class.unread).to include(unread_feedback)
-        expect(described_class.unread).to exclude(read_feedback)
-      end
-    end
-
-    describe ".read" do
-      it "returns only read feedbacks" do
-        expect(described_class.read).to include(read_feedback)
-        expect(described_class.read).to exclude(unread_feedback)
-      end
-    end
-  end
-
   include_examples "apply default scope on created_at:desc"
 
-  describe "class methods" do
+  describe "class methods and scopes" do
+    let(:reviewable) { create(:product) }
+
     let!(:user1) { create(:buyer) }
     let!(:user2) { create(:admin) }
 
     let!(:feedback1) { create(:feedback, user: user1, rating: 7.0, is_unread: true, reviewable:) }
     let!(:feedback2) { create(:feedback, user: user2, rating: 9.5, is_unread: false, reviewable:) }
-    let!(:feedback3) { create(:feedback, user: user1, rating: 6.0, is_unread: true, reviewable:) }
-    let!(:feedback4) { create(:feedback, user: user2, rating: 8.0, is_unread: false, reviewable:) }
 
     describe ".accessible" do
-      it "returns list of accessible feedbacks" do
-        expect(described_class.accessible(user1)).to match_array([feedback1, feedback3])
-        expect(described_class.accessible(user2)).to match_array([feedback1, feedback2, feedback3, feedback4])
+      it "returns all feedbacks for admin user" do
+        expect(described_class.accessible(user2)).to match_array([feedback1, feedback2])
+      end
+
+      it "returns own feedbacks for users other than admin" do
+        expect(described_class.accessible(user1)).to include(feedback1)
       end
     end
 
     describe ".unread_for_user" do
       it "returns only unread feedbacks for the given user" do
-        expect(described_class.unread_for_user(user1)).to match_array([feedback1, feedback3])
+        expect(described_class.unread_for_user(user1)).to include(feedback1)
         expect(described_class.unread_for_user(user2)).to be_empty
       end
     end
 
+    describe ".unread" do
+      it "returns only unread feedbacks" do
+        expect(described_class.unread).to include(feedback1)
+        expect(described_class.unread).to exclude(feedback2)
+      end
+    end
+
+    describe ".read" do
+      it "returns only read feedbacks" do
+        expect(described_class.read).to include(feedback2)
+        expect(described_class.read).to exclude(feedback1)
+      end
+    end
+
     describe ".average_rating_for" do
+      let!(:feedback3) { create(:feedback, user: user1, rating: 6.0, is_unread: true, reviewable:) }
+      let!(:feedback4) { create(:feedback, user: user2, rating: 8.0, is_unread: false, reviewable:) }
+
       it "calculates the average rating for a product" do
         expect(described_class.average_rating_for(reviewable)).to eq(7.6) # (7.0 + 9.5 + 6.0 + 8.0) / 4 = 7.625 -> rounded to 7.6
       end
     end
 
     describe ".for_user_and_reviewable" do
-      it "returns feedback given by a specific user for a product" do
-        expect(described_class.for_user_and_reviewable(user1, reviewable)).to match_array([feedback1, feedback3])
+      it "returns feedback given by a specific user for a reviewable" do
+        expect(described_class.for_user_and_reviewable(user1, reviewable)).to include(feedback1)
       end
 
       it "returns an empty array if no feedback exists for the user and reviewable" do

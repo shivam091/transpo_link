@@ -66,6 +66,11 @@
           change_color_scheme: "Change color scheme",
         },
       },
+      error: {
+        footer: {
+          copyright_notice: "&copy; %{copyright_year}, TranspoLink LLP or its affiliates, all rights reserved.",
+        }
+      }
     }
   }
 }

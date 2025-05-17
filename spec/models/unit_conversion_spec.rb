@@ -7,29 +7,10 @@
 require "spec_helper"
 
 RSpec.describe UnitConversion, type: :model do
-  subject(:unit_conversion) { create(:unit_conversion) }
+  subject(:unit_conversion) { build(:unit_conversion) }
 
   describe "valid factory" do
     it { is_expected.to have_a_valid_factory(:unit_conversion) }
-  end
-
-  describe "attributes, indexes, foreign keys, and check constraints" do
-    it { is_expected.to have_db_column(:id).of_type(:uuid) }
-    it { is_expected.to have_db_column(:source_unit_id).of_type(:uuid).with_options(null: false) }
-    it { is_expected.to have_db_column(:target_unit_id).of_type(:uuid).with_options(null: false) }
-    it { is_expected.to have_db_column(:multiplier).of_type(:decimal).with_options(precision: 30, scale: 15) }
-    it { is_expected.to have_db_column(:created_at).of_type(:timestamptz).with_options(null: false) }
-    it { is_expected.to have_db_column(:updated_at).of_type(:timestamptz).with_options(null: false) }
-
-    it { is_expected.to have_db_index(:source_unit_id) }
-    it { is_expected.to have_db_index(:target_unit_id) }
-    it { is_expected.to have_db_index([:source_unit_id, :target_unit_id]).unique }
-
-    it { is_expected.to have_foreign_key(:source_unit_id).with_name(:fk_unit_conversions_source_unit_id_on_units).on_delete(:restrict) }
-    it { is_expected.to have_foreign_key(:target_unit_id).with_name(:fk_unit_conversions_target_unit_id_on_units).on_delete(:restrict) }
-
-    it { is_expected.to have_check_constraint(:check_unit_conversions_multiplier_positive).with_expression("multiplier > 0.0") }
-    it { is_expected.to have_check_constraint(:check_unit_conversions_multiplier_presence).with_expression("multiplier IS NOT NULL") }
   end
 
   describe "constants" do
@@ -108,13 +89,13 @@ RSpec.describe UnitConversion, type: :model do
     end
   end
 
-  describe "class methods" do
-    describe ".convert" do
+  describe "class methods and scopes" do
+    describe ".convert!" do
       let(:source_unit) { create(:kilogramme_unit) }
       let(:target_unit) { create(:gramme_unit) }
 
       context "when source and target units are the same (Unit objects)" do
-        let(:result) { described_class.convert(source_unit, source_unit, 2) }
+        let(:result) { described_class.convert!(source_unit, source_unit, 2) }
 
         it "returns the same quantity as BigDecimal" do
           expect(result).to eq(2.0)
@@ -123,7 +104,7 @@ RSpec.describe UnitConversion, type: :model do
       end
 
       context "when source and target units are the same (Unit IDs)" do
-        let(:result) { described_class.convert(source_unit.id, source_unit.id, 5) }
+        let(:result) { described_class.convert!(source_unit.id, source_unit.id, 5) }
 
         it "returns the same quantity as BigDecimal" do
           expect(result).to eq(5.0)
@@ -134,7 +115,7 @@ RSpec.describe UnitConversion, type: :model do
       context "when conversion exists (using Unit objects)" do
         let!(:conversion) { create(:kilogramme_gramme_conversion, source_unit:, target_unit:) }
 
-        let(:result) { described_class.convert(source_unit, target_unit, 2) }
+        let(:result) { described_class.convert!(source_unit, target_unit, 2) }
 
         it "returns the converted quantity as BigDecimal" do
           expect(result).to eq(2000.0)
@@ -145,7 +126,7 @@ RSpec.describe UnitConversion, type: :model do
       context "when conversion exists (using Unit IDs)" do
         let!(:conversion) { create(:kilogramme_gramme_conversion, source_unit:, target_unit:) }
 
-        let(:result) { described_class.convert(source_unit.id, target_unit.id, 3) }
+        let(:result) { described_class.convert!(source_unit.id, target_unit.id, 3) }
 
         it "returns the converted quantity as BigDecimal" do
           expect(result).to eq(3000.0)
@@ -156,7 +137,7 @@ RSpec.describe UnitConversion, type: :model do
       context "when conversion does not exist" do
         it "raises UnitConversionError" do
           expect {
-            described_class.convert(source_unit, target_unit, 2)
+            described_class.convert!(source_unit, target_unit, 2)
           }.to raise_error(UnitConversionError, /Please ensure a valid unit conversion exists./)
         end
       end

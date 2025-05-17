@@ -4,7 +4,7 @@
 
 class RequestLogsController < ApplicationController
   before_action :set_breadcrumbs
-  before_action :find_request_log, only: :show
+  before_action :set_request_log, only: :show
 
   # GET /request-logs
   def index
@@ -19,7 +19,7 @@ class RequestLogsController < ApplicationController
 
   private
 
-  def find_request_log
+  def set_request_log
     @request_log ||= RequestLog.find(params[:id])
   end
 

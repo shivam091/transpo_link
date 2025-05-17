@@ -10,8 +10,8 @@ RSpec.describe Inventories::RestockService, type: :service do
   let(:unit) { create(:item_unit) }
   let(:inventory) { create(:inventory, unit:) }
   let(:purchase_order_item) { create(:purchase_order_item, :delivered, unit:) }
-  let(:inventory_batch) { create(:inventory_batch, quantity: 10, source: purchase_order_item, unit:, inventory:) }
-  let(:restock) { create(:inventory_restock, quantity: 10, inventory_batch:, unit:) }
+  let(:inventory_batch) { create(:inventory_batch, source: purchase_order_item, unit:, inventory:) }
+  let(:restock) { create(:inventory_restock, inventory_batch:, unit:) }
 
   subject(:service_response) { described_class.(inventory_batch, restock) }
 

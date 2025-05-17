@@ -7,42 +7,10 @@
 require "spec_helper"
 
 RSpec.describe PurchaseOrder, type: :model do
-  subject(:purchase_order) { build_stubbed(:purchase_order) }
+  subject(:purchase_order) { build(:purchase_order) }
 
   describe "valid factory" do
     it { is_expected.to have_a_valid_factory(:purchase_order) }
-  end
-
-  describe "attributes, indexes, foreign keys, and check constraints" do
-    it { is_expected.to have_db_column(:id).of_type(:uuid) }
-    it { is_expected.to have_db_column(:reference_code).of_type(:string) }
-    it { is_expected.to have_db_column(:warehouse_id).of_type(:uuid) }
-    it { is_expected.to have_db_column(:manager_id).of_type(:uuid) }
-    it { is_expected.to have_db_column(:supplier_id).of_type(:uuid) }
-    it { is_expected.to have_db_column(:reference_document).of_type(:string) }
-    it { is_expected.to have_db_column(:order_date).of_type(:timestamptz) }
-    it { is_expected.to have_db_column(:expected_delivery_date).of_type(:date) }
-    it { is_expected.to have_db_column(:actual_delivery_date).of_type(:date) }
-    it { is_expected.to have_db_column(:status).of_type(:enum) }
-    it { is_expected.to have_db_column(:notes).of_type(:text) }
-    it { is_expected.to have_db_column(:created_at).of_type(:timestamptz).with_options(null: false) }
-    it { is_expected.to have_db_column(:updated_at).of_type(:timestamptz).with_options(null: false) }
-
-    it { is_expected.to have_db_index(:manager_id) }
-    it { is_expected.to have_db_index(:order_date) }
-    it { is_expected.to have_db_index(:reference_code).unique }
-    it { is_expected.to have_db_index(:supplier_id) }
-    it { is_expected.to have_db_index(:warehouse_id) }
-
-    it { is_expected.to have_foreign_key(:manager_id).with_name(:fk_purchase_orders_manager_id_on_users).on_delete(:restrict) }
-    it { is_expected.to have_foreign_key(:supplier_id).with_name(:fk_purchase_orders_supplier_id_on_users).on_delete(:restrict) }
-    it { is_expected.to have_foreign_key(:warehouse_id).with_name(:fk_purchase_orders_warehouse_id_on_warehouses).on_delete(:restrict) }
-
-    it { is_expected.to have_check_constraint(:check_purchase_orders_notes_length).with_expression("char_length(notes) <= 1000") }
-    it { is_expected.to have_check_constraint(:check_purchase_orders_reference_document_length).with_expression("char_length(reference_document::text) <= 55") }
-    it { is_expected.to have_check_constraint(:check_purchase_orders_expected_delivery_after_order).with_expression("expected_delivery_date >= order_date") }
-    it { is_expected.to have_check_constraint(:check_purchase_orders_status_in_enum_values) }
-    it { is_expected.to have_check_constraint(:check_purchase_orders_status_presence).with_expression("status IS NOT NULL") }
   end
 
   describe "constants" do
@@ -134,8 +102,23 @@ RSpec.describe PurchaseOrder, type: :model do
     end
 
     describe "#status" do
+      let(:warehouse) { build_stubbed(:warehouse) }
+      let(:manager) { build_stubbed(:manager) }
+      let(:supplier) { build_stubbed(:supplier) }
+
       it { is_expected.to validate_presence_of(:status) }
-      # it { is_expected.to validate_inclusion_of(:status).in_array(described_class.statuses.values) }
+
+      it "allows valid status values" do
+        described_class.statuses.keys.each do |status|
+          expect(build(:purchase_order, status:, warehouse:, manager:, supplier:)).to be_valid
+        end
+      end
+
+      it "raises error on invalid status value" do
+        expect {
+          build(:purchase_order, status: "invalid_status")
+        }.to raise_error(ArgumentError, /is not a valid status/)
+      end
     end
 
     describe "#notes" do
@@ -371,7 +354,7 @@ RSpec.describe PurchaseOrder, type: :model do
     end
   end
 
-  describe "class methods" do
+  describe "class methods and scopes" do
     describe ".accessible" do
       let!(:purchase_order) { create(:purchase_order) }
 

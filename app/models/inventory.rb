@@ -16,8 +16,7 @@ class Inventory < ApplicationRecord
     average_cost: "average_cost",
   }
 
-  attribute :average_cost_price, default: 0.0
-  attribute :tracking_method, :enum, default: tracking_methods[:average_cost]
+  attribute :tracking_method, default: tracking_methods[:average_cost]
 
   scale_attributes :average_cost_price, :low_stock_threshold
 
@@ -66,6 +65,10 @@ class Inventory < ApplicationRecord
 
   def key_associations
     [product, warehouse]
+  end
+
+  def low_stock?
+    quantity_in_hand <= low_stock_threshold
   end
 
   private

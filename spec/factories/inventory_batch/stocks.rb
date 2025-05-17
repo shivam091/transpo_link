@@ -13,40 +13,40 @@ FactoryBot.define do
     restockable_quantity { 0.0 }
     available_quantity { 0.0 }
     used_quantity { 0.0 }
-    status { InventoryBatch::Stock.statuses[:available] }
+    status { :available }
     is_locked { false }
 
     trait :available do
-      status { InventoryBatch::Stock.statuses[:available] }
+      status { :available }
     end
 
     trait :reserved do
-      status { InventoryBatch::Stock.statuses[:reserved] }
+      status { :reserved }
     end
 
     trait :partially_used do
-      status { InventoryBatch::Stock.statuses[:partially_used] }
+      status { :partially_used }
     end
 
     trait :exhausted do
-      status { InventoryBatch::Stock.statuses[:exhausted] }
+      status { :exhausted }
     end
 
     trait :locked do
-      status { InventoryBatch::Stock.statuses[:locked] }
+      status { :locked }
     end
 
     trait :damaged do
-      status { InventoryBatch::Stock.statuses[:damaged] }
+      status { :damaged }
     end
 
     trait :closed do
-      status { InventoryBatch::Stock.statuses[:closed] }
+      status { :closed }
     end
 
     # Transient attributes
     transient do
-      batch_quantity { 1000.0 }  # Set this only when needed
+      batch_quantity { 1000.0 } # Set this only when needed
       auto_calculate_quantities { false }
     end
 

@@ -8,7 +8,7 @@ require "spec_helper"
 
 RSpec.describe InventoryBatches::Stocks::UpdateService, type: :service do
   let(:purchase_order_item) { create(:purchase_order_item, :delivered) }
-  let(:inventory_batch) { create(:inventory_batch, quantity: 10, source: purchase_order_item) }
+  let(:inventory_batch) { create(:inventory_batch, source: purchase_order_item) }
 
   subject(:service_response) { described_class.(inventory_batch, stock_attributes) }
 

@@ -95,7 +95,7 @@ class InventoryBatch < ApplicationRecord
     source_unit, target_unit = attributes[:source_unit], unit
 
     quantity_to_add = if source_unit && source_unit != target_unit
-      UnitConversion.convert(source_unit, target_unit, quantity)
+      UnitConversion.convert!(source_unit, target_unit, quantity)
     else
       quantity
     end
@@ -131,7 +131,7 @@ class InventoryBatch < ApplicationRecord
   def convert_to_inventory_unit
     return if (target_unit = inventory.unit) == (source_unit = unit)
 
-    self.quantity = UnitConversion.convert(source_unit, target_unit, quantity)
+    self.quantity = UnitConversion.convert!(source_unit, target_unit, quantity)
     self.unit = target_unit # Store in default unit
   end
 
@@ -145,7 +145,7 @@ class InventoryBatch < ApplicationRecord
     return unless from_purchase_order_item? && unit
 
     available_quantity = source.available_batch_quantity
-    converted_batch_quantity = UnitConversion.convert(unit, source.unit, quantity.to_f)
+    converted_batch_quantity = UnitConversion.convert!(unit, source.unit, quantity.to_f)
 
     if converted_batch_quantity > available_quantity
       errors.add(:quantity, :exceeds_purchase_quantity, message: "exceeds the available quantity for this item")

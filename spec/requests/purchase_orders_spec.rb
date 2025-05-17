@@ -180,12 +180,11 @@ RSpec.describe "PurchaseOrders", type: :request do
     let(:warehouse) { create(:warehouse, :with_supplier, name: "Test warehouse") }
     let(:product) { create(:product, name: "Test product") }
     let(:unit) { product.unit }
-    let(:supplier) { warehouse.managers.first }
     let(:supplier) { warehouse.suppliers.first }
 
     let!(:purchase_order) do
       create(:purchase_order, :submitted, warehouse:, manager:, supplier:).tap do |po|
-        create(:purchase_order_item, purchase_order: po, product:, unit:, quantity: 10)
+        create(:purchase_order_item, purchase_order: po, product:, unit:)
       end
     end
 
@@ -214,7 +213,7 @@ RSpec.describe "PurchaseOrders", type: :request do
     context "when unit conversion fails" do
       before do
         create(:inventory, warehouse:, product:, unit:)
-        allow(UnitConversion).to receive(:convert).and_raise(UnitConversionError.new(unit, unit))
+        allow(UnitConversion).to receive(:convert!).and_raise(UnitConversionError.new(unit, unit))
       end
 
       it "does not approve the purchase order and redirects with an unit conversion error" do

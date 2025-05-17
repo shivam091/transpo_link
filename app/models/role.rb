@@ -14,4 +14,6 @@ class Role < ApplicationRecord
             reduce: true
 
   has_many :users, inverse_of: :role, dependent: :restrict_with_exception
+  has_many :role_permissions, class_name: "AccessControl::RolePermission", inverse_of: :role, dependent: :restrict_with_exception
+  has_many :permissions, through: :role_permissions, class_name: "AccessControl::Permission"
 end

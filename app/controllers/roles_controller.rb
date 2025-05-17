@@ -4,7 +4,7 @@
 
 class RolesController < ApplicationController
   before_action :set_breadcrumbs
-  before_action :find_role, except: :index
+  before_action :set_role, except: :index
 
   # GET /roles
   def index
@@ -23,15 +23,14 @@ class RolesController < ApplicationController
 
     if response.success?
       set_flash_message(:notice, :success)
+
       redirect_to roles_path, status: :see_other
     else
       set_flash_message(:alert, :error, immediate: true)
+
       respond_to do |format|
         format.turbo_stream do
-          render turbo_stream: [
-            turbo_stream.update(:edit_role_form_frame, partial: "roles/form"),
-            render_flash
-          ], status: :unprocessable_entity
+          render turbo_stream: [update_form_frame, render_flash], status: :unprocessable_entity
         end
       end
     end
@@ -48,11 +47,19 @@ class RolesController < ApplicationController
     params.require(:role).permit(:name, :is_active)
   end
 
-  def find_role
+  def set_role
     @role ||= Role.find(params[:id])
   end
 
   def set_breadcrumbs
     add_breadcrumb t("roles.breadcrumb"), roles_path
+  end
+
+  def form_frame_id
+    :edit_role_form_frame
+  end
+
+  def form_partial
+    "roles/form"
   end
 end

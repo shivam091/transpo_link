@@ -15,7 +15,8 @@
 @import "tables";
 @import "pagination";
 @import "validations";
-@import "devise_layout";
+@import "devise";
+@import "error";
 
 html,
 body {
@@ -181,4 +182,13 @@ hr {
 }
 dt {
   margin-bottom: 0.5rem;
+}
+.low-stock-notification {
+  margin-top: -2px;
+  text-indent: 0.25rem;
+  svg {
+    height: 1rem;
+    width: 1rem;
+    fill: rgb(var(--bs-warning-rgb)) !important;
+  }
 }

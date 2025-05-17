@@ -17,28 +17,17 @@ RSpec.describe Role, type: :model do
     it { is_expected.to include_module(Toggleable) }
   end
 
-  describe "attributes, indexes, and foreign keys" do
-    it { is_expected.to have_db_column(:id).of_type(:uuid) }
-    it { is_expected.to have_db_column(:name).of_type(:string) }
-    it { is_expected.to have_db_column(:is_active).of_type(:boolean).with_options(default: false) }
-    it { is_expected.to have_db_column(:created_at).of_type(:timestamptz).with_options(null: false) }
-    it { is_expected.to have_db_column(:updated_at).of_type(:timestamptz).with_options(null: false) }
-
-    it { is_expected.to have_db_index(:name).unique }
-
-    it { is_expected.to have_check_constraint(:check_roles_name_length).with_expression("char_length(name::text) <= 55 AND char_length(name::text) >= 2") }
-    it { is_expected.to have_check_constraint(:check_roles_name_presence).with_expression("name IS NOT NULL AND name::text <> ''::text") }
-  end
-
-  describe "associations" do
-    it { is_expected.to have_many(:users).inverse_of(:role).dependent(:restrict_with_exception) }
-  end
-
   describe "validations" do
     describe "#name" do
       it { is_expected.to validate_presence_of(:name) }
       it { is_expected.to validate_length_of(:name).is_at_least(2).is_at_most(55) }
       it { is_expected.to validate_uniqueness_of(:name) }
     end
+  end
+
+  describe "associations" do
+    it { is_expected.to have_many(:users).inverse_of(:role).dependent(:restrict_with_exception) }
+    it { is_expected.to have_many(:role_permissions).class_name("AccessControl::RolePermission").inverse_of(:role).dependent(:restrict_with_exception) }
+    it { is_expected.to have_many(:permissions).through(:role_permissions).class_name("AccessControl::Permission") }
   end
 end

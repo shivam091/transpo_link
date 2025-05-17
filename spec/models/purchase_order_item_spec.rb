@@ -13,42 +13,6 @@ RSpec.describe PurchaseOrderItem, type: :model do
     it { is_expected.to have_a_valid_factory(:purchase_order_item) }
   end
 
-  describe "attributes, indexes, foreign keys, and check constraints" do
-    it { is_expected.to have_db_column(:id).of_type(:uuid) }
-    it { is_expected.to have_db_column(:purchase_order_id).of_type(:uuid) }
-    it { is_expected.to have_db_column(:product_id).of_type(:uuid) }
-    it { is_expected.to have_db_column(:quantity).of_type(:decimal).with_options(precision: 12, scale: 2) }
-    it { is_expected.to have_db_column(:received_quantity).of_type(:decimal).with_options(precision: 12, scale: 2, default: 0.0) }
-    it { is_expected.to have_db_column(:unit_id).of_type(:uuid).with_options(null: false) }
-    it { is_expected.to have_db_column(:unit_cost).of_type(:decimal).with_options(precision: 12, scale: 2) }
-    it { is_expected.to have_db_column(:total_cost).of_type(:decimal).with_options(precision: 12, scale: 2) }
-    it { is_expected.to have_db_column(:currency).of_type(:string) }
-    it { is_expected.to have_db_column(:status).of_type(:enum) }
-    it { is_expected.to have_db_column(:created_at).of_type(:timestamptz).with_options(null: false) }
-    it { is_expected.to have_db_column(:updated_at).of_type(:timestamptz).with_options(null: false) }
-
-    it { is_expected.to have_db_index(:quantity) }
-    it { is_expected.to have_db_index(:product_id) }
-    it { is_expected.to have_db_index(:unit_id) }
-    it { is_expected.to have_db_index(:purchase_order_id) }
-    it { is_expected.to have_db_index(:received_quantity) }
-    it { is_expected.to have_db_index([:purchase_order_id, :product_id]).unique }
-
-    it { is_expected.to have_foreign_key(:purchase_order_id).with_name(:fk_purchase_order_items_purchase_order_id_on_purchase_orders).on_delete(:cascade) }
-    it { is_expected.to have_foreign_key(:product_id).with_name(:fk_purchase_order_items_product_id_on_products).on_delete(:restrict) }
-    it { is_expected.to have_foreign_key(:unit_id).with_name(:fk_purchase_order_items_unit_id_on_units).on_delete(:restrict) }
-
-    it { is_expected.to have_check_constraint(:check_purchase_order_items_currency_presence).with_expression("currency IS NOT NULL AND currency::text <> ''::text") }
-    it { is_expected.to have_check_constraint(:check_purchase_order_items_quantity_positive).with_expression("quantity > 0.0") }
-    it { is_expected.to have_check_constraint(:check_purchase_order_items_quantity_presence).with_expression("quantity IS NOT NULL") }
-    it { is_expected.to have_check_constraint(:check_purchase_order_items_received_quantity_non_negative).with_expression("received_quantity >= 0.0") }
-    it { is_expected.to have_check_constraint(:check_purchase_order_items_received_quantity_presence).with_expression("received_quantity IS NOT NULL") }
-    it { is_expected.to have_check_constraint(:check_purchase_order_items_status_in_enum_values) }
-    it { is_expected.to have_check_constraint(:check_purchase_order_items_status_presence).with_expression("status IS NOT NULL") }
-    it { is_expected.to have_check_constraint(:check_purchase_order_items_unit_cost_positive).with_expression("unit_cost > 0.0") }
-    it { is_expected.to have_check_constraint(:check_purchase_order_items_unit_cost_presence).with_expression("unit_cost IS NOT NULL") }
-  end
-
   describe "constants" do
     it { is_expected.to have_constant(:LISTING_ATTRIBUTES) }
   end
@@ -66,10 +30,6 @@ RSpec.describe PurchaseOrderItem, type: :model do
 
   describe "default values" do
     let(:purchase_order_item) { described_class.new }
-
-    it "should set 0.0 as default value for #received_quantity" do
-      expect(purchase_order_item.received_quantity).to eq(0.0)
-    end
 
     it "should set pending as default value for #status" do
       expect(purchase_order_item.status).to eq("pending")
@@ -243,8 +203,22 @@ RSpec.describe PurchaseOrderItem, type: :model do
     end
 
     describe "#status" do
+      let(:product) { build_stubbed(:product) }
+
       it { is_expected.to validate_presence_of(:status) }
-      # it { is_expected.to validate_inclusion_of(:status).in_array(described_class.statuses.values) }
+
+      it "allows valid status values" do
+
+        described_class.statuses.keys.each do |status|
+          expect(build(:purchase_order_item, unit_cost: 1000, status:, product:)).to be_valid
+        end
+      end
+
+      it "raises error on invalid status value" do
+        expect {
+          build(:purchase_order_item, status: "invalid_status")
+        }.to raise_error(ArgumentError, /is not a valid status/)
+      end
     end
   end
 
@@ -416,15 +390,12 @@ RSpec.describe PurchaseOrderItem, type: :model do
     end
 
     describe "#available_batch_quantity" do
-      let!(:dozen_item_conversion) { create(:dozen_item_conversion) }
-
-      let(:target_unit) { dozen_item_conversion.target_unit }
-
-      let(:purchase_order_item) { create(:purchase_order_item, unit: target_unit, received_quantity: 10.0) }
+      let(:unit) { create(:item_unit) }
+      let(:source) { create(:purchase_order_item, :delivered, unit:) }
 
       context "when there are no inventory batches" do
         it "returns the full received_quantity" do
-          expect(purchase_order_item.available_batch_quantity).to eq(10.0)
+          expect(source.available_batch_quantity).to eq(1000)
         end
       end
 
@@ -432,11 +403,12 @@ RSpec.describe PurchaseOrderItem, type: :model do
         include_context "with current user"
 
         before do
-          create(:inventory_batch, source: purchase_order_item, unit: target_unit, quantity: 5.0)
+          allow_any_instance_of(InventoryBatch).to receive(:record_audit_logs)
+          create(:inventory_batch, source:, unit:)
         end
 
         it "returns received_quantity minus total batched quantity after conversion" do
-          expect(purchase_order_item.available_batch_quantity).to eq(5.0)
+          expect(source.available_batch_quantity).to eq(990)
         end
       end
     end

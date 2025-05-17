@@ -12,8 +12,8 @@ class UserDetail < ApplicationRecord
 
   nullify_if_blank :mobile_number, :alternate_contact_number, :alternate_email
 
-  sanitize_attributes :first_name, :last_name, :mobile_number, :alternate_contact_number,
-                      :alternate_email
+  sanitize_attributes :first_name, :last_name, :mobile_number,  :alternate_email,
+                      :alternate_contact_number
 
   validates :user_id,
             presence: true,

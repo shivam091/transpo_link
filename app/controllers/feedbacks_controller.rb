@@ -4,8 +4,8 @@
 
 class FeedbacksController < ApplicationController
   before_action :set_breadcrumbs
-  before_action :find_reviewable, only: [:new, :create]
-  before_action :find_feedback, only: [:show, :mark_as_read]
+  before_action :set_reviewable, only: [:new, :create]
+  before_action :set_feedback, only: [:show, :mark_as_read]
 
   # GET /feedbacks
   def index
@@ -30,15 +30,14 @@ class FeedbacksController < ApplicationController
 
     if response.success?
       set_flash_message(:notice, :success)
+
       redirect_back fallback_location: feedbacks_path, status: :see_other
     else
       set_flash_message(:alert, :error, immediate: true)
+
       respond_to do |format|
         format.turbo_stream do
-          render turbo_stream: [
-            turbo_stream.update(:new_feedback_form_frame, partial: "feedbacks/form"),
-            render_flash
-          ], status: :unprocessable_entity
+          render turbo_stream: [update_form_frame, render_flash], status: :unprocessable_entity
         end
       end
     end
@@ -54,6 +53,7 @@ class FeedbacksController < ApplicationController
     else
       set_flash_message(:alert, :error)
     end
+
     redirect_back fallback_location: feedbacks_path, status: :see_other
   end
 
@@ -68,17 +68,25 @@ class FeedbacksController < ApplicationController
     params.require(:feedback).permit(:rating, :comment)
   end
 
-  def find_reviewable
+  def set_reviewable
     @reviewable = if params[:product_id]
       Product.find(params[:product_id])
     end
   end
 
-  def find_feedback
+  def set_feedback
     @feedback ||= Feedback.find(params[:id])
   end
 
   def set_breadcrumbs
     add_breadcrumb t("feedbacks.breadcrumb"), feedbacks_path
+  end
+
+  def form_frame_id
+    :new_feedback_form_frame
+  end
+
+  def form_partial
+    "feedbacks/form"
   end
 end

@@ -39,7 +39,7 @@ class CreatePurchaseOrderItems < ActiveRecord::Migration[8.0]
       t.decimal :unit_cost, precision: 12, scale: 2
       t.decimal :total_cost, precision: 12, scale: 2, as: "quantity * unit_cost", stored: true
       t.string :currency
-      t.enum :status, enum_type: :purchase_order_item_statuses
+      t.enum :status, enum_type: :purchase_order_item_statuses, index: {using: :btree}
       t.timestamps_with_timezone null: false
 
       t.index [:purchase_order_id, :product_id], using: :btree, unique: true

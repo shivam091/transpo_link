@@ -13,6 +13,8 @@
 # closed: Batch is finalized or archived — no further actions allowed.
 
 class InventoryBatch::Stock < ApplicationRecord
+  self.primary_key = :inventory_batch_id
+
   include AASM, ScaleEnforcer
 
   enum :status, {
