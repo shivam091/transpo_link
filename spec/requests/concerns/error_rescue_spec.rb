@@ -69,6 +69,8 @@ RSpec.describe "ErrorRescue", type: :request do
 
   context "when a generic StandardError is raised" do
     it "renders the 500 internal server error template" do
+      expect(Rails.logger).to receive(:error).with(/[500 Error Rescue]/)
+
       get "/test_internal_error"
 
       expect(response).to have_http_status(:internal_server_error)
@@ -78,6 +80,8 @@ RSpec.describe "ErrorRescue", type: :request do
 
   context "when an ApplicationError is raised" do
     it "redirects back with flash alert" do
+      expect(Rails.logger).to receive(:warn).with(/[ApplicationError]/)
+
       get "/test_application_error"
 
       expect(response).to redirect_to("/")
