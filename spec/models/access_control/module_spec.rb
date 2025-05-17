@@ -13,10 +13,14 @@ RSpec.describe AccessControl::Module, type: :model do
     it { is_expected.to have_a_valid_factory(:module) }
   end
 
+  describe "normalized attributes" do
+    it { is_expected.to normalize(:label_key).from("  CREATE  ").to("create") }
+  end
+
   describe "validations" do
     describe "#label_key" do
       it { is_expected.to validate_presence_of(:label_key) }
-      it { is_expected.to validate_uniqueness_of(:label_key) }
+      it { is_expected.to validate_uniqueness_of(:label_key).ignoring_case_sensitivity }
       it { is_expected.to validate_length_of(:label_key).is_at_most(55) }
     end
 
