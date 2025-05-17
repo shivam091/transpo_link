@@ -12,6 +12,27 @@
           created_at: "Created at",
           updated_at: "Updated at",
         },
+        "access_control/action" => {
+          label_key: "Label key",
+          is_active: "Is active",
+        },
+        "access_control/module" => {
+          label_key: "Label key",
+          position: "Position",
+          is_active: "Is active",
+        },
+        "access_control/permission" => {
+          action_id: "Action",
+          module_id: "Module",
+          position: "Position",
+          is_active: "Is active",
+        },
+        "access_control/role_permission" => {
+          role_id: "Role",
+          permission: "Permission",
+          is_allowed: "Is allowed",
+          is_active: "Is active",
+        },
         request_log: {
           uuid: "UUID",
           uri: "URI",
@@ -471,6 +492,20 @@
             attributes: {
               quantity: {
                 exceeds_remaining_quantity: "cannot exceed remaining quantity of the purchase order item"
+              }
+            }
+          },
+          "access_control/module" => {
+            attributes: {
+              position: {
+                already_set: "is already set for other module"
+              }
+            }
+          },
+          "access_control/permission" => {
+            attributes: {
+              position: {
+                already_within_module: "is already set within this module",
               }
             }
           },

@@ -30,6 +30,63 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_02_140259) do
   create_enum "tracking_methods", ["fifo", "lifo", "average_cost"]
   create_enum "unit_categories", ["count", "length", "weight", "area", "volume"]
 
+  create_table "access_control_actions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "label_key"
+    t.boolean "is_active", default: false
+    t.timestamptz "created_at", null: false
+    t.timestamptz "updated_at", null: false
+    t.index ["is_active"], name: "index_access_control_actions_on_is_active"
+    t.index ["label_key"], name: "index_access_control_actions_on_label_key", unique: true
+    t.check_constraint "char_length(label_key::text) <= 55", name: "check_access_control_actions_label_key_length"
+    t.check_constraint "label_key IS NOT NULL AND label_key::text <> ''::text", name: "check_access_control_actions_label_key_presence"
+  end
+
+  create_table "access_control_modules", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "label_key"
+    t.integer "position"
+    t.boolean "is_active", default: false
+    t.timestamptz "created_at", null: false
+    t.timestamptz "updated_at", null: false
+    t.index ["is_active"], name: "index_access_control_modules_on_is_active"
+    t.index ["label_key"], name: "index_access_control_modules_on_label_key", unique: true
+    t.index ["position"], name: "index_access_control_modules_on_position", unique: true
+    t.check_constraint "\"position\" > 0", name: "check_access_control_modules_position_positive"
+    t.check_constraint "\"position\" IS NOT NULL", name: "check_access_control_modules_position_presence"
+    t.check_constraint "char_length(label_key::text) <= 55", name: "check_access_control_modules_label_key_length"
+    t.check_constraint "label_key IS NOT NULL AND label_key::text <> ''::text", name: "check_access_control_modules_label_key_presence"
+  end
+
+  create_table "access_control_permissions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "action_id", null: false
+    t.uuid "module_id", null: false
+    t.boolean "is_active", default: false
+    t.integer "position"
+    t.timestamptz "created_at", null: false
+    t.timestamptz "updated_at", null: false
+    t.index ["action_id", "module_id"], name: "index_access_control_permissions_on_action_id_and_module_id", unique: true
+    t.index ["action_id"], name: "index_access_control_permissions_on_action_id"
+    t.index ["is_active"], name: "index_access_control_permissions_on_is_active"
+    t.index ["module_id", "position"], name: "index_access_control_permissions_on_module_id_and_position", unique: true
+    t.index ["module_id"], name: "index_access_control_permissions_on_module_id"
+    t.index ["position"], name: "index_access_control_permissions_on_position"
+    t.check_constraint "\"position\" > 0", name: "check_access_control_permissions_position_positive"
+    t.check_constraint "\"position\" IS NOT NULL", name: "check_access_control_permissions_position_presence"
+  end
+
+  create_table "access_control_role_permissions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "role_id", null: false
+    t.uuid "permission_id", null: false
+    t.boolean "is_allowed", default: true
+    t.boolean "is_active", default: false
+    t.timestamptz "created_at", null: false
+    t.timestamptz "updated_at", null: false
+    t.index ["is_active"], name: "index_access_control_role_permissions_on_is_active"
+    t.index ["is_allowed"], name: "index_access_control_role_permissions_on_is_allowed"
+    t.index ["permission_id"], name: "index_access_control_role_permissions_on_permission_id"
+    t.index ["role_id", "permission_id"], name: "idx_on_role_id_permission_id_e18d990825", unique: true
+    t.index ["role_id"], name: "index_access_control_role_permissions_on_role_id"
+  end
+
   create_table "addresses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "addressable_type", null: false
     t.uuid "addressable_id", null: false
@@ -667,6 +724,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_02_140259) do
     t.check_constraint "total_capacity IS NOT NULL", name: "check_warehouses_total_capacity_presence"
   end
 
+  add_foreign_key "access_control_permissions", "access_control_actions", column: "action_id", name: "fk_access_control_permissions_action_id_on_access_control_actio", on_delete: :restrict
+  add_foreign_key "access_control_permissions", "access_control_modules", column: "module_id", name: "fk_access_control_permissions_module_id_on_access_control_modul", on_delete: :restrict
+  add_foreign_key "access_control_role_permissions", "access_control_permissions", column: "permission_id", name: "fk_access_control_role_permissions_permission_id_on_permissions", on_delete: :restrict
+  add_foreign_key "access_control_role_permissions", "roles", name: "fk_access_control_role_permissions_action_id_on_roles", on_delete: :restrict
   add_foreign_key "feedbacks", "users", name: "fk_feedbacks_user_id_on_users", on_delete: :nullify
   add_foreign_key "inventories", "products", name: "fk_inventories_product_id_on_products", on_delete: :cascade
   add_foreign_key "inventories", "units", name: "fk_inventories_unit_id_on_units", on_delete: :restrict
