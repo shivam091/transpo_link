@@ -3,7 +3,7 @@
 # -*- warn_indent: true -*-
 
 class ApplicationController < ActionController::Base
-  include TurboStreamHelpers, Breadcrumbs, FlashMessages
+  include ErrorRescue, TurboStreamHelpers, Breadcrumbs, FlashMessages
 
   protect_from_forgery with: :exception, prepend: true
 
@@ -11,13 +11,6 @@ class ApplicationController < ActionController::Base
 
   # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
   allow_browser versions: :modern
-
-  rescue_from ActionController::InvalidAuthenticityToken do |exception|
-    sign_out(current_user) if user_signed_in?
-
-    redirect_to new_user_session_path
-  end
-  rescue_from ApplicationError, with: :handle_application_error
 
   prepend_before_action :authenticate_user!
   before_action :set_current_attributes, :set_main_breadcrumb
@@ -35,7 +28,7 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def with_time_zone(&block)
+  def with_time_zonde(&block)
     if user_signed_in?
       TranspoLink::TimeZone.with_user_time_zone(current_user, &block)
     else
@@ -55,13 +48,6 @@ class ApplicationController < ActionController::Base
 
       redirect_to new_user_session_path
     end
-  end
-
-  def handle_application_error(exception)
-    Rails.logger.warn("[ApplicationError] #{exception.class}: #{exception.message}")
-    flash[:alert] = exception.message
-
-    redirect_back fallback_location: root_path
   end
 
   def update_last_activity_at
