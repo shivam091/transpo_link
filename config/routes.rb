@@ -129,4 +129,6 @@ Rails.application.routes.draw do
   resources :unit_conversions, path: "unit-conversions", only: :index
 
   root to: "dashboards#show"
+
+  match "*unmatched_route", to: "application#render_not_found", via: :all
 end
