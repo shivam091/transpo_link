@@ -43,11 +43,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_02_140259) do
 
   create_table "access_control_modules", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "label_key"
+    t.integer "position"
     t.boolean "is_active", default: false
     t.timestamptz "created_at", null: false
     t.timestamptz "updated_at", null: false
     t.index ["is_active"], name: "index_access_control_modules_on_is_active"
     t.index ["label_key"], name: "index_access_control_modules_on_label_key", unique: true
+    t.index ["position"], name: "index_access_control_modules_on_position", unique: true
+    t.check_constraint "\"position\" > 0", name: "check_access_control_modules_position_positive"
+    t.check_constraint "\"position\" IS NOT NULL", name: "check_access_control_modules_position_presence"
     t.check_constraint "char_length(label_key::text) <= 55", name: "check_access_control_modules_label_key_length"
     t.check_constraint "label_key IS NOT NULL AND label_key::text <> ''::text", name: "check_access_control_modules_label_key_presence"
   end
@@ -56,12 +60,17 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_02_140259) do
     t.uuid "action_id", null: false
     t.uuid "module_id", null: false
     t.boolean "is_active", default: false
+    t.integer "position"
     t.timestamptz "created_at", null: false
     t.timestamptz "updated_at", null: false
     t.index ["action_id", "module_id"], name: "index_access_control_permissions_on_action_id_and_module_id", unique: true
     t.index ["action_id"], name: "index_access_control_permissions_on_action_id"
     t.index ["is_active"], name: "index_access_control_permissions_on_is_active"
+    t.index ["module_id", "position"], name: "index_access_control_permissions_on_module_id_and_position", unique: true
     t.index ["module_id"], name: "index_access_control_permissions_on_module_id"
+    t.index ["position"], name: "index_access_control_permissions_on_position"
+    t.check_constraint "\"position\" > 0", name: "check_access_control_permissions_position_positive"
+    t.check_constraint "\"position\" IS NOT NULL", name: "check_access_control_permissions_position_presence"
   end
 
   create_table "access_control_role_permissions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

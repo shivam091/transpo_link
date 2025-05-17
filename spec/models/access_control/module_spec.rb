@@ -19,6 +19,12 @@ RSpec.describe AccessControl::Module, type: :model do
       it { is_expected.to validate_uniqueness_of(:label_key) }
       it { is_expected.to validate_length_of(:label_key).is_at_most(55) }
     end
+
+    describe "#position" do
+      it { is_expected.to validate_presence_of(:position) }
+      it { is_expected.to validate_uniqueness_of(:position).with_message("is already set for other module") }
+      it { is_expected.to validate_numericality_of(:position).is_greater_than(0).only_integer }
+    end
   end
 
   describe "associations" do

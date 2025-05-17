@@ -8,6 +8,11 @@ class AccessControl::Module < ApplicationRecord
             length: {maximum: 55},
             uniqueness: true,
             reduce: true
+  validates :position,
+            presence: true,
+            uniqueness: {message: :already_set},
+            numericality: {only_integer: true, greater_than: 0},
+            reduce: true
 
   has_many :permissions,
            class_name: "AccessControl::Permission",

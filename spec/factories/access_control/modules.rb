@@ -5,5 +5,6 @@
 FactoryBot.define do
   factory :access_control_module, class: "AccessControl::Module", aliases: [:module] do
     sequence(:label_key) { |n| "module_label_#{n}" }
+    sequence(:position) { |n| n }
   end
 end

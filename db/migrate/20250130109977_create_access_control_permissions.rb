@@ -24,9 +24,14 @@ class CreateAccessControlPermissions < ActiveRecord::Migration[8.0]
                    null: false,
                    index: {using: :btree}
       t.boolean :is_active, default: false, index: {using: :btree}
+      t.integer :position, index: {using: :btree}
       t.timestamps_with_timezone null: false
 
       t.index [:action_id, :module_id], using: :btree, unique: true
+      t.index [:module_id, :position], using: :btree, unique: true
+
+      t.check_constraint "position IS NOT NULL", name: :check_access_control_permissions_position_presence
+      t.check_constraint "position > 0", name: :check_access_control_permissions_position_positive
     end
   end
 end

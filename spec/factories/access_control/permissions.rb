@@ -6,5 +6,6 @@ FactoryBot.define do
   factory :access_control_permission, class: "AccessControl::Permission", aliases: [:permission] do
     association :action, factory: :action
     association :module, factory: :module
+    sequence(:position) { |n| n }
   end
 end

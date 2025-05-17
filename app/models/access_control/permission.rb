@@ -8,6 +8,11 @@ class AccessControl::Permission < ApplicationRecord
             uniqueness: {scope: :module_id},
             reduce: true
   validates :module_id, presence: true, reduce: true
+  validates :position,
+            presence: true,
+            uniqueness: {scope: :module_id, message: :already_within_module},
+            numericality: {only_integer: true, greater_than: 0},
+            reduce: true
 
   has_many :role_permissions,
            class_name: "AccessControl::RolePermission",

@@ -24,6 +24,14 @@ RSpec.describe AccessControl::Permission, type: :model do
     describe "#module_id" do
       it { is_expected.to validate_presence_of(:module_id) }
     end
+
+    describe "#position" do
+      let!(:permission) { create(:permission) }
+
+      it { is_expected.to validate_presence_of(:position) }
+      it { is_expected.to validate_uniqueness_of(:position).scoped_to(:module_id).with_message("is already set within this module") }
+      it { is_expected.to validate_numericality_of(:position).is_greater_than(0).only_integer }
+    end
   end
 
   describe "associations" do
