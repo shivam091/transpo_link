@@ -28,7 +28,7 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def with_time_zonde(&block)
+  def with_time_zone(&block)
     if user_signed_in?
       TranspoLink::TimeZone.with_user_time_zone(current_user, &block)
     else
