@@ -17,6 +17,8 @@
       remove: "Remove",
       save: "Save",
       cancel: "Cancel",
+      go_back: "Go back",
+      go_to_home: "Go to home",
       leave_feedback: "Leave feedback",
       submit: "Submit",
       mark_as_read: "Mark as read",
