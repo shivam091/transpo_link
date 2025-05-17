@@ -1,0 +1,8 @@
+= safe_render.partial("layouts/shared_layout") do
+  %body.d-flex.align-items-center.justify-content-center{data: {bs_theme: current_user&.preferred_color_scheme}}
+    .clearfix
+    %main.container-fluid
+      .container
+        .error-pages
+          = yield
+      = safe_render.partial("layouts/error/footer")

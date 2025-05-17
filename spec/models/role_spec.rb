@@ -17,15 +17,17 @@ RSpec.describe Role, type: :model do
     it { is_expected.to include_module(Toggleable) }
   end
 
-  describe "associations" do
-    it { is_expected.to have_many(:users).inverse_of(:role).dependent(:restrict_with_exception) }
-  end
-
   describe "validations" do
     describe "#name" do
       it { is_expected.to validate_presence_of(:name) }
       it { is_expected.to validate_length_of(:name).is_at_least(2).is_at_most(55) }
       it { is_expected.to validate_uniqueness_of(:name) }
     end
+  end
+
+  describe "associations" do
+    it { is_expected.to have_many(:users).inverse_of(:role).dependent(:restrict_with_exception) }
+    it { is_expected.to have_many(:role_permissions).class_name("AccessControl::RolePermission").inverse_of(:role).dependent(:restrict_with_exception) }
+    it { is_expected.to have_many(:permissions).through(:role_permissions).class_name("AccessControl::Permission") }
   end
 end
