@@ -32,4 +32,56 @@ RSpec.describe PermissionsHelper, type: :helper do
       expect(helper.translate_action("unknown_action")).to eq("permissions.actions.unknown_action")
     end
   end
+
+  describe "#can_view_link?" do
+    let(:user) { build_stubbed(:user) }
+    let(:ability) { instance_double("Ability") }
+
+    before do
+      allow(helper).to receive(:current_user) { user }
+      allow(Ability).to receive(:new).with(user) { ability }
+    end
+
+    context "when user has permission" do
+      it "returns true" do
+        allow(ability).to receive(:can?).with("orders", "update") { true }
+
+        expect(helper.can_view_link?("orders", "update")).to be_truthy
+      end
+    end
+
+    context "when user does not have permission" do
+      it "returns false" do
+        allow(ability).to receive(:can?).with("orders", "delete") { false }
+
+        expect(helper.can_view_link?("orders", "delete")).to be_falsy
+      end
+    end
+  end
+
+  describe "#with_authorization" do
+    let(:user) { build_stubbed(:user) }
+    let(:ability) { instance_double("Ability") }
+
+    before do
+      allow(helper).to receive(:current_user) { user }
+      allow(Ability).to receive(:new).with(user) { ability }
+    end
+
+    context "when user is authorized for given module and action" do
+      it "executes the given block" do
+        allow(ability).to receive(:can?).with("orders", "edit") { true }
+
+        expect { |b| helper.with_authorization("orders", "edit", &b) }.to yield_control
+      end
+    end
+
+    context "when user is not authorized for given module and action" do
+      it "does not execute the given block" do
+        allow(ability).to receive(:can?).with("orders", "edit") { false }
+
+        expect { |b| helper.with_authorization("orders", "edit", &b) }.not_to yield_control
+      end
+    end
+  end
 end
