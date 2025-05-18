@@ -23,11 +23,19 @@ class AccessControl::RolePermission < ApplicationRecord
       .order(modules[:position].asc, permissions[:position].asc)
   end
 
+  after_commit :invalidate_cache
+
   delegate :module, :action, to: :permission
 
   class << self
     def grouped_by_module
       all.group_by { |role_permission| role_permission.permission.module }
     end
+  end
+
+  private
+
+  def invalidate_cache
+    Rails.cache.delete(["user_permissions", role_id])
   end
 end
