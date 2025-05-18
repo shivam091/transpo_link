@@ -26,10 +26,10 @@ module PermissionsHelper
   # @return [Boolean] true if the user can view the link, otherwise false
   #
   # @example
-  #   <% if can_view_link?("orders", "update") %>
+  #   <% if authorized_for?(:orders, :update) %>
   #     <%= link_to "Edit", edit_order_path(order) %>
   #   <% end %>
-  def can_view_link?(module_key, action_key)
+  def authorized_for?(module_key, action_key)
     Ability.new(current_user).can?(module_key, action_key)
   end
 
@@ -40,10 +40,10 @@ module PermissionsHelper
   # @param block [Proc] the block to be executed if the user has access
   #
   # @example
-  #   <% with_authorization("orders", "delete") do %>
+  #   <% with_permission(:orders, :delete) do %>
   #     <%= link_to "Delete", order_path(order), method: :delete %>
   #   <% end %>
-  def with_authorization(module_key, action_key, &block)
-    block.call if can_view_link?(module_key, action_key)
+  def with_permission(module_key, action_key, &block)
+    block.call if authorized_for?(module_key, action_key)
   end
 end

@@ -33,7 +33,7 @@ RSpec.describe PermissionsHelper, type: :helper do
     end
   end
 
-  describe "#can_view_link?" do
+  describe "#authorized_for?" do
     let(:user) { build_stubbed(:user) }
     let(:ability) { instance_double("Ability") }
 
@@ -46,7 +46,7 @@ RSpec.describe PermissionsHelper, type: :helper do
       it "returns true" do
         allow(ability).to receive(:can?).with("orders", "update") { true }
 
-        expect(helper.can_view_link?("orders", "update")).to be_truthy
+        expect(helper.authorized_for?("orders", "update")).to be_truthy
       end
     end
 
@@ -54,12 +54,12 @@ RSpec.describe PermissionsHelper, type: :helper do
       it "returns false" do
         allow(ability).to receive(:can?).with("orders", "delete") { false }
 
-        expect(helper.can_view_link?("orders", "delete")).to be_falsy
+        expect(helper.authorized_for?("orders", "delete")).to be_falsy
       end
     end
   end
 
-  describe "#with_authorization" do
+  describe "#with_permission" do
     let(:user) { build_stubbed(:user) }
     let(:ability) { instance_double("Ability") }
 
@@ -72,7 +72,7 @@ RSpec.describe PermissionsHelper, type: :helper do
       it "executes the given block" do
         allow(ability).to receive(:can?).with("orders", "edit") { true }
 
-        expect { |b| helper.with_authorization("orders", "edit", &b) }.to yield_control
+        expect { |b| helper.with_permission("orders", "edit", &b) }.to yield_control
       end
     end
 
@@ -80,7 +80,7 @@ RSpec.describe PermissionsHelper, type: :helper do
       it "does not execute the given block" do
         allow(ability).to receive(:can?).with("orders", "edit") { false }
 
-        expect { |b| helper.with_authorization("orders", "edit", &b) }.not_to yield_control
+        expect { |b| helper.with_permission("orders", "edit", &b) }.not_to yield_control
       end
     end
   end
