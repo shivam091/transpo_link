@@ -3,7 +3,8 @@
 # -*- warn_indent: true -*-
 
 class ApplicationController < ActionController::Base
-  include ErrorRescue, TurboStreamHelpers, Breadcrumbs, FlashMessages
+  include ErrorRescue, TurboStreamHelpers, Breadcrumbs, FlashMessages,
+          ContextualAuthorization
 
   protect_from_forgery with: :exception, prepend: true
 
