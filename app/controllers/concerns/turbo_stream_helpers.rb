@@ -3,10 +3,6 @@
 # -*- warn_indent: true -*-
 
 module TurboStreamHelpers
-  def clear_frame(frame_id)
-    turbo_stream.update(frame_id, "")
-  end
-
   def update_form_frame
     update_frame(form_frame_id, form_partial)
   end
