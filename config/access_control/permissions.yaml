@@ -48,6 +48,7 @@ permissions:
     - create
     - update
     - delete
+    - view
   inventories:
     - create
     - update

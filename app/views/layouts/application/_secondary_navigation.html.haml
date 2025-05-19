@@ -4,9 +4,10 @@
       = link_to warehouses_path, class: class_names("nav-link", "active": current_controller?(:warehouses)) do
         = sprite_icon("warehouse")
         = t(".warehouses")
-    = link_to products_path, class: class_names("nav-link", "active": current_controller?(:products)) do
-      = sprite_icon("cube")
-      = t(".products")
+    - if authorized_for?(:products, :view_all)
+      = link_to products_path, class: class_names("nav-link", "active": current_controller?(:products)) do
+        = sprite_icon("cube")
+        = t(".products")
     = link_to purchase_orders_path, class: class_names("nav-link", "active": current_controller?(:purchase_orders)) do
       = sprite_icon("file")
       = t(".purchase_orders")

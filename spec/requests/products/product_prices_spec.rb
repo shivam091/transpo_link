@@ -16,7 +16,10 @@ RSpec.describe "Products::ProductPrices", type: :request do
   include_context "sign in as admin"
 
   describe "GET /products/:product_id/product-prices/new" do
-    before { get new_product_product_price_path(product), as: :turbo_stream }
+    before do
+      grant_permission!(admin, :product_prices, :create)
+      get new_product_product_price_path(product), as: :turbo_stream
+    end
 
     include_examples "initializes a new instance", :product_price, ProductPrice
 
@@ -27,6 +30,8 @@ RSpec.describe "Products::ProductPrices", type: :request do
   end
 
   describe "POST /products/:product_id/product-prices" do
+    before { grant_permission!(admin, :product_prices, :create) }
+
     context "when provided parameters are valid" do
       it "creates the price tier and redirects" do
         post product_product_prices_path(product), params: valid_params, as: :turbo_stream
@@ -51,6 +56,8 @@ RSpec.describe "Products::ProductPrices", type: :request do
 
   describe "GET /products/:product_id/product-prices/:id/edit" do
     it "renders edit price tier modal" do
+      grant_permission!(admin, :product_prices, :update)
+
       get edit_product_product_price_path(product, product_price)
 
       expect(controller_assigns(:product_price)).to eq(product_price)
@@ -59,6 +66,8 @@ RSpec.describe "Products::ProductPrices", type: :request do
   end
 
   describe "PUT|PATCH /products/:product_id/product-prices/:id" do
+    before { grant_permission!(admin, :product_prices, :update) }
+
     context "when provided parameters are valid" do
       it "updates the price tier and redirects" do
         put product_product_price_path(product, product_price), params: valid_params, as: :turbo_stream
@@ -82,6 +91,8 @@ RSpec.describe "Products::ProductPrices", type: :request do
   end
 
   describe "DELETE /products/:product_id/product-prices/:id" do
+    before { grant_permission!(admin, :product_prices, :delete) }
+
     context "when deletion is successful" do
       it "deletes the price tier and redirects" do
         delete product_product_price_path(product, product_price), as: :turbo_stream

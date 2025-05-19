@@ -24,6 +24,8 @@ RSpec.describe "Products", type: :request do
 
   describe "GET /products" do
     it "renders list of all products with pagination" do
+      grant_permission!(admin, :products, :view_all)
+
       get products_path
 
       expect(controller_assigns(:products)).to include(active_product)
@@ -33,6 +35,8 @@ RSpec.describe "Products", type: :request do
     end
 
     it "renders list of active products with pagination" do
+      grant_permission!(admin, :products, :view_active)
+
       get active_products_path
 
       expect(controller_assigns(:products)).to include(active_product)
@@ -42,6 +46,8 @@ RSpec.describe "Products", type: :request do
     end
 
     it "renders list of inactive products with pagination" do
+      grant_permission!(admin, :products, :view_inactive)
+
       get inactive_products_path
 
       expect(controller_assigns(:products)).to include(inactive_product)
@@ -52,12 +58,17 @@ RSpec.describe "Products", type: :request do
   end
 
   describe "GET /products/new" do
-    before { get new_product_path }
+    before do
+      grant_permission!(admin, :products, :create)
+      get new_product_path
+    end
 
     include_examples "initializes a new instance", :product, Product
   end
 
   describe "POST /products" do
+    before { grant_permission!(admin, :products, :create) }
+
     context "when provided parameters are valid" do
       it "creates the product and redirects" do
         post products_path, params: valid_params, as: :turbo_stream
@@ -82,6 +93,8 @@ RSpec.describe "Products", type: :request do
 
   describe "GET /products/:id/edit" do
     it "renders product edit page" do
+      grant_permission!(admin, :products, :update)
+
       get edit_product_path(active_product)
 
       expect(controller_assigns(:product)).to eq(active_product)
@@ -90,6 +103,8 @@ RSpec.describe "Products", type: :request do
   end
 
   describe "PUT|PATCH /products/:id" do
+    before { grant_permission!(admin, :products, :update) }
+
     context "when provided parameters are valid" do
       it "updates the product and redirects" do
         put product_path(active_product), params: valid_params, as: :turbo_stream
@@ -114,6 +129,8 @@ RSpec.describe "Products", type: :request do
 
   describe "GET /products/:id" do
     it "renders product details page" do
+      grant_permission!(admin, :products, :view)
+
       get product_path(active_product)
 
       expect(controller_assigns(:product)).to eq(active_product)
@@ -122,6 +139,8 @@ RSpec.describe "Products", type: :request do
   end
 
   describe "DELETE /products/:id" do
+    before { grant_permission!(admin, :products, :delete) }
+
     context "when deletion is successful" do
       it "deletes the product and redirects" do
         delete product_path(active_product), as: :turbo_stream

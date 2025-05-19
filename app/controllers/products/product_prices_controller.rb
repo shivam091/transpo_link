@@ -6,6 +6,10 @@ class Products::ProductPricesController < ApplicationController
   before_action :set_product
   before_action :set_product_price, except: [:new, :create]
 
+  requires_authorization_for [:new, :create], :product_prices, :create
+  requires_authorization_for [:edit, :update], :product_prices, :update
+  requires_authorization_for :destroy, :product_prices, :delete
+
   # GET /products/:product_id/product-prices/new
   def new
     @product_price = @product.product_prices.build
