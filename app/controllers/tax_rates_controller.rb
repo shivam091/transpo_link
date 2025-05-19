@@ -102,17 +102,17 @@ class TaxRatesController < ApplicationController
   def set_tax_rates
     case params[:status]
     when "active"
-      require_authorization :users, :view_active
-      @tax_rates = TaxRate.active
+      require_authorization :tax_rates, :view_active
+      @tax_rates ||= TaxRate.active
     when "future"
-      require_authorization :users, :view_future
-      @tax_rates = TaxRate.future
+      require_authorization :tax_rates, :view_future
+      @tax_rates ||= TaxRate.future
     when "expired"
-      require_authorization :users, :view_expired
-      @tax_rates = TaxRate.expired
+      require_authorization :tax_rates, :view_expired
+      @tax_rates ||= TaxRate.expired
     else
-      require_authorization :users, :view_all
-      @tax_rates = TaxRate.all
+      require_authorization :tax_rates, :view_all
+      @tax_rates ||= TaxRate.all
     end
 
     @tax_rates

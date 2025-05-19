@@ -26,6 +26,8 @@ RSpec.describe "LegalIdentifiers", type: :request do
     let!(:rejected_legal_identifier) { create(:legal_identifier, :rejected, user: buyer, country: "AT", tax_identifier_type: "vat", tax_identifier: "ATU10223006") }
 
     it "renders list of all legal identifiers with pagination" do
+      grant_permission!(buyer, :legal_identifiers, :view_all)
+
       get legal_identifiers_path
 
       expect(controller_assigns(:legal_identifiers)).to include(unapproved_legal_identifier)
@@ -36,6 +38,8 @@ RSpec.describe "LegalIdentifiers", type: :request do
     end
 
     it "renders list of unapproved legal identifiers with pagination" do
+      grant_permission!(buyer, :legal_identifiers, :view_unapproved)
+
       get unapproved_legal_identifiers_path
 
       expect(controller_assigns(:legal_identifiers)).to include(unapproved_legal_identifier)
@@ -46,6 +50,8 @@ RSpec.describe "LegalIdentifiers", type: :request do
     end
 
     it "renders list of approved legal identifiers with pagination" do
+      grant_permission!(buyer, :legal_identifiers, :view_approved)
+
       get approved_legal_identifiers_path
 
       expect(controller_assigns(:legal_identifiers)).to exclude(unapproved_legal_identifier)
@@ -56,6 +62,8 @@ RSpec.describe "LegalIdentifiers", type: :request do
     end
 
     it "renders list of rejected legal identifiers with pagination" do
+      grant_permission!(buyer, :legal_identifiers, :view_rejected)
+
       get rejected_legal_identifiers_path
 
       expect(controller_assigns(:legal_identifiers)).to exclude(unapproved_legal_identifier)
@@ -67,12 +75,17 @@ RSpec.describe "LegalIdentifiers", type: :request do
   end
 
   describe "GET /legal-identifiers/new" do
-    before { get new_legal_identifier_path }
+    before do
+      grant_permission!(buyer, :legal_identifiers, :create)
+      get new_legal_identifier_path
+    end
 
     include_examples "initializes a new instance", :legal_identifier, LegalIdentifier
   end
 
   describe "POST /legal-identifiers" do
+    before { grant_permission!(buyer, :legal_identifiers, :create) }
+
     context "when provided parameters are valid" do
       it "creates the legal identifier and redirects" do
         post legal_identifiers_path, params: valid_params, as: :turbo_stream
@@ -97,6 +110,8 @@ RSpec.describe "LegalIdentifiers", type: :request do
 
   describe "GET /legal-identifiers/:id/edit" do
     it "renders legal identifier edit page" do
+      grant_permission!(buyer, :legal_identifiers, :update)
+
       get edit_legal_identifier_path(unapproved_legal_identifier)
 
       expect(controller_assigns(:legal_identifier)).to eq(unapproved_legal_identifier)
@@ -105,6 +120,8 @@ RSpec.describe "LegalIdentifiers", type: :request do
   end
 
   describe "PUT|PATCH /legal-identifiers/:id" do
+    before { grant_permission!(buyer, :legal_identifiers, :update) }
+
     context "when provided parameters are valid" do
       it "updates the legal identifier and redirects" do
         put legal_identifier_path(unapproved_legal_identifier), params: valid_params, as: :turbo_stream
@@ -128,6 +145,8 @@ RSpec.describe "LegalIdentifiers", type: :request do
   end
 
   describe "DELETE /legal-identifiers/:id" do
+    before { grant_permission!(buyer, :legal_identifiers, :delete) }
+
     context "when deletion is successful" do
       it "deletes the legal identifier and redirects" do
         delete legal_identifier_path(unapproved_legal_identifier), as: :turbo_stream
@@ -152,6 +171,8 @@ RSpec.describe "LegalIdentifiers", type: :request do
   end
 
   describe "PATCH /legal-identifiers/:id/approve" do
+    before { grant_permission!(buyer, :legal_identifiers, :approve) }
+
     context "when approval is successful" do
       it "approves the legal identifier and redirects" do
         patch approve_legal_identifier_path(unapproved_legal_identifier), as: :turbo_stream
@@ -176,6 +197,8 @@ RSpec.describe "LegalIdentifiers", type: :request do
   end
 
   describe "PATCH /legal-identifiers/:id/reject" do
+    before { grant_permission!(buyer, :legal_identifiers, :reject) }
+
     context "when rejection is successful" do
       it "rejects the legal identifier and redirects" do
         patch reject_legal_identifier_path(unapproved_legal_identifier), as: :turbo_stream

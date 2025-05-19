@@ -3,23 +3,24 @@
 # -*- warn_indent: true -*-
 
 class LegalIdentifiersController < ApplicationController
-  before_action :set_breadcrumbs, :legal_identifiers
+  before_action :set_breadcrumbs
+  before_action :set_legal_identifiers, only: :index
   before_action :set_legal_identifier, except: [:index, :new, :create]
+
+  requires_authorization_for [:new, :create], :legal_identifiers, :create
+  requires_authorization_for [:edit, :update], :legal_identifiers, :update
+  requires_authorization_for :destroy, :legal_identifiers, :delete
+  requires_authorization_for :approve, :legal_identifiers, :approve
+  requires_authorization_for :reject, :legal_identifiers, :reject
 
   # GET /legal-identifiers
   def index
-    @legal_identifiers = case params[:status]
-                         when "unapproved" then @legal_identifiers.unapproved
-                         when "approved"   then @legal_identifiers.approved
-                         when "rejected"   then @legal_identifiers.rejected
-                         else                   @legal_identifiers
-                         end
     @legal_identifiers, @pagination_metadata = @legal_identifiers.paginate(page: params[:page])
   end
 
   # GET /legal-identifiers/new
   def new
-    @legal_identifier = @legal_identifiers.build
+    @legal_identifier = LegalIdentifier.new
   end
 
   # POST /legal-identifiers
@@ -121,12 +122,28 @@ class LegalIdentifiersController < ApplicationController
     )
   end
 
-  def legal_identifiers
-    @legal_identifiers ||= LegalIdentifier.accessible(current_user)
+  def set_legal_identifier
+    @legal_identifier ||= LegalIdentifier.find(params[:id])
   end
 
-  def set_legal_identifier
-    @legal_identifier ||= @legal_identifiers.find(params[:id])
+  def set_legal_identifiers
+    @legal_identifiers ||= LegalIdentifier.accessible(current_user)
+
+    case params[:status]
+    when "unapproved"
+      require_authorization :legal_identifiers, :view_unapproved
+      @legal_identifiers = @legal_identifiers.unapproved
+    when "approved"
+      require_authorization :legal_identifiers, :view_approved
+      @legal_identifiers = @legal_identifiers.approved
+    when "rejected"
+      require_authorization :legal_identifiers, :view_rejected
+      @legal_identifiers = @legal_identifiers.rejected
+    else
+      require_authorization :legal_identifiers, :view_all
+    end
+
+    @legal_identifiers
   end
 
   def set_breadcrumbs
