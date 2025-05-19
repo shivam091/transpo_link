@@ -1,8 +1,9 @@
 .nav-scroller.bg-body-tertiary.shadow-sm.border-bottom
   %nav.nav{aria: {label: t(".secondary_navigation")}}
-    = link_to warehouses_path, class: class_names("nav-link", "active": current_controller?(:warehouses)) do
-      = sprite_icon("warehouse")
-      = t(".warehouses")
+    - if authorized_for?(:warehouses, :view_all)
+      = link_to warehouses_path, class: class_names("nav-link", "active": current_controller?(:warehouses)) do
+        = sprite_icon("warehouse")
+        = t(".warehouses")
     = link_to products_path, class: class_names("nav-link", "active": current_controller?(:products)) do
       = sprite_icon("cube")
       = t(".products")
