@@ -5,6 +5,7 @@
 class TaxRatesController < ApplicationController
   before_action :set_breadcrumbs
   before_action :set_tax_rate, only: [:edit, :update, :destroy]
+  before_action :set_tax_rates, only: :index
 
   requires_authorization_for [:new, :create], :tax_rates, :create
   requires_authorization_for [:edit, :update], :tax_rates, :update
@@ -12,12 +13,6 @@ class TaxRatesController < ApplicationController
 
   # GET /tax-rates
   def index
-    @tax_rates = case params[:status]
-                 when "active"  then TaxRate.active
-                 when "future"  then TaxRate.future
-                 when "expired" then TaxRate.expired
-                 else                TaxRate.all
-                 end
     @tax_rates, @pagination_metadata = @tax_rates.paginate(page: params[:page])
   end
 

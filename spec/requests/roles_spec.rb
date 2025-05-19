@@ -16,6 +16,8 @@ RSpec.describe "Roles", type: :request do
 
   describe "GET /roles" do
     it "renders list of all roles" do
+      grant_permission!(admin, :roles, :view_all)
+
       get roles_path
 
       expect(controller_assigns(:roles)).to include(role)
@@ -25,6 +27,8 @@ RSpec.describe "Roles", type: :request do
 
   describe "GET /roles/:id/edit" do
     it "renders role edit page" do
+      grant_permission!(admin, :roles, :update)
+
       get edit_role_path(role)
 
       expect(controller_assigns(:role)).to eq(role)
@@ -33,6 +37,8 @@ RSpec.describe "Roles", type: :request do
   end
 
   describe "PUT|PATCH /roles/:id" do
+    before { grant_permission!(admin, :roles, :update) }
+
     context "when provided parameters are valid" do
       it "updates the role and redirects" do
         put role_path(role), params: valid_params, as: :turbo_stream
@@ -57,6 +63,8 @@ RSpec.describe "Roles", type: :request do
 
   describe "GET /roles/:id" do
     it "renders role details page" do
+      grant_permission!(admin, :roles, :view)
+
       get role_path(role)
 
       expect(controller_assigns(:role)).to eq(role)
