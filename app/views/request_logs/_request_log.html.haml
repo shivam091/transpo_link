@@ -3,7 +3,8 @@
   .table-cell.cell-narrow
     = @pagination_metadata.offset + index
   .table-cell
-    = link_to request_log.uuid, request_log_path(request_log)
+    = conditional_link_to authorized_for?(:request_logs, :view), request_log_path(request_log) do
+      = request_log.uuid
   .table-cell
     = link_to request_log.uri, request_log.uri, target: :_blank
   .table-cell
@@ -16,12 +17,13 @@
     = time_ago_with_tooltip(request_log.created_at)
   .table-cell
     - if accessed_by.present?
-      = link_to_user(accessed_by, target: :_blank)
+      =  authorized_for?(:users, :view) ? link_to_user(accessed_by, target: :_blank) : accessed_by.full_name
   .table-cell.cell-narrow
     = link_to "javascript:void(0)", class: "text-reset", data: {bs_toggle: "dropdown"}, aria: {expanded: false} do
       = sprite_icon("ellipsis-vertical")
     %ul.dropdown-menu
-      %li
-        = link_to request_log_path(request_log), class: "dropdown-item" do
-          = sprite_icon("arrow-right")
-          = button_text(:view_details)
+      - if authorized_for?(:request_logs, :view)
+        %li
+          = link_to request_log_path(request_log), class: "dropdown-item" do
+            = sprite_icon("arrow-right")
+            = button_text(:view_details)

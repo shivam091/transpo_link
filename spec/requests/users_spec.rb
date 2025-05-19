@@ -15,6 +15,8 @@ RSpec.describe "Users", type: :request do
 
   describe "GET /users" do
     it "renders list of all users with pagination" do
+      grant_permission!(admin, "users", "view_all")
+
       get users_path
 
       expect(controller_assigns(:users)).to include(active_user)
@@ -25,6 +27,8 @@ RSpec.describe "Users", type: :request do
     end
 
     it "renders list of active users with pagination" do
+      grant_permission!(admin, "users", "view_active")
+
       get active_users_path
 
       expect(controller_assigns(:users)).to include(active_user)
@@ -33,6 +37,8 @@ RSpec.describe "Users", type: :request do
     end
 
     it "renders list of inactive users with pagination" do
+      grant_permission!(admin, "users", "view_inactive")
+
       get inactive_users_path
 
       expect(controller_assigns(:users)).to include(inactive_user)
@@ -41,6 +47,8 @@ RSpec.describe "Users", type: :request do
     end
 
     it "renders list of suspended users with pagination" do
+      grant_permission!(admin, "users", "view_suspended")
+
       get suspended_users_path
 
       expect(controller_assigns(:users)).to include(suspended_user)
@@ -51,6 +59,8 @@ RSpec.describe "Users", type: :request do
 
   describe "GET /users/:id" do
     it "renders user details page" do
+      grant_permission!(admin, "users", "view")
+
       get user_path(active_user)
 
       expect(controller_assigns(:user)).to eq(active_user)

@@ -11,6 +11,8 @@ RSpec.describe "Dashboards", type: :request do
 
   describe "GET /" do
     it "renders dashboard page" do
+      grant_permission!(admin, "dashboards", "view")
+
       get root_path
 
       expect(response).to have_http_status(:ok)
