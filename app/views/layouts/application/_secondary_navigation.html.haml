@@ -33,9 +33,10 @@
     = link_to feedbacks_path, class: class_names("nav-link", "active": current_controller?(:feedbacks)) do
       = sprite_icon("speech-bubble")
       = t(".feedbacks")
-    = link_to tax_rates_path, class: class_names("nav-link", "active": current_controller?(:tax_rates)) do
-      = sprite_icon("percentage")
-      = t(".tax_rates")
+    - if authorized_for?(:tax_rates, :view_all)
+      = link_to tax_rates_path, class: class_names("nav-link", "active": current_controller?(:tax_rates)) do
+        = sprite_icon("percentage")
+        = t(".tax_rates")
     = link_to roles_path, class: class_names("nav-link", "active": current_controller?(:roles)) do
       = sprite_icon("security")
       = t(".roles")
