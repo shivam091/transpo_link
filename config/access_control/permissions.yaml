@@ -114,3 +114,13 @@ permissions:
     - view_rejected
     - approve
     - reject
+  product_categories:
+    - create
+    - update
+    - delete
+    - view
+    - view_all
+    - view_active
+    - view_inactive
+  units_n_conversions:
+    - view

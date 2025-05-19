@@ -22,6 +22,8 @@
         legal_identifiers: "Legal identifiers",
         inventories: "Inventories",
         inventory_batches: "Inventory batches",
+        product_categories: "Product categories",
+        units_n_conversions: "Units & conversions",
       },
       actions: {
         create: "Create",
