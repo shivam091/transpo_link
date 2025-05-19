@@ -14,6 +14,7 @@
         dashboards: "Dashboard",
         request_logs: "Request logs",
         products: "Products",
+        product_prices: "Product prices",
         tax_rates: "Tax rates",
         warehouses: "Warehouses",
         feedbacks: "Feedbacks",

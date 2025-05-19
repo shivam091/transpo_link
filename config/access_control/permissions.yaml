@@ -44,6 +44,10 @@ permissions:
     - view_inactive
     - activate
     - deactivate
+  product_prices:
+    - create
+    - update
+    - delete
   inventories:
     - create
     - update
