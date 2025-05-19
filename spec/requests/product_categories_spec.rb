@@ -15,6 +15,8 @@ RSpec.describe "ProductCategories", type: :request do
 
   describe "GET /product-categories" do
     it "renders list of all product categories with pagination" do
+      grant_permission!(admin, :product_categories, :view_all)
+
       get product_categories_path
 
       expect(controller_assigns(:product_categories)).to include(active_product_category)
@@ -24,6 +26,8 @@ RSpec.describe "ProductCategories", type: :request do
     end
 
     it "renders list of active product categories with pagination" do
+      grant_permission!(admin, :product_categories, :view_active)
+
       get active_product_categories_path
 
       expect(controller_assigns(:product_categories)).to include(active_product_category)
@@ -33,6 +37,8 @@ RSpec.describe "ProductCategories", type: :request do
     end
 
     it "renders list of inactive product categories with pagination" do
+      grant_permission!(admin, :product_categories, :view_inactive)
+
       get inactive_product_categories_path
 
       expect(controller_assigns(:product_categories)).to include(inactive_product_category)
@@ -43,12 +49,17 @@ RSpec.describe "ProductCategories", type: :request do
   end
 
   describe "GET /product-categories/new" do
-    before { get new_product_category_path }
+    before do
+      grant_permission!(admin, :product_categories, :create)
+      get new_product_category_path
+    end
 
     include_examples "initializes a new instance", :product_category, ProductCategory
   end
 
   describe "POST /product-categories" do
+    before { grant_permission!(admin, :product_categories, :create) }
+
     context "when provided parameters are valid" do
       it "creates the product category and redirects" do
         post product_categories_path, params: valid_params, as: :turbo_stream
@@ -73,6 +84,8 @@ RSpec.describe "ProductCategories", type: :request do
 
   describe "GET /product-categories/:id/edit" do
     it "renders product category edit page" do
+      grant_permission!(admin, :product_categories, :update)
+
       get edit_product_category_path(active_product_category)
 
       expect(controller_assigns(:product_category)).to eq(active_product_category)
@@ -81,6 +94,8 @@ RSpec.describe "ProductCategories", type: :request do
   end
 
   describe "PUT|PATCH /product-categories/:id" do
+    before { grant_permission!(admin, :product_categories, :update) }
+
     context "when provided parameters are valid" do
       it "updates the product category and redirects" do
         put product_category_path(active_product_category), params: valid_params, as: :turbo_stream
@@ -104,6 +119,8 @@ RSpec.describe "ProductCategories", type: :request do
   end
 
   describe "DELETE /product-categories/:id" do
+    before { grant_permission!(admin, :product_categories, :delete) }
+
     context "when deletion is successful" do
       it "deletes the product category and redirects" do
         delete product_category_path(active_product_category), as: :turbo_stream
