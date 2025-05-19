@@ -1,0 +1,5 @@
+%li.list-inline-item
+  %span.permission-indicator
+    = role_permission.is_allowed? ? sprite_icon("check") : sprite_icon("times")
+  %span
+    = translate_action(role_permission.permission.action.label_key)

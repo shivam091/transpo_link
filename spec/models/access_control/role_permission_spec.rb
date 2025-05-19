@@ -27,7 +27,48 @@ RSpec.describe AccessControl::RolePermission, type: :model do
   end
 
   describe "associations" do
-    it { is_expected.to belong_to(:role).inverse_of(:role_permissions) }
+    it { is_expected.to belong_to(:role).inverse_of(:role_permissions).touch }
     it { is_expected.to belong_to(:permission).class_name("AccessControl::Permission").inverse_of(:role_permissions) }
+  end
+
+  describe "delegates" do
+    it { is_expected.to delegate_method(:module).to(:permission) }
+    it { is_expected.to delegate_method(:action).to(:permission) }
+  end
+
+  describe "class methods & scopes" do
+    let!(:module_a) { create(:module, label_key: "module_a", position: 2) }
+    let!(:module_b) { create(:module, label_key: "module_b", position: 1) }
+
+    let!(:action_a) { create(:action, label_key: "action_a") }
+    let!(:action_b) { create(:action, label_key: "action_b") }
+
+    let!(:permission_aa) { create(:permission, module: module_a, action: action_a, position: 1) }
+    let!(:permission_ab) { create(:permission, module: module_a, action: action_b, position: 2) }
+    let!(:permission_ba) { create(:permission, module: module_b, action: action_a, position: 1) }
+
+    let!(:role) { create(:manager_role) }
+
+    let!(:rp_aa) { create(:role_permission, permission: permission_aa, role:) }
+    let!(:rp_ab) { create(:role_permission, permission: permission_ab, role:) }
+    let!(:rp_ba) { create(:role_permission, permission: permission_ba, role:) }
+
+    describe ".ordered_by_positions" do
+      let(:ordered) { described_class.ordered_by_positions }
+
+      it "returns role permissions ordered by module position and then permission position" do
+        expect(ordered).to eq([rp_ba, rp_aa, rp_ab])
+      end
+    end
+
+    describe ".grouped_by_module" do
+      let(:grouped) { described_class.grouped_by_module }
+
+      it "groups role permissions by their associated module" do
+        expect(grouped.keys).to match_array([module_a, module_b])
+        expect(grouped[module_a]).to contain_exactly(rp_aa, rp_ab)
+        expect(grouped[module_b]).to contain_exactly(rp_ba)
+      end
+    end
   end
 end

@@ -22,6 +22,10 @@ RSpec.describe "ErrorRescue", type: :request do
       raise StandardError, "Unexpected"
     end
 
+    def trigger_forbidden
+      raise AccessDeniedError.new(:orders, :create)
+    end
+
     def trigger_application_error
       raise ApplicationError
     end
@@ -35,6 +39,7 @@ RSpec.describe "ErrorRescue", type: :request do
     Rails.application.routes.draw do
       get "/test_not_found", to: "anonymous#trigger_not_found"
       get "/test_routing_error", to: "anonymous#trigger_routing_error"
+      get "/test_forbidden", to: "anonymous#trigger_forbidden"
       get "/test_internal_error", to: "anonymous#trigger_internal_error"
       get "/test_application_error", to: "anonymous#trigger_application_error"
       get "/test_invalid_token", to: "anonymous#trigger_invalid_token"
@@ -64,6 +69,15 @@ RSpec.describe "ErrorRescue", type: :request do
 
       expect(response).to have_http_status(:not_found)
       expect(response.body).to include("Oops! Page not found")
+    end
+  end
+
+  context "when an ActionController::RoutingError is raised" do
+    it "renders the 403 not found template" do
+      get "/test_forbidden"
+
+      expect(response).to have_http_status(:forbidden)
+      expect(response.body).to include("Forbidden")
     end
   end
 
