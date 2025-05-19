@@ -11,8 +11,10 @@ module AuthorizationHelpers
 
     if always_allow
       allow(ability).to receive(:authorize!) { true }
+      allow(ability).to receive(:can?) { true }
     else
       allow(ability).to receive(:authorize!).and_raise(AccessDeniedError)
+      allow(ability).to receive(:can?) { false }
     end
 
     ability
