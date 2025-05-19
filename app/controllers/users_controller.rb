@@ -27,20 +27,22 @@ class UsersController < ApplicationController
 
   def set_users
     @users = User.includes(:role, :user_detail)
-    @users = case params[:status]
-     when "active"
-       require_authorization :users, :view_active
-       @users.active
-     when "inactive"
-       require_authorization :users, :view_inactive
-       @users.inactive
-     when "suspended"
-       require_authorization :users, :view_suspended
-       @users.suspended
-     else
-       require_authorization :users, :view_all
-       @users
-     end
+
+    case params[:status]
+    when "active"
+      require_authorization :users, :view_active
+      @users = @users.active
+    when "inactive"
+      require_authorization :users, :view_inactive
+      @users = @users.inactive
+    when "suspended"
+      require_authorization :users, :view_suspended
+      @users = @users.suspended
+    else
+      require_authorization :users, :view_all
+    end
+
+    @users
   end
 
   def set_breadcrumbs
