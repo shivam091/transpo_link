@@ -13,6 +13,7 @@ module ErrorRescue
     rescue_from ActiveRecord::RecordNotFound, with: :render_not_found
     rescue_from ActionController::RoutingError, with: :render_not_found
     rescue_from ApplicationError, with: :handle_application_error
+    rescue_from AccessDeniedError, with: :render_forbidden
   end
 
   def render_not_found
@@ -36,7 +37,11 @@ module ErrorRescue
 
   def render_internal_server_error(exception)
     Rails.logger.error("[500 Error Rescue] #{exception.message}")
-    
+
     render "errors/internal_server_error", status: :internal_server_error, layout: "error"
+  end
+
+  def render_forbidden
+    render "errors/forbidden", status: :forbidden, layout: "error"
   end
 end

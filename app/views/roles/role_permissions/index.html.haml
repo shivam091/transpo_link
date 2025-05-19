@@ -1,0 +1,7 @@
+- @grouped_permissions.each do |mdule, role_permissions|
+  .col-12
+    %h6.mb-2
+      = translate_module(mdule.label_key)
+    %ul.list-inline
+      - role_permissions.each do |role_permission|
+        = safe_render.partial("roles/role_permissions/role_permission", role_permission:)
