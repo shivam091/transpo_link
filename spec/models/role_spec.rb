@@ -30,4 +30,8 @@ RSpec.describe Role, type: :model do
     it { is_expected.to have_many(:role_permissions).class_name("AccessControl::RolePermission").inverse_of(:role).dependent(:restrict_with_exception) }
     it { is_expected.to have_many(:permissions).through(:role_permissions).class_name("AccessControl::Permission") }
   end
+
+  describe "nested attributes" do
+    it { is_expected.to accept_nested_attributes_for(:role_permissions).allow_destroy(false) }
+  end
 end

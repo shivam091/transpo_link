@@ -5,6 +5,7 @@
 class RolesController < ApplicationController
   before_action :set_breadcrumbs
   before_action :set_role, except: :index
+  before_action :set_grouped_permissions, only: [:edit, :show, :update]
 
   # GET /roles
   def index
@@ -44,11 +45,22 @@ class RolesController < ApplicationController
   private
 
   def role_params
-    params.require(:role).permit(:name, :is_active)
+    params.require(:role).permit(
+      :name,
+      :is_active,
+      role_permissions_attributes: [
+        :id,
+        :is_allowed
+      ]
+    )
   end
 
   def set_role
     @role ||= Role.find(params[:id])
+  end
+
+  def set_grouped_permissions
+    @grouped_permissions ||= @role.role_permissions.ordered_by_positions.grouped_by_module
   end
 
   def set_breadcrumbs

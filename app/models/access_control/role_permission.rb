@@ -10,7 +10,24 @@ class AccessControl::RolePermission < ApplicationRecord
   validates :permission_id, presence: true, reduce: true
 
   with_options inverse_of: :role_permissions do |a|
-    a.belongs_to :role
+    a.belongs_to :role, touch: true
     a.belongs_to :permission, class_name: "AccessControl::Permission"
+  end
+
+  scope :ordered_by_positions, -> do
+    modules = AccessControl::Module.arel_table
+    permissions = AccessControl::Permission.arel_table
+
+    joins(permission: :module)
+      .includes(permission: [:module, :action])
+      .order(modules[:position].asc, permissions[:position].asc)
+  end
+
+  delegate :module, :action, to: :permission
+
+  class << self
+    def grouped_by_module
+      all.group_by { |role_permission| role_permission.permission.module }
+    end
   end
 end

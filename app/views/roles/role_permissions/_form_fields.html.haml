@@ -1,0 +1,18 @@
+- @grouped_permissions.each do |mdule, role_permissions|
+  - module_label = translate_module(mdule.label_key)
+  .col-12{data: {controller: "checkbox-selection"}}
+    .form-check.mb-2
+      = check_box_tag "module_#{mdule.label_key}", nil, false, class: "form-check-input", data: {checkbox_selection_target: "selectAll"},
+        aria: {controls: "permissions_#{mdule.label_key}", label: t(".module_aria_label", module_label:)}
+      = label_tag "module_#{mdule.label_key}", module_label, class: "form-check-label"
+    .d-flex.flex-wrap.gap-2.permissions
+      - role_permissions.each do |role_permission|
+        - action_label = translate_action(role_permission.permission.action.label_key)
+        - permission_id = "permission_#{mdule.label_key}_#{role_permission.permission.action.label_key}"
+        = form.fields_for :role_permissions, role_permission do |role_permission_fields|
+          .form-check.form-check-inline
+            = role_permission_fields.check_box :is_allowed, id: permission_id, data: {checkbox_selection_target: "itemCheckbox"},
+              aria: {labelledby: "label_#{permission_id}", describedby: "desc_#{permission_id}"}
+            = role_permission_fields.label :is_allowed, action_label, class: "form-check-label", for: permission_id, id: "label_#{permission_id}"
+            %small.visually-hidden{id: "desc_#{permission_id}"}
+              = t(".action_aria_label", module_label:, action_label:)
