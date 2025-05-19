@@ -74,11 +74,11 @@ namespace :transpo_link do
     task add_unit_conversions: :environment do
       unit_records = {}
 
+      puts "↳ Adding units and conversions..."
+
       UNITS_AND_CONVERSIONS.each do |category, units|
         units.each_key do |symbol|
-          unit = Unit.safe_find_or_create_by(symbol: symbol.to_s, category: category.to_s) do |u|
-            puts "↳ Unit --> [#{symbol}] added to category [#{category}]."
-          end
+          unit = Unit.safe_find_or_create_by(symbol: symbol.to_s, category: category.to_s)
           unit_records[symbol] = unit
         end
 
@@ -97,10 +97,11 @@ namespace :transpo_link do
               target_unit: target_unit,
               multiplier: multiplier
             )
-            puts "↳ UnitConversion --> [#{from_symbol} → #{to_symbol}] = #{multiplier}"
           end
         end
       end
+
+      puts "↳ Added units and conversions."
     end
   end
 end

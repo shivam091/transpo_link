@@ -192,3 +192,19 @@ dt {
     fill: rgb(var(--bs-warning-rgb)) !important;
   }
 }
+.permissions {
+  margin-left: 1.5rem;
+}
+.permission-indicator {
+  .icon-check {
+    fill: rgb(var(--bs-success-rgb)) !important;
+  }
+  .icon-times {
+    fill: rgb(var(--bs-danger-rgb)) !important;
+  }
+}
+.list-inline-item {
+  display: inline-flex !important;
+  align-items: center;
+  gap: 0.25rem;
+}

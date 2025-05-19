@@ -17,15 +17,4 @@
           = sprite_icon("pencil")
           = button_text(:edit)
       .widget-body
-        .widget-row
-          .widget-row-content
-            .widget-row-title
-              = Role.human_attribute_name(:name)
-            .widget-row-body
-              = @role.name
-        .widget-row
-          .widget-row-content
-            .widget-row-title
-              = Role.human_attribute_name(:is_active)
-            .widget-row-body
-              = humanize_boolean(@role.is_active)
+        = safe_render.template("roles/role_permissions/index")

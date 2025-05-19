@@ -1,0 +1,75 @@
+permissions:
+  users:
+    - create
+    - update
+    - delete
+    - view
+    - activate
+    - deactivate
+    - grant_access
+    - revoke_access
+  roles:
+    - update
+    - view
+    - toggle_permission
+    - activate
+    - deactivate
+  request_logs:
+    - view
+  dashboards:
+    - view
+  warehouses:
+    - create
+    - update
+    - delete
+    - view
+    - activate
+    - deactivate
+  products:
+    - create
+    - update
+    - delete
+    - view
+    - activate
+    - deactivate
+  purchase_orders:
+    - create
+    - update
+    - delete
+    - view
+    - cancel
+    - submit
+    - approve
+    - reject
+    - close
+    - hold
+  purchase_order_items:
+    - create
+    - update
+    - delete
+    - view
+    - cancel
+    - deliver
+  tax_rates:
+    - create
+    - update
+    - delete
+    - view
+  feedbacks:
+    - create
+    - update
+    - view
+    - mark_as_read
+  profiles:
+    - update
+    - view
+  preferences:
+    - update
+    - view
+  legal_identifiers:
+    - create
+    - update
+    - delete
+    - view
+    - approve
+    - reject

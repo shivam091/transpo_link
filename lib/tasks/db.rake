@@ -10,6 +10,7 @@ namespace :transpo_link do
     task seed: :environment do
       begin
         Rake::Task["transpo_link:db:add_unit_conversions"].invoke
+        Rake::Task["transpo_link:db:add_permissions"].invoke
 
         puts "↳ Database seeding completed"
       rescue Exception => e
