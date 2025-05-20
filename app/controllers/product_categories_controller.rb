@@ -90,17 +90,20 @@ class ProductCategoriesController < ApplicationController
   end
 
   def set_product_categories
-    @product_categories = ProductCategory.includes(:parent_category)
+    scope = ProductCategory.includes(:parent_category)
 
     case params[:status]
+    when nil, ""
+      require_authorization :product_categories, :view_all
+      @product_categories = scope
     when "active"
       require_authorization :product_categories, :view_active
-      @product_categories = @product_categories.active
+      @product_categories = scope.active
     when "inactive"
       require_authorization :product_categories, :view_inactive
-      @product_categories = @product_categories.inactive
+      @product_categories = scope.inactive
     else
-      require_authorization :product_categories, :view_all
+      raise ActionController::RoutingError, "Invalid status: #{params[:status]}"
     end
 
     @product_categories

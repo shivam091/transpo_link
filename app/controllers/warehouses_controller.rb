@@ -118,16 +118,20 @@ class WarehousesController < ApplicationController
   end
 
   def set_warehouses
+    scope = Warehouse.all
+
     case params[:status]
+    when nil, ""
+      require_authorization :warehouses, :view_all
+      @warehouses = scope
     when "active"
       require_authorization :warehouses, :view_active
-      @warehouses = Warehouse.active
+      @warehouses = scope.active
     when "inactive"
       require_authorization :warehouses, :view_inactive
-      @warehouses = Warehouse.inactive
+      @warehouses = scope.inactive
     else
-      require_authorization :warehouses, :view_all
-      @warehouses = Warehouse.all
+      raise ActionController::RoutingError, "Invalid status: #{params[:status]}"
     end
 
     @warehouses

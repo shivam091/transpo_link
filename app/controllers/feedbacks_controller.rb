@@ -78,17 +78,20 @@ class FeedbacksController < ApplicationController
   end
 
   def set_feedbacks
-    @feedbacks ||= Feedback.accessible(current_user)
+    scope = Feedback.accessible(current_user)
 
     case params[:status]
+    when nil, ""
+      require_authorization :feedbacks, :view_all
+      @feedbacks = scope
     when "read"
       require_authorization :feedbacks, :view_read
-      @feedbacks = @feedbacks.read
+      @feedbacks = scope.read
     when "unread"
       require_authorization :feedbacks, :view_unread
-      @feedbacks = @feedbacks.unread
+      @feedbacks = scope.unread
     else
-      require_authorization :feedbacks, :view_all
+      raise ActionController::RoutingError, "Invalid status: #{params[:status]}"
     end
 
     @feedbacks

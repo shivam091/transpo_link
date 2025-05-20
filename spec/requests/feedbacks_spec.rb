@@ -49,6 +49,12 @@ RSpec.describe "Feedbacks", type: :request do
       expect(controller_assigns(:pagination_metadata)).to be_present
       expect(response).to have_http_status(:ok)
     end
+
+    it "returns 404 for invalid status" do
+      get feedbacks_path, params: {status: "invalid"}
+
+      expect(response).to have_http_status(:not_found)
+    end
   end
 
   describe "GET /feedbacks/new" do

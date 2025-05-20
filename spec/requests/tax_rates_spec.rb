@@ -61,6 +61,12 @@ RSpec.describe "TaxRates", type: :request do
         expect(response).to have_http_status(:ok)
       end
     end
+
+    it "returns 404 for invalid status" do
+      get tax_rates_path, params: {status: "invalid"}
+
+      expect(response).to have_http_status(:not_found)
+    end
   end
 
   describe "GET /tax-rates/new" do

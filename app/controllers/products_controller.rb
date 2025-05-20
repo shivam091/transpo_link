@@ -122,17 +122,20 @@ class ProductsController < ApplicationController
   end
 
   def set_products
-    @products = Product.includes(inventories: :stock)
+    scope = Product.includes(inventories: :stock)
 
     case params[:status]
+    when nil, ""
+      require_authorization :products, :view_all
+      @products = scope
     when "active"
       require_authorization :products, :view_active
-      @products = @products.active
+      @products = scope.active
     when "inactive"
       require_authorization :products, :view_inactive
-      @products = @products.inactive
+      @products = scope.inactive
     else
-      require_authorization :products, :view_all
+      raise ActionController::RoutingError, "Invalid status: #{params[:status]}"
     end
 
     @products

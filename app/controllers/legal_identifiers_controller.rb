@@ -127,20 +127,23 @@ class LegalIdentifiersController < ApplicationController
   end
 
   def set_legal_identifiers
-    @legal_identifiers ||= LegalIdentifier.accessible(current_user)
+    scope = LegalIdentifier.accessible(current_user)
 
     case params[:status]
+    when nil, ""
+      require_authorization :legal_identifiers, :view_all
+      @legal_identifiers = scope
     when "unapproved"
       require_authorization :legal_identifiers, :view_unapproved
-      @legal_identifiers = @legal_identifiers.unapproved
+      @legal_identifiers = scope.unapproved
     when "approved"
       require_authorization :legal_identifiers, :view_approved
-      @legal_identifiers = @legal_identifiers.approved
+      @legal_identifiers = scope.approved
     when "rejected"
       require_authorization :legal_identifiers, :view_rejected
-      @legal_identifiers = @legal_identifiers.rejected
+      @legal_identifiers = scope.rejected
     else
-      require_authorization :legal_identifiers, :view_all
+      raise ActionController::RoutingError, "Invalid status: #{params[:status]}"
     end
 
     @legal_identifiers

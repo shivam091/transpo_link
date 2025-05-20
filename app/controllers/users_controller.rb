@@ -26,20 +26,23 @@ class UsersController < ApplicationController
   end
 
   def set_users
-    @users = User.includes(:role, :user_detail)
+    scope = User.includes(:role, :user_detail)
 
     case params[:status]
+    when nil, ""
+      require_authorization :users, :view_all
+      @users = scope
     when "active"
       require_authorization :users, :view_active
-      @users = @users.active
+      @users = scope.active
     when "inactive"
       require_authorization :users, :view_inactive
-      @users = @users.inactive
+      @users = scope.inactive
     when "suspended"
       require_authorization :users, :view_suspended
-      @users = @users.suspended
+      @users = scope.suspended
     else
-      require_authorization :users, :view_all
+      raise ActionController::RoutingError, "Invalid status: #{params[:status]}"
     end
 
     @users

@@ -100,19 +100,23 @@ class TaxRatesController < ApplicationController
   end
 
   def set_tax_rates
+    scope = TaxRate.all
+
     case params[:status]
+    when nil, ""
+      require_authorization :tax_rates, :view_all
+      @tax_rates = scope
     when "active"
       require_authorization :tax_rates, :view_active
-      @tax_rates ||= TaxRate.active
+      @tax_rates = scope.active
     when "future"
       require_authorization :tax_rates, :view_future
-      @tax_rates ||= TaxRate.future
+      @tax_rates = scope.future
     when "expired"
       require_authorization :tax_rates, :view_expired
-      @tax_rates ||= TaxRate.expired
+      @tax_rates = scope.expired
     else
-      require_authorization :tax_rates, :view_all
-      @tax_rates ||= TaxRate.all
+      raise ActionController::RoutingError, "Invalid status: #{params[:status]}"
     end
 
     @tax_rates

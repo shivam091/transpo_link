@@ -166,7 +166,7 @@ class PurchaseOrdersController < ApplicationController
   end
 
   def fetch_accessible_purchase_orders
-    @purchase_orders ||= PurchaseOrder.accessible(current_user)
+    @purchase_orders = PurchaseOrder.accessible(current_user)
   end
 
   def set_breadcrumbs
