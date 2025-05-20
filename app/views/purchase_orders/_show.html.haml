@@ -38,9 +38,9 @@
 .widget-row
   .widget-row-content
     .widget-row-title
-      = PurchaseOrder.human_attribute_name(:actual_delivery_date)
+      = PurchaseOrder.human_attribute_name(:delivered_at)
     .widget-row-body
-      = prettify_date(@purchase_order.actual_delivery_date) || "-"
+      = prettify_date(@purchase_order.delivered_at) || "-"
 .widget-row
   .widget-row-content
     .widget-row-title

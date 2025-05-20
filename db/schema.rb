@@ -454,7 +454,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_02_140259) do
     t.string "reference_document"
     t.timestamptz "order_date", default: -> { "CURRENT_TIMESTAMP" }
     t.date "expected_delivery_date"
-    t.date "actual_delivery_date"
+    t.date "delivered_at"
     t.enum "status", enum_type: "purchase_order_statuses"
     t.text "notes"
     t.timestamptz "created_at", null: false

@@ -86,7 +86,7 @@ class PurchaseOrder < ApplicationRecord
     event :fully_deliver do
       transitions from: [:approved, :partially_delivered], to: :fully_delivered
 
-      before :update_actual_delivery_date
+      before :update_delivered_at
       after :deliver_purchase_order_items!
     end
 
@@ -182,7 +182,7 @@ class PurchaseOrder < ApplicationRecord
     end
   end
 
-  def update_actual_delivery_date
-    update_column(:actual_delivery_date, Date.current)
+  def update_delivered_at
+    update_column(:delivered_at, Date.current)
   end
 end

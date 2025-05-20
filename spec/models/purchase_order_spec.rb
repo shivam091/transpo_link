@@ -340,15 +340,15 @@ RSpec.describe PurchaseOrder, type: :model do
       end
     end
 
-    describe "#update_actual_delivery_date" do
-      let(:purchase_order) { create(:purchase_order, :approved, actual_delivery_date: nil) }
+    describe "#update_delivered_at" do
+      let(:purchase_order) { create(:purchase_order, :approved, delivered_at: nil) }
 
-      it "sets actual_delivery_date to current time on delivery" do
+      it "sets delivered_at to current time on delivery" do
         freeze_time do
           expect {
             purchase_order.fully_deliver!
           }.to change {
-            purchase_order.reload.actual_delivery_date
+            purchase_order.reload.delivered_at
           }.from(nil).to(Date.current)
         end
       end

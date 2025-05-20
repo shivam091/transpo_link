@@ -295,7 +295,7 @@
           reference_document: "Reference document",
           order_date: "Ordered at",
           expected_delivery_date: "Expected delivery date",
-          actual_delivery_date: "Actual delivery date",
+          delivered_at: "Delivered at",
           status: "Status",
           notes: "Notes"
         },

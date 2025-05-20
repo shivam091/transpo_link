@@ -18,7 +18,7 @@ RSpec.describe PurchaseOrder, type: :model do
     it { is_expected.to have_db_column(:reference_document).of_type(:string) }
     it { is_expected.to have_db_column(:order_date).of_type(:timestamptz) }
     it { is_expected.to have_db_column(:expected_delivery_date).of_type(:date) }
-    it { is_expected.to have_db_column(:actual_delivery_date).of_type(:date) }
+    it { is_expected.to have_db_column(:delivered_at).of_type(:date) }
     it { is_expected.to have_db_column(:status).of_type(:enum) }
     it { is_expected.to have_db_column(:notes).of_type(:text) }
     it { is_expected.to have_db_column(:created_at).of_type(:timestamptz).with_options(null: false) }
