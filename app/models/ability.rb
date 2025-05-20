@@ -35,7 +35,12 @@ class Ability
     key = [module_key.to_s.downcase, ACTION_ALIASES[action_key.to_s.downcase] || action_key.to_s.downcase]
 
     @can_cache ||= {}
-    @can_cache[key] ||= @permissions[key] == true
+    if @permissions.key?(key)
+      @can_cache[key] ||= @permissions[key] == true
+    else
+      Rails.logger.warn("[Permissions] Undefined permission: #{key}") if Rails.env.development?
+      false
+    end
   end
 
   # Enforces permission by raising an error if the user is not allowed to perform the action.
