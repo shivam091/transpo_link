@@ -4,13 +4,13 @@
     .widget-row-title
       = Inventory.human_attribute_name(:product_id)
     .widget-row-body
-      = link_to_product(product, target: :_blank)
+      = authorized_for?(:products, :view) ? link_to_product(product, target: :_blank) : product.name
 .widget-row
   .widget-row-content
     .widget-row-title
       = Inventory.human_attribute_name(:warehouse_id)
     .widget-row-body
-      = link_to_warehouse(warehouse, target: :_blank)
+      = authorized_for?(:warehouses, :view) ? link_to_warehouse(warehouse, target: :_blank) : warehouse.name
 .widget-row
   .widget-row-content
     .widget-row-title

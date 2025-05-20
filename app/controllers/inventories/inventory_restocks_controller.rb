@@ -5,6 +5,8 @@
 class Inventories::InventoryRestocksController < ApplicationController
   before_action :set_inventory_batch
 
+  requires_authorization :inventories, :restock
+
   # GET /inventory-batches/:inventory_batch_id/restocks/new
   def new
     @inventory_restock = @inventory_batch.restocks.build

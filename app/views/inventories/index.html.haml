@@ -1,10 +1,11 @@
 = title(t(".title"))
 .card.card-primary.border.border-primary
-  .card-header
-    .d-flex.justify-content-end.align-items-center
-      = link_to new_inventory_path, class: "btn btn-primary" do
-        = sprite_icon("plus")
-        = button_text(:new)
+  - if authorized_for?(:inventories, :create)
+    .card-header
+      .d-flex.justify-content-end.align-items-center
+        = link_to new_inventory_path, class: "btn btn-primary" do
+          = sprite_icon("plus")
+          = button_text(:new)
   .card-body
     .table-wrapper
       .table-container
