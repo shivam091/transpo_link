@@ -24,7 +24,12 @@ Rails.application.configure do
 
   # Show error pages.
   config.consider_all_requests_local = false
-  config.cache_store = :null_store
+
+  # Use memory store instead of null store
+  config.cache_store = :memory_store
+
+  # Enable caching (this is false by default in test)
+  config.action_controller.perform_caching = true
 
   # Render exception templates for rescuable exceptions and raise for other exceptions.
   config.action_dispatch.show_exceptions = :rescuable

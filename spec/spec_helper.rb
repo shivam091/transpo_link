@@ -49,6 +49,10 @@ RSpec.configure do |config|
     FileUtils.mkdir_p test_directory_path
   end
 
+  config.before(:each) do
+    Rails.cache.clear
+  end
+
   if Bullet.enable?
     config.before(:each) do
       Bullet.start_request

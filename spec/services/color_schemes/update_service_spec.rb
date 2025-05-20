@@ -35,7 +35,7 @@ RSpec.describe ColorSchemes::UpdateService, type: :service do
   context "when update fails due to validation error" do
     let(:color_scheme) { "light" }
 
-    before { allow(user).to receive(:update).and_return(false) }
+    before { allow(user).to receive(:update) { false } }
 
     it "does not update the preferred color scheme" do
       expect { service_response }.to not_change { user.reload.preferred_color_scheme }

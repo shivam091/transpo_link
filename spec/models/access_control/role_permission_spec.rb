@@ -71,4 +71,24 @@ RSpec.describe AccessControl::RolePermission, type: :model do
       end
     end
   end
+
+  describe "instance methods" do
+    describe "#invalidate_cache" do
+      let(:role) { create(:manager_role) }
+      let(:permission) { create(:permission) }
+      let(:role_permission) { build(:role_permission, role:, permission:) }
+
+      it "deletes the cache key for user_permissions and role_id", transactional: false do
+        cache_key = ["user_permissions", role.id]
+        Rails.cache.write(cache_key, "cached_permissions")
+
+        expect(Rails.cache.read(cache_key)).to eq("cached_permissions")
+
+        role_permission.save!
+        role_permission.send(:invalidate_cache)
+
+        expect(Rails.cache.read(cache_key)).to be_nil
+      end
+    end
+  end
 end
