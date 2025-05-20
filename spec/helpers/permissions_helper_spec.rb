@@ -40,6 +40,7 @@ RSpec.describe PermissionsHelper, type: :helper do
     before do
       allow(helper).to receive(:current_user) { user }
       allow(Ability).to receive(:new).with(user) { ability }
+      allow(helper).to receive(:current_ability) { ability }
     end
 
     context "when user has permission" do
@@ -66,6 +67,7 @@ RSpec.describe PermissionsHelper, type: :helper do
     before do
       allow(helper).to receive(:current_user) { user }
       allow(Ability).to receive(:new).with(user) { ability }
+      allow(helper).to receive(:current_ability) { ability }
     end
 
     context "when user is authorized for given module and action" do

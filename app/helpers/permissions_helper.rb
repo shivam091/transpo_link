@@ -3,6 +3,13 @@
 # -*- warn_indent: true -*-
 
 module PermissionsHelper
+  # Lazily initializes and returns the current user's ability object.
+  #
+  # @return [Ability] The ability instance scoped to the current user
+  def current_ability
+    @current_ability ||= Ability.new(current_user)
+  end
+
   # Check if current user can perform the action in views
   #
   # @param label_key [String] the key of the module
@@ -30,7 +37,7 @@ module PermissionsHelper
   #     <%= link_to "Edit", edit_order_path(order) %>
   #   <% end %>
   def authorized_for?(module_key, action_key)
-    Ability.new(current_user).can?(module_key, action_key)
+    current_ability.can?(module_key, action_key)
   end
 
   # Conditionally render content if user is authorized
