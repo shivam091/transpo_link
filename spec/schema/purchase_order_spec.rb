@@ -15,9 +15,7 @@ RSpec.describe PurchaseOrder, type: :model do
     it { is_expected.to have_db_column(:warehouse_id).of_type(:uuid) }
     it { is_expected.to have_db_column(:manager_id).of_type(:uuid) }
     it { is_expected.to have_db_column(:supplier_id).of_type(:uuid) }
-    it { is_expected.to have_db_column(:reference_document).of_type(:string) }
     it { is_expected.to have_db_column(:order_date).of_type(:timestamptz) }
-    it { is_expected.to have_db_column(:expected_delivery_date).of_type(:date) }
     it { is_expected.to have_db_column(:delivered_at).of_type(:date) }
     it { is_expected.to have_db_column(:status).of_type(:enum) }
     it { is_expected.to have_db_column(:notes).of_type(:text) }
@@ -42,8 +40,6 @@ RSpec.describe PurchaseOrder, type: :model do
 
   describe "check constraints" do
     it { is_expected.to have_check_constraint(:check_purchase_orders_notes_length).with_expression("char_length(notes) <= 1000") }
-    it { is_expected.to have_check_constraint(:check_purchase_orders_reference_document_length).with_expression("char_length(reference_document::text) <= 55") }
-    it { is_expected.to have_check_constraint(:check_purchase_orders_expected_delivery_after_order).with_expression("expected_delivery_date >= order_date") }
     it { is_expected.to have_check_constraint(:check_purchase_orders_status_in_enum_values) }
     it { is_expected.to have_check_constraint(:check_purchase_orders_status_presence).with_expression("status IS NOT NULL") }
   end

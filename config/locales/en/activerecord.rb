@@ -292,9 +292,7 @@
           warehouse_id: "Warehouse",
           manager_id: "Manager",
           supplier_id: "Supplier",
-          reference_document: "Reference document",
           order_date: "Ordered at",
-          expected_delivery_date: "Expected delivery date",
           delivered_at: "Delivered at",
           status: "Status",
           notes: "Notes"

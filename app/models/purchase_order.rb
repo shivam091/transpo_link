@@ -19,8 +19,7 @@ class PurchaseOrder < ApplicationRecord
   include AASM, HasReferenceCode, Sanitizable, NullifyIfBlank, Pageable, Navigable
 
   LISTING_ATTRIBUTES = %i[
-    reference_code warehouse_id manager_id supplier_id order_date expected_delivery_date
-    status
+    reference_code warehouse_id manager_id supplier_id order_date status
   ].freeze
 
   enum :status, {
@@ -38,9 +37,9 @@ class PurchaseOrder < ApplicationRecord
 
   attribute :status, default: statuses[:draft]
 
-  sanitize_attributes :reference_document, :notes
+  sanitize_attributes :notes
 
-  nullify_if_blank :reference_document, :notes, :expected_delivery_date
+  nullify_if_blank :notes
 
   aasm column: :status, enum: true, requires_lock: true do
     state :draft, initial: true
@@ -96,14 +95,6 @@ class PurchaseOrder < ApplicationRecord
   end
 
   validates :warehouse_id, :manager_id, :supplier_id, presence: true, reduce: true
-  validates :reference_document,
-            length: {maximum: 55},
-            allow_blank: true,
-            reduce: true
-  validates :expected_delivery_date,
-            comparison: {greater_than_or_equal_to: :order_date},
-            allow_nil: true,
-            reduce: true
   validates :status,
             presence: true,
             inclusion: {in: statuses.values, message: :inclusion},

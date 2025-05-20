@@ -451,9 +451,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_02_140259) do
     t.uuid "warehouse_id", null: false
     t.uuid "manager_id", null: false
     t.uuid "supplier_id", null: false
-    t.string "reference_document"
     t.timestamptz "order_date", default: -> { "CURRENT_TIMESTAMP" }
-    t.date "expected_delivery_date"
     t.date "delivered_at"
     t.enum "status", enum_type: "purchase_order_statuses"
     t.text "notes"
@@ -466,8 +464,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_02_140259) do
     t.index ["supplier_id"], name: "index_purchase_orders_on_supplier_id"
     t.index ["warehouse_id"], name: "index_purchase_orders_on_warehouse_id"
     t.check_constraint "char_length(notes) <= 1000", name: "check_purchase_orders_notes_length"
-    t.check_constraint "char_length(reference_document::text) <= 55", name: "check_purchase_orders_reference_document_length"
-    t.check_constraint "expected_delivery_date >= order_date", name: "check_purchase_orders_expected_delivery_after_order"
     t.check_constraint "status = ANY (ARRAY['draft'::purchase_order_statuses, 'submitted'::purchase_order_statuses, 'approved'::purchase_order_statuses, 'shipped'::purchase_order_statuses, 'partially_delivered'::purchase_order_statuses, 'fully_delivered'::purchase_order_statuses, 'cancelled'::purchase_order_statuses, 'rejected'::purchase_order_statuses, 'closed'::purchase_order_statuses, 'on_hold'::purchase_order_statuses])", name: "check_purchase_orders_status_in_enum_values"
     t.check_constraint "status IS NOT NULL", name: "check_purchase_orders_status_presence"
   end

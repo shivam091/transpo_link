@@ -39,13 +39,10 @@ RSpec.describe PurchaseOrder, type: :model do
   end
 
   describe "nullified attributes" do
-    it { is_expected.to nullify_if_blank(:reference_document) }
     it { is_expected.to nullify_if_blank(:notes) }
-    it { is_expected.to nullify_if_blank(:expected_delivery_date) }
   end
 
   describe "sanitized attributes" do
-    it { is_expected.to sanitize_attribute(:reference_document) }
     it { is_expected.to sanitize_attribute(:notes) }
   end
 
@@ -92,14 +89,6 @@ RSpec.describe PurchaseOrder, type: :model do
 
     describe "#supplier_id" do
       it { is_expected.to validate_presence_of(:supplier_id) }
-    end
-
-    describe "#reference_document" do
-      it { is_expected.to validate_length_of(:reference_document).is_at_most(55).allow_blank }
-    end
-
-    describe "#expected_delivery_date" do
-      it { is_expected.to validate_comparison_of(:expected_delivery_date).is_greater_than_or_equal_to(:order_date).allow_nil }
     end
 
     describe "#status" do

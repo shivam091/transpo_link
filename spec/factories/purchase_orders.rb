@@ -7,9 +7,7 @@ FactoryBot.define do
     association :warehouse
     association :supplier
     association :manager
-    reference_document { Faker::Alphanumeric.alphanumeric(number: 12).upcase }
     order_date { Date.current }
-    expected_delivery_date { order_date + 1.month }
     notes { Faker::Lorem.paragraph(sentence_count: 3) }
     status { :draft }
 

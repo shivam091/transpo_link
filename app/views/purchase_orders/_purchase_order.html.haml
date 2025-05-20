@@ -13,8 +13,6 @@
   .table-cell
     = prettify_datetime(purchase_order.order_date)
   .table-cell
-    = prettify_date(purchase_order.expected_delivery_date) || "-"
-  .table-cell
     = safe_render.partial("shared/badge", color: TranspoLink::ColorMapper.new(:status).for(purchase_order.status)) do
       = enum_l(purchase_order, :status)
   .table-cell.cell-narrow

@@ -35,17 +35,11 @@ class CreatePurchaseOrders < ActiveRecord::Migration[8.0]
                    },
                    null: false,
                    index: {using: :btree}
-      t.string :reference_document
       t.timestamptz :order_date, index: {using: :btree}, default: -> { "CURRENT_TIMESTAMP" }
-      t.date :expected_delivery_date
       t.date :delivered_at
       t.enum :status, enum_type: :purchase_order_statuses, index: {using: :btree}
       t.text :notes
       t.timestamps_with_timezone null: false
-
-      t.check_constraint "CHAR_LENGTH(reference_document) <= 55", name: :check_purchase_orders_reference_document_length
-
-      t.check_constraint "expected_delivery_date >= order_date", name: :check_purchase_orders_expected_delivery_after_order
 
       t.check_constraint "status IS NOT NULL", name: :check_purchase_orders_status_presence
       t.check_constraint "status IN (#{enum_values('purchase_order_statuses')})", name: :check_purchase_orders_status_in_enum_values
