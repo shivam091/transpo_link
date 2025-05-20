@@ -34,9 +34,10 @@
     = link_to "javascript:void(0)", class: "nav-link" do
       = sprite_icon("chart")
       = t(".reports")
-    = link_to feedbacks_path, class: class_names("nav-link", "active": current_controller?(:feedbacks)) do
-      = sprite_icon("speech-bubble")
-      = t(".feedbacks")
+    - if authorized_for?(:feedbacks, :view_all)
+      = link_to feedbacks_path, class: class_names("nav-link", "active": current_controller?(:feedbacks)) do
+        = sprite_icon("speech-bubble")
+        = t(".feedbacks")
     - if authorized_for?(:tax_rates, :view_all)
       = link_to tax_rates_path, class: class_names("nav-link", "active": current_controller?(:tax_rates)) do
         = sprite_icon("percentage")

@@ -6,15 +6,14 @@ class FeedbacksController < ApplicationController
   before_action :set_breadcrumbs
   before_action :set_reviewable, only: [:new, :create]
   before_action :set_feedback, only: [:show, :mark_as_read]
+  before_action :set_feedbacks, only: :index
+
+  requires_authorization_for [:new, :create], :feedbacks, :create
+  requires_authorization_for :mark_as_read, :feedbacks, :mark_as_read
+  requires_authorization_for :show, :feedbacks, :view
 
   # GET /feedbacks
   def index
-    @feedbacks = Feedback.accessible(current_user)
-    @feedbacks = case params[:status]
-                 when "read"   then @feedbacks.read
-                 when "unread" then @feedbacks.unread
-                 else               @feedbacks
-                 end
     @feedbacks, @pagination_metadata = @feedbacks.paginate(page: params[:page])
   end
 
@@ -76,6 +75,23 @@ class FeedbacksController < ApplicationController
 
   def set_feedback
     @feedback ||= Feedback.find(params[:id])
+  end
+
+  def set_feedbacks
+    @feedbacks ||= Feedback.accessible(current_user)
+
+    case params[:status]
+    when "read"
+      require_authorization :feedbacks, :view_read
+      @feedbacks = @feedbacks.read
+    when "unread"
+      require_authorization :feedbacks, :view_unread
+      @feedbacks = @feedbacks.unread
+    else
+      require_authorization :feedbacks, :view_all
+    end
+
+    @feedbacks
   end
 
   def set_breadcrumbs

@@ -5,9 +5,10 @@
     - if feedback.is_unread? && params[:status].nil?
       .list-item-unread-indicator
   .table-cell
-    = link_to feedback.reference_code, feedback_path(feedback)
+    = conditional_link_to authorized_for?(:feedbacks, :view), feedback_path(feedback) do
+      = feedback.reference_code
   .table-cell
-    = link_to_user(user, target: :_blank)
+    = authorized_for?(:users, :view) ? link_to_user(user, target: :_blank) : user.full_name
   .table-cell
     = link_to_reviewable(reviewable, target: :_blank)
   .table-cell
@@ -23,11 +24,12 @@
     = link_to "javascript:void(0)", class: "text-reset", data: {bs_toggle: "dropdown"}, aria: {expanded: false} do
       = sprite_icon("ellipsis-vertical")
     %ul.dropdown-menu
-      %li
-        = link_to feedback_path(feedback), class: "dropdown-item" do
-          = sprite_icon("arrow-right")
-          = button_text(:view_details)
-      - if feedback.is_unread?
+      - if authorized_for?(:feedbacks, :view)
+        %li
+          = link_to feedback_path(feedback), class: "dropdown-item" do
+            = sprite_icon("arrow-right")
+            = button_text(:view_details)
+      - if authorized_for?(:feedbacks, :mark_as_read) && feedback.is_unread?
         %li
           = link_to mark_as_read_feedback_path(feedback), class: "dropdown-item",
             data: {turbo_method: :patch, turbo_confirm: t(".mark_as_read_confirmation_text", reference_code: feedback.reference_code)} do
