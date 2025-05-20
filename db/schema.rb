@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_02_140259) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_20_115623) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_catalog.plpgsql"
@@ -397,6 +397,25 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_02_140259) do
     t.check_constraint "sku IS NOT NULL AND sku::text <> ''::text", name: "check_products_sku_presence"
   end
 
+  create_table "purchase_order_approvals", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "purchase_order_id", null: false
+    t.string "reference_document"
+    t.date "expected_delivery_date"
+    t.text "remarks"
+    t.boolean "partial_delivery_allowed", default: true
+    t.timestamptz "created_at", null: false
+    t.timestamptz "updated_at", null: false
+    t.index ["expected_delivery_date"], name: "index_purchase_order_approvals_on_expected_delivery_date"
+    t.index ["purchase_order_id"], name: "index_purchase_order_approvals_on_purchase_order_id"
+    t.index ["reference_document"], name: "index_purchase_order_approvals_on_reference_document"
+    t.check_constraint "char_length(reference_document::text) <= 55", name: "check_po_approvals_reference_document_length"
+    t.check_constraint "char_length(remarks) <= 1000", name: "check_po_approvals_remarks_length"
+    t.check_constraint "expected_delivery_date <= (CURRENT_DATE + 'P180D'::interval)", name: "check_po_approvals_expected_delivery_max_6_months"
+    t.check_constraint "expected_delivery_date >= CURRENT_DATE", name: "check_po_approvals_expected_delivery_today_or_in_future"
+    t.check_constraint "expected_delivery_date IS NOT NULL", name: "check_po_approvals_expected_delivery_presence"
+    t.check_constraint "reference_document IS NOT NULL AND reference_document::text <> ''::text", name: "check_po_approvals_reference_document_presence"
+  end
+
   create_table "purchase_order_item_deliveries", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "purchase_order_item_id", null: false
     t.uuid "unit_id", null: false
@@ -747,6 +766,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_02_140259) do
   add_foreign_key "product_prices", "warehouses", name: "fk_product_prices_warehouse_id_on_warehouses", on_delete: :restrict
   add_foreign_key "products", "product_categories", name: "fk_products_product_category_id_on_product_categories", on_delete: :restrict
   add_foreign_key "products", "units", name: "fk_products_unit_id_on_units", on_delete: :restrict
+  add_foreign_key "purchase_order_approvals", "purchase_orders", name: "po_approvals_purchase_order_id_on_purchase_orders", on_delete: :cascade
   add_foreign_key "purchase_order_item_deliveries", "purchase_order_items", name: "fk_purchase_order_item_deliveries_purchase_order_item_id_on_pur", on_delete: :cascade
   add_foreign_key "purchase_order_item_deliveries", "units", name: "fk_purchase_order_item_deliveries_unit_id_on_units", on_delete: :restrict
   add_foreign_key "purchase_order_items", "products", name: "fk_purchase_order_items_product_id_on_products", on_delete: :restrict

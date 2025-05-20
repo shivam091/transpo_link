@@ -106,7 +106,11 @@ class PurchaseOrder < ApplicationRecord
 
   validates_associated :purchase_order_items
 
-  has_many :purchase_order_items, inverse_of: :purchase_order, dependent: :destroy
+  with_options inverse_of: :purchase_order, dependent: :destroy do |a|
+    a.has_one :approval, class_name: "PurchaseOrder::Approval"
+
+    a.has_many :purchase_order_items
+  end
 
   belongs_to :warehouse, inverse_of: :purchase_orders
   belongs_to :manager, inverse_of: :purchase_orders, class_name: "User"

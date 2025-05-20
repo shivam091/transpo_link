@@ -297,6 +297,12 @@
           status: "Status",
           notes: "Notes"
         },
+        "purchase_order/approval" => {
+          reference_document: "Reference document",
+          expected_delivery_date: "Expected delivery date",
+          remarks: "Remarks",
+          partial_delivery_allowed: "Partial delivery allowed?"
+        },
         purchase_order_item: {
           purchase_order_id: "Purchase order",
           product_id: "Product",

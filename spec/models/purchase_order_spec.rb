@@ -67,6 +67,8 @@ RSpec.describe PurchaseOrder, type: :model do
   end
 
   describe "associations" do
+    it { is_expected.to have_one(:approval).class_name("PurchaseOrder::Approval").inverse_of(:purchase_order).dependent(:destroy) }
+
     it { is_expected.to have_many(:purchase_order_items).inverse_of(:purchase_order).dependent(:destroy) }
 
     it { is_expected.to belong_to(:warehouse).inverse_of(:purchase_orders) }
