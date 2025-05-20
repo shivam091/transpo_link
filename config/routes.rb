@@ -107,7 +107,6 @@ Rails.application.routes.draw do
     member do
       patch :cancel
       patch :submit
-      patch :approve
       patch :reject
     end
 
