@@ -37,8 +37,8 @@
             = button_text(:submit)
       - if purchase_order.may_approve?
         %li
-          = link_to approve_purchase_order_path(purchase_order), class: "dropdown-item",
-            data: {turbo_confirm: t(".approve_confirmation_text", reference_code: purchase_order.reference_code), turbo_method: :patch} do
+          = link_to new_purchase_order_approval_path(purchase_order), class: "dropdown-item",
+            data: {turbo_frame: :remote_modal} do
             = sprite_icon("check")
             = button_text(:approve)
       - if purchase_order.may_reject?

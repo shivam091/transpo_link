@@ -37,6 +37,7 @@
       create_batch: "Create batch",
       restock: "Restock",
       confirm_restock: "Confirm restock",
+      confirm_approval: "Confirm approval",
     },
   }
 }

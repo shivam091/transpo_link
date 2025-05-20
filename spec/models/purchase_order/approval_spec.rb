@@ -48,6 +48,16 @@ RSpec.describe PurchaseOrder::Approval, type: :model do
   end
 
   describe "instance methods" do
+    describe "#approve_purchase_order!" do
+      let!(:purchase_order) { create(:purchase_order) }
+
+      it "calls PurchaseOrders::ApproveService after create" do
+        expect(PurchaseOrders::ApproveService).to receive(:call).with(purchase_order)
+
+        create(:purchase_order_approval, purchase_order: purchase_order)
+      end
+    end
+
     describe "#expected_delivery_date_within_six_months" do
       let(:approval) { build(:purchase_order_approval, expected_delivery_date: delivery_date) }
 
