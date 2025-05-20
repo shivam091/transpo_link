@@ -28,6 +28,8 @@ RSpec.describe "PurchaseOrderItems", type: :request do
 
   describe "GET /purchase-orders/:purchase_order_id/purchase-order-items" do
     it "renders list of all purchase order items" do
+      grant_permission!(manager, :purchase_order_items, :view_all)
+
       get purchase_order_purchase_order_items_path(purchase_order)
 
       expect(controller_assigns(:purchase_order)).to eq(purchase_order)
@@ -37,7 +39,10 @@ RSpec.describe "PurchaseOrderItems", type: :request do
   end
 
   describe "GET /purchase-orders/:purchase_order_id/purchase-order-items/new" do
-    before { get new_purchase_order_purchase_order_item_path(purchase_order) }
+    before do
+      grant_permission!(manager, :purchase_order_items, :create)
+      get new_purchase_order_purchase_order_item_path(purchase_order)
+    end
 
     include_examples "initializes a new instance", :purchase_order_item, PurchaseOrderItem
 
@@ -48,6 +53,8 @@ RSpec.describe "PurchaseOrderItems", type: :request do
   end
 
   describe "POST /purchase-orders/:purchase_order_id/purchase-order-items" do
+    before { grant_permission!(manager, :purchase_order_items, :create) }
+
     context "when provided parameters are valid" do
       it "creates the purchase order item and closes the modal" do
         post purchase_order_purchase_order_items_path(purchase_order), params: valid_params, as: :turbo_stream
@@ -72,6 +79,8 @@ RSpec.describe "PurchaseOrderItems", type: :request do
 
   describe "GET /purchase-order-items/:id/edit" do
     it "renders edit purchase order item modal" do
+      grant_permission!(manager, :purchase_order_items, :update)
+
       get edit_purchase_order_item_path(po_item1)
 
       expect(controller_assigns(:purchase_order_item)).to eq(po_item1)
@@ -81,6 +90,8 @@ RSpec.describe "PurchaseOrderItems", type: :request do
   end
 
   describe "PATCH /purchase-order-items/:id" do
+    before { grant_permission!(manager, :purchase_order_items, :update) }
+
     context "when provided parameters are valid" do
       it "updates the purchase order item and closes the modal" do
         patch purchase_order_item_path(po_item1), params: valid_params, as: :turbo_stream
@@ -105,6 +116,8 @@ RSpec.describe "PurchaseOrderItems", type: :request do
 
   describe "GET /purchase-order-items/:id" do
     it "renders purchase order item details modal" do
+      grant_permission!(manager, :purchase_order_items, :view)
+
       get purchase_order_item_path(po_item1)
 
       expect(controller_assigns(:purchase_order_item)).to eq(po_item1)
@@ -113,6 +126,8 @@ RSpec.describe "PurchaseOrderItems", type: :request do
   end
 
   describe "DELETE /purchase-order-items/:id" do
+    before { grant_permission!(manager, :purchase_order_items, :delete) }
+
     context "when deletion is successful" do
       it "deletes the purchase order item and updates the turbo frame" do
         delete purchase_order_item_path(po_item1), as: :turbo_stream
@@ -137,6 +152,8 @@ RSpec.describe "PurchaseOrderItems", type: :request do
   end
 
   describe "PATCH /purchase-order-items/:id/cancel" do
+    before { grant_permission!(manager, :purchase_order_items, :cancel) }
+
     context "when cancellation is successful" do
       it "cancels the purchase order item and updates the turbo frame" do
         patch cancel_purchase_order_item_path(po_item1), as: :turbo_stream

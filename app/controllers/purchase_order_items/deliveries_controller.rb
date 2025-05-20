@@ -5,6 +5,8 @@
 class PurchaseOrderItems::DeliveriesController < ApplicationController
   before_action :set_purchase_order_item
 
+  requires_authorization :purchase_order_items, :deliver
+
   # GET /purchase-order-items/:purchase_order_item_id/deliveries/new
   def new
     @delivery = @purchase_order_item.deliveries.build
