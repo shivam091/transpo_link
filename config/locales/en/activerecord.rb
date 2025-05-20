@@ -478,6 +478,14 @@
               },
             }
           },
+          "purchase_order/approval" => {
+            attributes: {
+              expected_delivery_date: {
+                must_be_today_or_future_date: "must be today or a future date",
+                must_be_within_six_months: "must be within 6 months from today"
+              },
+            }
+          },
           purchase_order_item: {
             attributes: {
               product_id: {
