@@ -7,6 +7,7 @@
 # draft: PO is being created but not yet submitted. Editable.
 # submitted: PO has been submitted for approval or processing.
 # approved: PO has been reviewed and approved. Can now be acted on.
+# shipped: PO has been shipped by the supplier.
 # partially_delivered: Some items in the PO have been received.
 # fully_delivered: All items in the PO have been fully received.
 # cancelled: PO was cancelled before completion. No further processing.
@@ -26,6 +27,7 @@ class PurchaseOrder < ApplicationRecord
     draft: "draft",
     submitted: "submitted",
     approved: "approved",
+    shipped: "shipped",
     partially_delivered: "partially_delivered",
     fully_delivered: "fully_delivered",
     cancelled: "cancelled",
@@ -42,7 +44,7 @@ class PurchaseOrder < ApplicationRecord
 
   aasm column: :status, enum: true, requires_lock: true do
     state :draft, initial: true
-    state :submitted, :approved, :cancelled, :rejected, :partially_delivered,
+    state :submitted, :approved, :shipped, :cancelled, :rejected, :partially_delivered,
           :fully_delivered, :closed, :on_hold
 
     event :submit do
@@ -53,6 +55,10 @@ class PurchaseOrder < ApplicationRecord
       transitions from: :submitted, to: :approved
 
       after :replenish_inventory!
+    end
+
+    event :ship do
+      transitions from: :approved, to: :shipped
     end
 
     event :reject do

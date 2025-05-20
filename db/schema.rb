@@ -25,7 +25,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_02_140259) do
   create_enum "legal_identifier_statuses", ["unapproved", "approved", "rejected"]
   create_enum "movement_types", ["restock", "purchase", "sale", "customer_return", "supplier_return", "transfer_in", "transfer_out", "adjustment", "correction", "reservation", "release_reservation", "initial_stock", "inspection", "quarantine", "release_from_quarantine"]
   create_enum "purchase_order_item_statuses", ["pending", "ordered", "partially_delivered", "delivered", "cancelled"]
-  create_enum "purchase_order_statuses", ["draft", "submitted", "approved", "partially_delivered", "fully_delivered", "cancelled", "rejected", "closed", "on_hold"]
+  create_enum "purchase_order_statuses", ["draft", "submitted", "approved", "shipped", "partially_delivered", "fully_delivered", "cancelled", "rejected", "closed", "on_hold"]
   create_enum "tax_types", ["exclusive", "inclusive"]
   create_enum "tracking_methods", ["fifo", "lifo", "average_cost"]
   create_enum "unit_categories", ["count", "length", "weight", "area", "volume"]
@@ -440,7 +440,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_02_140259) do
     t.check_constraint "quantity IS NOT NULL", name: "check_purchase_order_items_quantity_presence"
     t.check_constraint "received_quantity >= 0.0", name: "check_purchase_order_items_received_quantity_non_negative"
     t.check_constraint "received_quantity IS NOT NULL", name: "check_purchase_order_items_received_quantity_presence"
-    t.check_constraint "status = ANY (ARRAY['cancelled'::purchase_order_item_statuses, 'delivered'::purchase_order_item_statuses, 'ordered'::purchase_order_item_statuses, 'partially_delivered'::purchase_order_item_statuses, 'pending'::purchase_order_item_statuses])", name: "check_purchase_order_items_status_in_enum_values"
+    t.check_constraint "status = ANY (ARRAY['pending'::purchase_order_item_statuses, 'ordered'::purchase_order_item_statuses, 'partially_delivered'::purchase_order_item_statuses, 'delivered'::purchase_order_item_statuses, 'cancelled'::purchase_order_item_statuses])", name: "check_purchase_order_items_status_in_enum_values"
     t.check_constraint "status IS NOT NULL", name: "check_purchase_order_items_status_presence"
     t.check_constraint "unit_cost > 0.0", name: "check_purchase_order_items_unit_cost_positive"
     t.check_constraint "unit_cost IS NOT NULL", name: "check_purchase_order_items_unit_cost_presence"
@@ -468,7 +468,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_02_140259) do
     t.check_constraint "char_length(notes) <= 1000", name: "check_purchase_orders_notes_length"
     t.check_constraint "char_length(reference_document::text) <= 55", name: "check_purchase_orders_reference_document_length"
     t.check_constraint "expected_delivery_date >= order_date", name: "check_purchase_orders_expected_delivery_after_order"
-    t.check_constraint "status = ANY (ARRAY['approved'::purchase_order_statuses, 'cancelled'::purchase_order_statuses, 'closed'::purchase_order_statuses, 'draft'::purchase_order_statuses, 'fully_delivered'::purchase_order_statuses, 'on_hold'::purchase_order_statuses, 'partially_delivered'::purchase_order_statuses, 'rejected'::purchase_order_statuses, 'submitted'::purchase_order_statuses])", name: "check_purchase_orders_status_in_enum_values"
+    t.check_constraint "status = ANY (ARRAY['draft'::purchase_order_statuses, 'submitted'::purchase_order_statuses, 'approved'::purchase_order_statuses, 'shipped'::purchase_order_statuses, 'partially_delivered'::purchase_order_statuses, 'fully_delivered'::purchase_order_statuses, 'cancelled'::purchase_order_statuses, 'rejected'::purchase_order_statuses, 'closed'::purchase_order_statuses, 'on_hold'::purchase_order_statuses])", name: "check_purchase_orders_status_in_enum_values"
     t.check_constraint "status IS NOT NULL", name: "check_purchase_orders_status_presence"
   end
 

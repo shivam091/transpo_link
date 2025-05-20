@@ -25,6 +25,10 @@ FactoryBot.define do
       status { :approved }
     end
 
+    trait :shipped do
+      status { :shipped }
+    end
+
     trait :partially_delivered do
       status { :partially_delivered }
     end

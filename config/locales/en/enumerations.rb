@@ -172,6 +172,7 @@
           draft: "Draft",
           submitted: "Submitted",
           approved: "Approved",
+          shipped: "Shipped",
           partially_delivered: "Partially delivered",
           fully_delivered: "Fully delivered",
           cancelled: "Cancelled",

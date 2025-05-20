@@ -60,6 +60,7 @@ RSpec.describe PurchaseOrder, type: :model do
     it { is_expected.to transition_from(:submitted).to(:cancelled).on_event(:cancel) }
     it { is_expected.to transition_from(:on_hold).to(:cancelled).on_event(:cancel) }
     it { is_expected.to transition_from(:submitted).to(:on_hold).on_event(:hold) }
+    it { is_expected.to transition_from(:approved).to(:shipped).on_event(:ship) }
     it { is_expected.to transition_from(:approved).to(:on_hold).on_event(:hold) }
     it { is_expected.to transition_from(:on_hold).to(:approved).on_event(:resume) }
     it { is_expected.to transition_from(:approved).to(:partially_delivered).on_event(:partially_deliver) }
