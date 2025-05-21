@@ -403,6 +403,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_20_115623) do
     t.uuid "purchase_order_id", null: false
     t.string "reference_document"
     t.date "expected_delivery_date"
+    t.enum "incoterm_code", enum_type: "incoterm_codes"
+    t.enum "shipping_method", enum_type: "shipping_methods"
+    t.text "payment_terms"
     t.text "remarks"
     t.boolean "partial_delivery_allowed", default: true
     t.timestamptz "created_at", null: false
@@ -410,12 +413,18 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_20_115623) do
     t.index ["expected_delivery_date"], name: "index_purchase_order_approvals_on_expected_delivery_date"
     t.index ["purchase_order_id"], name: "index_purchase_order_approvals_on_purchase_order_id"
     t.index ["reference_document"], name: "index_purchase_order_approvals_on_reference_document"
+    t.check_constraint "char_length(payment_terms) <= 1000", name: "check_po_approvals_payment_terms_length"
     t.check_constraint "char_length(reference_document::text) <= 55", name: "check_po_approvals_reference_document_length"
     t.check_constraint "char_length(remarks) <= 1000", name: "check_po_approvals_remarks_length"
     t.check_constraint "expected_delivery_date <= (CURRENT_DATE + 'P180D'::interval)", name: "check_po_approvals_expected_delivery_max_6_months"
     t.check_constraint "expected_delivery_date >= CURRENT_DATE", name: "check_po_approvals_expected_delivery_today_or_in_future"
     t.check_constraint "expected_delivery_date IS NOT NULL", name: "check_po_approvals_expected_delivery_presence"
+    t.check_constraint "incoterm_code = ANY (ARRAY['EXW'::incoterm_codes, 'FCA'::incoterm_codes, 'FOB'::incoterm_codes, 'CFR'::incoterm_codes, 'CIF'::incoterm_codes, 'DAP'::incoterm_codes, 'DPU'::incoterm_codes, 'DDP'::incoterm_codes])", name: "check_po_approvals_incoterm_code_in_enum_values"
+    t.check_constraint "incoterm_code IS NOT NULL", name: "check_po_approvals_incoterm_code_presence"
+    t.check_constraint "payment_terms IS NOT NULL AND payment_terms <> ''::text", name: "check_po_approvals_payment_terms_presence"
     t.check_constraint "reference_document IS NOT NULL AND reference_document::text <> ''::text", name: "check_po_approvals_reference_document_presence"
+    t.check_constraint "shipping_method = ANY (ARRAY['AIR'::shipping_methods, 'SEA'::shipping_methods, 'ROAD'::shipping_methods, 'RAIL'::shipping_methods, 'COURIER'::shipping_methods, 'POSTAL'::shipping_methods, 'MULTIMODAL'::shipping_methods, 'DRONE'::shipping_methods, 'BIKE'::shipping_methods, 'HAND_CARRY'::shipping_methods, 'IN_PERSON'::shipping_methods])", name: "check_po_approvals_shipping_method_in_enum_values"
+    t.check_constraint "shipping_method IS NOT NULL", name: "check_po_approvals_shipping_method_presence"
   end
 
   create_table "purchase_order_item_deliveries", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
