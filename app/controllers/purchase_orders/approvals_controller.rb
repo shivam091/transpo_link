@@ -41,6 +41,9 @@ class PurchaseOrders::ApprovalsController < ApplicationController
     params.require(:approval).permit(
       :reference_document,
       :expected_delivery_date,
+      :incoterm_code,
+      :shipping_method,
+      :payment_terms,
       :remarks,
       :partial_delivery_allowed
     )

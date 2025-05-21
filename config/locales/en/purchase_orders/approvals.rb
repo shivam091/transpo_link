@@ -10,7 +10,9 @@
           title: "Confirm %{reference_code} approval"
         },
         form: {
-          approval_note: "Please enter below information to confirm approval of %{reference_code}."
+          approval_note: "Please enter below information to confirm approval of %{reference_code}.",
+          select_incoterm_code: "Select incoterm code",
+          select_shipping_method: "Select shipping method",
         },
       }
     }
