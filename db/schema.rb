@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_21_094510) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_21_100219) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_catalog.plpgsql"
@@ -477,6 +477,21 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_21_094510) do
     t.check_constraint "unit_cost IS NOT NULL", name: "check_purchase_order_items_unit_cost_presence"
   end
 
+  create_table "purchase_order_rejections", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "purchase_order_id", null: false
+    t.enum "reason", enum_type: "po_rejection_reasons"
+    t.text "suggested_alternatives"
+    t.text "note"
+    t.timestamptz "created_at", null: false
+    t.timestamptz "updated_at", null: false
+    t.index ["purchase_order_id"], name: "index_purchase_order_rejections_on_purchase_order_id"
+    t.index ["reason"], name: "index_purchase_order_rejections_on_reason"
+    t.check_constraint "char_length(note) <= 1000", name: "check_po_rejections_note_length"
+    t.check_constraint "char_length(suggested_alternatives) <= 1000", name: "check_po_rejections_suggested_alternatives_length"
+    t.check_constraint "reason = ANY (ARRAY['ITEM_OUT_OF_STOCK'::po_rejection_reasons, 'ITEM_DISCONTINUED'::po_rejection_reasons, 'MINIMUM_ORDER_NOT_MET'::po_rejection_reasons, 'LEAD_TIME_TOO_SHORT'::po_rejection_reasons, 'INVALID_SHIPPING_LOCATION'::po_rejection_reasons, 'PAYMENT_TERMS_UNACCEPTABLE'::po_rejection_reasons, 'PRICING_DISAGREEMENT'::po_rejection_reasons, 'CAPACITY_CONSTRAINTS'::po_rejection_reasons, 'PACKAGING_REQUIREMENTS_UNMET'::po_rejection_reasons, 'COMPLIANCE_DOCUMENTS_MISSING'::po_rejection_reasons, 'SEASONAL_ITEM_UNAVAILABLE'::po_rejection_reasons, 'WRONG_SPECIFICATIONS'::po_rejection_reasons, 'LOGISTICS_UNAVAILABLE'::po_rejection_reasons, 'MANUAL_ERROR'::po_rejection_reasons, 'ALREADY_FULFILLED_BY_OTHER'::po_rejection_reasons, 'CONTRACT_TERMS_VIOLATED'::po_rejection_reasons])", name: "check_po_rejections_reason_in_enum_values"
+    t.check_constraint "reason IS NOT NULL", name: "check_po_rejections_reason_presence"
+  end
+
   create_table "purchase_orders", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "reference_code"
     t.uuid "warehouse_id", null: false
@@ -784,6 +799,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_21_094510) do
   add_foreign_key "purchase_order_items", "products", name: "fk_purchase_order_items_product_id_on_products", on_delete: :restrict
   add_foreign_key "purchase_order_items", "purchase_orders", name: "fk_purchase_order_items_purchase_order_id_on_purchase_orders", on_delete: :cascade
   add_foreign_key "purchase_order_items", "units", name: "fk_purchase_order_items_unit_id_on_units", on_delete: :restrict
+  add_foreign_key "purchase_order_rejections", "purchase_orders", name: "po_rejections_purchase_order_id_on_purchase_orders", on_delete: :cascade
   add_foreign_key "purchase_orders", "users", column: "manager_id", name: "fk_purchase_orders_manager_id_on_users", on_delete: :restrict
   add_foreign_key "purchase_orders", "users", column: "supplier_id", name: "fk_purchase_orders_supplier_id_on_users", on_delete: :restrict
   add_foreign_key "purchase_orders", "warehouses", name: "fk_purchase_orders_warehouse_id_on_warehouses", on_delete: :restrict
