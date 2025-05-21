@@ -44,6 +44,21 @@ module EnumsHelper
     enum_values(model, enum).key(value)
   end
 
+  # Generates select options from enum with title tooltips using I18n
+  #
+  # Example:
+  # enum_options_with_titles(PurchaseOrder::Approval, :incoterm_codes)
+  #
+  # @param model [Class] The class containing the enum
+  # @param enum [Symbol] The enum name (e.g., :incoterm_codes)
+  #
+  # @return [Array<Array>] Options with title attribute for select
+  def enum_options_with_titles(model, enum)
+    enum_options_for_select(model, enum).map do |label, value|
+      [label, value, {title: enum_value_hint(value, model, enum)}]
+    end
+  end
+
   private
 
   # Helper to fetch enum values from the model.
@@ -54,5 +69,9 @@ module EnumsHelper
   # Helper to construct the i18n scope.
   def enum_scope(model, enum)
     "enumerations.#{model.model_name.i18n_key}.#{enum.to_s.pluralize}"
+  end
+
+  def enum_value_hint(value, model, enum)
+    I18n.t("#{value.downcase}_hint", scope: enum_scope(model, enum), default: "")
   end
 end
