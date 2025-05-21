@@ -107,7 +107,6 @@ Rails.application.routes.draw do
     member do
       patch :cancel
       patch :submit
-      patch :reject
     end
 
     resource :delivery, only: [:new, :create], module: :purchase_orders
