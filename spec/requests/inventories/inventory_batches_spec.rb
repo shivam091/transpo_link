@@ -17,6 +17,8 @@ RSpec.describe "Inventories::InventoryBatches", type: :request do
 
   describe "GET /inventories/:inventory_id/inventory-batches" do
     it "renders list of all inventory batches in turbo frame" do
+      grant_permission!(manager, :inventory_batches, :view_all)
+
       get inventory_inventory_batches_path(inventory), headers: {"Turbo-Frame" => dom_id(inventory, :batches)}
 
       expect(controller_assigns(:inventory)).to eq(inventory)

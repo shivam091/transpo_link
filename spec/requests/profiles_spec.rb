@@ -26,6 +26,8 @@ RSpec.describe "Profiles", type: :request do
 
   describe "GET /profile" do
     it "renders profile page" do
+      grant_permission!(buyer, :profiles, :view)
+
       get profile_path
 
       expect(response).to have_http_status(:ok)
@@ -35,6 +37,8 @@ RSpec.describe "Profiles", type: :request do
 
   describe "GET /profile/edit" do
     it "renders profile edit page" do
+      grant_permission!(buyer, :profiles, :update)
+
       get edit_profile_path
 
       expect(controller_assigns(:current_user)).to eq(buyer)
@@ -44,6 +48,8 @@ RSpec.describe "Profiles", type: :request do
   end
 
   describe "PUT|PATCH /profile" do
+    before { grant_permission!(buyer, :profiles, :update) }
+
     context "when provided parameters are valid" do
       it "updates the profile and redirects" do
         put profile_path, params: valid_params, as: :turbo_stream

@@ -26,6 +26,8 @@ RSpec.describe "PurchaseOrders", type: :request do
 
   describe "GET /purchase-orders" do
     it "renders list of all purchase orders with pagination" do
+      grant_permission!(manager, :purchase_orders, :view_all)
+
       get purchase_orders_path
 
       expect(controller_assigns(:purchase_orders)).to include(purchase_order)
@@ -35,12 +37,17 @@ RSpec.describe "PurchaseOrders", type: :request do
   end
 
   describe "GET /purchase-orders/new" do
-    before { get new_purchase_order_path }
+    before do
+      grant_permission!(manager, :purchase_orders, :create)
+      get new_purchase_order_path
+    end
 
     include_examples "initializes a new instance", :purchase_order, PurchaseOrder
   end
 
   describe "POST /purchase-orders" do
+    before { grant_permission!(manager, :purchase_orders, :create) }
+
     context "when provided parameters are valid" do
       it "creates the purchase order and redirects" do
         post purchase_orders_path, params: valid_params, as: :turbo_stream
@@ -65,6 +72,8 @@ RSpec.describe "PurchaseOrders", type: :request do
 
   describe "GET /purchase-orders/:id/edit" do
     it "renders purchase order edit page" do
+      grant_permission!(manager, :purchase_orders, :update)
+
       get edit_purchase_order_path(purchase_order)
 
       expect(controller_assigns(:purchase_order)).to eq(purchase_order)
@@ -73,6 +82,8 @@ RSpec.describe "PurchaseOrders", type: :request do
   end
 
   describe "PUT|PATCH /purchase-orders/:id" do
+    before { grant_permission!(manager, :purchase_orders, :update) }
+
     context "when provided parameters are valid" do
       it "updates the purchase order and redirects" do
         put purchase_order_path(purchase_order), params: valid_params, as: :turbo_stream
@@ -97,6 +108,8 @@ RSpec.describe "PurchaseOrders", type: :request do
 
   describe "GET /purchase-orders/:id" do
     it "renders purchase order details page" do
+      grant_permission!(manager, :purchase_orders, :view)
+
       get purchase_order_path(purchase_order)
 
       expect(controller_assigns(:purchase_order)).to eq(purchase_order)
@@ -105,6 +118,8 @@ RSpec.describe "PurchaseOrders", type: :request do
   end
 
   describe "DELETE /purchase-orders/:id" do
+    before { grant_permission!(manager, :purchase_orders, :delete) }
+
     context "when deletion is successful" do
       it "deletes the purchase order and redirects" do
         delete purchase_order_path(purchase_order), as: :turbo_stream
@@ -129,6 +144,8 @@ RSpec.describe "PurchaseOrders", type: :request do
   end
 
   describe "PATCH /purchase-orders/:id/cancel" do
+    before { grant_permission!(manager, :purchase_orders, :cancel) }
+
     context "when cancellation is successful" do
       it "cancels the purchase order and redirects" do
         patch cancel_purchase_order_path(purchase_order), as: :turbo_stream
@@ -153,6 +170,8 @@ RSpec.describe "PurchaseOrders", type: :request do
   end
 
   describe "PATCH /purchase-orders/:id/submit" do
+    before { grant_permission!(manager, :purchase_orders, :submit) }
+
     context "when submission is successful" do
       it "submits the purchase order and redirects" do
         patch submit_purchase_order_path(purchase_order), as: :turbo_stream

@@ -8,9 +8,10 @@
             = t(".your_legal_identifiers")
           .widget-help
             = t(".your_legal_identifiers_help_text")
-        = link_to new_legal_identifier_path, class: "btn btn-primary", data: {turbo_frame: :remote_modal} do
-          = sprite_icon("plus")
-          = button_text(:new)
+        - if authorized_for?(:legal_identifiers, :create)
+          = link_to new_legal_identifier_path, class: "btn btn-primary", data: {turbo_frame: :remote_modal} do
+            = sprite_icon("plus")
+            = button_text(:new)
       .widget-body
         = safe_render.partial("legal_identifiers/help_texts")
         = safe_render.partial("legal_identifiers/nav_tabs")

@@ -13,6 +13,8 @@ RSpec.describe "ColorSchemes", type: :request do
   include_context "sign in as buyer"
 
   describe "PUT|PATCH /color_scheme" do
+    before { grant_permission!(buyer, :preferences, :update) }
+
     context "when valid color scheme is passed" do
       it "updates the user's color scheme and returns success JSON" do
         patch color_scheme_path, params: valid_params, as: :json

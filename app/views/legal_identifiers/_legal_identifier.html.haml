@@ -21,23 +21,27 @@
       = sprite_icon("ellipsis-vertical")
     %ul.dropdown-menu
       - if legal_identifier.unapproved?
-        %li
-          = link_to approve_legal_identifier_path(legal_identifier), class: "dropdown-item",
-            data: {turbo_method: :patch, turbo_confirm: t(".approve_confirmation_text")} do
-            = sprite_icon("check")
-            = button_text(:approve)
-        %li
-          = link_to reject_legal_identifier_path(legal_identifier), class: "dropdown-item",
-            data: {turbo_method: :patch, turbo_confirm: t(".reject_confirmation_text")} do
-            = sprite_icon("times")
-            = button_text(:reject)
+        - if authorized_for?(:legal_identifiers, :approve)
+          %li
+            = link_to approve_legal_identifier_path(legal_identifier), class: "dropdown-item",
+              data: {turbo_method: :patch, turbo_confirm: t(".approve_confirmation_text")} do
+              = sprite_icon("check")
+              = button_text(:approve)
+        - if authorized_for?(:legal_identifiers, :reject)
+          %li
+            = link_to reject_legal_identifier_path(legal_identifier), class: "dropdown-item",
+              data: {turbo_method: :patch, turbo_confirm: t(".reject_confirmation_text")} do
+              = sprite_icon("times")
+              = button_text(:reject)
         %li.dropdown-divider
-      %li
-        = link_to edit_legal_identifier_path(legal_identifier), class: "dropdown-item", data: {turbo_frame: :remote_modal} do
-          = sprite_icon("pencil")
-          = button_text(:edit)
-      %li
-        = link_to legal_identifier_path(legal_identifier), class: "dropdown-item",
-          data: {turbo_method: :delete, turbo_confirm: t(".delete_confirmation_text")} do
-          = sprite_icon("trash")
-          = button_text(:delete)
+      - if authorized_for?(:legal_identifiers, :update)
+        %li
+          = link_to edit_legal_identifier_path(legal_identifier), class: "dropdown-item", data: {turbo_frame: :remote_modal} do
+            = sprite_icon("pencil")
+            = button_text(:edit)
+      - if authorized_for?(:legal_identifiers, :delete)
+        %li
+          = link_to legal_identifier_path(legal_identifier), class: "dropdown-item",
+            data: {turbo_method: :delete, turbo_confirm: t(".delete_confirmation_text")} do
+            = sprite_icon("trash")
+            = button_text(:delete)

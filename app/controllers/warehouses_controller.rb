@@ -5,14 +5,15 @@
 class WarehousesController < ApplicationController
   before_action :set_breadcrumbs
   before_action :set_warehouse, only: [:edit, :update, :show, :destroy]
+  before_action :set_warehouses, only: :index
+
+  requires_authorization_for [:new, :create], :warehouses, :create
+  requires_authorization_for [:edit, :update], :warehouses, :update
+  requires_authorization_for :destroy, :warehouses, :delete
+  requires_authorization_for :show, :warehouses, :view
 
   # GET /warehouses
   def index
-    @warehouses = case params[:status]
-                  when "active"   then Warehouse.active
-                  when "inactive" then Warehouse.inactive
-                  else                 Warehouse.all
-                  end
     @warehouses, @pagination_metadata = @warehouses.paginate(page: params[:page])
   end
 
@@ -114,6 +115,26 @@ class WarehousesController < ApplicationController
 
   def set_warehouse
     @warehouse ||= Warehouse.find(params[:id])
+  end
+
+  def set_warehouses
+    scope = Warehouse.all
+
+    case params[:status]
+    when nil, ""
+      require_authorization :warehouses, :view_all
+      @warehouses = scope
+    when "active"
+      require_authorization :warehouses, :view_active
+      @warehouses = scope.active
+    when "inactive"
+      require_authorization :warehouses, :view_inactive
+      @warehouses = scope.inactive
+    else
+      raise ActionController::RoutingError, "Invalid status: #{params[:status]}"
+    end
+
+    @warehouses
   end
 
   def set_breadcrumbs
