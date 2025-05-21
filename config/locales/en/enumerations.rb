@@ -181,6 +181,31 @@
           on_hold: "On hold",
         },
       },
+      "purchase_order/approval" => {
+        incoterm_codes: {
+          exw: "EXW - Ex Works",
+          fca: "FCA - Free Carrier",
+          fob: "FOB - Free On Board",
+          cfr: "CFR - Cost and Freight",
+          cif: "CIF - Cost, Insurance, and Freight",
+          dap: "DAP - Delivered At Place",
+          dpu: "DPU - Delivered at Place Unloaded",
+          ddp: "DDP - Delivered Duty Paid",
+        },
+        shipping_methods: {
+          air: "AIR",
+          sea: "SEA",
+          road: "ROAD",
+          rail: "RAIL",
+          courier: "COURIER",
+          postal: "POSTAL",
+          multimodal: "MULTIMODAL",
+          drone: "DRONE",
+          bike: "BIKE",
+          hand_carry: "HAND_CARRY",
+          in_person: "IN_PERSON",
+        },
+      },
       purchase_order_item: {
         statuses: {
           pending: "Pending",
