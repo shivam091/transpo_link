@@ -6,6 +6,11 @@ class InventoriesController < ApplicationController
   before_action :set_breadcrumbs
   before_action :set_inventory, except: [:index, :new, :create]
 
+  requires_authorization_for :index, :inventories, :view_all
+  requires_authorization_for [:new, :create], :inventories, :create
+  requires_authorization_for [:edit, :update], :inventories, :update
+  requires_authorization_for :show, :inventories, :view
+
   # GET /inventories
   def index
     @inventories = Inventory.includes(:stock)

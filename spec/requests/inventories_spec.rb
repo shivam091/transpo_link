@@ -25,6 +25,8 @@ RSpec.describe "Inventories", type: :request do
 
   describe "GET /inventories" do
     it "renders list of all inventories with pagination" do
+      grant_permission!(admin, :inventories, :view_all)
+
       get inventories_path
 
       expect(controller_assigns(:inventories)).to include(inventory)
@@ -34,12 +36,17 @@ RSpec.describe "Inventories", type: :request do
   end
 
   describe "GET /inventories/new" do
-    before { get new_inventory_path }
+    before do
+      grant_permission!(admin, :inventories, :create)
+      get new_inventory_path
+    end
 
     include_examples "initializes a new instance", :inventory, Inventory
   end
 
   describe "POST /inventories" do
+    before { grant_permission!(admin, :inventories, :create) }
+
     context "when provided parameters are valid" do
       it "creates the inventory and redirects" do
         post inventories_path, params: valid_params, as: :turbo_stream
@@ -64,6 +71,7 @@ RSpec.describe "Inventories", type: :request do
 
   describe "GET /inventories/:id/edit" do
     it "renders inventory edit page" do
+      grant_permission!(admin, :inventories, :update)
       get edit_inventory_path(inventory)
 
       expect(controller_assigns(:inventory)).to eq(inventory)
@@ -72,6 +80,8 @@ RSpec.describe "Inventories", type: :request do
   end
 
   describe "PUT|PATCH /inventories/:id" do
+    before { grant_permission!(admin, :inventories, :update) }
+
     context "when provided parameters are valid" do
       it "updates the inventory and redirects" do
         put inventory_path(inventory), params: valid_params, as: :turbo_stream
@@ -96,6 +106,7 @@ RSpec.describe "Inventories", type: :request do
 
   describe "GET /inventories/:id" do
     it "renders inventory details page" do
+      grant_permission!(admin, :inventories, :view)
       get inventory_path(inventory)
 
       expect(controller_assigns(:inventory)).to eq(inventory)

@@ -7,6 +7,10 @@ class RolesController < ApplicationController
   before_action :set_role, except: :index
   before_action :set_grouped_permissions, only: [:edit, :show, :update]
 
+  requires_authorization_for :index, :roles, :view_all
+  requires_authorization_for [:edit, :update], :roles, :update
+  requires_authorization_for :show, :roles, :view
+
   # GET /roles
   def index
     @roles = Role.all

@@ -6,6 +6,16 @@ class PurchaseOrdersController < ApplicationController
   before_action :set_breadcrumbs, :fetch_accessible_purchase_orders
   before_action :set_purchase_order, except: [:index, :new, :create]
 
+  requires_authorization_for :index, :purchase_orders, :view_all
+  requires_authorization_for [:new, :create], :purchase_orders, :create
+  requires_authorization_for [:edit, :update], :purchase_orders, :update
+  requires_authorization_for :show, :purchase_orders, :view
+  requires_authorization_for :destroy, :purchase_orders, :delete
+  requires_authorization_for :cancel, :purchase_orders, :cancel
+  requires_authorization_for :submit, :purchase_orders, :submit
+  requires_authorization_for :approve, :purchase_orders, :approve
+  requires_authorization_for :reject, :purchase_orders, :reject
+
   # GET /purchase-orders
   def index
     @purchase_orders, @pagination_metadata = @purchase_orders.paginate(page: params[:page])
@@ -156,7 +166,7 @@ class PurchaseOrdersController < ApplicationController
   end
 
   def fetch_accessible_purchase_orders
-    @purchase_orders ||= PurchaseOrder.accessible(current_user)
+    @purchase_orders = PurchaseOrder.accessible(current_user)
   end
 
   def set_breadcrumbs

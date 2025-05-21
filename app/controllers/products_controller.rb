@@ -5,15 +5,15 @@
 class ProductsController < ApplicationController
   before_action :set_breadcrumbs
   before_action :set_product, only: [:edit, :update, :show, :destroy]
+  before_action :set_products, only: :index
+
+  requires_authorization_for [:new, :create], :products, :create
+  requires_authorization_for [:edit, :update], :products, :update
+  requires_authorization_for :show, :products, :view
+  requires_authorization_for :destroy, :products, :delete
 
   # GET /products
   def index
-    @products = Product.includes(:inventories)
-    @products = case params[:status]
-                when "active"   then @products.active
-                when "inactive" then @products.inactive
-                else                 @products
-                end
     @products, @pagination_metadata = @products.paginate(page: params[:page])
   end
 
@@ -119,6 +119,26 @@ class ProductsController < ApplicationController
 
   def set_product
     @product ||= Product.find(params[:id])
+  end
+
+  def set_products
+    scope = Product.includes(inventories: :stock)
+
+    case params[:status]
+    when nil, ""
+      require_authorization :products, :view_all
+      @products = scope
+    when "active"
+      require_authorization :products, :view_active
+      @products = scope.active
+    when "inactive"
+      require_authorization :products, :view_inactive
+      @products = scope.inactive
+    else
+      raise ActionController::RoutingError, "Invalid status: #{params[:status]}"
+    end
+
+    @products
   end
 
   def set_breadcrumbs

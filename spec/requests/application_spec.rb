@@ -11,7 +11,10 @@ RSpec.describe "Application", type: :request do
     context "when user is signed in" do
       include_context "sign in as buyer"
 
-      before { get root_path }
+      before do
+        grant_permission!(buyer, :dashboards, :view)
+        get root_path
+      end
 
       context "when user is not banned" do
         it "allows the user to proceed" do

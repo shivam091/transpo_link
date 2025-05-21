@@ -5,14 +5,16 @@
         = safe_render.partial("shared/live_clock")
       .col-lg-6.col-12.d-none.d-lg-flex.justify-content-center.justify-content-lg-end
         .list-unstyled.d-flex.align-items-center
-          = safe_render.partial("layouts/application/color_scheme_switcher")
+          - if authorized_for?(:preferences, :update)
+            = safe_render.partial("layouts/application/color_scheme_switcher")
           .d-inline-block.middle-dot-divider
             = link_to "javascript:void(0)", class: "top-menu-link", title: t(".switch_screen_mode")  do
               = sprite_icon("expand")
           .d-inline-block.middle-dot-divider
             = link_to "javascript:void(0)", class: "top-menu-link", title: t(".notifications") do
               = sprite_icon("bell", class: "animate-blinking")
-          .d-inline-block.middle-dot-divider
-            = link_to edit_locale_path, class: "top-menu-link", title: t(".change_language"), data: {turbo_frame: :remote_modal} do
-              = sprite_icon("globe")
+          - if authorized_for?(:preferences, :update)
+            .d-inline-block.middle-dot-divider
+              = link_to edit_locale_path, class: "top-menu-link", title: t(".change_language"), data: {turbo_frame: :remote_modal} do
+                = sprite_icon("globe")
   = yield

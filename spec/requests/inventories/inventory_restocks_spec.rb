@@ -19,7 +19,10 @@ RSpec.describe "Inventories::InventoryRestocks", type: :request do
   before { allow_any_instance_of(InventoryBatch).to receive(:record_audit_logs) }
 
   describe "GET /inventory-batches/:inventory_batch_id/restocks/new" do
-    before { get new_inventory_batch_inventory_restock_path(inventory_batch), as: :turbo_stream }
+    before do
+      grant_permission!(manager, :inventories, :restock)
+      get new_inventory_batch_inventory_restock_path(inventory_batch), as: :turbo_stream
+    end
 
     include_examples "initializes a new instance", :inventory_restock, Inventory::Restock
 
@@ -30,6 +33,8 @@ RSpec.describe "Inventories::InventoryRestocks", type: :request do
   end
 
   describe "POST /inventory-batches/:inventory_batch_id/restocks" do
+    before { grant_permission!(manager, :inventories, :restock) }
+
     context "when provided parameters are valid" do
       it "restocks the inventory and redirects" do
         post inventory_batch_inventory_restocks_path(inventory_batch), params: valid_params, as: :turbo_stream

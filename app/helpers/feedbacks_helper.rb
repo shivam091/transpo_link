@@ -21,6 +21,13 @@ module FeedbacksHelper
     label = reviewable_label(reviewable)
     path = reviewable_path(reviewable)
 
-    link_to(label, path, **options)
+    conditional_link_to(can_view_reviewable?(reviewable), path, **options) do
+      label
+    end
+  end
+
+  def can_view_reviewable?(reviewable)
+    model_key = reviewable.class.name.underscore.pluralize.to_sym
+    authorized_for?(model_key, :view)
   end
 end

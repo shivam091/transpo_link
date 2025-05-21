@@ -11,5 +11,6 @@
   .table-cell.flex-column
     = form.measurement_unit_select :unit_id, {include_blank: t(".select_unit_of_measure")}, {}
   .table-cell.cell-narrow
-    = button_tag type: :button, class: "btn btn-sm btn-danger", data: {action: "click->nested-forms#removeAssociation"} do
-      = sprite_icon("trash")
+    - if authorized_for?(:purchase_order_items, :delete)
+      = button_tag type: :button, class: "btn btn-sm btn-danger", data: {action: "click->nested-forms#removeAssociation"} do
+        = sprite_icon("trash")
