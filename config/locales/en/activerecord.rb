@@ -500,6 +500,13 @@
               }
             }
           },
+          "purchase_order/rejection" => {
+            attributes: {
+              reason: {
+                inclusion: "'%{value}' is not a valid rejection reason",
+              },
+            }
+          },
           purchase_order_item: {
             attributes: {
               product_id: {
