@@ -13,8 +13,6 @@ class PurchaseOrdersController < ApplicationController
   requires_authorization_for :destroy, :purchase_orders, :delete
   requires_authorization_for :cancel, :purchase_orders, :cancel
   requires_authorization_for :submit, :purchase_orders, :submit
-  requires_authorization_for :approve, :purchase_orders, :approve
-  requires_authorization_for :reject, :purchase_orders, :reject
 
   # GET /purchase-orders
   def index

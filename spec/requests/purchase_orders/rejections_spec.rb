@@ -14,6 +14,8 @@ RSpec.describe "PurchaseOrders::Rejections", type: :request do
 
   include_context "sign in as supplier"
 
+  before { grant_permission!(supplier, :purchase_orders, :reject) }
+
   describe "GET /purchase-orders/:purchase_order_id/rejection/new" do
     before { get new_purchase_order_rejection_path(purchase_order), as: :turbo_stream }
 

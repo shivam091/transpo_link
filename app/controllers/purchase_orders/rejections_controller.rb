@@ -5,6 +5,8 @@
 class PurchaseOrders::RejectionsController < ApplicationController
   before_action :set_purchase_order
 
+  requires_authorization :purchase_orders, :reject
+
   # GET /purchase-orders/:purchase_order_id/rejection/new
   def new
     @rejection = @purchase_order.build_rejection

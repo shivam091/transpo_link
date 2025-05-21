@@ -5,6 +5,8 @@
 class PurchaseOrders::ApprovalsController < ApplicationController
   before_action :set_purchase_order
 
+  requires_authorization :purchase_orders, :approve
+
   # GET /purchase-orders/:purchase_order_id/approval/new
   def new
     @approval = @purchase_order.build_approval

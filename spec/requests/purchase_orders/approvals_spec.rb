@@ -14,6 +14,8 @@ RSpec.describe "PurchaseOrders::Approvals", type: :request do
 
   include_context "sign in as supplier"
 
+  before { grant_permission!(supplier, :purchase_orders, :approve) }
+
   describe "GET /purchase-orders/:purchase_order_id/approval/new" do
     before { get new_purchase_order_approval_path(purchase_order), as: :turbo_stream }
 
