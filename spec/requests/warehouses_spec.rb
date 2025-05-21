@@ -25,6 +25,8 @@ RSpec.describe "Warehouses", type: :request do
 
   describe "GET /warehouses" do
     it "renders list of all warehouses with pagination" do
+      grant_permission!(admin, :warehouses, :view_all)
+
       get warehouses_path
 
       expect(controller_assigns(:warehouses)).to include(active_warehouse)
@@ -34,6 +36,8 @@ RSpec.describe "Warehouses", type: :request do
     end
 
     it "renders list of active warehouses with pagination" do
+      grant_permission!(admin, :warehouses, :view_active)
+
       get active_warehouses_path
 
       expect(controller_assigns(:warehouses)).to include(active_warehouse)
@@ -43,6 +47,8 @@ RSpec.describe "Warehouses", type: :request do
     end
 
     it "renders list of inactive warehouses with pagination" do
+      grant_permission!(admin, :warehouses, :view_inactive)
+
       get inactive_warehouses_path
 
       expect(controller_assigns(:warehouses)).to include(inactive_warehouse)
@@ -50,15 +56,26 @@ RSpec.describe "Warehouses", type: :request do
       expect(controller_assigns(:pagination_metadata)).to be_present
       expect(response).to have_http_status(:ok)
     end
+
+    it "returns 404 for invalid status" do
+      get warehouses_path, params: {status: "invalid"}
+
+      expect(response).to have_http_status(:not_found)
+    end
   end
 
   describe "GET /warehouses/new" do
-    before { get new_warehouse_path }
+    before do
+      grant_permission!(admin, :warehouses, :create)
+      get new_warehouse_path
+    end
 
     include_examples "initializes a new instance", :warehouse, Warehouse
   end
 
   describe "POST /warehouses" do
+    before { grant_permission!(admin, :warehouses, :create) }
+
     context "when provided parameters are valid" do
       it "creates the warehouse and redirects" do
         post warehouses_path, params: valid_params, as: :turbo_stream
@@ -83,6 +100,8 @@ RSpec.describe "Warehouses", type: :request do
 
   describe "GET /warehouses/:id/edit" do
     it "renders warehouse edit page" do
+      grant_permission!(admin, :warehouses, :update)
+
       get edit_warehouse_path(active_warehouse)
 
       expect(controller_assigns(:warehouse)).to eq(active_warehouse)
@@ -91,6 +110,8 @@ RSpec.describe "Warehouses", type: :request do
   end
 
   describe "PUT|PATCH /warehouses/:id" do
+    before { grant_permission!(admin, :warehouses, :update) }
+
     context "when provided parameters are valid" do
       it "updates the warehouse and redirects" do
         put warehouse_path(active_warehouse), params: valid_params, as: :turbo_stream
@@ -115,6 +136,8 @@ RSpec.describe "Warehouses", type: :request do
 
   describe "GET /warehouse/:id" do
     it "renders warehouse details page" do
+      grant_permission!(admin, :warehouses, :view)
+
       get warehouse_path(active_warehouse)
 
       expect(controller_assigns(:warehouse)).to eq(active_warehouse)
@@ -123,6 +146,8 @@ RSpec.describe "Warehouses", type: :request do
   end
 
   describe "DELETE /warehouse/:id" do
+    before { grant_permission!(admin, :warehouses, :delete) }
+
     context "when deletion is successful" do
       it "deletes the warehouse and redirects" do
         delete warehouse_path(active_warehouse), as: :turbo_stream

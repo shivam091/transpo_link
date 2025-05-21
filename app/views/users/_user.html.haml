@@ -5,7 +5,7 @@
     = check_box_tag "user_ids[]", user.id, false, id: dom_id(user), class: "form-check-input",
       data: {checkbox_selection_target: "itemCheckbox"}
   .table-cell
-    = link_to_user(user)
+    = authorized_for?(:users, :view) ? link_to_user(user) : user.full_name
   .table-cell
     = mail_to user.email
   .table-cell
@@ -20,15 +20,18 @@
     = link_to "javascript:void(0)", class: "text-reset", data: {bs_toggle: "dropdown"}, aria: {expanded: false} do
       = sprite_icon("ellipsis-vertical")
     %ul.dropdown-menu
-      %li
-        = link_to user_path(user), class: "dropdown-item" do
-          = sprite_icon("arrow-right")
-          = button_text(:view_details)
-      %li
-        = link_to "javascript:void(0)", class: "dropdown-item" do
-          = sprite_icon("pencil")
-          = button_text(:edit)
-      %li
-        = link_to "javascript:void(0)", class: "dropdown-item" do
-          = sprite_icon("trash")
-          = button_text(:delete)
+      - if authorized_for?(:users, :view)
+        %li
+          = link_to user_path(user), class: "dropdown-item" do
+            = sprite_icon("arrow-right")
+            = button_text(:view_details)
+      - if authorized_for?(:users, :update)
+        %li
+          = link_to "javascript:void(0)", class: "dropdown-item" do
+            = sprite_icon("pencil")
+            = button_text(:edit)
+      - if authorized_for?(:users, :delete)
+        %li
+          = link_to "javascript:void(0)", class: "dropdown-item" do
+            = sprite_icon("trash")
+            = button_text(:delete)

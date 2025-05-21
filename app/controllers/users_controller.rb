@@ -5,16 +5,12 @@
 class UsersController < ApplicationController
   before_action :set_breadcrumbs
   before_action :set_user, only: :show
+  before_action :set_users, only: :index
+
+  requires_authorization_for :show, :users, :view
 
   # GET /users
   def index
-    @users = User.includes(:role, :user_detail)
-    @users = case params[:status]
-             when "active"    then @users.active
-             when "inactive"  then @users.inactive
-             when "suspended" then @users.suspended
-             else                  @users
-             end
     @users, @pagination_metadata = @users.paginate(page: params[:page])
   end
 
@@ -27,6 +23,29 @@ class UsersController < ApplicationController
 
   def set_user
     @user ||= User.find(params[:id])
+  end
+
+  def set_users
+    scope = User.includes(:role, :user_detail)
+
+    case params[:status]
+    when nil, ""
+      require_authorization :users, :view_all
+      @users = scope
+    when "active"
+      require_authorization :users, :view_active
+      @users = scope.active
+    when "inactive"
+      require_authorization :users, :view_inactive
+      @users = scope.inactive
+    when "suspended"
+      require_authorization :users, :view_suspended
+      @users = scope.suspended
+    else
+      raise ActionController::RoutingError, "Invalid status: #{params[:status]}"
+    end
+
+    @users
   end
 
   def set_breadcrumbs

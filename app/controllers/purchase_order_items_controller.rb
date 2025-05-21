@@ -6,6 +6,13 @@ class PurchaseOrderItemsController < ApplicationController
   before_action :set_purchase_order, only: [:index, :new, :create]
   before_action :set_purchase_order_item, except: [:index, :new, :create]
 
+  requires_authorization_for :index, :purchase_order_items, :view_all
+  requires_authorization_for [:new, :create], :purchase_order_items, :create
+  requires_authorization_for [:edit, :update], :purchase_order_items, :update
+  requires_authorization_for :show, :purchase_order_items, :view
+  requires_authorization_for :destroy, :purchase_order_items, :delete
+  requires_authorization_for :cancel, :purchase_order_items, :cancel
+
   # GET /purchase-orders/:purchase_order_id/purchase-order-items
   def index
     @purchase_order_items = @purchase_order.purchase_order_items

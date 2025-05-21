@@ -18,6 +18,8 @@ RSpec.describe "Feedbacks", type: :request do
 
   describe "GET /feedbacks" do
     it "renders list of all feedbacks with pagination" do
+      grant_permission!(admin, :feedbacks, :view_all)
+
       get feedbacks_path
 
       expect(controller_assigns(:feedbacks)).to include(read_feedback)
@@ -27,6 +29,8 @@ RSpec.describe "Feedbacks", type: :request do
     end
 
     it "renders list of read feedbacks with pagination" do
+      grant_permission!(admin, :feedbacks, :view_read)
+
       get read_feedbacks_path
 
       expect(controller_assigns(:feedbacks)).to include(read_feedback)
@@ -36,6 +40,8 @@ RSpec.describe "Feedbacks", type: :request do
     end
 
     it "renders list of unread feedbacks with pagination" do
+      grant_permission!(admin, :feedbacks, :view_unread)
+
       get unread_feedbacks_path
 
       expect(controller_assigns(:feedbacks)).to include(unread_feedback)
@@ -43,15 +49,26 @@ RSpec.describe "Feedbacks", type: :request do
       expect(controller_assigns(:pagination_metadata)).to be_present
       expect(response).to have_http_status(:ok)
     end
+
+    it "returns 404 for invalid status" do
+      get feedbacks_path, params: {status: "invalid"}
+
+      expect(response).to have_http_status(:not_found)
+    end
   end
 
   describe "GET /feedbacks/new" do
-    before { get new_product_feedback_path(reviewable) }
+    before do
+      grant_permission!(admin, :feedbacks, :create)
+      get new_product_feedback_path(reviewable)
+    end
 
     include_examples "initializes a new instance", :feedback, Feedback
   end
 
   describe "POST /feedbacks" do
+    before { grant_permission!(admin, :feedbacks, :create) }
+
     context "when provided parameters are valid" do
       it "creates the feedback and redirects" do
         post product_feedbacks_path(reviewable), params: valid_params, as: :turbo_stream
@@ -75,9 +92,11 @@ RSpec.describe "Feedbacks", type: :request do
   end
 
   describe "PUT|PATCH /feedbacks/:id/mark-as-read" do
+    before { grant_permission!(admin, :feedbacks, :mark_as_read) }
+
     context "when unread feedback" do
       it "marks feedback as read and redirects" do
-        put mark_as_read_feedback_path(unread_feedback), headers:, as: :turbo_stream
+        put mark_as_read_feedback_path(unread_feedback), as: :turbo_stream
 
         expect(response).to redirect_to(feedbacks_path)
         expect(flash[:info]).to eq("Feedback was successfully marked as read.")
@@ -98,6 +117,8 @@ RSpec.describe "Feedbacks", type: :request do
 
   describe "GET /feedbacks/:id" do
     it "renders feedback details page" do
+      grant_permission!(admin, :feedbacks, :view)
+
       get feedback_path(read_feedback)
 
       expect(controller_assigns(:feedback)).to eq(read_feedback)

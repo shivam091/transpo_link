@@ -10,7 +10,7 @@
           .widget-help
             = Feedback.human_attribute_name(:created_at)
             = time_ago_with_tooltip(@feedback.created_at)
-        - if @feedback.is_unread?
+        - if authorized_for?(:feedbacks, :mark_as_read) && @feedback.is_unread?
           = link_to mark_as_read_feedback_path(@feedback), class: "btn btn-secondary",
             data: {turbo_method: :patch, turbo_confirm: t(".mark_as_read_confirmation_text", reference_code: @feedback.reference_code)} do
             = sprite_icon("check-circle")

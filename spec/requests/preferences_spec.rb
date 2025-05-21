@@ -26,6 +26,8 @@ RSpec.describe "Preferences", type: :request do
 
   describe "GET /preference" do
     it "renders preference page" do
+      grant_permission!(buyer, :preferences, :view)
+
       get preference_path
 
       expect(response).to have_http_status(:ok)
@@ -35,6 +37,8 @@ RSpec.describe "Preferences", type: :request do
 
   describe "GET /preference/edit" do
     it "renders preference edit page" do
+      grant_permission!(buyer, :preferences, :update)
+
       get edit_preference_path
 
       expect(controller_assigns(:current_user)).to eq(buyer)
@@ -44,6 +48,8 @@ RSpec.describe "Preferences", type: :request do
   end
 
   describe "PUT|PATCH /preference" do
+    before { grant_permission!(buyer, :preferences, :update) }
+
     context "when provided parameters are valid" do
       it "updates the preference and redirects" do
         put preference_path, params: valid_params, as: :turbo_stream

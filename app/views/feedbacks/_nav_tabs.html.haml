@@ -1,8 +1,11 @@
 = safe_render.partial("shared/inline_navigations") do
   %ul.nav.nav-pills.flex-row
-    %li.nav-item
-      = link_to t(".all"), feedbacks_path, class: class_names("nav-link", "active": params[:status].nil?)
-    %li.nav-item
-      = link_to t(".unread"), unread_feedbacks_path, class: class_names("nav-link", "active": params[:status].eql?("unread"))
-    %li.nav-item
-      = link_to t(".read"), read_feedbacks_path, class: class_names("nav-link", "active": params[:status].eql?("read"))
+    - if authorized_for?(:feedbacks, :view_all)
+      %li.nav-item
+        = link_to t(".all"), feedbacks_path, class: class_names("nav-link", "active": params[:status].nil?)
+    - if authorized_for?(:feedbacks, :view_unread)
+      %li.nav-item
+        = link_to t(".unread"), unread_feedbacks_path, class: class_names("nav-link", "active": params[:status].eql?("unread"))
+    - if authorized_for?(:feedbacks, :view_read)
+      %li.nav-item
+        = link_to t(".read"), read_feedbacks_path, class: class_names("nav-link", "active": params[:status].eql?("read"))

@@ -20,7 +20,10 @@ RSpec.describe "PurchaseOrderItems::InventoryBatches", type: :request do
   include_context "sign in as manager"
 
   describe "GET /purchase-order-items/:purchase_order_item_id/inventory-batches/new" do
-    before { get new_purchase_order_item_inventory_batch_path(purchase_order_item), as: :turbo_stream }
+    before do
+      grant_permission!(manager, :inventory_batches, :create)
+      get new_purchase_order_item_inventory_batch_path(purchase_order_item), as: :turbo_stream
+    end
 
     include_examples "initializes a new instance", :inventory_batch, InventoryBatch
 
@@ -31,6 +34,8 @@ RSpec.describe "PurchaseOrderItems::InventoryBatches", type: :request do
   end
 
   describe "POST /purchase-order-items/:purchase_order_item_id/inventory-batches" do
+    before { grant_permission!(manager, :inventory_batches, :create) }
+
     context "when provided parameters are valid" do
       it "creates the inventory batch and redirects" do
         post purchase_order_item_inventory_batches_path(purchase_order_item), params: valid_params, as: :turbo_stream

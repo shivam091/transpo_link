@@ -5,15 +5,14 @@
 class TaxRatesController < ApplicationController
   before_action :set_breadcrumbs
   before_action :set_tax_rate, only: [:edit, :update, :destroy]
+  before_action :set_tax_rates, only: :index
+
+  requires_authorization_for [:new, :create], :tax_rates, :create
+  requires_authorization_for [:edit, :update], :tax_rates, :update
+  requires_authorization_for :destroy, :tax_rates, :delete
 
   # GET /tax-rates
   def index
-    @tax_rates = case params[:status]
-                 when "active"  then TaxRate.active
-                 when "future"  then TaxRate.future
-                 when "expired" then TaxRate.expired
-                 else                TaxRate.all
-                 end
     @tax_rates, @pagination_metadata = @tax_rates.paginate(page: params[:page])
   end
 
@@ -98,6 +97,29 @@ class TaxRatesController < ApplicationController
 
   def set_tax_rate
     @tax_rate ||= TaxRate.find(params[:id])
+  end
+
+  def set_tax_rates
+    scope = TaxRate.all
+
+    case params[:status]
+    when nil, ""
+      require_authorization :tax_rates, :view_all
+      @tax_rates = scope
+    when "active"
+      require_authorization :tax_rates, :view_active
+      @tax_rates = scope.active
+    when "future"
+      require_authorization :tax_rates, :view_future
+      @tax_rates = scope.future
+    when "expired"
+      require_authorization :tax_rates, :view_expired
+      @tax_rates = scope.expired
+    else
+      raise ActionController::RoutingError, "Invalid status: #{params[:status]}"
+    end
+
+    @tax_rates
   end
 
   def set_breadcrumbs

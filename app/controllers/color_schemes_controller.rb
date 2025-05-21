@@ -3,6 +3,7 @@
 # -*- warn_indent: true -*-
 
 class ColorSchemesController < ApplicationController
+  requires_authorization_for :update, :preferences, :update
 
   # PUT|PATCH /color-scheme
   def update

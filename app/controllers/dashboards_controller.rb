@@ -4,6 +4,8 @@
 
 class DashboardsController < ApplicationController
 
+  requires_authorization_for :show, :dashboards, :view
+
   # GET /
   def show
   end

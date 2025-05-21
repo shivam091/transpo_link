@@ -17,7 +17,10 @@ RSpec.describe "PurchaseOrderItems::Deliveries", type: :request do
   include_context "sign in as manager"
 
   describe "GET /purchase-order-items/:purchase_order_item_id/deliveries/new" do
-    before { get new_purchase_order_item_delivery_path(purchase_order_item), as: :turbo_stream }
+    before do
+      grant_permission!(manager, :purchase_order_items, :deliver)
+      get new_purchase_order_item_delivery_path(purchase_order_item), as: :turbo_stream
+    end
 
     include_examples "initializes a new instance", :delivery, PurchaseOrderItem::Delivery
 
@@ -31,6 +34,7 @@ RSpec.describe "PurchaseOrderItems::Deliveries", type: :request do
     before do
       allow_any_instance_of(PurchaseOrderItem::Delivery).to receive(:convert_to_item_unit)
       allow_any_instance_of(PurchaseOrderItem::Delivery).to receive(:process_delivery)
+      grant_permission!(manager, :purchase_order_items, :deliver)
     end
 
     context "when provided parameters are valid" do

@@ -4,18 +4,21 @@
   %ul.dropdown-menu.dropdown-menu-lg-end
     %li
       %h6.dropdown-header.fw-bold= t(".your_account")
-    %li
-      = link_to profile_path, class: "dropdown-item" do
-        = sprite_icon("personalize")
-        = t(".your_profile")
-    %li
-      = link_to preference_path, class: "dropdown-item" do
-        = sprite_icon("cog")
-        = t(".your_preferences")
-    %li
-      = link_to legal_identifiers_path, class: "dropdown-item" do
-        = sprite_icon("check-alt")
-        = t(".your_legal_identifiers")
+    - if authorized_for?(:profiles, :view)
+      %li
+        = link_to profile_path, class: "dropdown-item" do
+          = sprite_icon("personalize")
+          = t(".your_profile")
+    - if authorized_for?(:preferences, :view)
+      %li
+        = link_to preference_path, class: "dropdown-item" do
+          = sprite_icon("cog")
+          = t(".your_preferences")
+    - if authorized_for?(:legal_identifiers, :view_all)
+      %li
+        = link_to legal_identifiers_path, class: "dropdown-item" do
+          = sprite_icon("check-alt")
+          = t(".your_legal_identifiers")
     - if current_user.enable_keyboard_shortcuts
       %li.dropdown-divider
       %li

@@ -1,8 +1,11 @@
 = safe_render.partial("shared/inline_navigations") do
   %ul.nav.nav-pills.flex-row
-    %li.nav-item
-      = link_to t(".all"), products_path, class: class_names("nav-link", "active": params[:status].nil?)
-    %li.nav-item
-      = link_to t(".active"), active_products_path, class: class_names("nav-link", "active": params[:status].eql?("active"))
-    %li.nav-item
-      = link_to t(".inactive"), inactive_products_path, class: class_names("nav-link", "active": params[:status].eql?("inactive"))
+    - if authorized_for?(:products, :view_all)
+      %li.nav-item
+        = link_to t(".all"), products_path, class: class_names("nav-link", "active": params[:status].nil?)
+    - if authorized_for?(:products, :view_active)
+      %li.nav-item
+        = link_to t(".active"), active_products_path, class: class_names("nav-link", "active": params[:status].eql?("active"))
+    - if authorized_for?(:products, :view_inactive)
+      %li.nav-item
+        = link_to t(".inactive"), inactive_products_path, class: class_names("nav-link", "active": params[:status].eql?("inactive"))

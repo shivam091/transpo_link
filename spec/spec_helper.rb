@@ -101,6 +101,7 @@ RSpec.configure do |config|
   config.include JsonResponseHelper, type: :request
   config.include MigrationHelpers, type: :migration
   config.include DateTimeHelperSupport, type: :helper
+  config.include AuthorizationHelpers, type: :request
 
   # Extend support classes and modules.
   config.extend ControllerMacros, type: :request

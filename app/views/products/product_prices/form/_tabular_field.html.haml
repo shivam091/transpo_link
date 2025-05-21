@@ -20,5 +20,6 @@
   .table-cell.flex-column
     = form.date_field :effective_until
   .table-cell.cell-narrow
-    = button_tag type: :button, class: "btn btn-sm btn-danger", data: {action: "click->nested-forms#removeAssociation"} do
-      = sprite_icon("trash")
+    - if authorized_for?(:product_prices, :delete)
+      = button_tag type: :button, class: "btn btn-sm btn-danger", data: {action: "click->nested-forms#removeAssociation"} do
+        = sprite_icon("trash")

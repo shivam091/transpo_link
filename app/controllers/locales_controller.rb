@@ -3,6 +3,8 @@
 # -*- warn_indent: true -*-
 
 class LocalesController < ApplicationController
+  requires_authorization_for [:edit, :update], :preferences, :update
+
   # GET /locale/edit
   def edit
   end

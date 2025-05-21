@@ -4,6 +4,10 @@ permissions:
     - update
     - delete
     - view
+    - view_all
+    - view_active
+    - view_inactive
+    - view_suspended
     - activate
     - deactivate
     - grant_access
@@ -11,11 +15,13 @@ permissions:
   roles:
     - update
     - view
+    - view_all
     - toggle_permission
     - activate
     - deactivate
   request_logs:
     - view
+    - view_all
   dashboards:
     - view
   warehouses:
@@ -23,6 +29,9 @@ permissions:
     - update
     - delete
     - view
+    - view_all
+    - view_active
+    - view_inactive
     - activate
     - deactivate
   products:
@@ -30,13 +39,38 @@ permissions:
     - update
     - delete
     - view
+    - view_all
+    - view_active
+    - view_inactive
     - activate
     - deactivate
+  product_prices:
+    - create
+    - update
+    - delete
+    - view
+  inventories:
+    - create
+    - update
+    - delete
+    - view
+    - view_all
+    - view_movements
+    - view_logs
+    - restock
+  inventory_batches:
+    - create
+    - update
+    - delete
+    - view
+    - view_all
+    - view_logs
   purchase_orders:
     - create
     - update
     - delete
     - view
+    - view_all
     - cancel
     - submit
     - approve
@@ -48,6 +82,7 @@ permissions:
     - update
     - delete
     - view
+    - view_all
     - cancel
     - deliver
   tax_rates:
@@ -55,10 +90,17 @@ permissions:
     - update
     - delete
     - view
+    - view_all
+    - view_active
+    - view_expired
+    - view_future
   feedbacks:
     - create
     - update
     - view
+    - view_all
+    - view_read
+    - view_unread
     - mark_as_read
   profiles:
     - update
@@ -71,5 +113,19 @@ permissions:
     - update
     - delete
     - view
+    - view_all
+    - view_approved
+    - view_unapproved
+    - view_rejected
     - approve
     - reject
+  product_categories:
+    - create
+    - update
+    - delete
+    - view
+    - view_all
+    - view_active
+    - view_inactive
+  units_n_conversions:
+    - view

@@ -1,9 +1,10 @@
-- if @purchase_order.draft? || @purchase_order.submitted?
-  .d-flex.justify-content-end.align-items-center.mb-2
-    = link_to new_purchase_order_purchase_order_item_path(@purchase_order), class: "btn btn-primary",
-      data: {turbo_frame: :remote_modal} do
-      = sprite_icon("plus")
-      = button_text(:new)
+- if authorized_for?(:purchase_order_items, :create)
+  - if @purchase_order.draft? || @purchase_order.submitted?
+    .d-flex.justify-content-end.align-items-center.mb-2
+      = link_to new_purchase_order_purchase_order_item_path(@purchase_order), class: "btn btn-primary",
+        data: {turbo_frame: :remote_modal} do
+        = sprite_icon("plus")
+        = button_text(:new)
 .table-wrapper
   .table-container
     .table-header

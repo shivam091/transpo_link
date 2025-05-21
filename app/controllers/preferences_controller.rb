@@ -5,6 +5,9 @@
 class PreferencesController < ApplicationController
   before_action :set_breadcrumbs, :set_user
 
+  requires_authorization_for [:edit, :update], :preferences, :update
+  requires_authorization_for :show, :preferences, :view
+
   # GET /preference
   def show
   end

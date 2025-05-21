@@ -5,6 +5,8 @@
 class PurchaseOrderItems::InventoryBatchesController < ApplicationController
   before_action :set_purchase_order_item_and_inventory
 
+  requires_authorization_for [:new, :create], :inventory_batches, :create
+
   # GET /purchase-order-items/:purchase_order_item_id/inventory-batches/new
   def new
     @inventory_batch = @purchase_order_item.inventory_batches.build
