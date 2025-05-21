@@ -30,6 +30,8 @@ RSpec.describe "Locales", type: :request do
 
   describe "GET /locale/edit" do
     it "renders locale edit page" do
+      grant_permission!(manager, :preferences, :update)
+
       get edit_locale_path, as: :turbo_stream
 
       expect(response).to have_http_status(:ok)
@@ -40,6 +42,8 @@ RSpec.describe "Locales", type: :request do
   end
 
   describe "PUT|PATCH /locale" do
+    before { grant_permission!(manager, :preferences, :update) }
+
     context "when provided parameters are valid" do
       it "updates the locale and redirects" do
         put locale_path, params: valid_params, as: :turbo_stream

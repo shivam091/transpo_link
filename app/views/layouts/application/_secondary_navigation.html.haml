@@ -1,17 +1,21 @@
 .nav-scroller.bg-body-tertiary.shadow-sm.border-bottom
   %nav.nav{aria: {label: t(".secondary_navigation")}}
-    = link_to warehouses_path, class: class_names("nav-link", "active": current_controller?(:warehouses)) do
-      = sprite_icon("warehouse")
-      = t(".warehouses")
-    = link_to products_path, class: class_names("nav-link", "active": current_controller?(:products)) do
-      = sprite_icon("cube")
-      = t(".products")
-    = link_to purchase_orders_path, class: class_names("nav-link", "active": current_controller?(:purchase_orders)) do
-      = sprite_icon("file")
-      = t(".purchase_orders")
-    = link_to inventories_path, class: class_names("nav-link", "active": current_controller?(:inventories)) do
-      = sprite_icon("database")
-      = t(".inventories")
+    - if authorized_for?(:warehouses, :view_all)
+      = link_to warehouses_path, class: class_names("nav-link", "active": current_controller?(:warehouses)) do
+        = sprite_icon("warehouse")
+        = t(".warehouses")
+    - if authorized_for?(:products, :view_all)
+      = link_to products_path, class: class_names("nav-link", "active": current_controller?(:products)) do
+        = sprite_icon("cube")
+        = t(".products")
+    - if authorized_for?(:purchase_orders, :view_all)
+      = link_to purchase_orders_path, class: class_names("nav-link", "active": current_controller?(:purchase_orders)) do
+        = sprite_icon("file")
+        = t(".purchase_orders")
+    - if authorized_for?(:inventories, :view_all)
+      = link_to inventories_path, class: class_names("nav-link", "active": current_controller?(:inventories)) do
+        = sprite_icon("database")
+        = t(".inventories")
     = link_to "javascript:void(0)", class: "nav-link" do
       = sprite_icon("cart")
       = t(".orders")
@@ -30,12 +34,15 @@
     = link_to "javascript:void(0)", class: "nav-link" do
       = sprite_icon("chart")
       = t(".reports")
-    = link_to feedbacks_path, class: class_names("nav-link", "active": current_controller?(:feedbacks)) do
-      = sprite_icon("speech-bubble")
-      = t(".feedbacks")
-    = link_to tax_rates_path, class: class_names("nav-link", "active": current_controller?(:tax_rates)) do
-      = sprite_icon("percentage")
-      = t(".tax_rates")
-    = link_to roles_path, class: class_names("nav-link", "active": current_controller?(:roles)) do
-      = sprite_icon("security")
-      = t(".roles")
+    - if authorized_for?(:feedbacks, :view_all)
+      = link_to feedbacks_path, class: class_names("nav-link", "active": current_controller?(:feedbacks)) do
+        = sprite_icon("speech-bubble")
+        = t(".feedbacks")
+    - if authorized_for?(:tax_rates, :view_all)
+      = link_to tax_rates_path, class: class_names("nav-link", "active": current_controller?(:tax_rates)) do
+        = sprite_icon("percentage")
+        = t(".tax_rates")
+    - if authorized_for?(:roles, :view_all)
+      = link_to roles_path, class: class_names("nav-link", "active": current_controller?(:roles)) do
+        = sprite_icon("security")
+        = t(".roles")

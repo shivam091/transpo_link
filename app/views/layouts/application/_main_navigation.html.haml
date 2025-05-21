@@ -11,18 +11,21 @@
           %span.icon-bar.bottom-bar
       #navbar.navbar-collapse.collapse.divider
         %ul.navbar-nav.me-auto
-          %li.nav-item
-            = link_to root_path, class: class_names("nav-link", "active": current_controller?(:dashboards)) do
-              = sprite_icon("dashboard")
-              = t(".dashboard")
-          %li.nav-item
-            = link_to users_path, class: class_names("nav-link", "active": current_controller?(:users)) do
-              = sprite_icon("users")
-              = t(".users")
-          %li.nav-item
-            = link_to request_logs_path, class: class_names("nav-link", "active": current_controller?(:request_logs)) do
-              = sprite_icon("logs")
-              = t(".request_logs")
+          - if authorized_for?(:dashboards, :view)
+            %li.nav-item
+              = link_to root_path, class: class_names("nav-link", "active": current_controller?(:dashboards)) do
+                = sprite_icon("dashboard")
+                = t(".dashboard")
+          - if authorized_for?(:users, :view_all)
+            %li.nav-item
+              = link_to users_path, class: class_names("nav-link", "active": current_controller?(:users)) do
+                = sprite_icon("users")
+                = t(".users")
+          - if authorized_for?(:request_logs, :view_all)
+            %li.nav-item
+              = link_to request_logs_path, class: class_names("nav-link", "active": current_controller?(:request_logs)) do
+                = sprite_icon("logs")
+                = t(".request_logs")
         %ul.navbar-nav.d-none.d-lg-flex.ms-2
           = safe_render.partial("layouts/application/menu")
         %ul.navbar-nav.d-lg-none

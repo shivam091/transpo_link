@@ -1,8 +1,9 @@
 %div{data: {controller: "nested-forms", nested_forms_wrapper_selector_value: ".purchase-order-item-form-wrapper"}}
-  .col-12.text-end.mb-2
-    = button_tag type: :button, class: "btn btn-secondary", data: {action: "click->nested-forms#addAssociation"} do
-      = sprite_icon("plus")
-      = button_text(:add)
+  - if authorized_for?(:purchase_order_items, :create)
+    .col-12.text-end.mb-2
+      = button_tag type: :button, class: "btn btn-secondary", data: {action: "click->nested-forms#addAssociation"} do
+        = sprite_icon("plus")
+        = button_text(:add)
   .table-wrapper
     .table-container
       .table-header

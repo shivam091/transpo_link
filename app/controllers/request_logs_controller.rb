@@ -6,6 +6,9 @@ class RequestLogsController < ApplicationController
   before_action :set_breadcrumbs
   before_action :set_request_log, only: :show
 
+  requires_authorization_for :index, :request_logs, :view_all
+  requires_authorization_for :show, :request_logs, :view
+
   # GET /request-logs
   def index
     @request_logs = RequestLog.includes(user: :user_detail)

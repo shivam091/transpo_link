@@ -17,6 +17,8 @@ RSpec.describe "TaxRates", type: :request do
 
   describe "GET /tax-rates" do
     it "renders list of all tax rates with pagination" do
+      grant_permission!(admin, :tax_rates, :view_all)
+
       get tax_rates_path
 
       expect(controller_assigns(:tax_rates)).to include(active_tax_rate)
@@ -26,6 +28,8 @@ RSpec.describe "TaxRates", type: :request do
     end
 
     it "renders list of active tax rates with pagination" do
+      grant_permission!(admin, :tax_rates, :view_active)
+
       get active_tax_rates_path
 
       expect(controller_assigns(:tax_rates)).to include(active_tax_rate)
@@ -35,6 +39,8 @@ RSpec.describe "TaxRates", type: :request do
     end
 
     it "renders list of future tax rates with pagination" do
+      grant_permission!(admin, :tax_rates, :view_future)
+
       get future_tax_rates_path
 
       expect(controller_assigns(:tax_rates)).to include(future_tax_rate)
@@ -44,6 +50,8 @@ RSpec.describe "TaxRates", type: :request do
     end
 
     it "renders list of expired tax rates with pagination" do
+      grant_permission!(admin, :tax_rates, :view_expired)
+
       travel_to(1.year.from_now) do
         get expired_tax_rates_path
 
@@ -53,15 +61,26 @@ RSpec.describe "TaxRates", type: :request do
         expect(response).to have_http_status(:ok)
       end
     end
+
+    it "returns 404 for invalid status" do
+      get tax_rates_path, params: {status: "invalid"}
+
+      expect(response).to have_http_status(:not_found)
+    end
   end
 
   describe "GET /tax-rates/new" do
-    before { get new_tax_rate_path }
+    before do
+      grant_permission!(admin, :tax_rates, :create)
+      get new_tax_rate_path
+    end
 
     include_examples "initializes a new instance", :tax_rate, TaxRate
   end
 
   describe "POST /tax-rates" do
+    before { grant_permission!(admin, :tax_rates, :create) }
+
     context "when provided parameters are valid" do
       it "creates the tax rate and redirects" do
         post tax_rates_path, params: valid_params, as: :turbo_stream
@@ -86,6 +105,8 @@ RSpec.describe "TaxRates", type: :request do
 
   describe "GET /tax-rates/:id/edit" do
     it "renders tax rate edit page" do
+      grant_permission!(admin, :tax_rates, :update)
+
       get edit_tax_rate_path(active_tax_rate)
 
       expect(controller_assigns(:tax_rate)).to eq(active_tax_rate)
@@ -94,6 +115,8 @@ RSpec.describe "TaxRates", type: :request do
   end
 
   describe "PUT|PATCH /tax-rates/:id" do
+    before { grant_permission!(admin, :tax_rates, :update) }
+
     context "when provided parameters are valid" do
       it "updates the tax rate and redirects" do
         put tax_rate_path(active_tax_rate), params: valid_params, as: :turbo_stream
@@ -117,6 +140,8 @@ RSpec.describe "TaxRates", type: :request do
   end
 
   describe "DELETE /tax-rates/:id" do
+    before { grant_permission!(admin, :tax_rates, :delete) }
+
     context "when deletion is successful" do
       it "deletes the tax rate and redirects" do
         delete tax_rate_path(active_tax_rate), as: :turbo_stream

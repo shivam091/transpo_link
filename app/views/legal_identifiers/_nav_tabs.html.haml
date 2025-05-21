@@ -1,10 +1,14 @@
 = safe_render.partial("shared/inline_navigations") do
   %ul.nav.nav-pills.flex-row.mb-3
-    %li.nav-item
-      = link_to t(".all"), legal_identifiers_path, class: class_names("nav-link", "active": params[:status].nil?)
-    %li.nav-item
-      = link_to t(".unapproved"), unapproved_legal_identifiers_path, class: class_names("nav-link", "active": params[:status].eql?("unapproved"))
-    %li.nav-item
-      = link_to t(".approved"), approved_legal_identifiers_path, class: class_names("nav-link", "active": params[:status].eql?("approved"))
-    %li.nav-item
-      = link_to t(".rejected"), rejected_legal_identifiers_path, class: class_names("nav-link", "active": params[:status].eql?("rejected"))
+    - if authorized_for?(:legal_identifiers, :view_all)
+      %li.nav-item
+        = link_to t(".all"), legal_identifiers_path, class: class_names("nav-link", "active": params[:status].nil?)
+    - if authorized_for?(:legal_identifiers, :view_unapproved)
+      %li.nav-item
+        = link_to t(".unapproved"), unapproved_legal_identifiers_path, class: class_names("nav-link", "active": params[:status].eql?("unapproved"))
+    - if authorized_for?(:legal_identifiers, :view_approved)
+      %li.nav-item
+        = link_to t(".approved"), approved_legal_identifiers_path, class: class_names("nav-link", "active": params[:status].eql?("approved"))
+    - if authorized_for?(:legal_identifiers, :view_rejected)
+      %li.nav-item
+        = link_to t(".rejected"), rejected_legal_identifiers_path, class: class_names("nav-link", "active": params[:status].eql?("rejected"))

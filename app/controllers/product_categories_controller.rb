@@ -5,15 +5,14 @@
 class ProductCategoriesController < ApplicationController
   before_action :set_breadcrumbs
   before_action :set_product_category, except: [:index, :new, :create]
+  before_action :set_product_categories, only: :index
+
+  requires_authorization_for [:new, :create], :product_categories, :create
+  requires_authorization_for [:edit, :update], :product_categories, :update
+  requires_authorization_for :destroy, :product_categories, :delete
 
   # GET /product-categories
   def index
-    @product_categories = ProductCategory.includes(:parent_category)
-    @product_categories = case params[:status]
-                          when "active"   then @product_categories.active
-                          when "inactive" then @product_categories.inactive
-                          else                 @product_categories
-                          end
     @product_categories, @pagination_metadata = @product_categories.paginate(page: params[:page])
   end
 
@@ -88,6 +87,26 @@ class ProductCategoriesController < ApplicationController
 
   def set_product_category
     @product_category ||= ProductCategory.find(params[:id])
+  end
+
+  def set_product_categories
+    scope = ProductCategory.includes(:parent_category)
+
+    case params[:status]
+    when nil, ""
+      require_authorization :product_categories, :view_all
+      @product_categories = scope
+    when "active"
+      require_authorization :product_categories, :view_active
+      @product_categories = scope.active
+    when "inactive"
+      require_authorization :product_categories, :view_inactive
+      @product_categories = scope.inactive
+    else
+      raise ActionController::RoutingError, "Invalid status: #{params[:status]}"
+    end
+
+    @product_categories
   end
 
   def set_breadcrumbs

@@ -26,6 +26,13 @@ RSpec.describe FeedbacksHelper, type: :helper do
   end
 
   describe "#link_to_reviewable" do
+    let(:user) { build_stubbed(:user) }
+    let(:ability) { instance_double("Ability") }
+
+    before do
+      allow(helper).to receive(:can_view_reviewable?) { true }
+    end
+
     it "returns link for reviewable" do
       expect(helper.link_to_reviewable(product)).to eq(
         link_to("Test product (Product)", product_path(product))

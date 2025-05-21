@@ -13,21 +13,23 @@
             %span.middle-dot-divider
               = PurchaseOrder.human_attribute_name(:updated_at)
               = time_ago_with_tooltip(@purchase_order.updated_at)
-        = link_to edit_purchase_order_path(@purchase_order), class: "btn btn-secondary" do
-          = sprite_icon("pencil")
-          = button_text(:edit)
+        - if authorized_for?(:purchase_orders, :update)
+          = link_to edit_purchase_order_path(@purchase_order), class: "btn btn-secondary" do
+            = sprite_icon("pencil")
+            = button_text(:edit)
     .widget
       .widget-header
         .widget-title
           = t(".basic_details")
       .widget-body
         = safe_render.partial("purchase_orders/show")
-    .widget
-      .widget-header
-        .widget-title
-          = t(".purchase_order_items")
-      .widget-body
-        = turbo_frame_tag dom_id(@purchase_order, :items) do
-          = safe_render.template("purchase_order_items/index")
+    - with_permission(:purchase_order_items, :view_all) do
+      .widget
+        .widget-header
+          .widget-title
+            = t(".purchase_order_items")
+        .widget-body
+          = turbo_frame_tag dom_id(@purchase_order, :items) do
+            = safe_render.template("purchase_order_items/index")
   .card-footer
     = safe_render.partial("shared/navigable_links", resource: @purchase_order)

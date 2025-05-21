@@ -4,19 +4,19 @@
     .widget-row-title
       = PurchaseOrder.human_attribute_name(:warehouse_id)
     .widget-row-body
-      = link_to_warehouse(warehouse, target: :_blank)
+      = authorized_for?(:warehouses, :view) ? link_to_warehouse(warehouse, target: :_blank) : warehouse.name
 .widget-row
   .widget-row-content
     .widget-row-title
       = PurchaseOrder.human_attribute_name(:manager_id)
     .widget-row-body
-      = link_to_user(manager, target: :_blank)
+      = authorized_for?(:users, :view) ? link_to_user(manager, target: :_blank) : manager.full_name
 .widget-row
   .widget-row-content
     .widget-row-title
       = PurchaseOrder.human_attribute_name(:supplier_id)
     .widget-row-body
-      = link_to_user(supplier, target: :_blank)
+      = authorized_for?(:users, :view) ? link_to_user(supplier, target: :_blank) : supplier.full_name
 .widget-row
   .widget-row-content
     .widget-row-title

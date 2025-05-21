@@ -19,6 +19,10 @@ RSpec.describe "Users::Sessions", type: :request do
   end
 
   describe "POST /users/sign-in" do
+    before do
+      grant_permission!(user, :dashboards, :view)
+    end
+
     context "when valid credentials" do
       it "signs in the user and redirects" do
         post user_session_path, params: {user: {email: user.email, password: user.password}}, as: :turbo_stream
@@ -152,6 +156,7 @@ RSpec.describe "Users::Sessions", type: :request do
 
   describe "Session timeout" do
     before do
+      grant_permission!(user, :dashboards, :view)
       sign_in(user)
       get root_path
     end

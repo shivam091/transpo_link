@@ -5,6 +5,9 @@
 class ProfilesController < ApplicationController
   before_action :set_breadcrumbs, :set_user
 
+  requires_authorization_for [:edit, :update], :profiles, :update
+  requires_authorization_for :show, :profiles, :view
+
   # GET /profile
   def show
   end

@@ -8,7 +8,8 @@
     = check_box_tag "product_ids[]", product.id, false, id: dom_id(product), class: "form-check-input",
       data: {checkbox_selection_target: "itemCheckbox"}
   .table-cell
-    = link_to product.reference_code, product_path(product)
+    = conditional_link_to authorized_for?(:products, :view), product_path(product) do
+      = product.reference_code
   .table-cell
     = product.name
   .table-cell
@@ -23,21 +24,25 @@
     = link_to "javascript:void(0)", class: "text-reset", data: {bs_toggle: "dropdown"}, aria: {expanded: false} do
       = sprite_icon("ellipsis-vertical")
     %ul.dropdown-menu
-      %li
-        = link_to new_product_feedback_path(product), class: "dropdown-item", data: {turbo_frame: :remote_modal} do
-          = sprite_icon("speech-bubble")
-          = button_text(:leave_feedback)
-      %li.dropdown-divider
-      %li
-        = link_to product_path(product), class: "dropdown-item" do
-          = sprite_icon("arrow-right")
-          = button_text(:view_details)
-      %li
-        = link_to edit_product_path(product), class: "dropdown-item" do
-          = sprite_icon("pencil")
-          = button_text(:edit)
-      %li
-        = link_to product_path(product), class: "dropdown-item",
-          data: {turbo_confirm: t(".delete_confirmation_text", name: product.name), turbo_method: :delete} do
-          = sprite_icon("trash")
-          = button_text(:delete)
+      - if authorized_for?(:feedbacks, :create)
+        %li
+          = link_to new_product_feedback_path(product), class: "dropdown-item", data: {turbo_frame: :remote_modal} do
+            = sprite_icon("speech-bubble")
+            = button_text(:leave_feedback)
+        %li.dropdown-divider
+      - if authorized_for?(:products, :view)
+        %li
+          = link_to product_path(product), class: "dropdown-item" do
+            = sprite_icon("arrow-right")
+            = button_text(:view_details)
+      - if authorized_for?(:products, :update)
+        %li
+          = link_to edit_product_path(product), class: "dropdown-item" do
+            = sprite_icon("pencil")
+            = button_text(:edit)
+      - if authorized_for?(:products, :delete)
+        %li
+          = link_to product_path(product), class: "dropdown-item",
+            data: {turbo_confirm: t(".delete_confirmation_text", name: product.name), turbo_method: :delete} do
+            = sprite_icon("trash")
+            = button_text(:delete)

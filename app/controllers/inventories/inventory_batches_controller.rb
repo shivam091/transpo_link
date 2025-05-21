@@ -5,6 +5,8 @@
 class Inventories::InventoryBatchesController < ApplicationController
   before_action :set_inventory
 
+  requires_authorization :inventory_batches, :view_all
+
   # GET /inventories/:inventory_id/inventory-batches
   def index
     @inventory_batches = @inventory.inventory_batches

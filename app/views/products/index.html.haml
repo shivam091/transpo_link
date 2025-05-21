@@ -3,9 +3,10 @@
   .card-header
     .d-flex.justify-content-between.align-items-center
       = safe_render.partial("products/nav_tabs")
-      = link_to new_product_path, class: "btn btn-primary" do
-        = sprite_icon("plus")
-        = button_text(:new)
+      - if authorized_for?(:products, :create)
+        = link_to new_product_path, class: "btn btn-primary" do
+          = sprite_icon("plus")
+          = button_text(:new)
   .card-body{data: {controller: "checkbox-selection"}}
     %p.mb-2{data: {checkbox_selection_target: "selectedCount", label_template: t("shared.selected", count: "%{count}")}}
     .table-wrapper
