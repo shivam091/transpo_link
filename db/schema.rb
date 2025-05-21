@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_20_115623) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_21_094510) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_catalog.plpgsql"
@@ -25,6 +25,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_20_115623) do
   create_enum "inventory_batch_stock_statuses", ["available", "reserved", "partially_used", "exhausted", "locked", "damaged", "closed"]
   create_enum "legal_identifier_statuses", ["unapproved", "approved", "rejected"]
   create_enum "movement_types", ["restock", "purchase", "sale", "customer_return", "supplier_return", "transfer_in", "transfer_out", "adjustment", "correction", "reservation", "release_reservation", "initial_stock", "inspection", "quarantine", "release_from_quarantine"]
+  create_enum "po_rejection_reasons", ["ITEM_OUT_OF_STOCK", "ITEM_DISCONTINUED", "MINIMUM_ORDER_NOT_MET", "LEAD_TIME_TOO_SHORT", "INVALID_SHIPPING_LOCATION", "PAYMENT_TERMS_UNACCEPTABLE", "PRICING_DISAGREEMENT", "CAPACITY_CONSTRAINTS", "PACKAGING_REQUIREMENTS_UNMET", "COMPLIANCE_DOCUMENTS_MISSING", "SEASONAL_ITEM_UNAVAILABLE", "WRONG_SPECIFICATIONS", "LOGISTICS_UNAVAILABLE", "MANUAL_ERROR", "ALREADY_FULFILLED_BY_OTHER", "CONTRACT_TERMS_VIOLATED"]
   create_enum "purchase_order_item_statuses", ["pending", "ordered", "partially_delivered", "delivered", "cancelled"]
   create_enum "purchase_order_statuses", ["draft", "submitted", "approved", "shipped", "partially_delivered", "fully_delivered", "cancelled", "rejected", "closed", "on_hold"]
   create_enum "shipping_methods", ["AIR", "SEA", "ROAD", "RAIL", "COURIER", "POSTAL", "MULTIMODAL", "DRONE", "BIKE", "HAND_CARRY", "IN_PERSON"]
