@@ -2,7 +2,7 @@
 # -*- frozen_string_literal: true -*-
 # -*- warn_indent: true -*-
 
-# spec/schema/purchase_order_spec.rb
+# spec/schema/purchase_order/approval_spec.rb
 
 require "spec_helper"
 
