@@ -1,5 +1,5 @@
 - title = t(".title", reference_code: @purchase_order.reference_code)
 = title(title)
-= render_modal(title: title, modal_id: "purchase-order-approval") do
+= render_modal(title: title, modal_id: "purchase-order-approval", size: :lg) do
   = turbo_frame_tag :po_approval_confirmation_form_frame, target: "_top" do
     = safe_render.partial("purchase_orders/approvals/form")

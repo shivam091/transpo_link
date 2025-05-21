@@ -1,28 +1,31 @@
+- incoterm_codes = enum_options_for_select(PurchaseOrder::Approval, :incoterm_codes).each { |a| a << {title: t(".#{a.last.downcase}_hint")} }
 = pretty_form_with model: [@purchase_order, @approval], scope: :approval, class: "row g-2",
   url: purchase_order_approval_path(@purchase_order) do |form|
   %p
     = t(".approval_note", reference_code: @purchase_order.reference_code)
-  .col-12
+  .col-md-12.col-lg-6
     = form.label :reference_document, class: "form-label required"
     = form.text_field :reference_document
-  .col-12
+  .col-md-12.col-lg-6
     = form.label :expected_delivery_date, class: "form-label required"
     = form.date_field :expected_delivery_date
-  .col-12
+  .col-md-12.col-lg-6
     = form.label :incoterm_code, class: "form-label required"
-    = form.select :incoterm_code, options_for_select(enum_options_for_select(PurchaseOrder::Approval, :incoterm_codes), form.object.incoterm_code&.upcase),
+    = form.select :incoterm_code, options_for_select(enum_options_with_titles(PurchaseOrder::Approval, :incoterm_codes), form.object.incoterm_code&.upcase),
       {include_blank: t(".select_incoterm_code")}, {}
-  .col-12
+    = help_text(t(".incoterm_code_help_text"))
+  .col-md-12.col-lg-6
     = form.label :shipping_method, class: "form-label required"
     = form.select :shipping_method, options_for_select(enum_options_for_select(PurchaseOrder::Approval, :shipping_methods), form.object.shipping_method&.upcase),
       {include_blank: t(".select_shipping_method")}, {}
+    = help_text(t(".shipping_method_help_text"))
   .col-12
     = form.label :payment_terms, class: "form-label required"
     = form.text_area :payment_terms, rows: 2
   .col-12
     = form.label :remarks, class: "form-label"
     = form.text_area :remarks, rows: 2
-  .col-12
+  .col-12.mt-3
     .form-check
       = form.label :partial_delivery_allowed, class: "form-check-label"
       = form.check_box :partial_delivery_allowed
