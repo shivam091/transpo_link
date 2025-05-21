@@ -300,6 +300,9 @@
         "purchase_order/approval" => {
           reference_document: "Reference document",
           expected_delivery_date: "Expected delivery date",
+          incoterm_code: "Incoterm code",
+          shipping_method: "Expected shipping method",
+          payment_terms: "Payment terms",
           remarks: "Remarks",
           partial_delivery_allowed: "Partial delivery allowed?"
         },
@@ -484,6 +487,12 @@
                 must_be_today_or_future_date: "must be today or a future date",
                 must_be_within_six_months: "must be within 6 months from today"
               },
+              incoterm_code: {
+                inclusion: "'%{value}' is not a valid incoterm code",
+              },
+              shipping_method: {
+                inclusion: "'%{value}' is not a valid shipping method",
+              }
             }
           },
           purchase_order_item: {

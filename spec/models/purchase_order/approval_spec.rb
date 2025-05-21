@@ -18,12 +18,18 @@ RSpec.describe PurchaseOrder::Approval, type: :model do
     it { is_expected.to include_module(NullifyIfBlank) }
   end
 
+  describe "enum" do
+    it { is_expected.to define_enum_for(:incoterm_code).backed_by_column_of_type(:enum) }
+    it { is_expected.to define_enum_for(:shipping_method).backed_by_column_of_type(:enum) }
+  end
+
   describe "nullified attributes" do
     it { is_expected.to nullify_if_blank(:remarks) }
   end
 
   describe "sanitized attributes" do
     it { is_expected.to sanitize_attribute(:reference_document) }
+    it { is_expected.to sanitize_attribute(:payment_terms) }
     it { is_expected.to sanitize_attribute(:remarks) }
   end
 
@@ -40,6 +46,43 @@ RSpec.describe PurchaseOrder::Approval, type: :model do
     describe "#expected_delivery_date" do
       it { is_expected.to validate_presence_of(:expected_delivery_date) }
       it { is_expected.to validate_comparison_of(:expected_delivery_date).is_greater_than_or_equal_to(Date.current).with_message("must be today or a future date") }
+    end
+
+    describe "#incoterm_code" do
+      it { is_expected.to validate_presence_of(:incoterm_code) }
+
+      it "allows valid incoterm_code values" do
+        described_class.incoterm_codes.values.each do |incoterm_code|
+          expect(build(:purchase_order_approval, incoterm_code:)).to be_valid
+        end
+      end
+
+      it "raises error on invalid incoterm_code value" do
+        expect {
+          build(:purchase_order_approval, incoterm_code: "invalid_incoterm_code")
+        }.to raise_error(ArgumentError, /is not a valid incoterm_code/)
+      end
+    end
+
+    describe "#shipping_method" do
+      it { is_expected.to validate_presence_of(:shipping_method) }
+
+      it "allows valid shipping_method values" do
+        described_class.shipping_methods.values.each do |shipping_method|
+          expect(build(:purchase_order_approval, shipping_method:)).to be_valid
+        end
+      end
+
+      it "raises error on invalid shipping_method value" do
+        expect {
+          build(:purchase_order_approval, shipping_method: "invalid_shipping_method")
+        }.to raise_error(ArgumentError, /is not a valid shipping_method/)
+      end
+    end
+
+    describe "#payment_terms" do
+      it { is_expected.to validate_presence_of(:payment_terms) }
+      it { is_expected.to validate_length_of(:payment_terms).is_at_most(1000) }
     end
 
     describe "#remarks" do

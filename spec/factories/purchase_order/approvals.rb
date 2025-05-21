@@ -7,6 +7,9 @@ FactoryBot.define do
     association :purchase_order
     reference_document { Faker::Alphanumeric.alphanumeric(number: 12).upcase }
     expected_delivery_date { Date.current + 1.month }
+    incoterm_code { :exw }
+    shipping_method { :air }
+    payment_terms { Faker::Lorem.paragraph(sentence_count: 3) }
     remarks { Faker::Lorem.sentence(word_count: 50) }
     partial_delivery_allowed { true }
   end

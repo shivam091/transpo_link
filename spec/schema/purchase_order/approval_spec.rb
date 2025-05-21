@@ -14,6 +14,9 @@ RSpec.describe PurchaseOrder::Approval, type: :model do
     it { is_expected.to have_db_column(:purchase_order_id).of_type(:uuid).with_options(null: false) }
     it { is_expected.to have_db_column(:reference_document).of_type(:string) }
     it { is_expected.to have_db_column(:expected_delivery_date).of_type(:date) }
+    it { is_expected.to have_db_column(:incoterm_code).of_type(:enum) }
+    it { is_expected.to have_db_column(:shipping_method).of_type(:enum) }
+    it { is_expected.to have_db_column(:payment_terms).of_type(:text) }
     it { is_expected.to have_db_column(:remarks).of_type(:text) }
     it { is_expected.to have_db_column(:partial_delivery_allowed).of_type(:boolean).with_options(default: true) }
     it { is_expected.to have_db_column(:created_at).of_type(:timestamptz).with_options(null: false) }
@@ -37,5 +40,12 @@ RSpec.describe PurchaseOrder::Approval, type: :model do
     it { is_expected.to have_check_constraint(:check_po_approvals_expected_delivery_today_or_in_future).with_expression("expected_delivery_date >= CURRENT_DATE") }
     it { is_expected.to have_check_constraint(:check_po_approvals_expected_delivery_presence).with_expression("expected_delivery_date IS NOT NULL") }
     it { is_expected.to have_check_constraint(:check_po_approvals_reference_document_presence).with_expression("reference_document IS NOT NULL AND reference_document::text <> ''::text") }
+
+    it { is_expected.to have_check_constraint(:check_po_approvals_payment_terms_length).with_expression("char_length(payment_terms) <= 1000") }
+    it { is_expected.to have_check_constraint(:check_po_approvals_incoterm_code_in_enum_values) }
+    it { is_expected.to have_check_constraint(:check_po_approvals_incoterm_code_presence).with_expression("incoterm_code IS NOT NULL") }
+    it { is_expected.to have_check_constraint(:check_po_approvals_payment_terms_presence).with_expression("payment_terms IS NOT NULL AND payment_terms <> ''::text") }
+    it { is_expected.to have_check_constraint(:check_po_approvals_shipping_method_in_enum_values) }
+    it { is_expected.to have_check_constraint(:check_po_approvals_shipping_method_presence).with_expression("shipping_method IS NOT NULL") }
   end
 end
