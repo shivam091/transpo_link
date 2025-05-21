@@ -111,6 +111,7 @@ Rails.application.routes.draw do
 
     resource :delivery, only: [:new, :create], module: :purchase_orders
     resource :approval, only: [:new, :create], module: :purchase_orders
+    resource :rejection, only: [:new, :create], module: :purchase_orders
 
     resources :purchase_order_items, path: "purchase-order-items", shallow: true do
       member do

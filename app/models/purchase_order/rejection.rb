@@ -42,4 +42,12 @@ class PurchaseOrder::Rejection < ApplicationRecord
             reduce: true
 
   belongs_to :purchase_order, inverse_of: :rejection
+
+  after_create :reject_purchase_order!
+
+  private
+
+  def reject_purchase_order!
+    PurchaseOrders::RejectService.(purchase_order)
+  end
 end

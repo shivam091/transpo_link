@@ -41,6 +41,12 @@
             data: {turbo_frame: :remote_modal} do
             = sprite_icon("check")
             = button_text(:approve)
+      - if purchase_order.may_reject?
+        %li
+          = link_to new_purchase_order_rejection_path(purchase_order), class: "dropdown-item",
+            data: {turbo_frame: :remote_modal} do
+            = sprite_icon("times")
+            = button_text(:reject)
       %li
         = link_to purchase_order_path(purchase_order), class: "dropdown-item" do
           = sprite_icon("arrow-right")

@@ -1,4 +1,3 @@
-- incoterm_codes = enum_options_for_select(PurchaseOrder::Approval, :incoterm_codes).each { |a| a << {title: t(".#{a.last.downcase}_hint")} }
 = pretty_form_with model: [@purchase_order, @approval], scope: :approval, class: "row g-2",
   url: purchase_order_approval_path(@purchase_order) do |form|
   %p

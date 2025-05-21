@@ -211,6 +211,12 @@
           error: "Unable to approve the purchase order. Please try again later or contact support if the issue persists.",
         },
       },
+      rejections: {
+        create: {
+          success: "Purchase order has been successfully rejected.",
+          error: "Unable to reject the purchase order. Please try again later or contact support if the issue persists.",
+        },
+      },
     }
   }
 }

@@ -61,4 +61,16 @@ RSpec.describe PurchaseOrder::Rejection, type: :model do
       it { is_expected.to validate_length_of(:note).is_at_most(1000).allow_blank }
     end
   end
+
+  describe "instance methods" do
+    describe "#reject_purchase_order!" do
+      let!(:purchase_order) { create(:purchase_order) }
+
+      it "calls PurchaseOrders::RejectService after create" do
+        expect(PurchaseOrders::RejectService).to receive(:call).with(purchase_order)
+
+        create(:purchase_order_rejection, purchase_order: purchase_order)
+      end
+    end
+  end
 end
