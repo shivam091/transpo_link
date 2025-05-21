@@ -292,12 +292,19 @@
           warehouse_id: "Warehouse",
           manager_id: "Manager",
           supplier_id: "Supplier",
-          reference_document: "Reference document",
           order_date: "Ordered at",
-          expected_delivery_date: "Expected delivery date",
-          actual_delivery_date: "Actual delivery date",
+          delivered_at: "Delivered at",
           status: "Status",
           notes: "Notes"
+        },
+        "purchase_order/approval" => {
+          reference_document: "Reference document",
+          expected_delivery_date: "Expected delivery date",
+          incoterm_code: "Incoterm code",
+          shipping_method: "Expected shipping method",
+          payment_terms: "Payment terms",
+          remarks: "Remarks",
+          partial_delivery_allowed: "Partial delivery allowed?"
         },
         purchase_order_item: {
           purchase_order_id: "Purchase order",
@@ -472,6 +479,20 @@
               status: {
                 inclusion: "'%{value}' is not a valid status for purchase order",
               },
+            }
+          },
+          "purchase_order/approval" => {
+            attributes: {
+              expected_delivery_date: {
+                must_be_today_or_future_date: "must be today or a future date",
+                must_be_within_six_months: "must be within 6 months from today"
+              },
+              incoterm_code: {
+                inclusion: "'%{value}' is not a valid incoterm code",
+              },
+              shipping_method: {
+                inclusion: "'%{value}' is not a valid shipping method",
+              }
             }
           },
           purchase_order_item: {

@@ -20,27 +20,15 @@
 .widget-row
   .widget-row-content
     .widget-row-title
-      = PurchaseOrder.human_attribute_name(:reference_document)
-    .widget-row-body
-      = @purchase_order.reference_document || "-"
-.widget-row
-  .widget-row-content
-    .widget-row-title
       = PurchaseOrder.human_attribute_name(:order_date)
     .widget-row-body
       = prettify_datetime(@purchase_order.order_date)
 .widget-row
   .widget-row-content
     .widget-row-title
-      = PurchaseOrder.human_attribute_name(:expected_delivery_date)
+      = PurchaseOrder.human_attribute_name(:delivered_at)
     .widget-row-body
-      = prettify_date(@purchase_order.expected_delivery_date) || "-"
-.widget-row
-  .widget-row-content
-    .widget-row-title
-      = PurchaseOrder.human_attribute_name(:actual_delivery_date)
-    .widget-row-body
-      = prettify_date(@purchase_order.actual_delivery_date) || "-"
+      = prettify_date(@purchase_order.delivered_at) || "-"
 .widget-row
   .widget-row-content
     .widget-row-title

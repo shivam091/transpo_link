@@ -7,6 +7,7 @@
 # draft: PO is being created but not yet submitted. Editable.
 # submitted: PO has been submitted for approval or processing.
 # approved: PO has been reviewed and approved. Can now be acted on.
+# shipped: PO has been shipped by the supplier.
 # partially_delivered: Some items in the PO have been received.
 # fully_delivered: All items in the PO have been fully received.
 # cancelled: PO was cancelled before completion. No further processing.
@@ -18,14 +19,14 @@ class PurchaseOrder < ApplicationRecord
   include AASM, HasReferenceCode, Sanitizable, NullifyIfBlank, Pageable, Navigable
 
   LISTING_ATTRIBUTES = %i[
-    reference_code warehouse_id manager_id supplier_id order_date expected_delivery_date
-    status
+    reference_code warehouse_id manager_id supplier_id order_date status
   ].freeze
 
   enum :status, {
     draft: "draft",
     submitted: "submitted",
     approved: "approved",
+    shipped: "shipped",
     partially_delivered: "partially_delivered",
     fully_delivered: "fully_delivered",
     cancelled: "cancelled",
@@ -36,13 +37,13 @@ class PurchaseOrder < ApplicationRecord
 
   attribute :status, default: statuses[:draft]
 
-  sanitize_attributes :reference_document, :notes
+  sanitize_attributes :notes
 
-  nullify_if_blank :reference_document, :notes, :expected_delivery_date
+  nullify_if_blank :notes
 
   aasm column: :status, enum: true, requires_lock: true do
     state :draft, initial: true
-    state :submitted, :approved, :cancelled, :rejected, :partially_delivered,
+    state :submitted, :approved, :shipped, :cancelled, :rejected, :partially_delivered,
           :fully_delivered, :closed, :on_hold
 
     event :submit do
@@ -53,6 +54,10 @@ class PurchaseOrder < ApplicationRecord
       transitions from: :submitted, to: :approved
 
       after :replenish_inventory!
+    end
+
+    event :ship do
+      transitions from: :approved, to: :shipped
     end
 
     event :reject do
@@ -80,7 +85,7 @@ class PurchaseOrder < ApplicationRecord
     event :fully_deliver do
       transitions from: [:approved, :partially_delivered], to: :fully_delivered
 
-      before :update_actual_delivery_date
+      before :update_delivered_at
       after :deliver_purchase_order_items!
     end
 
@@ -90,14 +95,6 @@ class PurchaseOrder < ApplicationRecord
   end
 
   validates :warehouse_id, :manager_id, :supplier_id, presence: true, reduce: true
-  validates :reference_document,
-            length: {maximum: 55},
-            allow_blank: true,
-            reduce: true
-  validates :expected_delivery_date,
-            comparison: {greater_than_or_equal_to: :order_date},
-            allow_nil: true,
-            reduce: true
   validates :status,
             presence: true,
             inclusion: {in: statuses.values, message: :inclusion},
@@ -109,7 +106,11 @@ class PurchaseOrder < ApplicationRecord
 
   validates_associated :purchase_order_items
 
-  has_many :purchase_order_items, inverse_of: :purchase_order, dependent: :destroy
+  with_options inverse_of: :purchase_order, dependent: :destroy do |a|
+    a.has_one :approval, class_name: "PurchaseOrder::Approval"
+
+    a.has_many :purchase_order_items
+  end
 
   belongs_to :warehouse, inverse_of: :purchase_orders
   belongs_to :manager, inverse_of: :purchase_orders, class_name: "User"
@@ -176,7 +177,7 @@ class PurchaseOrder < ApplicationRecord
     end
   end
 
-  def update_actual_delivery_date
-    update_column(:actual_delivery_date, Date.current)
+  def update_delivered_at
+    update_column(:delivered_at, Date.current)
   end
 end

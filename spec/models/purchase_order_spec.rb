@@ -39,13 +39,10 @@ RSpec.describe PurchaseOrder, type: :model do
   end
 
   describe "nullified attributes" do
-    it { is_expected.to nullify_if_blank(:reference_document) }
     it { is_expected.to nullify_if_blank(:notes) }
-    it { is_expected.to nullify_if_blank(:expected_delivery_date) }
   end
 
   describe "sanitized attributes" do
-    it { is_expected.to sanitize_attribute(:reference_document) }
     it { is_expected.to sanitize_attribute(:notes) }
   end
 
@@ -60,6 +57,7 @@ RSpec.describe PurchaseOrder, type: :model do
     it { is_expected.to transition_from(:submitted).to(:cancelled).on_event(:cancel) }
     it { is_expected.to transition_from(:on_hold).to(:cancelled).on_event(:cancel) }
     it { is_expected.to transition_from(:submitted).to(:on_hold).on_event(:hold) }
+    it { is_expected.to transition_from(:approved).to(:shipped).on_event(:ship) }
     it { is_expected.to transition_from(:approved).to(:on_hold).on_event(:hold) }
     it { is_expected.to transition_from(:on_hold).to(:approved).on_event(:resume) }
     it { is_expected.to transition_from(:approved).to(:partially_delivered).on_event(:partially_deliver) }
@@ -69,6 +67,8 @@ RSpec.describe PurchaseOrder, type: :model do
   end
 
   describe "associations" do
+    it { is_expected.to have_one(:approval).class_name("PurchaseOrder::Approval").inverse_of(:purchase_order).dependent(:destroy) }
+
     it { is_expected.to have_many(:purchase_order_items).inverse_of(:purchase_order).dependent(:destroy) }
 
     it { is_expected.to belong_to(:warehouse).inverse_of(:purchase_orders) }
@@ -91,14 +91,6 @@ RSpec.describe PurchaseOrder, type: :model do
 
     describe "#supplier_id" do
       it { is_expected.to validate_presence_of(:supplier_id) }
-    end
-
-    describe "#reference_document" do
-      it { is_expected.to validate_length_of(:reference_document).is_at_most(55).allow_blank }
-    end
-
-    describe "#expected_delivery_date" do
-      it { is_expected.to validate_comparison_of(:expected_delivery_date).is_greater_than_or_equal_to(:order_date).allow_nil }
     end
 
     describe "#status" do
@@ -339,15 +331,15 @@ RSpec.describe PurchaseOrder, type: :model do
       end
     end
 
-    describe "#update_actual_delivery_date" do
-      let(:purchase_order) { create(:purchase_order, :approved, actual_delivery_date: nil) }
+    describe "#update_delivered_at" do
+      let(:purchase_order) { create(:purchase_order, :approved, delivered_at: nil) }
 
-      it "sets actual_delivery_date to current time on delivery" do
+      it "sets delivered_at to current time on delivery" do
         freeze_time do
           expect {
             purchase_order.fully_deliver!
           }.to change {
-            purchase_order.reload.actual_delivery_date
+            purchase_order.reload.delivered_at
           }.from(nil).to(Date.current)
         end
       end

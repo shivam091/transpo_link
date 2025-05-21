@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_02_140259) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_20_115623) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_catalog.plpgsql"
@@ -21,11 +21,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_02_140259) do
   create_enum "business_categories", ["b2b", "b2c"]
   create_enum "color_schemes", ["auto", "dark", "light"]
   create_enum "entity_types", ["business", "individual"]
+  create_enum "incoterm_codes", ["EXW", "FCA", "FOB", "CFR", "CIF", "DAP", "DPU", "DDP"]
   create_enum "inventory_batch_stock_statuses", ["available", "reserved", "partially_used", "exhausted", "locked", "damaged", "closed"]
   create_enum "legal_identifier_statuses", ["unapproved", "approved", "rejected"]
   create_enum "movement_types", ["restock", "purchase", "sale", "customer_return", "supplier_return", "transfer_in", "transfer_out", "adjustment", "correction", "reservation", "release_reservation", "initial_stock", "inspection", "quarantine", "release_from_quarantine"]
   create_enum "purchase_order_item_statuses", ["pending", "ordered", "partially_delivered", "delivered", "cancelled"]
-  create_enum "purchase_order_statuses", ["draft", "submitted", "approved", "partially_delivered", "fully_delivered", "cancelled", "rejected", "closed", "on_hold"]
+  create_enum "purchase_order_statuses", ["draft", "submitted", "approved", "shipped", "partially_delivered", "fully_delivered", "cancelled", "rejected", "closed", "on_hold"]
+  create_enum "shipping_methods", ["AIR", "SEA", "ROAD", "RAIL", "COURIER", "POSTAL", "MULTIMODAL", "DRONE", "BIKE", "HAND_CARRY", "IN_PERSON"]
   create_enum "tax_types", ["exclusive", "inclusive"]
   create_enum "tracking_methods", ["fifo", "lifo", "average_cost"]
   create_enum "unit_categories", ["count", "length", "weight", "area", "volume"]
@@ -397,6 +399,34 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_02_140259) do
     t.check_constraint "sku IS NOT NULL AND sku::text <> ''::text", name: "check_products_sku_presence"
   end
 
+  create_table "purchase_order_approvals", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "purchase_order_id", null: false
+    t.string "reference_document"
+    t.date "expected_delivery_date"
+    t.enum "incoterm_code", enum_type: "incoterm_codes"
+    t.enum "shipping_method", enum_type: "shipping_methods"
+    t.text "payment_terms"
+    t.text "remarks"
+    t.boolean "partial_delivery_allowed", default: true
+    t.timestamptz "created_at", null: false
+    t.timestamptz "updated_at", null: false
+    t.index ["expected_delivery_date"], name: "index_purchase_order_approvals_on_expected_delivery_date"
+    t.index ["purchase_order_id"], name: "index_purchase_order_approvals_on_purchase_order_id"
+    t.index ["reference_document"], name: "index_purchase_order_approvals_on_reference_document"
+    t.check_constraint "char_length(payment_terms) <= 1000", name: "check_po_approvals_payment_terms_length"
+    t.check_constraint "char_length(reference_document::text) <= 55", name: "check_po_approvals_reference_document_length"
+    t.check_constraint "char_length(remarks) <= 1000", name: "check_po_approvals_remarks_length"
+    t.check_constraint "expected_delivery_date <= (CURRENT_DATE + 'P180D'::interval)", name: "check_po_approvals_expected_delivery_max_6_months"
+    t.check_constraint "expected_delivery_date >= CURRENT_DATE", name: "check_po_approvals_expected_delivery_today_or_in_future"
+    t.check_constraint "expected_delivery_date IS NOT NULL", name: "check_po_approvals_expected_delivery_presence"
+    t.check_constraint "incoterm_code = ANY (ARRAY['EXW'::incoterm_codes, 'FCA'::incoterm_codes, 'FOB'::incoterm_codes, 'CFR'::incoterm_codes, 'CIF'::incoterm_codes, 'DAP'::incoterm_codes, 'DPU'::incoterm_codes, 'DDP'::incoterm_codes])", name: "check_po_approvals_incoterm_code_in_enum_values"
+    t.check_constraint "incoterm_code IS NOT NULL", name: "check_po_approvals_incoterm_code_presence"
+    t.check_constraint "payment_terms IS NOT NULL AND payment_terms <> ''::text", name: "check_po_approvals_payment_terms_presence"
+    t.check_constraint "reference_document IS NOT NULL AND reference_document::text <> ''::text", name: "check_po_approvals_reference_document_presence"
+    t.check_constraint "shipping_method = ANY (ARRAY['AIR'::shipping_methods, 'SEA'::shipping_methods, 'ROAD'::shipping_methods, 'RAIL'::shipping_methods, 'COURIER'::shipping_methods, 'POSTAL'::shipping_methods, 'MULTIMODAL'::shipping_methods, 'DRONE'::shipping_methods, 'BIKE'::shipping_methods, 'HAND_CARRY'::shipping_methods, 'IN_PERSON'::shipping_methods])", name: "check_po_approvals_shipping_method_in_enum_values"
+    t.check_constraint "shipping_method IS NOT NULL", name: "check_po_approvals_shipping_method_presence"
+  end
+
   create_table "purchase_order_item_deliveries", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "purchase_order_item_id", null: false
     t.uuid "unit_id", null: false
@@ -440,7 +470,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_02_140259) do
     t.check_constraint "quantity IS NOT NULL", name: "check_purchase_order_items_quantity_presence"
     t.check_constraint "received_quantity >= 0.0", name: "check_purchase_order_items_received_quantity_non_negative"
     t.check_constraint "received_quantity IS NOT NULL", name: "check_purchase_order_items_received_quantity_presence"
-    t.check_constraint "status = ANY (ARRAY['cancelled'::purchase_order_item_statuses, 'delivered'::purchase_order_item_statuses, 'ordered'::purchase_order_item_statuses, 'partially_delivered'::purchase_order_item_statuses, 'pending'::purchase_order_item_statuses])", name: "check_purchase_order_items_status_in_enum_values"
+    t.check_constraint "status = ANY (ARRAY['pending'::purchase_order_item_statuses, 'ordered'::purchase_order_item_statuses, 'partially_delivered'::purchase_order_item_statuses, 'delivered'::purchase_order_item_statuses, 'cancelled'::purchase_order_item_statuses])", name: "check_purchase_order_items_status_in_enum_values"
     t.check_constraint "status IS NOT NULL", name: "check_purchase_order_items_status_presence"
     t.check_constraint "unit_cost > 0.0", name: "check_purchase_order_items_unit_cost_positive"
     t.check_constraint "unit_cost IS NOT NULL", name: "check_purchase_order_items_unit_cost_presence"
@@ -451,10 +481,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_02_140259) do
     t.uuid "warehouse_id", null: false
     t.uuid "manager_id", null: false
     t.uuid "supplier_id", null: false
-    t.string "reference_document"
     t.timestamptz "order_date", default: -> { "CURRENT_TIMESTAMP" }
-    t.date "expected_delivery_date"
-    t.date "actual_delivery_date"
+    t.date "delivered_at"
     t.enum "status", enum_type: "purchase_order_statuses"
     t.text "notes"
     t.timestamptz "created_at", null: false
@@ -466,9 +494,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_02_140259) do
     t.index ["supplier_id"], name: "index_purchase_orders_on_supplier_id"
     t.index ["warehouse_id"], name: "index_purchase_orders_on_warehouse_id"
     t.check_constraint "char_length(notes) <= 1000", name: "check_purchase_orders_notes_length"
-    t.check_constraint "char_length(reference_document::text) <= 55", name: "check_purchase_orders_reference_document_length"
-    t.check_constraint "expected_delivery_date >= order_date", name: "check_purchase_orders_expected_delivery_after_order"
-    t.check_constraint "status = ANY (ARRAY['approved'::purchase_order_statuses, 'cancelled'::purchase_order_statuses, 'closed'::purchase_order_statuses, 'draft'::purchase_order_statuses, 'fully_delivered'::purchase_order_statuses, 'on_hold'::purchase_order_statuses, 'partially_delivered'::purchase_order_statuses, 'rejected'::purchase_order_statuses, 'submitted'::purchase_order_statuses])", name: "check_purchase_orders_status_in_enum_values"
+    t.check_constraint "status = ANY (ARRAY['draft'::purchase_order_statuses, 'submitted'::purchase_order_statuses, 'approved'::purchase_order_statuses, 'shipped'::purchase_order_statuses, 'partially_delivered'::purchase_order_statuses, 'fully_delivered'::purchase_order_statuses, 'cancelled'::purchase_order_statuses, 'rejected'::purchase_order_statuses, 'closed'::purchase_order_statuses, 'on_hold'::purchase_order_statuses])", name: "check_purchase_orders_status_in_enum_values"
     t.check_constraint "status IS NOT NULL", name: "check_purchase_orders_status_presence"
   end
 
@@ -751,6 +777,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_02_140259) do
   add_foreign_key "product_prices", "warehouses", name: "fk_product_prices_warehouse_id_on_warehouses", on_delete: :restrict
   add_foreign_key "products", "product_categories", name: "fk_products_product_category_id_on_product_categories", on_delete: :restrict
   add_foreign_key "products", "units", name: "fk_products_unit_id_on_units", on_delete: :restrict
+  add_foreign_key "purchase_order_approvals", "purchase_orders", name: "po_approvals_purchase_order_id_on_purchase_orders", on_delete: :cascade
   add_foreign_key "purchase_order_item_deliveries", "purchase_order_items", name: "fk_purchase_order_item_deliveries_purchase_order_item_id_on_pur", on_delete: :cascade
   add_foreign_key "purchase_order_item_deliveries", "units", name: "fk_purchase_order_item_deliveries_unit_id_on_units", on_delete: :restrict
   add_foreign_key "purchase_order_items", "products", name: "fk_purchase_order_items_product_id_on_products", on_delete: :restrict

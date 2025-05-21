@@ -28,6 +28,7 @@ module TranspoLink
         draft:                   "#D4C5F9FF", # Lavender blue
         submitted:               "#FBCA04FF", # Tangerine yellow
         approved:                "#43FF2CFF", # Harlequin
+        shipped:                 "#006B75FF", # Blue Lagoon
         cancelled:               "#E57F84FF", # Carissma
         rejected:                "#B60205FF", # Guardsman red
         partially_delivered:     "#2FF3E0FF", # Bright turquoise
