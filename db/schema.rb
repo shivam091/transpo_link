@@ -29,6 +29,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_21_100219) do
   create_enum "purchase_order_item_statuses", ["pending", "ordered", "partially_delivered", "delivered", "cancelled"]
   create_enum "purchase_order_statuses", ["draft", "submitted", "approved", "shipped", "partially_delivered", "fully_delivered", "cancelled", "rejected", "closed", "on_hold"]
   create_enum "shipping_methods", ["AIR", "SEA", "ROAD", "RAIL", "COURIER", "POSTAL", "MULTIMODAL", "DRONE", "BIKE", "HAND_CARRY", "IN_PERSON"]
+  create_enum "stock_adjustment_reasons", ["stock_count_discrepancy", "damaged_goods", "expired_stock", "theft_or_loss", "sample_issued", "administrative_correction", "misplaced_then_found", "overstock_correction", "shrinkage", "pallet_breakage", "found_during_audit", "cycle_count_adjustment", "donated", "disposal", "used_internally"]
   create_enum "tax_types", ["exclusive", "inclusive"]
   create_enum "tracking_methods", ["fifo", "lifo", "average_cost"]
   create_enum "unit_categories", ["count", "length", "weight", "area", "volume"]
