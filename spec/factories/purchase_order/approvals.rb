@@ -3,7 +3,7 @@
 # -*- warn_indent: true -*-
 
 FactoryBot.define do
-  factory :purchase_order_approval, class: 'PurchaseOrder::Approval' do
+  factory :purchase_order_approval, class: "PurchaseOrder::Approval" do
     association :purchase_order
     reference_document { Faker::Alphanumeric.alphanumeric(number: 12).upcase }
     expected_delivery_date { Date.current + 1.month }

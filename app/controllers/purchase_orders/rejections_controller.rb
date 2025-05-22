@@ -2,26 +2,26 @@
 # -*- frozen_string_literal: true -*-
 # -*- warn_indent: true -*-
 
-class PurchaseOrders::ApprovalsController < ApplicationController
+class PurchaseOrders::RejectionsController < ApplicationController
   before_action :set_purchase_order
 
-  requires_authorization :purchase_orders, :approve
+  requires_authorization :purchase_orders, :reject
 
-  # GET /purchase-orders/:purchase_order_id/approval/new
+  # GET /purchase-orders/:purchase_order_id/rejection/new
   def new
-    @approval = @purchase_order.build_approval
+    @rejection = @purchase_order.build_rejection
   end
 
-  # POST /purchase-orders/:purchase_order_id/approval
+  # POST /purchase-orders/:purchase_order_id/rejection
   def create
-    response = PurchaseOrders::Approval::CreateService.(@purchase_order, approval_params)
+    response = PurchaseOrders::Rejection::CreateService.(@purchase_order, rejection_params)
 
     response.on_success do
       set_flash_message(:notice, :success)
 
       redirect_back fallback_location: purchase_orders_path, status: :see_other
     end.on_error do
-      @approval = response.payload[:approval]
+      @rejection = response.payload[:rejection]
 
       respond_to do |format|
         format.turbo_stream do
@@ -39,23 +39,19 @@ class PurchaseOrders::ApprovalsController < ApplicationController
     @purchase_order ||= PurchaseOrder.find(params[:purchase_order_id])
   end
 
-  def approval_params
-    params.require(:approval).permit(
-      :reference_document,
-      :expected_delivery_date,
-      :incoterm_code,
-      :shipping_method,
-      :payment_terms,
-      :remarks,
-      :partial_delivery_allowed
+  def rejection_params
+    params.require(:rejection).permit(
+      :reason,
+      :suggested_alternatives,
+      :note,
     )
   end
 
   def form_frame_id
-    :po_approval_confirmation_form_frame
+    :po_rejection_confirmation_form_frame
   end
 
   def form_partial
-    "purchase_orders/approvals/form"
+    "purchase_orders/rejections/form"
   end
 end

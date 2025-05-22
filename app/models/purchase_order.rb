@@ -108,6 +108,7 @@ class PurchaseOrder < ApplicationRecord
 
   with_options inverse_of: :purchase_order, dependent: :destroy do |a|
     a.has_one :approval, class_name: "PurchaseOrder::Approval"
+    a.has_one :rejection, class_name: "PurchaseOrder::Rejection"
 
     a.has_many :purchase_order_items
   end

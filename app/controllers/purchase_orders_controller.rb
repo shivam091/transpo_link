@@ -13,8 +13,6 @@ class PurchaseOrdersController < ApplicationController
   requires_authorization_for :destroy, :purchase_orders, :delete
   requires_authorization_for :cancel, :purchase_orders, :cancel
   requires_authorization_for :submit, :purchase_orders, :submit
-  requires_authorization_for :approve, :purchase_orders, :approve
-  requires_authorization_for :reject, :purchase_orders, :reject
 
   # GET /purchase-orders
   def index
@@ -109,20 +107,6 @@ class PurchaseOrdersController < ApplicationController
   # PATCH /purchase-orders/:id/submit
   def submit
     response = PurchaseOrders::SubmitService.(@purchase_order)
-    @purchase_order = response.payload[:purchase_order]
-
-    if response.success?
-      set_flash_message(:info, :success)
-    else
-      set_flash_message(:alert, :error)
-    end
-
-    redirect_to purchase_orders_path, status: :see_other
-  end
-
-  # PATCH /purchase-orders/:id/reject
-  def reject
-    response = PurchaseOrders::RejectService.(@purchase_order)
     @purchase_order = response.payload[:purchase_order]
 
     if response.success?
