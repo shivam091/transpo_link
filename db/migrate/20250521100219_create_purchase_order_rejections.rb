@@ -11,7 +11,7 @@ class CreatePurchaseOrderRejections < ActiveRecord::Migration[8.0]
                    type: :uuid,
                    foreign_key: {
                      to_table: :purchase_orders,
-                     name: :po_rejections_purchase_order_id_on_purchase_orders,
+                     name: :fk_po_rejections_purchase_order_id_on_purchase_orders,
                      on_delete: :cascade
                    },
                    null: false,

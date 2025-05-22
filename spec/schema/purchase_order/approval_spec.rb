@@ -30,7 +30,7 @@ RSpec.describe PurchaseOrder::Approval, type: :model do
   end
 
   describe "foreign keys" do
-    it { is_expected.to have_foreign_key(:purchase_order_id).with_name(:po_approvals_purchase_order_id_on_purchase_orders).on_delete(:cascade) }
+    it { is_expected.to have_foreign_key(:purchase_order_id).with_name(:fk_po_approvals_purchase_order_id_on_purchase_orders).on_delete(:cascade) }
   end
 
   describe "check constraints" do
