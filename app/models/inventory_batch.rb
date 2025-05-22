@@ -5,7 +5,7 @@
 class InventoryBatch < ApplicationRecord
   include ActsAsMoney, NullifyIfBlank, Sanitizable, ScaleEnforcer
 
-  LISTING_ATTRIBUTES = %i[batch_number expiration_date quantity cost_price].freeze
+  LISTING_ATTRIBUTES = %i[batch_number lot_number expiration_date quantity cost_price].freeze
 
   nullify_if_blank :lot_number, :expiration_date, :notes
 
@@ -88,10 +88,11 @@ class InventoryBatch < ApplicationRecord
            :available_quantity, :used_quantity,
            to: :stock
 
-  scope :by_batch_number_and_expiry, ->(batch_number, expiry) do
+  scope :by_batch_lot_and_expiry, ->(batch_number, lot_number, expiration_date) do
     where(
       arel_table[:batch_number].eq(batch_number)
-        .and(arel_table[:expiration_date].eq(expiry))
+        .and(arel_table[:lot_number].eq(lot_number))
+        .and(arel_table[:expiration_date].eq(expiration_date))
     )
   end
 

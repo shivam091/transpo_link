@@ -4,6 +4,8 @@
   .table-cell
     = inventory_batch.batch_number
   .table-cell
+    = inventory_batch.lot_number
+  .table-cell
     = prettify_date(inventory_batch.expiration_date) || "-"
   .table-cell
     = number_to_measurement_unit(inventory_batch.quantity, inventory_batch.unit_symbol)

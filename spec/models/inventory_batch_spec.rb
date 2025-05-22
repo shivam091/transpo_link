@@ -179,27 +179,27 @@ RSpec.describe InventoryBatch, type: :model do
   end
 
   describe "class methods and scopes" do
-    describe ".by_batch_number_and_expiry" do
+    describe ".by_batch_lot_and_expiry" do
       let(:inventory) { create(:inventory) }
       let(:purchase_order_item) { create(:purchase_order_item, :delivered) }
 
-      let!(:batch_with_expiry) { create(:inventory_batch, inventory:, batch_number: "B001", expiration_date: 1.year.from_now, source: purchase_order_item) }
-      let!(:batch_without_expiry) { create(:inventory_batch, inventory:, batch_number: "B002", expiration_date: nil, source: purchase_order_item) }
+      let!(:batch_with_expiry) { create(:inventory_batch, inventory:, batch_number: "B001", lot_number: "L001", expiration_date: 1.year.from_now, source: purchase_order_item) }
+      let!(:batch_without_expiry) { create(:inventory_batch, inventory:, batch_number: "B002", lot_number: "L001", expiration_date: nil, source: purchase_order_item) }
 
       it "finds batch with matching batch_number and expiration_date" do
-        batch = described_class.by_batch_number_and_expiry("B001", 1.year.from_now).first
+        batch = described_class.by_batch_lot_and_expiry("B001", "L001", 1.year.from_now).first
 
         expect(batch).to eq(batch_with_expiry)
       end
 
       it "finds batch with nil expiration_date" do
-        batch = described_class.by_batch_number_and_expiry("B002", nil).first
+        batch = described_class.by_batch_lot_and_expiry("B002", "L001", nil).first
 
         expect(batch).to eq(batch_without_expiry)
       end
 
       it "returns nil if no batch matches the batch_number and expiration_date" do
-        batch = described_class.by_batch_number_and_expiry("B001", Date.tomorrow).first
+        batch = described_class.by_batch_lot_and_expiry("B001", "L001", Date.tomorrow).first
 
         expect(batch).to be_nil
       end
@@ -432,7 +432,7 @@ RSpec.describe InventoryBatch, type: :model do
       end
     end
 
-    describe "#validate_quantity_does_not_exceed_item_received_quantity" do
+    describe "#quantity_does_not_exceed_item_received_quantity" do
       let(:purchase_order_item) { create(:purchase_order_item, :delivered) }
       let(:inventory_batch) do
         build(:inventory_batch, source: purchase_order_item, unit: purchase_order_item.unit, quantity: 100)
@@ -492,7 +492,7 @@ RSpec.describe InventoryBatch, type: :model do
       end
 
       context "when duplicate batch number without lot_number" do
-        let(:existing) { create(:inventory_batch, batch_number: "B001", lot_number: nil, inventory:, source:) }
+        let!(:existing) { create(:inventory_batch, batch_number: "B001", lot_number: nil, inventory:, source:) }
         let(:duplicate) { build(:inventory_batch, batch_number: "B001", lot_number: nil, inventory:) }
 
         it "is invalid" do

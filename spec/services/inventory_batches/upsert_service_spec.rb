@@ -22,10 +22,12 @@ RSpec.describe InventoryBatches::UpsertService, type: :service do
         let(:inventory_batch_attributes) do
           {
             batch_number: "B001",
+            lot_number: "L001",
             expiration_date: 1.year.from_now,
             unit_id: purchase_order_item.unit_id,
             quantity: 3,
             cost_price: purchase_order_item.unit_cost,
+            received_at: Date.current,
             location: "Bin 1"
           }
         end
@@ -48,6 +50,7 @@ RSpec.describe InventoryBatches::UpsertService, type: :service do
           create(:inventory_batch,
             inventory:,
             batch_number: "B001",
+            lot_number: "L001",
             expiration_date: 1.year.from_now,
             unit: purchase_order_item.unit,
             quantity: purchase_order_item.quantity,
@@ -59,6 +62,7 @@ RSpec.describe InventoryBatches::UpsertService, type: :service do
         let(:inventory_batch_attributes) do
           {
             batch_number: existing_batch.batch_number,
+            lot_number: existing_batch.lot_number,
             expiration_date: existing_batch.expiration_date,
             unit_id: existing_batch.unit_id,
             quantity: existing_batch.quantity,
@@ -88,10 +92,12 @@ RSpec.describe InventoryBatches::UpsertService, type: :service do
         let(:inventory_batch_attributes) do
           {
             batch_number: "B002",
+            lot_number: "L002",
             expiration_date: nil,
             unit_id: purchase_order_item.unit_id,
             quantity: 3,
             cost_price: purchase_order_item.unit_cost,
+            received_at: Date.current,
             location: "Bin 1"
           }
         end
@@ -114,6 +120,7 @@ RSpec.describe InventoryBatches::UpsertService, type: :service do
           create(:inventory_batch,
             inventory:,
             batch_number: "B002",
+            lot_number: "L002",
             expiration_date: nil,
             unit: purchase_order_item.unit,
             quantity: 5,
@@ -125,6 +132,7 @@ RSpec.describe InventoryBatches::UpsertService, type: :service do
         let(:inventory_batch_attributes) do
           {
             batch_number: existing_batch.batch_number,
+            lot_number: existing_batch.lot_number,
             expiration_date: existing_batch.expiration_date,
             unit_id: existing_batch.unit_id,
             quantity: existing_batch.quantity,
