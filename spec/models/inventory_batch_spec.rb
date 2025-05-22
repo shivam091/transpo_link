@@ -28,10 +28,15 @@ RSpec.describe InventoryBatch, type: :model do
 
   describe "nullified attributes" do
     it { is_expected.to nullify_if_blank(:expiration_date) }
+    it { is_expected.to nullify_if_blank(:lot_number) }
+    it { is_expected.to nullify_if_blank(:notes) }
   end
 
   describe "sanitized attributes" do
     it { is_expected.to sanitize_attribute(:batch_number) }
+    it { is_expected.to sanitize_attribute(:lot_number) }
+    it { is_expected.to sanitize_attribute(:location) }
+    it { is_expected.to sanitize_attribute(:notes) }
   end
 
   describe "scaled attributes" do
@@ -80,12 +85,12 @@ RSpec.describe InventoryBatch, type: :model do
 
   describe "validations" do
     describe "#batch_number" do
-      let(:purchase_order_item) { create(:purchase_order_item, :delivered) }
-      let!(:inventory_batch) { create(:inventory_batch, batch_number: "ABC123", quantity: 100, source: purchase_order_item) }
-
       it { is_expected.to validate_presence_of(:batch_number) }
       it { is_expected.to validate_length_of(:batch_number).is_at_most(55) }
-      it { is_expected.to validate_uniqueness_of(:batch_number).scoped_to(:inventory_id).with_message("already exists for the selected inventory") }
+    end
+
+    describe "#lot_number" do
+      it { is_expected.to validate_length_of(:lot_number).is_at_most(55).allow_blank }
     end
 
     describe "#expiration_date" do
@@ -161,6 +166,15 @@ RSpec.describe InventoryBatch, type: :model do
 
     describe "#unit_id" do
       it { is_expected.to validate_presence_of(:unit_id) }
+    end
+
+    describe "#location" do
+      it { is_expected.to validate_presence_of(:location) }
+      it { is_expected.to validate_length_of(:location).is_at_most(55) }
+    end
+
+    describe "#notes" do
+      it { is_expected.to validate_length_of(:notes).is_at_most(1000).allow_blank }
     end
   end
 
@@ -458,6 +472,139 @@ RSpec.describe InventoryBatch, type: :model do
         expect {
           create(:inventory_batch, source: purchase_order_item)
         }.to change(InventoryBatch::Stock, :count).by(1)
+      end
+    end
+
+    describe "#unique_batch_in_inventory" do
+      let(:inventory) { create(:inventory) }
+      let(:source) { create(:purchase_order_item, :delivered) }
+
+      let!(:existing) { create(:inventory_batch, batch_number: "B001", lot_number: "L001", inventory:, source:) }
+
+      context "when duplicate batch number and lot number in the same inventory" do
+        let(:duplicate) { build(:inventory_batch, batch_number: "B001", lot_number: "L001", inventory:) }
+
+        it "is invalid" do
+          duplicate.validate
+
+          expect(duplicate.errors[:batch_number]).to include("with this lot number already exists")
+        end
+      end
+
+      context "when duplicate batch number without lot_number" do
+        let(:existing) { create(:inventory_batch, batch_number: "B001", lot_number: nil, inventory:, source:) }
+        let(:duplicate) { build(:inventory_batch, batch_number: "B001", lot_number: nil, inventory:) }
+
+        it "is invalid" do
+          duplicate.validate
+
+          expect(duplicate.errors[:batch_number]).to include("already exists in this inventory")
+        end
+      end
+
+      context "when different batch numbers with same lot number" do
+        let(:duplicate) { build(:inventory_batch, batch_number: "B002", lot_number: "L001", inventory:) }
+
+        it "is valid" do
+          duplicate.validate
+
+          expect(duplicate.errors[:batch_number]).to be_empty
+        end
+      end
+
+      context "when lot number is not present" do
+        let(:duplicate) { build(:inventory_batch, batch_number: "B001", lot_number: nil, inventory:) }
+
+        it "is valid" do
+          duplicate.validate
+
+          expect(duplicate.errors[:batch_number]).to be_empty
+        end
+      end
+
+      context "when inventory is different" do
+        let(:duplicate) { build(:inventory_batch, batch_number: "B001", lot_number: "L001", inventory: create(:inventory)) }
+
+        it "is valid" do
+          duplicate.validate
+
+          expect(duplicate.errors[:batch_number]).to be_empty
+        end
+      end
+    end
+
+    describe "#manufactured_at_before_expiration_date" do
+      subject(:inventory_batch) { build(:inventory_batch, manufactured_at:, expiration_date:) }
+
+      context "when manufactured_at is after expiration_date" do
+        let(:manufactured_at) { Date.tomorrow }
+        let(:expiration_date) { Date.current }
+
+        it "is invalid" do
+          inventory_batch.validate
+
+          expect(inventory_batch.errors[:manufactured_at]).to include("must be on or before the expiry date")
+        end
+      end
+
+      context "when manufactured_at is before or equal to expiration_date" do
+        let(:manufactured_at) { Date.current }
+        let(:expiration_date) { Date.current }
+
+        it "is valid" do
+          inventory_batch.validate
+
+          expect(inventory_batch.errors[:manufactured_at]).to be_empty
+        end
+      end
+
+      context "when manufactured_at is nil" do
+        let(:manufactured_at) { nil }
+        let(:expiration_date) { Date.current }
+
+        it "is valid" do
+          inventory_batch.validate
+
+          expect(inventory_batch.errors[:manufactured_at]).to be_empty
+        end
+      end
+    end
+
+    describe "#received_at_after_manufactured_at" do
+      subject(:inventory_batch) { build(:inventory_batch, manufactured_at:, received_at:) }
+
+      context "when received_at is before manufactured_at" do
+        let(:manufactured_at) { Date.current }
+        let(:received_at) { Date.yesterday }
+
+        it "is invalid" do
+          inventory_batch.validate
+
+          expect(inventory_batch.errors[:received_at]).to include("must be on or after the manufacture date")
+        end
+      end
+
+      context "when received_at is equal or after manufactured_at" do
+        let(:manufactured_at) { Date.current }
+        let(:received_at) { Date.tomorrow }
+
+        it "is valid" do
+          inventory_batch.validate
+
+          expect(inventory_batch.errors[:received_at]).to be_empty
+        end
+      end
+
+      context "when received_at is nil" do
+        let(:manufactured_at) { Date.current }
+        let(:received_at) { nil }
+
+        it "is valid" do
+          inventory_batch.lot_number = nil
+          inventory_batch.validate
+
+          expect(inventory_batch.errors[:received_at]).to be_empty
+        end
       end
     end
   end

@@ -7,16 +7,19 @@ class InventoryBatch < ApplicationRecord
 
   LISTING_ATTRIBUTES = %i[batch_number expiration_date quantity cost_price].freeze
 
-  nullify_if_blank :expiration_date
+  nullify_if_blank :lot_number, :expiration_date, :notes
 
-  sanitize_attributes :batch_number
+  sanitize_attributes :batch_number, :lot_number, :location, :notes
 
   scale_attributes :quantity, :cost_price
 
   validates :batch_number,
             presence: true,
             length: {maximum: 55},
-            uniqueness: {scope: :inventory_id, message: :uniqueness},
+            reduce: true
+  validates :lot_number,
+            length: {maximum: 55},
+            allow_blank: true,
             reduce: true
   validates :expiration_date,
             comparison: {
@@ -34,8 +37,23 @@ class InventoryBatch < ApplicationRecord
             numericality: {greater_than: 0.0},
             reduce: true
   validates :unit_id, presence: true, reduce: true
+  validates :received_at,
+            presence: true,
+            if: -> { lot_number.present? },
+            reduce: true
+  validates :location,
+            presence: true,
+            length: {maximum: 55},
+            reduce: true
+  validates :notes,
+            length: {maximum: 1000},
+            allow_blank: true,
+            reduce: true
 
-  validate :validate_quantity_does_not_exceed_item_received_quantity
+  validate :quantity_does_not_exceed_item_received_quantity
+  validate :unique_batch_in_inventory
+  validate :manufactured_at_before_expiration_date
+  validate :received_at_after_manufactured_at
 
   validates_associated :restocks
 
@@ -141,7 +159,7 @@ class InventoryBatch < ApplicationRecord
     InventoryBatchAuditLogs::CreateService.(self)
   end
 
-  def validate_quantity_does_not_exceed_item_received_quantity
+  def quantity_does_not_exceed_item_received_quantity
     return unless from_purchase_order_item? && unit
 
     available_quantity = source.available_batch_quantity
@@ -154,5 +172,38 @@ class InventoryBatch < ApplicationRecord
 
   def create_stock
     InventoryBatches::Stocks::CreateService.(self)
+  end
+
+  def unique_batch_in_inventory
+    scope = InventoryBatch.where(
+      InventoryBatch[:inventory_id].eq(inventory_id)
+        .and(InventoryBatch[:batch_number]).eq(batch_number)
+        .and(InventoryBatch[:lot_number].eq(lot_number))
+    )
+    scope = scope.where(InventoryBatch[:id].not_eq(id)) if persisted?
+
+    if scope.exists?
+      if lot_number.present?
+        errors.add(:batch_number, :already_exists_with_lot_number)
+      else
+        errors.add(:batch_number, :already_exists)
+      end
+    end
+  end
+
+  def manufactured_at_before_expiration_date
+    return unless manufactured_at.present? && expiration_date.present?
+
+    unless manufactured_at <= expiration_date
+      errors.add(:manufactured_at, :manufactured_before_expiry)
+    end
+  end
+
+  def received_at_after_manufactured_at
+    return unless received_at.present? && manufactured_at.present?
+
+    unless received_at >= manufactured_at
+      errors.add(:received_at, :received_after_manufactured)
+    end
   end
 end

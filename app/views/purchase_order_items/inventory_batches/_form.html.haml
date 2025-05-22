@@ -3,8 +3,8 @@
     = form.label :batch_number, class: "form-label required"
     = form.text_field :batch_number
   .col-md-12.col-lg-6
-    = form.label :expiration_date, class: "form-label required"
-    = form.date_field :expiration_date
+    = form.label :lot_number, class: "form-label"
+    = form.text_field :lot_number
   .col-md-12.col-lg-6
     = form.label :quantity, class: "form-label required"
     = form.number_field :quantity, step: 0.01
@@ -12,6 +12,21 @@
     = form.label :unit_id, class: "form-label required"
     = form.measurement_unit_select :unit_id, category: @purchase_order_item.unit.category,
       include_blank: t(".select_unit")
+  .col-md-12.col-lg-6
+    = form.label :manufactured_at, class: "form-label"
+    = form.date_field :manufactured_at
+  .col-md-12.col-lg-6
+    = form.label :expiration_date, class: "form-label"
+    = form.date_field :expiration_date
+  .col-md-12.col-lg-6
+    = form.label :received_at, class: "form-label"
+    = form.date_field :received_at
+  .col-md-12.col-lg-6
+    = form.label :location, class: "form-label required"
+    = form.text_field :location
+  .col-12
+    = form.label :notes, class: "form-label"
+    = form.text_area :notes, rows: 2
   .modal-actions
     = button_tag type: :submit, class: "btn btn-primary" do
       = sprite_icon("floppy")
