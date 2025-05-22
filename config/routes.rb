@@ -107,11 +107,11 @@ Rails.application.routes.draw do
     member do
       patch :cancel
       patch :submit
-      patch :approve
       patch :reject
     end
 
     resource :delivery, only: [:new, :create], module: :purchase_orders
+    resource :approval, only: [:new, :create], module: :purchase_orders
 
     resources :purchase_order_items, path: "purchase-order-items", shallow: true do
       member do

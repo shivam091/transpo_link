@@ -162,10 +162,6 @@
           success: "Purchase order has been successfully submitted to the supplier for approval.",
           error: "We encountered a problem submitting purchase order. Please try again."
         },
-        approve: {
-          success: "Purchase order has been successfully approved.",
-          error: "We encountered a problem approving purchase order. Please try again.",
-        },
         reject: {
           success: "Purchase order has been successfully rejected.",
           error: "We encountered a problem rejecting purchase order. Please try again.",
@@ -213,6 +209,12 @@
           error: "Unable to restock the inventory. Please try again later or contact support if the issue persists."
         }
       },
+      approvals: {
+        create: {
+          success: "Purchase order has been successfully approved.",
+          error: "Unable to approve the purchase order. Please try again later or contact support if the issue persists.",
+        },
+      }
     }
   }
 }

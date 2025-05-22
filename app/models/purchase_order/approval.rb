@@ -66,7 +66,13 @@ class PurchaseOrder::Approval < ApplicationRecord
 
   belongs_to :purchase_order, inverse_of: :approval
 
+  after_create :approve_purchase_order!
+
   private
+
+  def approve_purchase_order!
+    PurchaseOrders::ApproveService.(purchase_order)
+  end
 
   def expected_delivery_date_within_six_months
     return if expected_delivery_date.blank?
