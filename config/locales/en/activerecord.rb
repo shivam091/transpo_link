@@ -231,7 +231,12 @@
         inventory_batch: {
           inventory_id: "Inventory",
           batch_number: "Batch number",
+          lot_number: "Lot number",
+          manufactured_at: "Manufacture date",
           expiration_date: "Expiration date",
+          received_at: "Received at",
+          location: "Location",
+          notes: "Notes",
           quantity: "Quantity",
           unit_id: "Inventory unit",
           cost_price: "Cost price",

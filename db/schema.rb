@@ -152,7 +152,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_21_100219) do
     t.check_constraint "currency IS NOT NULL AND currency::text <> ''::text", name: "check_inventories_currency_presence"
     t.check_constraint "low_stock_threshold > 0.0", name: "check_inventories_low_stock_threshold_positive"
     t.check_constraint "low_stock_threshold IS NOT NULL", name: "check_inventories_low_stock_threshold_presence"
-    t.check_constraint "tracking_method = ANY (ARRAY['average_cost'::tracking_methods, 'fifo'::tracking_methods, 'lifo'::tracking_methods])", name: "check_inventories_tracking_method_in_enum_values"
+    t.check_constraint "tracking_method = ANY (ARRAY['fifo'::tracking_methods, 'lifo'::tracking_methods, 'average_cost'::tracking_methods])", name: "check_inventories_tracking_method_in_enum_values"
     t.check_constraint "tracking_method IS NOT NULL", name: "check_inventories_tracking_method_presence"
   end
 
@@ -224,34 +224,47 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_21_100219) do
     t.check_constraint "restocked_quantity IS NOT NULL", name: "check_inventory_batch_stocks_restocked_quantity_presence"
     t.check_constraint "returned_quantity >= 0.0", name: "check_inventory_batch_stocks_returned_quantity_non_negative"
     t.check_constraint "returned_quantity IS NOT NULL", name: "check_inventory_batch_stocks_returned_quantity_presence"
-    t.check_constraint "status = ANY (ARRAY['available'::inventory_batch_stock_statuses, 'closed'::inventory_batch_stock_statuses, 'damaged'::inventory_batch_stock_statuses, 'exhausted'::inventory_batch_stock_statuses, 'locked'::inventory_batch_stock_statuses, 'partially_used'::inventory_batch_stock_statuses, 'reserved'::inventory_batch_stock_statuses])", name: "check_inventory_batch_stocks_status_in_enum_values"
+    t.check_constraint "status = ANY (ARRAY['available'::inventory_batch_stock_statuses, 'reserved'::inventory_batch_stock_statuses, 'partially_used'::inventory_batch_stock_statuses, 'exhausted'::inventory_batch_stock_statuses, 'locked'::inventory_batch_stock_statuses, 'damaged'::inventory_batch_stock_statuses, 'closed'::inventory_batch_stock_statuses])", name: "check_inventory_batch_stocks_status_in_enum_values"
     t.check_constraint "status IS NOT NULL", name: "check_inventory_batch_stocks_status_presence"
   end
 
   create_table "inventory_batches", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "inventory_id", null: false
     t.string "batch_number"
-    t.date "expiration_date"
-    t.decimal "quantity", precision: 12, scale: 2
-    t.uuid "unit_id", null: false
-    t.decimal "cost_price", precision: 12, scale: 2
-    t.string "currency"
+    t.string "lot_number"
+    t.date "manufactured_at", comment: "Date on which the product in the batch was manufactured"
+    t.date "expiration_date", comment: "Expiry date of the product (Useful for perishable products)"
+    t.date "received_at", comment: "Date of which the batch was received into the warehouse"
+    t.string "location", comment: "Physical warehouse location, e.g., 'Aisle 3, Rack 2'"
+    t.text "notes", comment: "Freeform field for any internal notes"
+    t.decimal "quantity", precision: 12, scale: 2, comment: "Quantity of the product in this batch"
+    t.uuid "unit_id", null: false, comment: "Unit used in this batch"
+    t.decimal "cost_price", precision: 12, scale: 2, comment: "Cost per unit"
+    t.string "currency", comment: "Currency used in this batch"
     t.string "source_type"
     t.uuid "source_id"
     t.timestamptz "created_at", null: false
     t.timestamptz "updated_at", null: false
-    t.index ["inventory_id", "batch_number"], name: "index_inventory_batches_on_inventory_id_and_batch_number", unique: true
+    t.index "inventory_id, batch_number, COALESCE(lot_number, ''::character varying)", name: "idx_on_inventory_id_batch_number_COALESCE_lot_numbe_286f8e979c", unique: true
+    t.index ["expiration_date"], name: "index_inventory_batches_on_expiration_date"
     t.index ["inventory_id"], name: "index_inventory_batches_on_inventory_id"
     t.index ["source_type", "source_id"], name: "index_inventory_batches_on_source"
     t.index ["unit_id"], name: "index_inventory_batches_on_unit_id"
     t.check_constraint "batch_number IS NOT NULL AND batch_number::text <> ''::text", name: "check_inventory_batches_batch_number_presence"
     t.check_constraint "char_length(batch_number::text) <= 55", name: "check_inventory_batches_batch_number_length"
+    t.check_constraint "char_length(location::text) <= 55", name: "check_inventory_batches_location_length"
     t.check_constraint "cost_price > 0.0", name: "check_inventory_batches_cost_price_positive"
     t.check_constraint "cost_price IS NOT NULL", name: "check_inventory_batches_cost_price_presence"
     t.check_constraint "currency IS NOT NULL AND currency::text <> ''::text", name: "check_inventory_batches_currency_presence"
-    t.check_constraint "expiration_date >= CURRENT_DATE", name: "check_inventory_batches_expiration_date_future"
+    t.check_constraint "expiration_date IS NULL OR expiration_date >= CURRENT_DATE", name: "check_inventory_batches_expiration_future"
+    t.check_constraint "location IS NOT NULL AND location::text <> ''::text", name: "check_inventory_batches_location_presence"
+    t.check_constraint "lot_number IS NULL OR char_length(lot_number::text) <= 55", name: "check_inventory_batches_lot_number_length"
+    t.check_constraint "lot_number IS NULL OR received_at IS NOT NULL", name: "check_inventory_batches_received_at_presence"
+    t.check_constraint "manufactured_at IS NULL OR expiration_date IS NULL OR manufactured_at <= expiration_date", name: "check_inventory_batches_manufactured_before_expiry"
+    t.check_constraint "notes IS NULL OR char_length(notes) <= 1000", name: "check_inventory_batches_notes_length"
     t.check_constraint "quantity > 0.0", name: "check_inventory_batches_quantity_positive"
     t.check_constraint "quantity IS NOT NULL", name: "check_inventory_batches_quantity_presence"
+    t.check_constraint "received_at IS NULL OR manufactured_at IS NULL OR manufactured_at <= received_at", name: "check_inventory_batches_received_after_manufactured"
   end
 
   create_table "inventory_movements", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -275,7 +288,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_21_100219) do
     t.index ["source_type", "source_id"], name: "index_inventory_movements_on_source"
     t.index ["unit_id"], name: "index_inventory_movements_on_unit_id"
     t.check_constraint "currency IS NOT NULL AND currency::text <> ''::text", name: "check_inventory_movements_currency_presence"
-    t.check_constraint "movement_type = ANY (ARRAY['adjustment'::movement_types, 'correction'::movement_types, 'customer_return'::movement_types, 'initial_stock'::movement_types, 'inspection'::movement_types, 'purchase'::movement_types, 'quarantine'::movement_types, 'release_from_quarantine'::movement_types, 'release_reservation'::movement_types, 'reservation'::movement_types, 'restock'::movement_types, 'sale'::movement_types, 'supplier_return'::movement_types, 'transfer_in'::movement_types, 'transfer_out'::movement_types])", name: "check_inventory_movements_movement_type_in_enum_values"
+    t.check_constraint "movement_type = ANY (ARRAY['restock'::movement_types, 'purchase'::movement_types, 'sale'::movement_types, 'customer_return'::movement_types, 'supplier_return'::movement_types, 'transfer_in'::movement_types, 'transfer_out'::movement_types, 'adjustment'::movement_types, 'correction'::movement_types, 'reservation'::movement_types, 'release_reservation'::movement_types, 'initial_stock'::movement_types, 'inspection'::movement_types, 'quarantine'::movement_types, 'release_from_quarantine'::movement_types])", name: "check_inventory_movements_movement_type_in_enum_values"
     t.check_constraint "movement_type IS NOT NULL", name: "check_inventory_movements_movement_type_presence"
     t.check_constraint "quantity <> 0.0", name: "check_inventory_movements_quantity_nonzero"
     t.check_constraint "quantity IS NOT NULL", name: "check_inventory_movements_quantity_presence"

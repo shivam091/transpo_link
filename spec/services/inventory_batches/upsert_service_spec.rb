@@ -25,7 +25,8 @@ RSpec.describe InventoryBatches::UpsertService, type: :service do
             expiration_date: 1.year.from_now,
             unit_id: purchase_order_item.unit_id,
             quantity: 3,
-            cost_price: purchase_order_item.unit_cost
+            cost_price: purchase_order_item.unit_cost,
+            location: "Bin 1"
           }
         end
 
@@ -90,7 +91,8 @@ RSpec.describe InventoryBatches::UpsertService, type: :service do
             expiration_date: nil,
             unit_id: purchase_order_item.unit_id,
             quantity: 3,
-            cost_price: purchase_order_item.unit_cost
+            cost_price: purchase_order_item.unit_cost,
+            location: "Bin 1"
           }
         end
 
