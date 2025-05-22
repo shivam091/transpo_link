@@ -1,0 +1,23 @@
+= pretty_form_with model: [@purchase_order, @rejection], scope: :rejection, class: "row g-2",
+  url: purchase_order_rejection_path(@purchase_order) do |form|
+  %p
+    = t(".rejection_note", reference_code: @purchase_order.reference_code)
+  .col-12
+    = form.label :reason, class: "form-label required"
+    = form.select :reason, options_for_select(enum_options_with_titles(PurchaseOrder::Rejection, :reasons), form.object.reason&.upcase),
+      {include_blank: t(".select_reason")}, {}
+    = help_text(t(".reason_help_text"))
+  .col-12
+    = form.label :suggested_alternatives, class: "form-label"
+    = form.text_area :suggested_alternatives, rows: 2
+    = help_text(t(".suggested_alternatives_help_text"))
+  .col-12
+    = form.label :note, class: "form-label"
+    = form.text_area :note, rows: 2
+  .modal-actions
+    = button_tag type: :submit, class: "btn btn-primary" do
+      = sprite_icon("check")
+      = button_text(:confirm_rejection)
+    = button_tag type: :button, class: "btn btn-secondary", data: {action: "click->remote-modal#hide"} do
+      = sprite_icon("times")
+      = button_text(:cancel)

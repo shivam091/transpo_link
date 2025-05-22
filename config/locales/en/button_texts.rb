@@ -38,6 +38,7 @@
       restock: "Restock",
       confirm_restock: "Confirm restock",
       confirm_approval: "Confirm approval",
+      confirm_rejection: "Confirm rejection",
     },
   }
 }

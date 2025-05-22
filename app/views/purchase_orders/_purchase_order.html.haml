@@ -45,8 +45,8 @@
             = button_text(:approve)
       - if authorized_for?(:purchase_orders, :reject) && purchase_order.may_reject?
         %li
-          = link_to reject_purchase_order_path(purchase_order), class: "dropdown-item",
-            data: {turbo_confirm: t(".reject_confirmation_text", reference_code: purchase_order.reference_code), turbo_method: :patch} do
+          = link_to new_purchase_order_rejection_path(purchase_order), class: "dropdown-item",
+            data: {turbo_frame: :remote_modal} do
             = sprite_icon("times")
             = button_text(:reject)
       - if authorized_for?(:purchase_orders, :view)

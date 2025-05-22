@@ -306,6 +306,11 @@
           remarks: "Remarks",
           partial_delivery_allowed: "Partial delivery allowed?"
         },
+        "purchase_order/rejection" => {
+          reason: "Reason",
+          suggested_alternatives: "Suggested alternatives",
+          note: "Note",
+        },
         purchase_order_item: {
           purchase_order_id: "Purchase order",
           product_id: "Product",
@@ -493,6 +498,13 @@
               shipping_method: {
                 inclusion: "'%{value}' is not a valid shipping method",
               }
+            }
+          },
+          "purchase_order/rejection" => {
+            attributes: {
+              reason: {
+                inclusion: "'%{value}' is not a valid rejection reason",
+              },
             }
           },
           purchase_order_item: {
