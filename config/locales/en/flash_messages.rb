@@ -217,6 +217,12 @@
           error: "Unable to reject the purchase order. Please try again later or contact support if the issue persists.",
         },
       },
+      stock_adjustments: {
+        create: {
+          success: "Stock was successfully adjusted.",
+          error: "Unable to adjust the stock. Please try again later or contact support if the issue persists."
+        }
+      },
     }
   }
 }
