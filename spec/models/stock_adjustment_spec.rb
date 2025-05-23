@@ -118,4 +118,66 @@ RSpec.describe StockAdjustment, type: :model do
       it { is_expected.to validate_length_of(:note).is_at_most(1000).allow_blank }
     end
   end
+
+  describe "instance methods" do
+    describe "#set_inventory_id" do
+      let(:user) { create(:admin) }
+      let(:unit) { create(:item_unit) }
+      let(:inventory) { create(:inventory, unit:) }
+      let(:defaults) { {user:, unit:} }
+
+      context "when inventory_id is already set" do
+        let(:adjustment) { build(:stock_adjustment, adjustable: inventory, inventory:, **defaults) }
+
+        it "does not override the inventory_id" do
+          expect { adjustment.save! }.not_to change { adjustment.inventory_id }
+          expect(adjustment.inventory_id).to eq(inventory.id)
+        end
+      end
+
+      context "when adjustable_type is Inventory" do
+        let(:adjustment) { build(:stock_adjustment, adjustable: inventory, **defaults) }
+
+        it "sets inventory_id to adjustable_id" do
+          adjustment.save!
+
+          expect(adjustment.inventory_id).to eq(inventory.id)
+        end
+      end
+
+      context "when adjustable responds to inventory_id" do
+        let(:adjustable) { create(:inventory_batch, inventory:, unit:) }
+        let(:adjustment) { build(:stock_adjustment, adjustable:, **defaults) }
+
+        before do
+          allow_any_instance_of(InventoryBatch).to receive(:record_audit_logs)
+          allow_any_instance_of(InventoryBatch).to receive(:validate_quantity_does_not_exceed_item_received_quantity)
+        end
+
+        it "sets inventory_id from the adjustable's inventory_id" do
+          adjustment.save!
+
+          expect(adjustment.inventory_id).to eq(adjustable.inventory_id)
+        end
+      end
+
+      context "when adjustable has no inventory or inventory_id" do
+        let(:adjustable) { create(:inventory_batch, inventory:, unit:) }
+        let(:adjustment) { build(:stock_adjustment, adjustable:, **defaults) }
+
+        before do
+          allow_any_instance_of(InventoryBatch).to receive(:record_audit_logs)
+          allow_any_instance_of(InventoryBatch).to receive(:validate_quantity_does_not_exceed_item_received_quantity)
+
+          allow(adjustable).to receive(:respond_to?) do |method, *args|
+            method == :inventory_id ? false : adjustable.class.superclass.instance_method(:respond_to?).bind(adjustable).call(method, *args)
+          end
+        end
+
+        it "raises ArgumentError" do
+          expect { adjustment.save! }.to raise_error(ArgumentError, "Missing inventory on adjustable")
+        end
+      end
+    end
+  end
 end

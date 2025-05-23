@@ -60,4 +60,20 @@ class StockAdjustment < ApplicationRecord
   belongs_to :inventory, inverse_of: :stock_adjustments, optional: true
   belongs_to :user, inverse_of: :stock_adjustments
   belongs_to :unit, inverse_of: :stock_adjustments
+
+  before_create :set_inventory_id
+
+  private
+
+  def set_inventory_id
+    return if inventory_id.present?
+
+    if adjustable_type == "Inventory"
+      self.inventory_id = adjustable_id
+    elsif adjustable.respond_to?(:inventory_id)
+      self.inventory_id = adjustable.inventory_id
+    else
+      raise ArgumentError, "Missing inventory on adjustable"
+    end
+  end
 end
