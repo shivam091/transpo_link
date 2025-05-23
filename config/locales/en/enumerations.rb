@@ -268,6 +268,30 @@
           volume: "Volume"
         }
       },
+      stock_adjustment: {
+        adjustable_types: {
+          increase: "Increase",
+          decrease: "Decrease",
+          automatic: "Automatic"
+        },
+        adjustment_reasons: {
+          stock_count_discrepancy: "Stock count discrepancy",
+          damaged_goods: "Damaged goods",
+          expired_stock: "Expired stock",
+          theft_or_loss: "Theft or loss",
+          sample_issued: "Sample issued",
+          administrative_correction: "Administrative correction",
+          misplaced_then_found: "Misplaced then found",
+          overstock_correction: "Overstock correction",
+          shrinkage: "Shrinkage (retail loss tracking)",
+          pallet_breakage: "Pallet breakage",
+          found_during_audit: "Found during audit",
+          cycle_count_adjustment: "Cycle count adjustment",
+          donated: "Donated",
+          disposal: "Disposal",
+          used_internally: "Used internally",
+        },
+      }
     }
   }
 }
