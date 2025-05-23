@@ -18,21 +18,14 @@ RSpec.describe PurchaseOrderItems::Deliveries::CreateService, type: :service do
     end
 
     context "when provided attributes are valid" do
-      let(:delivery_attributes) do
-        attributes_for(:po_item_delivery,
-          unit_id: purchase_order_item.unit_id,
-          quantity: 3.0
-        )
-      end
+      let(:delivery_attributes) { attributes_for(:po_item_delivery, unit_id: purchase_order_item.unit_id) }
 
       include_examples "creates a record", PurchaseOrderItem::Delivery
       include_examples "returns a success response"
     end
 
     context "when provided attributes are invalid" do
-      let(:delivery_attributes) do
-        attributes_for(:po_item_delivery, quantity: nil, unit_id: nil)
-      end
+      let(:delivery_attributes) { attributes_for(:po_item_delivery, unit_id: nil) }
 
       include_examples "does not change record count", PurchaseOrderItem::Delivery
       include_examples "returns an error response"
