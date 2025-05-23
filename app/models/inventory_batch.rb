@@ -55,6 +55,7 @@ class InventoryBatch < ApplicationRecord
   has_one :stock, class_name: "InventoryBatch::Stock", inverse_of: :inventory_batch, dependent: :destroy
 
   has_many :restocks, class_name: "Inventory::Restock", inverse_of: :inventory_batch, dependent: :destroy
+  has_many :stock_adjustments, as: :adjustable, inverse_of: :adjustable, dependent: :destroy
 
   before_validation :auto_fill_cost_and_currency
   before_create :convert_to_inventory_unit

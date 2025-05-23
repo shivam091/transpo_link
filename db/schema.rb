@@ -575,6 +575,40 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_21_100219) do
     t.check_constraint "name IS NOT NULL AND name::text <> ''::text", name: "check_roles_name_presence"
   end
 
+  create_table "stock_adjustments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "inventory_id", null: false
+    t.string "adjustable_type", null: false
+    t.uuid "adjustable_id", null: false
+    t.string "source_type"
+    t.uuid "source_id"
+    t.uuid "user_id", null: false
+    t.uuid "unit_id", null: false
+    t.enum "adjustment_type", enum_type: "stock_adjustment_types"
+    t.decimal "adjusted_quantity", precision: 12, scale: 2
+    t.enum "adjustment_reason", enum_type: "stock_adjustment_reasons"
+    t.text "note"
+    t.timestamptz "adjusted_at", default: -> { "CURRENT_TIMESTAMP" }
+    t.timestamptz "created_at", null: false
+    t.timestamptz "updated_at", null: false
+    t.index ["adjustable_type", "adjustable_id"], name: "index_stock_adjustments_on_adjustable"
+    t.index ["adjusted_at"], name: "index_stock_adjustments_on_adjusted_at"
+    t.index ["adjustment_reason"], name: "index_stock_adjustments_on_adjustment_reason"
+    t.index ["adjustment_type"], name: "index_stock_adjustments_on_adjustment_type"
+    t.index ["inventory_id"], name: "index_stock_adjustments_on_inventory_id"
+    t.index ["source_type", "source_id"], name: "index_stock_adjustments_on_source"
+    t.index ["unit_id"], name: "index_stock_adjustments_on_unit_id"
+    t.index ["user_id"], name: "index_stock_adjustments_on_user_id"
+    t.check_constraint "adjusted_at <= CURRENT_TIMESTAMP", name: "check_stock_adjustments_adjusted_at_not_in_future"
+    t.check_constraint "adjusted_at IS NOT NULL", name: "check_stock_adjustments_adjusted_at_presence"
+    t.check_constraint "adjusted_quantity > 0::numeric", name: "check_stock_adjustments_adjusted_quantity_positive"
+    t.check_constraint "adjusted_quantity IS NOT NULL", name: "check_stock_adjustments_adjusted_quantity_presence"
+    t.check_constraint "adjustment_reason = ANY (ARRAY['stock_count_discrepancy'::stock_adjustment_reasons, 'damaged_goods'::stock_adjustment_reasons, 'expired_stock'::stock_adjustment_reasons, 'theft_or_loss'::stock_adjustment_reasons, 'sample_issued'::stock_adjustment_reasons, 'administrative_correction'::stock_adjustment_reasons, 'misplaced_then_found'::stock_adjustment_reasons, 'overstock_correction'::stock_adjustment_reasons, 'shrinkage'::stock_adjustment_reasons, 'pallet_breakage'::stock_adjustment_reasons, 'found_during_audit'::stock_adjustment_reasons, 'cycle_count_adjustment'::stock_adjustment_reasons, 'donated'::stock_adjustment_reasons, 'disposal'::stock_adjustment_reasons, 'used_internally'::stock_adjustment_reasons])", name: "check_stock_adjustments_adjustment_reason_in_enum_values"
+    t.check_constraint "adjustment_reason IS NOT NULL", name: "check_stock_adjustments_adjustment_reason_presence"
+    t.check_constraint "adjustment_type = ANY (ARRAY['increase'::stock_adjustment_types, 'decrease'::stock_adjustment_types, 'automatic'::stock_adjustment_types])", name: "check_stock_adjustments_adjustment_type_in_enum_values"
+    t.check_constraint "adjustment_type IS NOT NULL", name: "check_stock_adjustments_adjustment_type_presence"
+    t.check_constraint "note IS NULL OR char_length(note) <= 1000", name: "check_stock_adjustments_note_length"
+  end
+
   create_table "stocks", primary_key: "inventory_id", id: :uuid, default: nil, force: :cascade do |t|
     t.decimal "quantity_in_hand", precision: 12, scale: 2, default: "0.0"
     t.decimal "quantity_pending_to_buyer", precision: 12, scale: 2, default: "0.0"
@@ -807,6 +841,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_21_100219) do
   add_foreign_key "purchase_orders", "warehouses", name: "fk_purchase_orders_warehouse_id_on_warehouses", on_delete: :restrict
   add_foreign_key "replenishments", "inventories", name: "fk_replenishments_inventory_id_on_inventories", on_delete: :cascade
   add_foreign_key "request_logs", "users", name: "fk_request_logs_user_id_on_users", on_delete: :nullify
+  add_foreign_key "stock_adjustments", "inventories", name: "fk_stock_adjustments_inventory_id_on_inventories", on_delete: :cascade
+  add_foreign_key "stock_adjustments", "units", name: "fk_stock_adjustments_unit_id_on_units", on_delete: :restrict
+  add_foreign_key "stock_adjustments", "users", name: "fk_stock_adjustments_user_id_on_user", on_delete: :nullify
   add_foreign_key "stocks", "inventories", name: "fk_stocks_inventory_id_on_inventories", on_delete: :cascade
   add_foreign_key "unit_conversions", "units", column: "source_unit_id", name: "fk_unit_conversions_source_unit_id_on_units", on_delete: :restrict
   add_foreign_key "unit_conversions", "units", column: "target_unit_id", name: "fk_unit_conversions_target_unit_id_on_units", on_delete: :restrict

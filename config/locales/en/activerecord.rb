@@ -331,6 +331,14 @@
           note: "Delivery note",
           reference_document: "Reference document",
         },
+        stock_adjustment: {
+          unit_id: "Adjustment unit",
+          adjustment_type: "Adjustment type",
+          adjustment_reason: "Adjustment reason",
+          adjusted_quantity: "Adjusted quantity",
+          note: "Note",
+          adjusted_at: "Adjusted at",
+        }
       },
       errors: {
         format: "%{attribute} %{message}",

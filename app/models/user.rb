@@ -41,6 +41,7 @@ class User < ApplicationRecord
     a.has_many :inventory_audit_logs, dependent: :nullify
     a.has_many :inventory_batch_audit_logs, dependent: :nullify
     a.has_many :feedbacks, dependent: :nullify
+    a.has_many :stock_adjustments, dependent: :nullify
   end
 
   with_options dependent: :restrict_with_exception do |a|
