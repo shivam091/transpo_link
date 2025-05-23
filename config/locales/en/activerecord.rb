@@ -550,6 +550,16 @@
               }
             }
           },
+          stock_adjustment: {
+            attributes: {
+              adjustment_type: {
+                inclusion: "'%{value}' is not a valid adjustment type",
+              },
+              adjustment_reason: {
+                inclusion: "'%{value}' is not a valid adjustment reason",
+              },
+            }
+          }
         },
         messages: {
           label_already_exists_at_group_level: "already exists at group level for %{group}. Please choose another one.",

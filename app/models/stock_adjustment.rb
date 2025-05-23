@@ -34,6 +34,27 @@ class StockAdjustment < ApplicationRecord
   nullify_if_blank :note
 
   sanitize_attributes :note
+
+  validates :adjusted_quantity,
+            presence: true,
+            numericality: {greater_than: 0.0},
+            reduce: true
+  validates :adjustment_type,
+            presence: true,
+            inclusion: {in: adjustment_types.values, message: :inclusion},
+            reduce: true
+  validates :adjustment_reason,
+            presence: true,
+            inclusion: {in: adjustment_reasons.values, message: :inclusion},
+            reduce: true
+  validates :unit_id,
+            presence: true,
+            reduce: true
+  validates :note,
+            length: {maximum: 1000},
+            allow_blank: true,
+            reduce: true
+
   belongs_to :adjustable, inverse_of: :stock_adjustments, polymorphic: true
   belongs_to :source, inverse_of: :stock_adjustments, polymorphic: true, optional: true
   belongs_to :inventory, inverse_of: :stock_adjustments, optional: true
