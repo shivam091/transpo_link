@@ -9,6 +9,7 @@ module InventoryMovements
       @source = source
       @inventory_movement_attributes = inventory_movement_attributes.dup.tap do |attrs|
         attrs[:inventory_id] = inventory.id
+        attrs[:movement_type] = movement_type
       end
     end
 
@@ -21,7 +22,7 @@ module InventoryMovements
     attr_reader :inventory, :source, :inventory_movement_attributes
 
     def record_inventory_movement
-      inventory_movement = source.send(movement_type.to_s.pluralize).build(inventory_movement_attributes)
+      inventory_movement = source.inventory_movements.build(inventory_movement_attributes)
 
       if inventory_movement.save
         ServiceResponse.success(payload: {inventory_movement:})

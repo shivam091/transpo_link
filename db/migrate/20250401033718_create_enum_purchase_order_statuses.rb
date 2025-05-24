@@ -9,6 +9,7 @@ class CreateEnumPurchaseOrderStatuses < ActiveRecord::Migration[8.0]
                   draft
                   submitted
                   approved
+                  shipped
                   partially_delivered
                   fully_delivered
                   cancelled

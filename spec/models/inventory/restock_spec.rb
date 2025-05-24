@@ -37,22 +37,7 @@ RSpec.describe Inventory::Restock, type: :model do
   end
 
   describe "associations" do
-    describe "#restocks" do
-      let(:source) { create(:purchase_order_item) }
-      let(:unit) { source.unit }
-      let(:association) { described_class.reflect_on_association(:restocks) }
-      let!(:restock_movement) { create(:inventory_movement, :restock, source:, unit:) }
-
-      it "has many restocks" do
-        expect(association.macro).to eq(:has_many)
-        expect(association.options[:class_name]).to eq("InventoryMovement")
-        expect(association.options[:dependent]).to eq(:destroy)
-      end
-
-      it "returns only restock inventory movements" do
-        expect(source.restocks).to contain_exactly(restock_movement)
-      end
-    end
+    it { is_expected.to have_many(:inventory_movements).dependent(:destroy) }
 
     it { is_expected.to belong_to(:inventory_batch).inverse_of(:restocks) }
     it { is_expected.to belong_to(:unit).inverse_of(:restocks) }
