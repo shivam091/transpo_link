@@ -523,7 +523,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_21_100219) do
     t.index ["supplier_id"], name: "index_purchase_orders_on_supplier_id"
     t.index ["warehouse_id"], name: "index_purchase_orders_on_warehouse_id"
     t.check_constraint "char_length(notes) <= 1000", name: "check_purchase_orders_notes_length"
-    t.check_constraint "status = ANY (ARRAY['draft'::purchase_order_statuses, 'submitted'::purchase_order_statuses, 'approved'::purchase_order_statuses, 'shipped'::purchase_order_statuses, 'partially_delivered'::purchase_order_statuses, 'fully_delivered'::purchase_order_statuses, 'cancelled'::purchase_order_statuses, 'rejected'::purchase_order_statuses, 'closed'::purchase_order_statuses, 'on_hold'::purchase_order_statuses])", name: "check_purchase_orders_status_in_enum_values"
+    t.check_constraint "status = ANY (ARRAY['approved'::purchase_order_statuses, 'cancelled'::purchase_order_statuses, 'closed'::purchase_order_statuses, 'draft'::purchase_order_statuses, 'fully_delivered'::purchase_order_statuses, 'on_hold'::purchase_order_statuses, 'partially_delivered'::purchase_order_statuses, 'rejected'::purchase_order_statuses, 'shipped'::purchase_order_statuses, 'submitted'::purchase_order_statuses])", name: "check_purchase_orders_status_in_enum_values"
     t.check_constraint "status IS NOT NULL", name: "check_purchase_orders_status_presence"
   end
 
@@ -806,13 +806,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_21_100219) do
   add_foreign_key "product_prices", "warehouses", name: "fk_product_prices_warehouse_id_on_warehouses", on_delete: :restrict
   add_foreign_key "products", "product_categories", name: "fk_products_product_category_id_on_product_categories", on_delete: :restrict
   add_foreign_key "products", "units", name: "fk_products_unit_id_on_units", on_delete: :restrict
-  add_foreign_key "purchase_order_approvals", "purchase_orders", name: "po_approvals_purchase_order_id_on_purchase_orders", on_delete: :cascade
+  add_foreign_key "purchase_order_approvals", "purchase_orders", name: "fk_po_approvals_purchase_order_id_on_purchase_orders", on_delete: :cascade
   add_foreign_key "purchase_order_item_deliveries", "purchase_order_items", name: "fk_purchase_order_item_deliveries_purchase_order_item_id_on_pur", on_delete: :cascade
   add_foreign_key "purchase_order_item_deliveries", "units", name: "fk_purchase_order_item_deliveries_unit_id_on_units", on_delete: :restrict
   add_foreign_key "purchase_order_items", "products", name: "fk_purchase_order_items_product_id_on_products", on_delete: :restrict
   add_foreign_key "purchase_order_items", "purchase_orders", name: "fk_purchase_order_items_purchase_order_id_on_purchase_orders", on_delete: :cascade
   add_foreign_key "purchase_order_items", "units", name: "fk_purchase_order_items_unit_id_on_units", on_delete: :restrict
-  add_foreign_key "purchase_order_rejections", "purchase_orders", name: "po_rejections_purchase_order_id_on_purchase_orders", on_delete: :cascade
+  add_foreign_key "purchase_order_rejections", "purchase_orders", name: "fk_po_rejections_purchase_order_id_on_purchase_orders", on_delete: :cascade
   add_foreign_key "purchase_orders", "users", column: "manager_id", name: "fk_purchase_orders_manager_id_on_users", on_delete: :restrict
   add_foreign_key "purchase_orders", "users", column: "supplier_id", name: "fk_purchase_orders_supplier_id_on_users", on_delete: :restrict
   add_foreign_key "purchase_orders", "warehouses", name: "fk_purchase_orders_warehouse_id_on_warehouses", on_delete: :restrict

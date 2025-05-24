@@ -29,13 +29,7 @@ class Inventory::Restock < ApplicationRecord
 
   validate :quantity_cannot_exceed_stock_restockable_quantity
 
-  has_many :restocks,
-             -> {
-               where(InventoryMovement.arel_table[:movement_type].eq(InventoryMovement.movement_types[:restock]))
-             },
-             as: :source,
-             class_name: "InventoryMovement",
-             dependent: :destroy
+  has_many :inventory_movements, as: :source, dependent: :destroy
 
   belongs_to :inventory_batch, inverse_of: :restocks
   belongs_to :unit, inverse_of: :restocks
