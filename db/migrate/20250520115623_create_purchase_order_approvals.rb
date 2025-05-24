@@ -11,7 +11,7 @@ class CreatePurchaseOrderApprovals < ActiveRecord::Migration[8.0]
                    type: :uuid,
                    foreign_key: {
                      to_table: :purchase_orders,
-                     name: :po_approvals_purchase_order_id_on_purchase_orders,
+                     name: :fk_po_approvals_purchase_order_id_on_purchase_orders,
                      on_delete: :cascade
                    },
                    null: false,
