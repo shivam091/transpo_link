@@ -84,20 +84,6 @@ class PurchaseOrderItem < ApplicationRecord
 
   has_many :inventory_batches, as: :source, dependent: :restrict_with_exception
   has_many :inventory_movements, as: :source, dependent: :restrict_with_exception
-  has_many :restocks,
-           -> {
-             where(InventoryMovement.arel_table[:movement_type].eq(InventoryMovement.movement_types[:restock]))
-           },
-           class_name: "InventoryMovement",
-           as: :source,
-           dependent: :restrict_with_exception
-  has_many :purchases,
-           -> {
-             where(InventoryMovement.arel_table[:movement_type].eq(InventoryMovement.movement_types[:purchase]))
-           },
-           class_name: "InventoryMovement",
-           as: :source,
-           dependent: :restrict_with_exception
   has_many :deliveries,
            class_name: "PurchaseOrderItem::Delivery",
            inverse_of: :purchase_order_item,

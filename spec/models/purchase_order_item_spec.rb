@@ -43,45 +43,11 @@ RSpec.describe PurchaseOrderItem, type: :model do
   end
 
   describe "associations" do
-    let(:source) { create(:purchase_order_item) }
-    let(:unit) { source.unit }
-
-    let!(:restock_movement) { create(:inventory_movement, :restock, source:, unit:) }
-    let!(:purchase_movement) { create(:inventory_movement, :purchase, source:, unit:) }
-
     it { is_expected.to have_one(:warehouse).through(:purchase_order).inverse_of(:purchase_order_items).dependent(:restrict_with_exception) }
 
+    it { is_expected.to have_many(:inventory_batches).dependent(:restrict_with_exception) }
     it { is_expected.to have_many(:inventory_movements).dependent(:restrict_with_exception) }
     it { is_expected.to have_many(:deliveries).class_name("PurchaseOrderItem::Delivery").inverse_of(:purchase_order_item).dependent(:destroy) }
-    it { is_expected.to have_many(:restocks).class_name("InventoryMovement").dependent(:restrict_with_exception) }
-
-    describe "#restocks" do
-      let(:association) { described_class.reflect_on_association(:restocks) }
-
-      it "has many restocks" do
-        expect(association.macro).to eq(:has_many)
-        expect(association.options[:class_name]).to eq("InventoryMovement")
-        expect(association.options[:dependent]).to eq(:restrict_with_exception)
-      end
-
-      it "returns only restock inventory movements" do
-        expect(source.restocks).to contain_exactly(restock_movement)
-      end
-    end
-
-    describe "#purchases" do
-      let(:association) { described_class.reflect_on_association(:purchases) }
-
-      it "has many purchases" do
-        expect(association.macro).to eq(:has_many)
-        expect(association.options[:class_name]).to eq("InventoryMovement")
-        expect(association.options[:dependent]).to eq(:restrict_with_exception)
-      end
-
-      it "returns only purchase inventory movements" do
-        expect(source.purchases).to contain_exactly(purchase_movement)
-      end
-    end
 
     it { is_expected.to belong_to(:purchase_order).inverse_of(:purchase_order_items).touch }
     it { is_expected.to belong_to(:product).inverse_of(:purchase_order_items) }

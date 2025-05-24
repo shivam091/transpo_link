@@ -10,7 +10,7 @@ RSpec.describe InventoryMovements::PurchaseService, type: :service do
   let!(:inventory) { create(:inventory) }
   let!(:source) { create(:purchase_order_item, quantity: 5) }
 
-  subject(:service_response) { described_class.call(inventory, source, inventory_movement_attributes) }
+  subject(:service_response) { described_class.(inventory, source, inventory_movement_attributes) }
 
   describe ".call" do
     context "when provided attributes are valid" do
