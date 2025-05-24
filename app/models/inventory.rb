@@ -57,8 +57,6 @@ class Inventory < ApplicationRecord
     a.belongs_to :unit
   end
 
-  has_many :stock_adjustments, as: :adjustable, inverse_of: :adjustable, dependent: :destroy
-
   after_create :create_stock, :create_replenishment
 
   delegate :quantity_in_hand, :quantity_pending_to_buyer, to: :stock

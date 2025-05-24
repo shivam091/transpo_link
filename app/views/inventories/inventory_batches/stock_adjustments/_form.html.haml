@@ -9,11 +9,6 @@
       {include_blank: t(".select_adjustment_reason")}, {}
     = help_text(t(".adjustment_reason_help_text"))
   .col-12
-    = form.label :adjustment_type, class: "form-label required"
-    = form.select :adjustment_type, options_for_select(enum_options_for_select(StockAdjustment, :adjustment_types), form.object.adjustment_type),
-      {include_blank: t(".select_adjustment_type")}, {}
-    = help_text(t(".adjustment_type_help_text"))
-  .col-12
     = form.label :adjusted_quantity, class: "form-label required"
     = form.number_field :adjusted_quantity, step: 0.01
     = help_text(t(".adjusted_quantity_help_text"))

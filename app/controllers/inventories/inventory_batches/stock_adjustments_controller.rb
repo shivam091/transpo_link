@@ -40,7 +40,6 @@ class Inventories::InventoryBatches::StockAdjustmentsController < ApplicationCon
   def stock_adjustment_params
     params.require(:stock_adjustment).permit(
       :adjustment_reason,
-      :adjustment_type,
       :adjusted_quantity,
       :unit_id,
       :note

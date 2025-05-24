@@ -5,12 +5,6 @@
 class StockAdjustment < ApplicationRecord
   include ScaleEnforcer, NullifyIfBlank, Sanitizable
 
-  # 'automatic' adjustment type is not listed here as it's system assigned.
-  enum :adjustment_type, {
-    increase: "increase",
-    decrease: "decrease"
-  }
-
   enum :adjustment_reason, {
     stock_count_discrepancy: "stock_count_discrepancy",
     damaged_goods: "damaged_goods",
@@ -39,10 +33,6 @@ class StockAdjustment < ApplicationRecord
             presence: true,
             numericality: {greater_than: 0.0},
             reduce: true
-  validates :adjustment_type,
-            presence: true,
-            inclusion: {in: adjustment_types.values, message: :inclusion},
-            reduce: true
   validates :adjustment_reason,
             presence: true,
             inclusion: {in: adjustment_reasons.values, message: :inclusion},
@@ -55,23 +45,8 @@ class StockAdjustment < ApplicationRecord
             allow_blank: true,
             reduce: true
 
-  belongs_to :adjustable, inverse_of: :stock_adjustments, polymorphic: true
+  belongs_to :inventory_batch, inverse_of: :stock_adjustments
   belongs_to :source, inverse_of: :stock_adjustments, polymorphic: true, optional: true
-  belongs_to :inventory, inverse_of: :stock_adjustments, optional: true
   belongs_to :user, inverse_of: :stock_adjustments
   belongs_to :unit, inverse_of: :stock_adjustments
-
-  before_create :set_inventory_id
-
-  private
-
-  def set_inventory_id
-    return if inventory_id.present?
-
-    if adjustable.respond_to?(:inventory_id)
-      self.inventory_id = adjustable.inventory_id
-    else
-      raise ArgumentError, "Missing inventory on adjustable"
-    end
-  end
 end

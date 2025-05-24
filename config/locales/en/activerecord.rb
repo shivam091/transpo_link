@@ -333,7 +333,6 @@
         },
         stock_adjustment: {
           unit_id: "Adjustment unit",
-          adjustment_type: "Adjustment type",
           adjustment_reason: "Adjustment reason",
           adjusted_quantity: "Adjusted quantity",
           note: "Note",
@@ -552,9 +551,6 @@
           },
           stock_adjustment: {
             attributes: {
-              adjustment_type: {
-                inclusion: "'%{value}' is not a valid adjustment type",
-              },
               adjustment_reason: {
                 inclusion: "'%{value}' is not a valid adjustment reason",
               },
