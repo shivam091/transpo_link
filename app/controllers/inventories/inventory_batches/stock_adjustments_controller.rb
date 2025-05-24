@@ -2,17 +2,17 @@
 # -*- frozen_string_literal: true -*-
 # -*- warn_indent: true -*-
 
-class StockAdjustmentsController < ApplicationController
-  before_action :set_adjustable
+class Inventories::InventoryBatches::StockAdjustmentsController < ApplicationController
+  before_action :set_inventory_batch
 
-  # GET /adjustable/:adjustable_id/stock-adjustments/new
+  # GET /inventory-batches/:inventory_batch_id/stock-adjustments/new
   def new
-    @stock_adjustment = @adjustable.stock_adjustments.build
+    @stock_adjustment = @inventory_batch.stock_adjustments.build
   end
 
-  # POST /adjustable/:adjustable_id/stock-adjustments
+  # POST /inventory-batches/:inventory_batch_id/stock-adjustments
   def create
-    response = StockAdjustments::CreateService.(@adjustable, stock_adjustment_params)
+    response = StockAdjustments::CreateService.(@inventory_batch, stock_adjustment_params)
 
     response.on_success do
       set_flash_message(:notice, :success)
@@ -33,12 +33,8 @@ class StockAdjustmentsController < ApplicationController
 
   private
 
-  def set_adjustable
-    @adjustable = if params[:inventory_batch_id]
-      InventoryBatch.find(params[:inventory_batch_id])
-    else
-      Inventory.find(params[:inventory_id])
-    end
+  def set_inventory_batch
+    @inventory_batch = InventoryBatch.find(params[:inventory_batch_id])
   end
 
   def stock_adjustment_params
@@ -56,6 +52,6 @@ class StockAdjustmentsController < ApplicationController
   end
 
   def form_partial
-    "stock_adjustments/form"
+    "inventories/inventory_batches/stock_adjustments/form"
   end
 end

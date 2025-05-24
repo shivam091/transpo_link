@@ -151,7 +151,6 @@ RSpec.describe Inventory, type: :model do
     it { is_expected.to delegate_method(:quantity_pending_to_buyer).to(:stock) }
     it { is_expected.to delegate_method(:quantity_pending_from_supplier).to(:replenishment) }
     it { is_expected.to delegate_method(:symbol).to(:unit).with_prefix }
-    it { is_expected.to delegate_method(:category).to(:unit).with_prefix }
   end
 
   include_examples "apply default scope on created_at:desc"

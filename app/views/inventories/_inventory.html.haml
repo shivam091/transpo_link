@@ -28,12 +28,6 @@
     = link_to "javascript:void(0)", class: "text-reset", data: {bs_toggle: "dropdown"}, aria: {expanded: false} do
       = sprite_icon("ellipsis-vertical")
     %ul.dropdown-menu
-      %li
-        = link_to new_inventory_stock_adjustment_path(inventory), class: "dropdown-item",
-          data: {turbo_frame: :remote_modal} do
-          = sprite_icon("adjust")
-          = button_text(:adjust_stock)
-      %li.dropdown-divider
       - if authorized_for?(:inventories, :view)
         %li
           = link_to inventory_path(inventory), class: "dropdown-item" do

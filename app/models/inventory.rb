@@ -63,7 +63,7 @@ class Inventory < ApplicationRecord
 
   delegate :quantity_in_hand, :quantity_pending_to_buyer, to: :stock
   delegate :quantity_pending_from_supplier, to: :replenishment
-  delegate :symbol, :category, to: :unit, prefix: true
+  delegate :symbol, to: :unit, prefix: true
 
   def key_associations
     [product, warehouse]

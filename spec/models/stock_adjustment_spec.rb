@@ -135,16 +135,6 @@ RSpec.describe StockAdjustment, type: :model do
         end
       end
 
-      context "when adjustable_type is Inventory" do
-        let(:adjustment) { build(:stock_adjustment, adjustable: inventory, **defaults) }
-
-        it "sets inventory_id to adjustable_id" do
-          adjustment.save!
-
-          expect(adjustment.inventory_id).to eq(inventory.id)
-        end
-      end
-
       context "when adjustable responds to inventory_id" do
         let(:adjustable) { create(:inventory_batch, inventory:, unit:) }
         let(:adjustment) { build(:stock_adjustment, adjustable:, **defaults) }

@@ -1,4 +1,4 @@
-= pretty_form_with model: [@adjustable, @stock_adjustment], class: "row g-2" do |form|
+= pretty_form_with model: [@inventory_batch, @stock_adjustment], class: "row g-2" do |form|
   %p
     = t(".help_text")
   %em
@@ -19,7 +19,7 @@
     = help_text(t(".adjusted_quantity_help_text"))
   .col-12
     = form.label :unit_id, class: "form-label required"
-    = form.measurement_unit_select :unit_id, category: @adjustable.unit_category, include_blank: t(".select_unit")
+    = form.measurement_unit_select :unit_id, category: @inventory_batch.unit_category, include_blank: t(".select_unit")
     = help_text(t(".unit_id_help_text"))
   .col-12
     = form.label :note, class: "form-label"
