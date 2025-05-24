@@ -2,7 +2,7 @@
 # -*- frozen_string_literal: true -*-
 # -*- warn_indent: true -*-
 
-class Inventories::InventoryBatches::StockAdjustmentsController < ApplicationController
+class InventoryBatches::StockAdjustmentsController < ApplicationController
   before_action :set_inventory_batch
 
   # GET /inventory-batches/:inventory_batch_id/stock-adjustments/new
@@ -12,7 +12,7 @@ class Inventories::InventoryBatches::StockAdjustmentsController < ApplicationCon
 
   # POST /inventory-batches/:inventory_batch_id/stock-adjustments
   def create
-    response = StockAdjustments::CreateService.(@inventory_batch, stock_adjustment_params)
+    response = InventoryBatches::StockAdjustments::CreateService.(@inventory_batch, stock_adjustment_params)
 
     response.on_success do
       set_flash_message(:notice, :success)
@@ -51,6 +51,6 @@ class Inventories::InventoryBatches::StockAdjustmentsController < ApplicationCon
   end
 
   def form_partial
-    "inventories/inventory_batches/stock_adjustments/form"
+    "inventory_batches/stock_adjustments/form"
   end
 end

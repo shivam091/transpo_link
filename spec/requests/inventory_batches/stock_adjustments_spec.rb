@@ -2,11 +2,11 @@
 # -*- frozen_string_literal: true -*-
 # -*- warn_indent: true -*-
 
-# spec/requests/inventories/inventory_batches/stock_adjustments_spec.rb
+# spec/requests/inventory_batches/stock_adjustments_spec.rb
 
 require "spec_helper"
 
-RSpec.describe "Inventories::InventoryBatches::StockAdjustments", type: :request do
+RSpec.describe "InventoryBatches::StockAdjustments", type: :request do
   include_context "sign in as admin"
 
   let(:inventory_batch) { create(:inventory_batch) }

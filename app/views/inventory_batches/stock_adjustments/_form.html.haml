@@ -21,7 +21,7 @@
     = form.text_area :note, rows: 2
     = help_text(t(".note_help_text"))
   .modal-actions
-    = button_tag type: :submit, class: "btn btn-primary" do
+    = button_tag type: :submit, class: "btn btn-primary", data: {turbo_submits_with: button_text(:processing)} do
       = sprite_icon("check")
       = button_text(:confirm_adjustment)
     = button_tag type: :button, class: "btn btn-secondary", data: {action: "click->remote-modal#hide"} do

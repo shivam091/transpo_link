@@ -2,11 +2,11 @@
 # -*- frozen_string_literal: true -*-
 # -*- warn_indent: true -*-
 
-# spec/services/stock_adjustments/create_service_spec.rb
+# spec/services/inventory_batches/stock_adjustments/create_service_spec.rb
 
 require "spec_helper"
 
-RSpec.describe StockAdjustments::CreateService, type: :service do
+RSpec.describe InventoryBatches::StockAdjustments::CreateService, type: :service do
   let(:user) { create(:admin) }
 
   let(:inventory_batch) { create(:inventory_batch) }

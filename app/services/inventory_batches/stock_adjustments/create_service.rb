@@ -2,9 +2,9 @@
 # -*- frozen_string_literal: true -*-
 # -*- warn_indent: true -*-
 
-class StockAdjustments::CreateService < ApplicationService
-  def initialize(adjustable, stock_adjustment_attributes)
-    @adjustable = adjustable
+class InventoryBatches::StockAdjustments::CreateService < ApplicationService
+  def initialize(inventory_batch, stock_adjustment_attributes)
+    @inventory_batch = inventory_batch
     @stock_adjustment_attributes = stock_adjustment_attributes
   end
 
@@ -14,11 +14,11 @@ class StockAdjustments::CreateService < ApplicationService
 
   private
 
-  attr_reader :adjustable, :stock_adjustment_attributes
+  attr_reader :inventory_batch, :stock_adjustment_attributes
 
   def create_stock_adjustment
-    stock_adjustment = adjustable.stock_adjustments.build(stock_adjustment_attributes)
-
+    stock_adjustment = inventory_batch.stock_adjustments.build(stock_adjustment_attributes)
+    debugger
     if stock_adjustment.save
       ServiceResponse.success(payload: {stock_adjustment:})
     else

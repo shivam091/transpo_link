@@ -41,6 +41,7 @@
       confirm_rejection: "Confirm rejection",
       adjust_stock: "Adjust stock",
       confirm_adjustment: "Confirm adjustment",
+      processing: "Processing...",
     },
   }
 }
