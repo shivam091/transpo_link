@@ -48,6 +48,7 @@ RSpec.describe InventoryBatch, type: :model do
 
   describe "delegates" do
     it { is_expected.to delegate_method(:symbol).to(:unit).with_prefix }
+    it { is_expected.to delegate_method(:category).to(:unit).with_prefix }
   end
 
   describe "nested attributes" do

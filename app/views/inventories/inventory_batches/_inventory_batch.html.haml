@@ -15,7 +15,7 @@
     %ul.dropdown-menu
       - if authorized_for?(:inventories, :restock) && inventory_batch.restockable_quantity > 0.0
         %li
-          = link_to new_inventory_batch_inventory_restock_path(inventory_batch), class: "dropdown-item",
+          = link_to new_inventory_batch_restock_path(inventory_batch), class: "dropdown-item",
             data: {turbo_frame: :remote_modal} do
             = sprite_icon("plus")
             = button_text(:restock)

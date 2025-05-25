@@ -2,11 +2,11 @@
 # -*- frozen_string_literal: true -*-
 # -*- warn_indent: true -*-
 
-# spec/services/inventories/restock_service_spec.rb
+# spec/services/inventory_batches/restock_service_spec.rb
 
 require "spec_helper"
 
-RSpec.describe Inventories::RestockService, type: :service do
+RSpec.describe InventoryBatches::RestockService, type: :service do
   let(:unit) { create(:item_unit) }
   let(:inventory) { create(:inventory, unit:) }
   let(:purchase_order_item) { create(:purchase_order_item, :delivered, unit:) }
