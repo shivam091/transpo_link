@@ -56,6 +56,9 @@ class User < ApplicationRecord
   has_many :managed_warehouses, through: :warehouse_managers, inverse_of: :managers, source: :warehouse
   has_many :supplied_warehouses, through: :warehouse_suppliers, inverse_of: :suppliers, source: :warehouse
 
+  has_many :purchase_order_approvals, class_name: "PurchaseOrder::Approval", inverse_of: :user, dependent: :nullify
+  has_many :approved_purchase_orders, through: :purchase_order_approvals, source: :purchase_order
+
   has_many :po_item_deliveries, class_name: "PurchaseOrderItem::Delivery", inverse_of: :user, dependent: :nullify
   has_many :delivered_po_items,
            -> { distinct },

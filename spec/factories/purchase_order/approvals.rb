@@ -5,6 +5,7 @@
 FactoryBot.define do
   factory :purchase_order_approval, class: "PurchaseOrder::Approval" do
     association :purchase_order
+    association :user, factory: :supplier
     reference_document { Faker::Alphanumeric.alphanumeric(number: 12).upcase }
     expected_delivery_date { Date.current + 1.month }
     incoterm_code { :exw }
