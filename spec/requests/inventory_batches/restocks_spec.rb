@@ -7,14 +7,22 @@
 require "spec_helper"
 
 RSpec.describe "InventoryBatches::Restocks", type: :request do
+  include_context "sign in as manager"
+
   let(:unit) { create(:item_unit) }
   let(:source) { create(:purchase_order_item, :delivered, unit:) }
   let(:inventory_batch) { create(:inventory_batch, source:, unit:) }
 
-  let(:valid_params) { {restock: attributes_for(:inventory_restock, unit_id: unit.id, inventory_batch_id: inventory_batch.id)} }
+  let(:valid_params) do
+    {
+      restock: attributes_for(:inventory_restock,
+        unit_id: unit.id,
+        inventory_batch_id: inventory_batch.id,
+        user_id: manager.id
+      )
+    }
+  end
   let(:invalid_params) { {restock: attributes_for(:inventory_restock, comment: "")} }
-
-  include_context "sign in as manager"
 
   before { allow_any_instance_of(InventoryBatch).to receive(:record_audit_logs) }
 

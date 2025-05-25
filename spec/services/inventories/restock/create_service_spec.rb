@@ -16,7 +16,8 @@ RSpec.describe Inventories::Restock::CreateService, type: :service do
 
   describe ".call" do
     context "when provided attributes are valid" do
-      let(:restock_attributes) { attributes_for(:inventory_restock) }
+      let(:user) { create(:manager) }
+      let(:restock_attributes) { attributes_for(:inventory_restock, user_id: user.id) }
 
       include_examples "creates a record", Inventory::Restock
       include_examples "returns a success response"

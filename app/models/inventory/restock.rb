@@ -33,6 +33,7 @@ class Inventory::Restock < ApplicationRecord
 
   belongs_to :inventory_batch, inverse_of: :restocks
   belongs_to :unit, inverse_of: :restocks
+  belongs_to :user, inverse_of: :restocks
 
   after_create :restock_inventory
 

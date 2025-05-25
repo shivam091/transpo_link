@@ -40,7 +40,12 @@ class InventoryBatches::RestocksController < ApplicationController
   end
 
   def restock_params
-    params.require(:restock).permit(:quantity, :unit_id, :comment, :note)
+    params.require(:restock).permit(
+      :quantity,
+      :unit_id,
+      :comment,
+      :note
+    ).merge(user: current_user)
   end
 
   def form_frame_id
