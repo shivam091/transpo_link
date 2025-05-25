@@ -1,16 +1,28 @@
-- product = @purchase_order_item.product
+- product, warehouse = @purchase_order_item.product, @purchase_order_item.warehouse
+.col-md-12.col-lg-6
+  %dl
+    %dt
+      = PurchaseOrderItem.human_attribute_name(:warehouse_id)
+    %dd
+      = authorized_for?(:warehouses, :view) ? link_to_product(warehouse, target: :_blank) : warehouse.name
 .col-md-12.col-lg-6
   %dl
     %dt
       = PurchaseOrderItem.human_attribute_name(:product_id)
     %dd
-      = link_to product.name, product_path(product), target: :_blank
+      = authorized_for?(:products, :view) ? link_to_product(product, target: :_blank) : product.name
 .col-md-12.col-lg-6
   %dl
     %dt
       = PurchaseOrderItem.human_attribute_name(:ordered_quantity)
     %dd
       = number_to_measurement_unit(@purchase_order_item.quantity, @purchase_order_item.unit_symbol)
+.col-md-12.col-lg-6
+  %dl
+    %dt
+      = PurchaseOrderItem.human_attribute_name(:received_quantity)
+    %dd
+      = number_to_measurement_unit((@purchase_order_item.received_quantity), @purchase_order_item.unit_symbol)
 .col-md-12.col-lg-6
   %dl
     %dt

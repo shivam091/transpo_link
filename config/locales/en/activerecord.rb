@@ -327,8 +327,8 @@
         "purchase_order_item/delivery" => {
           quantity: "Quantity",
           unit_id: "Unit of measure",
-          comment: "Delivery comment",
-          note: "Delivery note",
+          comment: "Comment",
+          note: "Note",
           reference_document: "Reference document",
         },
       },
