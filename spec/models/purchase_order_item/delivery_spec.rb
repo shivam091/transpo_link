@@ -40,6 +40,7 @@ RSpec.describe PurchaseOrderItem::Delivery, type: :model do
 
     it { is_expected.to belong_to(:purchase_order_item).inverse_of(:deliveries) }
     it { is_expected.to belong_to(:unit).inverse_of(:delivered_po_items) }
+    it { is_expected.to belong_to(:user).inverse_of(:delivered_po_items) }
   end
 
   describe "callbacks" do
@@ -102,6 +103,7 @@ RSpec.describe PurchaseOrderItem::Delivery, type: :model do
   describe "instance methods" do
     let!(:source_unit) { create(:dozen_unit) }
     let!(:target_unit) { create(:item_unit) }
+    let!(:user) { create(:manager) }
 
     let(:purchase_order_item) { create(:purchase_order_item, unit: target_unit) }
 
@@ -109,7 +111,7 @@ RSpec.describe PurchaseOrderItem::Delivery, type: :model do
       before { allow(delivery).to receive(:process_delivery) }
 
       context "when source and target units are the same" do
-        let(:delivery) { build(:po_item_delivery, unit: target_unit, quantity: 10, purchase_order_item:) }
+        let(:delivery) { build(:po_item_delivery, unit: target_unit, quantity: 10, purchase_order_item:, user:) }
 
         it "does not change quantity or unit" do
           expect(UnitConversion).not_to receive(:convert!)
@@ -122,7 +124,7 @@ RSpec.describe PurchaseOrderItem::Delivery, type: :model do
       end
 
       context "when source and target units are different and conversion succeeds" do
-        let(:delivery) { build(:po_item_delivery, unit: source_unit, quantity: 1, purchase_order_item:) }
+        let(:delivery) { build(:po_item_delivery, unit: source_unit, quantity: 1, purchase_order_item:, user:) }
 
         it "converts the quantity and sets unit to target unit" do
           allow(UnitConversion).to receive(:convert!).with(source_unit, target_unit, 1) { 12 }
@@ -136,7 +138,8 @@ RSpec.describe PurchaseOrderItem::Delivery, type: :model do
     end
 
     describe "#process_delivery" do
-      let(:delivery) { build(:po_item_delivery, purchase_order_item:) }
+      let(:user) { create(:manager) }
+      let(:delivery) { build(:po_item_delivery, purchase_order_item:, user:) }
 
       it "calls PurchaseOrderItems::Deliveries::ProcessService with the delivery" do
         expect(PurchaseOrderItems::Deliveries::ProcessService).to receive(:call).with(delivery)

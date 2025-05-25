@@ -18,7 +18,10 @@ RSpec.describe PurchaseOrderItems::Deliveries::CreateService, type: :service do
     end
 
     context "when provided attributes are valid" do
-      let(:delivery_attributes) { attributes_for(:po_item_delivery, unit_id: purchase_order_item.unit_id) }
+      let(:user) { create(:manager) }
+      let(:delivery_attributes) do
+        attributes_for(:po_item_delivery, unit_id: purchase_order_item.unit_id, user_id: user.id)
+      end
 
       include_examples "creates a record", PurchaseOrderItem::Delivery
       include_examples "returns a success response"

@@ -454,12 +454,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_21_100219) do
     t.timestamptz "updated_at", null: false
     t.index ["purchase_order_item_id"], name: "index_purchase_order_item_deliveries_on_purchase_order_item_id"
     t.index ["unit_id"], name: "index_purchase_order_item_deliveries_on_unit_id"
-    t.check_constraint "char_length(comment) <= 1000 AND char_length(comment) > 0", name: "check_purchase_order_item_deliveries_comment_length"
-    t.check_constraint "char_length(note) <= 1000", name: "check_purchase_order_item_deliveries_note_length"
-    t.check_constraint "char_length(reference_document::text) <= 55", name: "check_purchase_order_item_deliveries_reference_document_length"
-    t.check_constraint "comment IS NOT NULL AND comment <> ''::text", name: "check_purchase_order_item_deliveries_comment_presence"
-    t.check_constraint "quantity > 0.0", name: "check_purchase_order_item_deliveries_quantity_positive"
-    t.check_constraint "quantity IS NOT NULL", name: "check_purchase_order_item_deliveries_quantity_presence"
+    t.index ["user_id"], name: "index_purchase_order_item_deliveries_on_user_id"
+    t.check_constraint "char_length(comment) <= 1000 AND char_length(comment) > 0", name: "check_po_item_deliveries_comment_length"
+    t.check_constraint "char_length(note) <= 1000", name: "check_po_item_deliveries_note_length"
+    t.check_constraint "char_length(reference_document::text) <= 55", name: "check_po_item_deliveries_reference_document_length"
+    t.check_constraint "comment IS NOT NULL AND comment <> ''::text", name: "check_po_item_deliveries_comment_presence"
+    t.check_constraint "quantity > 0.0", name: "check_po_item_deliveries_quantity_positive"
+    t.check_constraint "quantity IS NOT NULL", name: "check_po_item_deliveries_quantity_presence"
   end
 
   create_table "purchase_order_items", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -810,8 +811,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_21_100219) do
   add_foreign_key "products", "product_categories", name: "fk_products_product_category_id_on_product_categories", on_delete: :restrict
   add_foreign_key "products", "units", name: "fk_products_unit_id_on_units", on_delete: :restrict
   add_foreign_key "purchase_order_approvals", "purchase_orders", name: "fk_po_approvals_purchase_order_id_on_purchase_orders", on_delete: :cascade
-  add_foreign_key "purchase_order_item_deliveries", "purchase_order_items", name: "fk_purchase_order_item_deliveries_purchase_order_item_id_on_pur", on_delete: :cascade
-  add_foreign_key "purchase_order_item_deliveries", "units", name: "fk_purchase_order_item_deliveries_unit_id_on_units", on_delete: :restrict
+  add_foreign_key "purchase_order_item_deliveries", "purchase_order_items", name: "fk_po_item_deliveries_purchase_order_item_id_on_purchase_order_", on_delete: :cascade
+  add_foreign_key "purchase_order_item_deliveries", "units", name: "fk_po_item_deliveries_unit_id_on_units", on_delete: :restrict
+  add_foreign_key "purchase_order_item_deliveries", "users", name: "fk_po_item_deliveries_user_id_on_users", on_delete: :nullify
   add_foreign_key "purchase_order_items", "products", name: "fk_purchase_order_items_product_id_on_products", on_delete: :restrict
   add_foreign_key "purchase_order_items", "purchase_orders", name: "fk_purchase_order_items_purchase_order_id_on_purchase_orders", on_delete: :cascade
   add_foreign_key "purchase_order_items", "units", name: "fk_purchase_order_items_unit_id_on_units", on_delete: :restrict

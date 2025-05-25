@@ -56,6 +56,11 @@ class User < ApplicationRecord
   has_many :managed_warehouses, through: :warehouse_managers, inverse_of: :managers, source: :warehouse
   has_many :supplied_warehouses, through: :warehouse_suppliers, inverse_of: :suppliers, source: :warehouse
 
+  has_many :po_item_deliveries, class_name: "PurchaseOrderItem::Delivery", inverse_of: :user, dependent: :nullify
+  has_many :delivered_po_items,
+           -> { distinct },
+           through: :po_item_deliveries, source: :purchase_order_item
+
   belongs_to :role, inverse_of: :users
 
   after_update :update_password_updated_at, if: :saved_change_to_encrypted_password?

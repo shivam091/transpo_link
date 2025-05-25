@@ -5,6 +5,7 @@
 FactoryBot.define do
   factory :po_item_delivery, class: "PurchaseOrderItem::Delivery" do
     association :purchase_order_item
+    association :user, factory: :manager
     quantity { 5.0 }
     note { Faker::Lorem.paragraph(sentence_count: 3) }
     comment { Faker::Lorem.paragraph(sentence_count: 3) }
