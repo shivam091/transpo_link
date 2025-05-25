@@ -31,4 +31,17 @@ class PurchaseOrder::CancellationRecord < ApplicationRecord
 
   belongs_to :cancellable, polymorphic: true, inverse_of: :cancellation_record
   belongs_to :user, inverse_of: :cancellation_records
+
+  validates :reason, presence: true, inclusion: {in: reasons.keys}, reduce: true
+  validates :note, length: {maximum: 1000}, reduce: true
+
+  validate :note_required_if_reason_is_other
+
+  private
+
+  def note_required_if_reason_is_other
+    return if reason.blank?
+
+    errors.add(:note, :blank) if reason == "other" && note.blank?
+  end
 end
