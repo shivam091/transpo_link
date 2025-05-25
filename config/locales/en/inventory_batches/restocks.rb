@@ -7,14 +7,14 @@
     inventory_batches: {
       restocks: {
         new: {
-          title: "Restock from batch %{batch_number}",
+          title: "Restock from batch %{batch_number} and lot number %{lot_number}",
         },
         form: {
           description_html: (<<~HTML).strip,
             <p>
               This form allows you to restock inventory from an existing batch <strong>%{batch_number}</strong>
-              when items are returned, corrected, or otherwise returned to usable stock.
-              You can only restock up to the quantity that’s available and restockable.
+              with lot number <strong>%{lot_number}</strong> when items are returned, corrected, or otherwise returned
+              to usable stock. You can only restock up to the quantity that’s available and restockable.
             </p>
             <p>
               When stock levels are low or operational needs demand more availability, restocking from a batch

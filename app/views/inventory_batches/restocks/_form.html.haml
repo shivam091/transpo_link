@@ -1,6 +1,6 @@
 = pretty_form_with model: [@inventory_batch, @restock], class: "row g-2", scope: :restock,
   url: inventory_batch_restocks_path do |form|
-  = t(".description_html", batch_number: @inventory_batch.batch_number)
+  = t(".description_html", batch_number: @inventory_batch.batch_number, lot_number: @inventory_batch.lot_number)
   .col-md-12.col-lg-6
     %dl
       %dt

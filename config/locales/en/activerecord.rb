@@ -328,6 +328,7 @@
           status: "Status",
           ordered_quantity: "Ordered quantity",
           remaining_quantity: "Remaining quantity",
+          available_batch_quantity: "Available batch quantity",
         },
         "purchase_order_item/delivery" => {
           quantity: "Quantity",
