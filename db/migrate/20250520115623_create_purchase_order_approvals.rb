@@ -15,7 +15,7 @@ class CreatePurchaseOrderApprovals < ActiveRecord::Migration[8.0]
                      on_delete: :cascade
                    },
                    null: false,
-                   index: {using: :btree}
+                   index: {using: :btree, unique: true}
       t.references :user,
                    type: :uuid,
                    foreign_key: {

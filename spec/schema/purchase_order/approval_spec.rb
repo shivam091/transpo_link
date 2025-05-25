@@ -25,7 +25,7 @@ RSpec.describe PurchaseOrder::Approval, type: :model do
   end
 
   describe "indexes" do
-    it { is_expected.to have_db_index(:purchase_order_id) }
+    it { is_expected.to have_db_index(:purchase_order_id).unique }
     it { is_expected.to have_db_index(:user_id) }
     it { is_expected.to have_db_index(:reference_document) }
     it { is_expected.to have_db_index(:expected_delivery_date) }

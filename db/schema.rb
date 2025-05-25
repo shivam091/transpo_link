@@ -428,7 +428,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_21_100219) do
     t.timestamptz "created_at", null: false
     t.timestamptz "updated_at", null: false
     t.index ["expected_delivery_date"], name: "index_purchase_order_approvals_on_expected_delivery_date"
-    t.index ["purchase_order_id"], name: "index_purchase_order_approvals_on_purchase_order_id"
+    t.index ["purchase_order_id"], name: "index_purchase_order_approvals_on_purchase_order_id", unique: true
     t.index ["reference_document"], name: "index_purchase_order_approvals_on_reference_document"
     t.index ["user_id"], name: "index_purchase_order_approvals_on_user_id"
     t.check_constraint "char_length(payment_terms) <= 1000", name: "check_po_approvals_payment_terms_length"
@@ -504,7 +504,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_21_100219) do
     t.text "note"
     t.timestamptz "created_at", null: false
     t.timestamptz "updated_at", null: false
-    t.index ["purchase_order_id"], name: "index_purchase_order_rejections_on_purchase_order_id"
+    t.index ["purchase_order_id"], name: "index_purchase_order_rejections_on_purchase_order_id", unique: true
     t.index ["reason"], name: "index_purchase_order_rejections_on_reason"
     t.index ["user_id"], name: "index_purchase_order_rejections_on_user_id"
     t.check_constraint "char_length(note) <= 1000", name: "check_po_rejections_note_length"
