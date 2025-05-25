@@ -16,12 +16,12 @@ class Inventories::Restock::CreateService < ApplicationService
   attr_reader :inventory_batch, :restock_attributes
 
   def create_inventory_restock
-    inventory_restock = inventory_batch.restocks.build(restock_attributes)
+    restock = inventory_batch.restocks.build(restock_attributes)
 
-    if inventory_restock.save
-      ServiceResponse.success(payload: {inventory_restock:})
+    if restock.save
+      ServiceResponse.success(payload: {restock:})
     else
-      ServiceResponse.error(payload: {inventory_restock:})
+      ServiceResponse.error(payload: {restock:})
     end
   end
 end

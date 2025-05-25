@@ -48,7 +48,7 @@ class PurchaseOrders::ApprovalsController < ApplicationController
       :payment_terms,
       :remarks,
       :partial_delivery_allowed
-    )
+    ).merge(user: current_user)
   end
 
   def form_frame_id

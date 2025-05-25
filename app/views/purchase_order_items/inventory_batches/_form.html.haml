@@ -1,32 +1,55 @@
+- product = @purchase_order_item.product
 = pretty_form_with model: [@purchase_order_item, @inventory_batch], class: "row g-2" do |form|
+  = t(".description_html", reference_code: @purchase_order_item.purchase_order.reference_code)
+  .col-md-12.col-lg-6
+    %dl
+      %dt
+        = PurchaseOrderItem.human_attribute_name(:received_quantity)
+      %dd
+        = number_to_measurement_unit(@purchase_order_item.received_quantity, @purchase_order_item.unit_symbol)
+  .col-md-12.col-lg-6
+    %dl
+      %dt
+        = PurchaseOrderItem.human_attribute_name(:available_batch_quantity)
+      %dd
+        = number_to_measurement_unit(@purchase_order_item.available_batch_quantity, @purchase_order_item.unit_symbol)
   .col-md-12.col-lg-6
     = form.label :batch_number, class: "form-label required"
     = form.text_field :batch_number
+    = help_text(t(".batch_number_help_text"))
   .col-md-12.col-lg-6
     = form.label :lot_number, class: "form-label"
     = form.text_field :lot_number
+    = help_text(t(".lot_number_help_text"))
   .col-md-12.col-lg-6
     = form.label :quantity, class: "form-label required"
     = form.number_field :quantity, step: 0.01
+    = help_text(t(".quantity_help_text"))
   .col-md-12.col-lg-6
     = form.label :unit_id, class: "form-label required"
     = form.measurement_unit_select :unit_id, category: @purchase_order_item.unit.category,
       include_blank: t(".select_unit")
+    = help_text(t(".unit_id_help_text"))
   .col-md-12.col-lg-6
     = form.label :manufactured_at, class: "form-label"
     = form.date_field :manufactured_at
+    = help_text(t(".manufactured_at_help_text"))
   .col-md-12.col-lg-6
     = form.label :expiration_date, class: "form-label"
     = form.date_field :expiration_date
+    = help_text(t(".expiration_date_help_text"))
   .col-md-12.col-lg-6
     = form.label :received_at, class: "form-label"
     = form.date_field :received_at
+    = help_text(t(".received_at_help_text"))
   .col-md-12.col-lg-6
     = form.label :location, class: "form-label required"
     = form.text_field :location
+    = help_text(t(".location_help_text"))
   .col-12
     = form.label :notes, class: "form-label"
     = form.text_area :notes, rows: 2
+    = help_text(t(".notes_help_text"))
   .modal-actions
     = button_tag type: :submit, class: "btn btn-primary" do
       = sprite_icon("floppy")

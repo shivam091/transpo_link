@@ -1,5 +1,6 @@
 = pretty_form_with model: [@purchase_order_item, @delivery], scope: :delivery, class: "row g-2",
   url: purchase_order_item_deliveries_path(@purchase_order_item) do |form|
+  = t(".description_html")
   = safe_render.partial "purchase_order_items/show"
   .col-md-12.col-lg-6
     = form.label :quantity, class: "form-label required"
@@ -11,12 +12,14 @@
       selected: (@delivery.original_unit_id || @delivery.unit_id),
       include_blank: t(".select_unit_of_measure")
     = help_text(t(".unit_id_help_text"))
-  .col-12
+  .col-md-12.col-lg-6
     = form.label :comment, class: "form-label required"
     = form.text_area :comment, rows: 2
-  .col-12
+    = help_text(t(".comment_help_text"))
+  .col-md-12.col-lg-6
     = form.label :note, class: "form-label"
     = form.text_area :note, rows: 2
+    = help_text(t(".note_help_text"))
   .modal-actions
     = button_tag type: :submit, class: "btn btn-primary" do
       = sprite_icon("check")

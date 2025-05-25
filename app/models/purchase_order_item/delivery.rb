@@ -34,6 +34,7 @@ class PurchaseOrderItem::Delivery < ApplicationRecord
 
   belongs_to :purchase_order_item, inverse_of: :deliveries
   belongs_to :unit, inverse_of: :delivered_po_items
+  belongs_to :user, inverse_of: :delivered_po_items
 
   before_validation :store_original_attributes, :convert_to_item_unit
   after_create :process_delivery

@@ -9,7 +9,7 @@ class CreatePurchaseOrderItemDeliveries < ActiveRecord::Migration[8.0]
                    type: :uuid,
                    foreign_key: {
                      to_table: :purchase_order_items,
-                     name: :fk_purchase_order_item_deliveries_purchase_order_item_id_on_purchase_order_items,
+                     name: :fk_po_item_deliveries_purchase_order_item_id_on_purchase_order_items,
                      on_delete: :cascade
                    },
                    null: false,
@@ -18,8 +18,17 @@ class CreatePurchaseOrderItemDeliveries < ActiveRecord::Migration[8.0]
                    type: :uuid,
                    foreign_key: {
                      to_table: :units,
-                     name: :fk_purchase_order_item_deliveries_unit_id_on_units,
+                     name: :fk_po_item_deliveries_unit_id_on_units,
                      on_delete: :restrict
+                   },
+                   null: false,
+                   index: {using: :btree}
+      t.references :user,
+                   type: :uuid,
+                   foreign_key: {
+                     to_table: :users,
+                     name: :fk_po_item_deliveries_user_id_on_users,
+                     on_delete: :nullify
                    },
                    null: false,
                    index: {using: :btree}
@@ -29,15 +38,15 @@ class CreatePurchaseOrderItemDeliveries < ActiveRecord::Migration[8.0]
       t.string :reference_document
       t.timestamps_with_timezone null: false
 
-      t.check_constraint "quantity IS NOT NULL", name: :check_purchase_order_item_deliveries_quantity_presence
-      t.check_constraint "quantity > 0.0", name: :check_purchase_order_item_deliveries_quantity_positive
+      t.check_constraint "quantity IS NOT NULL", name: :check_po_item_deliveries_quantity_presence
+      t.check_constraint "quantity > 0.0", name: :check_po_item_deliveries_quantity_positive
 
-      t.check_constraint "CHAR_LENGTH(reference_document) <= 55", name: :check_purchase_order_item_deliveries_reference_document_length
+      t.check_constraint "CHAR_LENGTH(reference_document) <= 55", name: :check_po_item_deliveries_reference_document_length
 
-      t.check_constraint "comment IS NOT NULL AND comment <> ''", name: :check_purchase_order_item_deliveries_comment_presence
-      t.check_constraint "CHAR_LENGTH(comment) <= 1000 AND CHAR_LENGTH(comment) > 0", name: :check_purchase_order_item_deliveries_comment_length
+      t.check_constraint "comment IS NOT NULL AND comment <> ''", name: :check_po_item_deliveries_comment_presence
+      t.check_constraint "CHAR_LENGTH(comment) <= 1000 AND CHAR_LENGTH(comment) > 0", name: :check_po_item_deliveries_comment_length
 
-      t.check_constraint "CHAR_LENGTH(note) <= 1000", name: :check_purchase_order_item_deliveries_note_length
+      t.check_constraint "CHAR_LENGTH(note) <= 1000", name: :check_po_item_deliveries_note_length
     end
   end
 end

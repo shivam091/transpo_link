@@ -49,9 +49,15 @@ RSpec.describe User, type: :model do
     it { is_expected.to have_many(:inventory_audit_logs).inverse_of(:user).dependent(:nullify) }
     it { is_expected.to have_many(:inventory_batch_audit_logs).inverse_of(:user).dependent(:nullify) }
     it { is_expected.to have_many(:feedbacks).inverse_of(:user).dependent(:nullify) }
+    it { is_expected.to have_many(:restocks).inverse_of(:user).dependent(:nullify) }
+    it { is_expected.to have_many(:purchase_order_approvals).class_name("PurchaseOrder::Approval").inverse_of(:user).dependent(:nullify) }
+    it { is_expected.to have_many(:approved_purchase_orders).through(:purchase_order_approvals).source(:purchase_order) }
+    it { is_expected.to have_many(:purchase_order_rejections).class_name("PurchaseOrder::Rejection").inverse_of(:user).dependent(:nullify) }
+    it { is_expected.to have_many(:rejected_purchase_orders).through(:purchase_order_rejections).source(:purchase_order) }
+    it { is_expected.to have_many(:po_item_deliveries).class_name("PurchaseOrderItem::Delivery").inverse_of(:user).dependent(:nullify) }
+    it { is_expected.to have_many(:delivered_po_items).through(:po_item_deliveries).source(:purchase_order_item) }
     it { is_expected.to have_many(:purchase_orders).inverse_of(:manager).dependent(:restrict_with_exception) }
     it { is_expected.to have_many(:supplied_purchase_orders).inverse_of(:supplier).class_name("PurchaseOrder").dependent(:restrict_with_exception) }
-
     it { is_expected.to have_many(:warehouse_managers).inverse_of(:manager).with_foreign_key(:manager_id).dependent(:restrict_with_exception) }
     it { is_expected.to have_many(:managed_warehouses).through(:warehouse_managers).inverse_of(:managers).source(:warehouse) }
     it { is_expected.to have_many(:warehouse_suppliers).inverse_of(:supplier).with_foreign_key(:supplier_id).dependent(:restrict_with_exception) }

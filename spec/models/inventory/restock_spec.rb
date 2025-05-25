@@ -107,8 +107,8 @@ RSpec.describe Inventory::Restock, type: :model do
       let(:purchase_order_item) { create(:purchase_order_item, :delivered) }
       let(:inventory_batch) { create(:inventory_batch, source: purchase_order_item) }
 
-      it "calls Inventories::RestockService" do
-        expect(Inventories::RestockService).to receive(:call).with(an_instance_of(InventoryBatch), an_instance_of(Inventory::Restock))
+      it "calls InventoryBatches::RestockService" do
+        expect(InventoryBatches::RestockService).to receive(:call).with(an_instance_of(InventoryBatch), an_instance_of(Inventory::Restock))
 
         create(:inventory_restock, inventory_batch:)
       end

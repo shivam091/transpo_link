@@ -42,6 +42,7 @@ class PurchaseOrder::Rejection < ApplicationRecord
             reduce: true
 
   belongs_to :purchase_order, inverse_of: :rejection
+  belongs_to :user, inverse_of: :rejected_purchase_orders
 
   after_create :reject_purchase_order!
 

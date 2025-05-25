@@ -1,13 +1,14 @@
 = pretty_form_with model: [@purchase_order, @approval], scope: :approval, class: "row g-2",
   url: purchase_order_approval_path(@purchase_order) do |form|
-  %p
-    = t(".approval_note", reference_code: @purchase_order.reference_code)
+  = t(".description_html", reference_code: @purchase_order.reference_code)
   .col-md-12.col-lg-6
     = form.label :reference_document, class: "form-label required"
     = form.text_field :reference_document
+    = help_text(t(".reference_document_help_text"))
   .col-md-12.col-lg-6
     = form.label :expected_delivery_date, class: "form-label required"
     = form.date_field :expected_delivery_date
+    = help_text(t(".expected_delivery_date_help_text"))
   .col-md-12.col-lg-6
     = form.label :incoterm_code, class: "form-label required"
     = form.select :incoterm_code, options_for_select(enum_options_with_titles(PurchaseOrder::Approval, :incoterm_codes), form.object.incoterm_code&.upcase),
@@ -21,13 +22,16 @@
   .col-12
     = form.label :payment_terms, class: "form-label required"
     = form.text_area :payment_terms, rows: 2
+    = help_text(t(".payment_terms_help_text"))
   .col-12
     = form.label :remarks, class: "form-label"
     = form.text_area :remarks, rows: 2
+    = help_text(t(".remarks_help_text"))
   .col-12.mt-3
     .form-check
       = form.label :partial_delivery_allowed, class: "form-check-label"
       = form.check_box :partial_delivery_allowed
+    = help_text(t(".partial_delivery_allowed_help_text"))
   .modal-actions
     = button_tag type: :submit, class: "btn btn-primary" do
       = sprite_icon("check")

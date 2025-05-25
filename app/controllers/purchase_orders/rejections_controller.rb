@@ -44,7 +44,7 @@ class PurchaseOrders::RejectionsController < ApplicationController
       :reason,
       :suggested_alternatives,
       :note,
-    )
+    ).merge(user: current_user)
   end
 
   def form_frame_id

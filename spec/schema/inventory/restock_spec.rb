@@ -14,6 +14,7 @@ RSpec.describe Inventory::Restock, type: :model do
     it { is_expected.to have_db_column(:inventory_batch_id).of_type(:uuid).with_options(null: false) }
     it { is_expected.to have_db_column(:quantity).of_type(:decimal).with_options(precision: 12, scale: 2) }
     it { is_expected.to have_db_column(:unit_id).of_type(:uuid).with_options(null: false) }
+    it { is_expected.to have_db_column(:user_id).of_type(:uuid).with_options(null: false) }
     it { is_expected.to have_db_column(:comment).of_type(:text) }
     it { is_expected.to have_db_column(:note).of_type(:text) }
     it { is_expected.to have_db_column(:created_at).of_type(:timestamptz).with_options(null: false) }
@@ -22,11 +23,13 @@ RSpec.describe Inventory::Restock, type: :model do
 
   describe "indexes" do
     it { is_expected.to have_db_index(:unit_id) }
+    it { is_expected.to have_db_index(:user_id) }
     it { is_expected.to have_db_index(:inventory_batch_id) }
   end
 
   describe "foreign keys" do
     it { is_expected.to have_foreign_key(:unit_id).with_name(:fk_inventory_restocks_unit_id_on_units).on_delete(:restrict) }
+    it { is_expected.to have_foreign_key(:user_id).with_name(:fk_inventory_restocks_user_id_on_users).on_delete(:nullify) }
     it { is_expected.to have_foreign_key(:inventory_batch_id).with_name(:fk_inventory_restocks_inventory_batch_id_on_inventory_batches).on_delete(:cascade) }
   end
 

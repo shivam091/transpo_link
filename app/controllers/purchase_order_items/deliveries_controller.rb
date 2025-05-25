@@ -39,7 +39,12 @@ class PurchaseOrderItems::DeliveriesController < ApplicationController
   end
 
   def delivery_params
-    params.require(:delivery).permit(:quantity, :unit_id, :comment, :note)
+    params.require(:delivery).permit(
+      :quantity,
+      :unit_id,
+      :comment, 
+      :note
+    ).merge(user: current_user)
   end
 
   def form_frame_id

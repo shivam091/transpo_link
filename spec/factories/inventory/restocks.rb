@@ -5,6 +5,7 @@
 FactoryBot.define do
   factory :inventory_restock, class: "Inventory::Restock" do
     association :inventory_batch
+    association :user, factory: :manager
     quantity { 10.0 }
     unit { find_or_create_unit("item") }
     note { Faker::Lorem.paragraph(sentence_count: 3) }

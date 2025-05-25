@@ -2,26 +2,26 @@
 # -*- frozen_string_literal: true -*-
 # -*- warn_indent: true -*-
 
-class Inventories::InventoryRestocksController < ApplicationController
+class InventoryBatches::RestocksController < ApplicationController
   before_action :set_inventory_batch
 
   requires_authorization :inventories, :restock
 
   # GET /inventory-batches/:inventory_batch_id/restocks/new
   def new
-    @inventory_restock = @inventory_batch.restocks.build
+    @restock = @inventory_batch.restocks.build
   end
 
   # POST /inventory-batches/:inventory_batch_id/restocks
   def create
-    response = Inventories::Restock::CreateService.(@inventory_batch, inventory_restock_params)
+    response = Inventories::Restock::CreateService.(@inventory_batch, restock_params)
 
     response.on_success do
       set_flash_message(:notice, :success)
 
       redirect_back fallback_location: inventories_path, status: :see_other
     end.on_error do
-      @inventory_restock = response.payload[:inventory_restock]
+      @restock = response.payload[:restock]
 
       respond_to do |format|
         format.turbo_stream do
@@ -39,15 +39,20 @@ class Inventories::InventoryRestocksController < ApplicationController
     @inventory_batch ||= InventoryBatch.find(params[:inventory_batch_id])
   end
 
-  def inventory_restock_params
-    params.require(:inventory_restock).permit(:quantity, :unit_id, :comment, :note)
+  def restock_params
+    params.require(:restock).permit(
+      :quantity,
+      :unit_id,
+      :comment,
+      :note
+    ).merge(user: current_user)
   end
 
   def form_frame_id
-    :inventory_restock_form_frame
+    :inventory_batch_restock_form_frame
   end
 
   def form_partial
-    "inventories/inventory_restocks/form"
+    "inventory_batches/restocks/form"
   end
 end

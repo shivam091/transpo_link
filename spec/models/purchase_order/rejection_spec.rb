@@ -34,6 +34,7 @@ RSpec.describe PurchaseOrder::Rejection, type: :model do
 
   describe "associations" do
     it { is_expected.to belong_to(:purchase_order).inverse_of(:rejection) }
+    it { is_expected.to belong_to(:user).inverse_of(:rejected_purchase_orders) }
   end
 
   describe "validations" do

@@ -116,7 +116,7 @@ class PurchaseOrderItem < ApplicationRecord
   def available_batch_quantity
     return received_quantity.to_f unless inventory_batches.any?
 
-    total_batched_quantity = inventory_batches.sum do |batch|
+    total_batched_quantity = inventory_batches.reject(&:new_record?).sum do |batch|
       UnitConversion.convert!(batch.unit, unit, batch.quantity.to_f)
     end
 

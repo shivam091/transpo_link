@@ -1,4 +1,0 @@
-= title(t(".title"))
-= render_modal(title: t(".title"), modal_id: "inventory-restock") do
-  = turbo_frame_tag :inventory_restock_form_frame, target: "_top" do
-    = safe_render.partial("inventories/inventory_restocks/form")

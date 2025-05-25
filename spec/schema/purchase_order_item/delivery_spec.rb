@@ -14,6 +14,7 @@ RSpec.describe PurchaseOrderItem::Delivery, type: :model do
     it { is_expected.to have_db_column(:purchase_order_item_id).of_type(:uuid) }
     it { is_expected.to have_db_column(:quantity).of_type(:decimal).with_options(precision: 12, scale: 2) }
     it { is_expected.to have_db_column(:unit_id).of_type(:uuid).with_options(null: false) }
+    it { is_expected.to have_db_column(:user_id).of_type(:uuid).with_options(null: false) }
     it { is_expected.to have_db_column(:comment).of_type(:text) }
     it { is_expected.to have_db_column(:note).of_type(:text) }
     it { is_expected.to have_db_column(:reference_document).of_type(:string) }
@@ -24,19 +25,21 @@ RSpec.describe PurchaseOrderItem::Delivery, type: :model do
   describe "indexes" do
     it { is_expected.to have_db_index(:purchase_order_item_id) }
     it { is_expected.to have_db_index(:unit_id) }
+    it { is_expected.to have_db_index(:user_id) }
   end
 
   describe "foreign keys" do
-    it { is_expected.to have_foreign_key(:purchase_order_item_id).with_name(:fk_purchase_order_item_deliveries_purchase_order_item_id_on_pur).on_delete(:cascade) }
-    it { is_expected.to have_foreign_key(:unit_id).with_name(:fk_purchase_order_item_deliveries_unit_id_on_units).on_delete(:restrict) }
+    it { is_expected.to have_foreign_key(:purchase_order_item_id).with_name(:fk_po_item_deliveries_purchase_order_item_id_on_purchase_order_).on_delete(:cascade) }
+    it { is_expected.to have_foreign_key(:unit_id).with_name(:fk_po_item_deliveries_unit_id_on_units).on_delete(:restrict) }
+    it { is_expected.to have_foreign_key(:user_id).with_name(:fk_po_item_deliveries_user_id_on_users).on_delete(:nullify) }
   end
 
   describe "check constraints" do
-    it { is_expected.to have_check_constraint(:check_purchase_order_item_deliveries_quantity_positive).with_expression("quantity > 0.0") }
-    it { is_expected.to have_check_constraint(:check_purchase_order_item_deliveries_quantity_presence).with_expression("quantity IS NOT NULL") }
-    it { is_expected.to have_check_constraint(:check_purchase_order_item_deliveries_comment_length).with_expression("char_length(comment) <= 1000 AND char_length(comment) > 0") }
-    it { is_expected.to have_check_constraint(:check_purchase_order_item_deliveries_note_length).with_expression("char_length(note) <= 1000") }
-    it { is_expected.to have_check_constraint(:check_purchase_order_item_deliveries_reference_document_length).with_expression("char_length(reference_document::text) <= 55") }
-    it { is_expected.to have_check_constraint(:check_purchase_order_item_deliveries_comment_presence).with_expression("comment IS NOT NULL AND comment <> ''::text") }
+    it { is_expected.to have_check_constraint(:check_po_item_deliveries_quantity_positive).with_expression("quantity > 0.0") }
+    it { is_expected.to have_check_constraint(:check_po_item_deliveries_quantity_presence).with_expression("quantity IS NOT NULL") }
+    it { is_expected.to have_check_constraint(:check_po_item_deliveries_comment_length).with_expression("char_length(comment) <= 1000 AND char_length(comment) > 0") }
+    it { is_expected.to have_check_constraint(:check_po_item_deliveries_note_length).with_expression("char_length(note) <= 1000") }
+    it { is_expected.to have_check_constraint(:check_po_item_deliveries_reference_document_length).with_expression("char_length(reference_document::text) <= 55") }
+    it { is_expected.to have_check_constraint(:check_po_item_deliveries_comment_presence).with_expression("comment IS NOT NULL AND comment <> ''::text") }
   end
 end

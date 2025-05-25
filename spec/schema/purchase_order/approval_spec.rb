@@ -12,6 +12,7 @@ RSpec.describe PurchaseOrder::Approval, type: :model do
   describe "attributes" do
     it { is_expected.to have_db_column(:id).of_type(:uuid) }
     it { is_expected.to have_db_column(:purchase_order_id).of_type(:uuid).with_options(null: false) }
+    it { is_expected.to have_db_column(:user_id).of_type(:uuid).with_options(null: false) }
     it { is_expected.to have_db_column(:reference_document).of_type(:string) }
     it { is_expected.to have_db_column(:expected_delivery_date).of_type(:date) }
     it { is_expected.to have_db_column(:incoterm_code).of_type(:enum) }
@@ -25,12 +26,14 @@ RSpec.describe PurchaseOrder::Approval, type: :model do
 
   describe "indexes" do
     it { is_expected.to have_db_index(:purchase_order_id) }
+    it { is_expected.to have_db_index(:user_id) }
     it { is_expected.to have_db_index(:reference_document) }
     it { is_expected.to have_db_index(:expected_delivery_date) }
   end
 
   describe "foreign keys" do
     it { is_expected.to have_foreign_key(:purchase_order_id).with_name(:fk_po_approvals_purchase_order_id_on_purchase_orders).on_delete(:cascade) }
+    it { is_expected.to have_foreign_key(:user_id).with_name(:fk_po_approvals_user_id_on_users).on_delete(:nullify) }
   end
 
   describe "check constraints" do

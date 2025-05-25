@@ -2,7 +2,7 @@
 # -*- frozen_string_literal: true -*-
 # -*- warn_indent: true -*-
 
-class Inventories::RestockService < ApplicationService
+class InventoryBatches::RestockService < ApplicationService
   def initialize(inventory_batch, restock)
     @inventory_batch, @restock = inventory_batch, restock
   end

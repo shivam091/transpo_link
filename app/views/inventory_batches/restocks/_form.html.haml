@@ -1,0 +1,38 @@
+= pretty_form_with model: [@inventory_batch, @restock], class: "row g-2", scope: :restock,
+  url: inventory_batch_restocks_path do |form|
+  = t(".description_html", batch_number: @inventory_batch.batch_number, lot_number: @inventory_batch.lot_number)
+  .col-md-12.col-lg-6
+    %dl
+      %dt
+        = InventoryBatch::Stock.human_attribute_name(:restockable_quantity)
+      %dd
+        = number_to_measurement_unit(@inventory_batch.restockable_quantity, @inventory_batch.unit_symbol)
+  .col-md-12.col-lg-6
+    %dl
+      %dt
+        = InventoryBatch::Stock.human_attribute_name(:restocked_quantity)
+      %dd
+        = number_to_measurement_unit(@inventory_batch.restocked_quantity, @inventory_batch.unit_symbol)
+  .col-md-12.col-lg-6
+    = form.label :quantity, class: "form-label required"
+    = form.number_field :quantity, step: 0.01
+    = help_text(t(".quantity_help_text"))
+  .col-md-12.col-lg-6
+    = form.label :unit_id, class: "form-label required"
+    = form.measurement_unit_select :unit_id, include_blank: t(".select_unit_of_measure"), category: @inventory_batch.unit_category
+    = help_text(t(".unit_id_help_text"))
+  .col-md-12.col-lg-6
+    = form.label :comment, class: "form-label required"
+    = form.text_area :comment, rows: 2
+    = help_text(t(".comment_help_text"))
+  .col-md-12.col-lg-6
+    = form.label :note, class: "form-label"
+    = form.text_area :note, rows: 2
+    = help_text(t(".note_help_text"))
+  .modal-actions
+    = button_tag type: :submit, class: "btn btn-primary" do
+      = sprite_icon("check")
+      = button_text(:confirm_restock)
+    = button_tag type: :button, class: "btn btn-secondary", data: {action: "click->remote-modal#hide"} do
+      = sprite_icon("times")
+      = button_text(:cancel)

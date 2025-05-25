@@ -16,6 +16,15 @@ class CreatePurchaseOrderApprovals < ActiveRecord::Migration[8.0]
                    },
                    null: false,
                    index: {using: :btree}
+      t.references :user,
+                   type: :uuid,
+                   foreign_key: {
+                     to_table: :users,
+                     name: :fk_po_approvals_user_id_on_users,
+                     on_delete: :nullify
+                   },
+                   null: false,
+                   index: {using: :btree}
       t.string :reference_document, index: {using: :btree}
       t.date :expected_delivery_date, index: {using: :btree}
       t.enum :incoterm_code, enum_type: :incoterm_codes

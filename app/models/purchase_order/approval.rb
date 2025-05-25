@@ -65,6 +65,7 @@ class PurchaseOrder::Approval < ApplicationRecord
   validate :expected_delivery_date_within_six_months
 
   belongs_to :purchase_order, inverse_of: :approval
+  belongs_to :user, inverse_of: :approved_purchase_orders
 
   after_create :approve_purchase_order!
 

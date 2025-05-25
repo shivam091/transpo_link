@@ -301,6 +301,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_21_100219) do
   create_table "inventory_restocks", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "inventory_batch_id", null: false
     t.uuid "unit_id", null: false
+    t.uuid "user_id", null: false
     t.decimal "quantity", precision: 12, scale: 2
     t.text "comment"
     t.text "note"
@@ -308,6 +309,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_21_100219) do
     t.timestamptz "updated_at", null: false
     t.index ["inventory_batch_id"], name: "index_inventory_restocks_on_inventory_batch_id"
     t.index ["unit_id"], name: "index_inventory_restocks_on_unit_id"
+    t.index ["user_id"], name: "index_inventory_restocks_on_user_id"
     t.check_constraint "char_length(comment) <= 1000 AND char_length(comment) > 0", name: "check_inventory_restocks_comment_length"
     t.check_constraint "char_length(note) <= 1000", name: "check_inventory_restocks_note_length"
     t.check_constraint "comment IS NOT NULL AND comment <> ''::text", name: "check_inventory_restocks_comment_presence"
@@ -415,6 +417,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_21_100219) do
 
   create_table "purchase_order_approvals", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "purchase_order_id", null: false
+    t.uuid "user_id", null: false
     t.string "reference_document"
     t.date "expected_delivery_date"
     t.enum "incoterm_code", enum_type: "incoterm_codes"
@@ -427,6 +430,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_21_100219) do
     t.index ["expected_delivery_date"], name: "index_purchase_order_approvals_on_expected_delivery_date"
     t.index ["purchase_order_id"], name: "index_purchase_order_approvals_on_purchase_order_id"
     t.index ["reference_document"], name: "index_purchase_order_approvals_on_reference_document"
+    t.index ["user_id"], name: "index_purchase_order_approvals_on_user_id"
     t.check_constraint "char_length(payment_terms) <= 1000", name: "check_po_approvals_payment_terms_length"
     t.check_constraint "char_length(reference_document::text) <= 55", name: "check_po_approvals_reference_document_length"
     t.check_constraint "char_length(remarks) <= 1000", name: "check_po_approvals_remarks_length"
@@ -444,6 +448,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_21_100219) do
   create_table "purchase_order_item_deliveries", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "purchase_order_item_id", null: false
     t.uuid "unit_id", null: false
+    t.uuid "user_id", null: false
     t.decimal "quantity", precision: 12, scale: 2
     t.text "comment"
     t.text "note"
@@ -452,12 +457,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_21_100219) do
     t.timestamptz "updated_at", null: false
     t.index ["purchase_order_item_id"], name: "index_purchase_order_item_deliveries_on_purchase_order_item_id"
     t.index ["unit_id"], name: "index_purchase_order_item_deliveries_on_unit_id"
-    t.check_constraint "char_length(comment) <= 1000 AND char_length(comment) > 0", name: "check_purchase_order_item_deliveries_comment_length"
-    t.check_constraint "char_length(note) <= 1000", name: "check_purchase_order_item_deliveries_note_length"
-    t.check_constraint "char_length(reference_document::text) <= 55", name: "check_purchase_order_item_deliveries_reference_document_length"
-    t.check_constraint "comment IS NOT NULL AND comment <> ''::text", name: "check_purchase_order_item_deliveries_comment_presence"
-    t.check_constraint "quantity > 0.0", name: "check_purchase_order_item_deliveries_quantity_positive"
-    t.check_constraint "quantity IS NOT NULL", name: "check_purchase_order_item_deliveries_quantity_presence"
+    t.index ["user_id"], name: "index_purchase_order_item_deliveries_on_user_id"
+    t.check_constraint "char_length(comment) <= 1000 AND char_length(comment) > 0", name: "check_po_item_deliveries_comment_length"
+    t.check_constraint "char_length(note) <= 1000", name: "check_po_item_deliveries_note_length"
+    t.check_constraint "char_length(reference_document::text) <= 55", name: "check_po_item_deliveries_reference_document_length"
+    t.check_constraint "comment IS NOT NULL AND comment <> ''::text", name: "check_po_item_deliveries_comment_presence"
+    t.check_constraint "quantity > 0.0", name: "check_po_item_deliveries_quantity_positive"
+    t.check_constraint "quantity IS NOT NULL", name: "check_po_item_deliveries_quantity_presence"
   end
 
   create_table "purchase_order_items", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -492,6 +498,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_21_100219) do
 
   create_table "purchase_order_rejections", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "purchase_order_id", null: false
+    t.uuid "user_id", null: false
     t.enum "reason", enum_type: "po_rejection_reasons"
     t.text "suggested_alternatives"
     t.text "note"
@@ -499,6 +506,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_21_100219) do
     t.timestamptz "updated_at", null: false
     t.index ["purchase_order_id"], name: "index_purchase_order_rejections_on_purchase_order_id"
     t.index ["reason"], name: "index_purchase_order_rejections_on_reason"
+    t.index ["user_id"], name: "index_purchase_order_rejections_on_user_id"
     t.check_constraint "char_length(note) <= 1000", name: "check_po_rejections_note_length"
     t.check_constraint "char_length(suggested_alternatives) <= 1000", name: "check_po_rejections_suggested_alternatives_length"
     t.check_constraint "reason = ANY (ARRAY['ITEM_OUT_OF_STOCK'::po_rejection_reasons, 'ITEM_DISCONTINUED'::po_rejection_reasons, 'MINIMUM_ORDER_NOT_MET'::po_rejection_reasons, 'LEAD_TIME_TOO_SHORT'::po_rejection_reasons, 'INVALID_SHIPPING_LOCATION'::po_rejection_reasons, 'PAYMENT_TERMS_UNACCEPTABLE'::po_rejection_reasons, 'PRICING_DISAGREEMENT'::po_rejection_reasons, 'CAPACITY_CONSTRAINTS'::po_rejection_reasons, 'PACKAGING_REQUIREMENTS_UNMET'::po_rejection_reasons, 'COMPLIANCE_DOCUMENTS_MISSING'::po_rejection_reasons, 'SEASONAL_ITEM_UNAVAILABLE'::po_rejection_reasons, 'WRONG_SPECIFICATIONS'::po_rejection_reasons, 'LOGISTICS_UNAVAILABLE'::po_rejection_reasons, 'MANUAL_ERROR'::po_rejection_reasons, 'ALREADY_FULFILLED_BY_OTHER'::po_rejection_reasons, 'CONTRACT_TERMS_VIOLATED'::po_rejection_reasons])", name: "check_po_rejections_reason_in_enum_values"
@@ -523,7 +531,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_21_100219) do
     t.index ["supplier_id"], name: "index_purchase_orders_on_supplier_id"
     t.index ["warehouse_id"], name: "index_purchase_orders_on_warehouse_id"
     t.check_constraint "char_length(notes) <= 1000", name: "check_purchase_orders_notes_length"
-    t.check_constraint "status = ANY (ARRAY['approved'::purchase_order_statuses, 'cancelled'::purchase_order_statuses, 'closed'::purchase_order_statuses, 'draft'::purchase_order_statuses, 'fully_delivered'::purchase_order_statuses, 'on_hold'::purchase_order_statuses, 'partially_delivered'::purchase_order_statuses, 'rejected'::purchase_order_statuses, 'shipped'::purchase_order_statuses, 'submitted'::purchase_order_statuses])", name: "check_purchase_orders_status_in_enum_values"
+    t.check_constraint "status = ANY (ARRAY['draft'::purchase_order_statuses, 'submitted'::purchase_order_statuses, 'approved'::purchase_order_statuses, 'shipped'::purchase_order_statuses, 'partially_delivered'::purchase_order_statuses, 'fully_delivered'::purchase_order_statuses, 'cancelled'::purchase_order_statuses, 'rejected'::purchase_order_statuses, 'closed'::purchase_order_statuses, 'on_hold'::purchase_order_statuses])", name: "check_purchase_orders_status_in_enum_values"
     t.check_constraint "status IS NOT NULL", name: "check_purchase_orders_status_presence"
   end
 
@@ -799,6 +807,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_21_100219) do
   add_foreign_key "inventory_movements", "units", name: "fk_inventory_movements_unit_id_on_units", on_delete: :restrict
   add_foreign_key "inventory_restocks", "inventory_batches", name: "fk_inventory_restocks_inventory_batch_id_on_inventory_batches", on_delete: :cascade
   add_foreign_key "inventory_restocks", "units", name: "fk_inventory_restocks_unit_id_on_units", on_delete: :restrict
+  add_foreign_key "inventory_restocks", "users", name: "fk_inventory_restocks_user_id_on_users", on_delete: :nullify
   add_foreign_key "legal_identifiers", "users", name: "fk_legal_identifiers_user_id_on_users", on_delete: :cascade
   add_foreign_key "product_categories", "product_categories", column: "parent_category_id", name: "fk_product_categories_parent_category_id_on_product_categories", on_delete: :cascade
   add_foreign_key "product_prices", "products", name: "fk_product_prices_product_id_on_products", on_delete: :cascade
@@ -807,12 +816,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_21_100219) do
   add_foreign_key "products", "product_categories", name: "fk_products_product_category_id_on_product_categories", on_delete: :restrict
   add_foreign_key "products", "units", name: "fk_products_unit_id_on_units", on_delete: :restrict
   add_foreign_key "purchase_order_approvals", "purchase_orders", name: "fk_po_approvals_purchase_order_id_on_purchase_orders", on_delete: :cascade
-  add_foreign_key "purchase_order_item_deliveries", "purchase_order_items", name: "fk_purchase_order_item_deliveries_purchase_order_item_id_on_pur", on_delete: :cascade
-  add_foreign_key "purchase_order_item_deliveries", "units", name: "fk_purchase_order_item_deliveries_unit_id_on_units", on_delete: :restrict
+  add_foreign_key "purchase_order_approvals", "users", name: "fk_po_approvals_user_id_on_users", on_delete: :nullify
+  add_foreign_key "purchase_order_item_deliveries", "purchase_order_items", name: "fk_po_item_deliveries_purchase_order_item_id_on_purchase_order_", on_delete: :cascade
+  add_foreign_key "purchase_order_item_deliveries", "units", name: "fk_po_item_deliveries_unit_id_on_units", on_delete: :restrict
+  add_foreign_key "purchase_order_item_deliveries", "users", name: "fk_po_item_deliveries_user_id_on_users", on_delete: :nullify
   add_foreign_key "purchase_order_items", "products", name: "fk_purchase_order_items_product_id_on_products", on_delete: :restrict
   add_foreign_key "purchase_order_items", "purchase_orders", name: "fk_purchase_order_items_purchase_order_id_on_purchase_orders", on_delete: :cascade
   add_foreign_key "purchase_order_items", "units", name: "fk_purchase_order_items_unit_id_on_units", on_delete: :restrict
   add_foreign_key "purchase_order_rejections", "purchase_orders", name: "fk_po_rejections_purchase_order_id_on_purchase_orders", on_delete: :cascade
+  add_foreign_key "purchase_order_rejections", "users", name: "fk_po_rejections_user_id_on_users", on_delete: :nullify
   add_foreign_key "purchase_orders", "users", column: "manager_id", name: "fk_purchase_orders_manager_id_on_users", on_delete: :restrict
   add_foreign_key "purchase_orders", "users", column: "supplier_id", name: "fk_purchase_orders_supplier_id_on_users", on_delete: :restrict
   add_foreign_key "purchase_orders", "warehouses", name: "fk_purchase_orders_warehouse_id_on_warehouses", on_delete: :restrict

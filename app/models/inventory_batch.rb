@@ -80,7 +80,7 @@ class InventoryBatch < ApplicationRecord
   after_create :create_stock
 
   with_options prefix: true do |d|
-    d.delegate :symbol, to: :unit
+    d.delegate :symbol, :category, to: :unit
   end
 
   delegate :ordered_quantity, :reserved_quantity, :damaged_quantity,

@@ -23,6 +23,15 @@ class CreateInventoryRestocks < ActiveRecord::Migration[8.0]
                    },
                    null: false,
                    index: {using: :btree}
+      t.references :user,
+                   type: :uuid,
+                   foreign_key: {
+                     to_table: :users,
+                     name: :fk_inventory_restocks_user_id_on_users,
+                     on_delete: :nullify
+                   },
+                   null: false,
+                   index: {using: :btree}
       t.decimal :quantity, precision: 12, scale: 2
       t.text :comment
       t.text :note

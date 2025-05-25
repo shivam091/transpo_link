@@ -33,13 +33,14 @@ class Inventory::Restock < ApplicationRecord
 
   belongs_to :inventory_batch, inverse_of: :restocks
   belongs_to :unit, inverse_of: :restocks
+  belongs_to :user, inverse_of: :restocks
 
   after_create :restock_inventory
 
   private
 
   def restock_inventory
-    Inventories::RestockService.(inventory_batch, self)
+    InventoryBatches::RestockService.(inventory_batch, self)
   end
 
   def quantity_cannot_exceed_stock_restockable_quantity
