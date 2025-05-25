@@ -74,6 +74,9 @@ class PurchaseOrderItem < ApplicationRecord
   validates_with UnitIsInProductUnitCategoryValidator
   validates_with UniqueProductInCollectionValidator, parent: :purchase_order, collection: :purchase_order_items
 
+  has_one :cancellation_record, class_name: "PurchaseOrder::CancellationRecord", as: :cancellable, inverse_of: :cancellable, dependent: :destroy
+  has_one :cancelled_by, through: :cancellation_record, source: :user
+
   with_options inverse_of: :purchase_order_items do |a|
     a.belongs_to :purchase_order, touch: true
     a.belongs_to :product

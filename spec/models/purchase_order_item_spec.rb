@@ -44,6 +44,8 @@ RSpec.describe PurchaseOrderItem, type: :model do
 
   describe "associations" do
     it { is_expected.to have_one(:warehouse).through(:purchase_order).inverse_of(:purchase_order_items).dependent(:restrict_with_exception) }
+    it { is_expected.to have_one(:cancellation_record).class_name("PurchaseOrder::CancellationRecord").inverse_of(:cancellable).dependent(:destroy) }
+    it { is_expected.to have_one(:cancelled_by).through(:cancellation_record).source(:user) }
 
     it { is_expected.to have_many(:inventory_batches).dependent(:restrict_with_exception) }
     it { is_expected.to have_many(:inventory_movements).dependent(:restrict_with_exception) }

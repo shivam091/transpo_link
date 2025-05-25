@@ -106,6 +106,9 @@ class PurchaseOrder < ApplicationRecord
 
   validates_associated :purchase_order_items
 
+  has_one :cancellation_record, class_name: "PurchaseOrder::CancellationRecord", as: :cancellable, inverse_of: :cancellable, dependent: :destroy
+  has_one :cancelled_by, through: :cancellation_record, source: :user
+
   with_options inverse_of: :purchase_order, dependent: :destroy do |a|
     a.has_one :approval, class_name: "PurchaseOrder::Approval"
     a.has_one :rejection, class_name: "PurchaseOrder::Rejection"

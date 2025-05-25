@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_21_100219) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_25_110200) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_catalog.plpgsql"
@@ -446,6 +446,23 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_21_100219) do
     t.check_constraint "shipping_method IS NOT NULL", name: "check_po_approvals_shipping_method_presence"
   end
 
+  create_table "purchase_order_cancellation_records", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "cancellable_type", null: false
+    t.uuid "cancellable_id", null: false
+    t.uuid "user_id", null: false
+    t.enum "reason", enum_type: "po_cancellation_reasons"
+    t.text "note"
+    t.timestamptz "created_at", null: false
+    t.timestamptz "updated_at", null: false
+    t.index ["cancellable_type", "cancellable_id"], name: "index_purchase_order_cancellation_records_on_cancellable", unique: true
+    t.index ["reason"], name: "index_purchase_order_cancellation_records_on_reason"
+    t.index ["user_id"], name: "index_purchase_order_cancellation_records_on_user_id"
+    t.check_constraint "char_length(note) <= 1000", name: "check_po_cancellation_records_note_length"
+    t.check_constraint "reason <> 'OTHER'::po_cancellation_reasons OR note IS NOT NULL AND note <> ''::text", name: "check_po_cancellation_records_note_presence"
+    t.check_constraint "reason = ANY (ARRAY['STOCK_NO_LONGER_REQUIRED'::po_cancellation_reasons, 'DUPLICATE_ORDER'::po_cancellation_reasons, 'PRICING_ISSUE'::po_cancellation_reasons, 'SUPPLIER_UNRESPONSIVE'::po_cancellation_reasons, 'DELAYED_DELIVERY_COMMITMENT'::po_cancellation_reasons, 'PRODUCT_DISCONTINUED_OR_UNAVAILABLE'::po_cancellation_reasons, 'CHANGED_SOURCING_STRATEGY'::po_cancellation_reasons, 'INTERNAL_ERROR_OR_MISTAKE'::po_cancellation_reasons, 'PAYMENT_OR_BUDGET_ISSUE'::po_cancellation_reasons, 'OTHER'::po_cancellation_reasons, 'REALIZED_AN_INPUT_ERROR'::po_cancellation_reasons, 'URGENT_NEED_FULFILLED_THROUGH_ALTERNATE_MEANS'::po_cancellation_reasons, 'MERGED_INTO_ANOTHER_PO'::po_cancellation_reasons, 'SUPPLIER_TERMS_CHANGED_AFTER_APPROVAL'::po_cancellation_reasons, 'STOCK_RE_EVALUATED_AFTER_INTERNAL_AUDIT'::po_cancellation_reasons, 'PARTIAL_ORDER_NOT_VIABLE'::po_cancellation_reasons, 'CANCELED_DUE_TO_SUPPLIER-SIDE_DELAY_PRE_APPROVAL'::po_cancellation_reasons])", name: "check_po_cancellation_records_reason_in_enum_values"
+    t.check_constraint "reason IS NOT NULL", name: "check_po_cancellation_records_reason_presence"
+  end
+
   create_table "purchase_order_item_deliveries", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "purchase_order_item_id", null: false
     t.uuid "unit_id", null: false
@@ -818,6 +835,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_21_100219) do
   add_foreign_key "products", "units", name: "fk_products_unit_id_on_units", on_delete: :restrict
   add_foreign_key "purchase_order_approvals", "purchase_orders", name: "fk_po_approvals_purchase_order_id_on_purchase_orders", on_delete: :cascade
   add_foreign_key "purchase_order_approvals", "users", name: "fk_po_approvals_user_id_on_users", on_delete: :nullify
+  add_foreign_key "purchase_order_cancellation_records", "users", name: "fk_po_cancellation_records_user_id_on_users", on_delete: :nullify
   add_foreign_key "purchase_order_item_deliveries", "purchase_order_items", name: "fk_po_item_deliveries_purchase_order_item_id_on_purchase_order_", on_delete: :cascade
   add_foreign_key "purchase_order_item_deliveries", "units", name: "fk_po_item_deliveries_unit_id_on_units", on_delete: :restrict
   add_foreign_key "purchase_order_item_deliveries", "users", name: "fk_po_item_deliveries_user_id_on_users", on_delete: :nullify

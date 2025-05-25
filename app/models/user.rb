@@ -62,6 +62,10 @@ class User < ApplicationRecord
   has_many :purchase_order_rejections, class_name: "PurchaseOrder::Rejection", inverse_of: :user, dependent: :nullify
   has_many :rejected_purchase_orders, through: :purchase_order_rejections, source: :purchase_order
 
+  has_many :cancellation_records, class_name: "PurchaseOrder::CancellationRecord", inverse_of: :user, dependent: :nullify
+  has_many :cancelled_purchase_orders, through: :cancellation_records, source: :cancellable, source_type: "PurchaseOrder"
+  has_many :cancelled_purchase_order_items, through: :cancellation_records, source: :cancellable, source_type: "PurchaseOrderItem"
+
   has_many :po_item_deliveries, class_name: "PurchaseOrderItem::Delivery", inverse_of: :user, dependent: :nullify
   has_many :delivered_po_items,
            -> { distinct },
