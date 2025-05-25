@@ -87,20 +87,6 @@ class PurchaseOrderItemsController < ApplicationController
     redirect_back fallback_location: purchase_orders_path, status: :see_other
   end
 
-  # PATCH /purchase-order-items/:id/cancel
-  def cancel
-    response = PurchaseOrderItems::CancelService.(@purchase_order_item)
-    @purchase_order_item = response.payload[:purchase_order_item]
-
-    if response.success?
-      set_flash_message(:notice, :success)
-    else
-      set_flash_message(:alert, :error)
-    end
-
-    redirect_back fallback_location: purchase_orders_path, status: :see_other
-  end
-
   private
 
   def set_purchase_order

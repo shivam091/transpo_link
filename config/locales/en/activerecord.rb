@@ -316,6 +316,10 @@
           suggested_alternatives: "Suggested alternatives",
           note: "Note",
         },
+        "purchase_order/cancellation_record" => {
+          reason: "Reason",
+          note: "Note",
+        },
         purchase_order_item: {
           purchase_order_id: "Purchase order",
           product_id: "Product",

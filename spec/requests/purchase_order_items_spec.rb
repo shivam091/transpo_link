@@ -150,30 +150,4 @@ RSpec.describe "PurchaseOrderItems", type: :request do
       end
     end
   end
-
-  describe "PATCH /purchase-order-items/:id/cancel" do
-    before { grant_permission!(manager, :purchase_order_items, :cancel) }
-
-    context "when cancellation is successful" do
-      it "cancels the purchase order item and updates the turbo frame" do
-        patch cancel_purchase_order_item_path(po_item1), as: :turbo_stream
-
-        expect(response).to redirect_to(purchase_orders_path)
-        expect(flash[:notice]).to eq("Purchase order item has been successfully cancelled.")
-        expect(response).to have_http_status(:see_other)
-      end
-    end
-
-    context "when cancellation is unsuccessful" do
-      it "does not cancel the purchase order item and render errors" do
-        allow(PurchaseOrderItems::CancelService).to receive(:call) { ServiceResponse.error }
-
-        patch cancel_purchase_order_item_path(po_item1), as: :turbo_stream
-
-        expect(response).to redirect_to(purchase_orders_path)
-        expect(flash[:alert]).to eq("We encountered a problem cancelling the purchase order item. Please try again.")
-        expect(response).to have_http_status(:see_other)
-      end
-    end
-  end
 end

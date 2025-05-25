@@ -70,6 +70,9 @@ RSpec.describe PurchaseOrder, type: :model do
     it { is_expected.to have_one(:approval).class_name("PurchaseOrder::Approval").inverse_of(:purchase_order).dependent(:destroy) }
     it { is_expected.to have_one(:rejection).class_name("PurchaseOrder::Rejection").inverse_of(:purchase_order).dependent(:destroy) }
 
+    it { is_expected.to have_one(:cancellation_record).class_name("PurchaseOrder::CancellationRecord").inverse_of(:cancellable).dependent(:destroy) }
+    it { is_expected.to have_one(:cancelled_by).through(:cancellation_record).source(:user) }
+
     it { is_expected.to have_many(:purchase_order_items).inverse_of(:purchase_order).dependent(:destroy) }
 
     it { is_expected.to belong_to(:warehouse).inverse_of(:purchase_orders) }

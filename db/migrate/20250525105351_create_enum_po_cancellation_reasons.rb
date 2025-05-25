@@ -1,0 +1,27 @@
+# -*- encoding: utf-8 -*-
+# -*- frozen_string_literal: true -*-
+# -*- warn_indent: true -*-
+
+class CreateEnumPoCancellationReasons < ActiveRecord::Migration[8.0]
+  def change
+    create_enum :po_cancellation_reasons, %i[
+      STOCK_NO_LONGER_REQUIRED
+      DUPLICATE_ORDER
+      PRICING_ISSUE
+      SUPPLIER_UNRESPONSIVE
+      DELAYED_DELIVERY_COMMITMENT
+      PRODUCT_DISCONTINUED_OR_UNAVAILABLE
+      CHANGED_SOURCING_STRATEGY
+      INTERNAL_ERROR_OR_MISTAKE
+      PAYMENT_OR_BUDGET_ISSUE
+      OTHER
+      REALIZED_AN_INPUT_ERROR
+      URGENT_NEED_FULFILLED_THROUGH_ALTERNATE_MEANS
+      MERGED_INTO_ANOTHER_PO
+      SUPPLIER_TERMS_CHANGED_AFTER_APPROVAL
+      STOCK_RE_EVALUATED_AFTER_INTERNAL_AUDIT
+      PARTIAL_ORDER_NOT_VIABLE
+      CANCELED_DUE_TO_SUPPLIER_SIDE_DELAY_PRE_APPROVAL
+    ]
+  end
+end

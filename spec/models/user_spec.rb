@@ -63,6 +63,10 @@ RSpec.describe User, type: :model do
     it { is_expected.to have_many(:warehouse_suppliers).inverse_of(:supplier).with_foreign_key(:supplier_id).dependent(:restrict_with_exception) }
     it { is_expected.to have_many(:supplied_warehouses).through(:warehouse_suppliers).inverse_of(:suppliers).source(:warehouse) }
 
+    it { is_expected.to have_many(:cancellation_records).class_name("PurchaseOrder::CancellationRecord").inverse_of(:user).dependent(:nullify) }
+    it { is_expected.to have_many(:cancelled_purchase_orders).through(:cancellation_records).source(:cancellable) }
+    it { is_expected.to have_many(:cancelled_purchase_order_items).through(:cancellation_records).source(:cancellable) }
+
     it { is_expected.to belong_to(:role).inverse_of(:users) }
   end
 
