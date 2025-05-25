@@ -231,7 +231,12 @@
         inventory_batch: {
           inventory_id: "Inventory",
           batch_number: "Batch number",
+          lot_number: "Lot number",
+          manufactured_at: "Manufacture date",
           expiration_date: "Expiration date",
+          received_at: "Received at",
+          location: "Location",
+          notes: "Notes",
           quantity: "Quantity",
           unit_id: "Inventory unit",
           cost_price: "Cost price",
@@ -466,13 +471,20 @@
           inventory_batch: {
             attributes: {
               batch_number: {
-                uniqueness: "already exists for the selected inventory"
+                already_exists: "already exists in this inventory",
+                already_exists_with_lot_number: "with this lot number already exists",
               },
               expiration_date: {
                 greater_than_or_equal_to: "must be today or a future date"
               },
               quantity: {
                 exceeds_purchase_quantity: "exceeds the available quantity for this item",
+              },
+              manufactured_at: {
+                manufactured_before_expiry: "must be on or before the expiry date"
+              },
+              received_at: {
+                received_after_manufactured: "must be on or after the manufacture date"
               },
             }
           },
