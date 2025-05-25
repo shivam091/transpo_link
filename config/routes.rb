@@ -105,7 +105,6 @@ Rails.application.routes.draw do
 
   resources :purchase_orders, path: "purchase-orders" do
     member do
-      patch :cancel
       patch :submit
     end
 
@@ -114,10 +113,6 @@ Rails.application.routes.draw do
     resource :rejection, only: [:new, :create], module: :purchase_orders
 
     resources :purchase_order_items, path: "purchase-order-items", shallow: true do
-      member do
-        patch :cancel
-      end
-
       resources :deliveries, only: [:new, :create], module: :purchase_order_items
 
       resources :inventory_batches, path: "inventory-batches", only: [:new, :create], module: :purchase_order_items

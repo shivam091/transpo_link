@@ -25,12 +25,6 @@
     = link_to "javascript:void(0)", class: "text-reset", data: {bs_toggle: "dropdown"}, aria: {expanded: false} do
       = sprite_icon("ellipsis-vertical")
     %ul.dropdown-menu
-      - if authorized_for?(:purchase_orders, :cancel) && purchase_order.may_cancel?
-        %li
-          = link_to cancel_purchase_order_path(purchase_order), class: "dropdown-item",
-            data: {turbo_confirm: t(".cancel_confirmation_text", reference_code: purchase_order.reference_code), turbo_method: :patch} do
-            = sprite_icon("times")
-            = button_text(:cancel)
       - if authorized_for?(:purchase_orders, :submit) && purchase_order.may_submit?
         %li
           = link_to submit_purchase_order_path(purchase_order), class: "dropdown-item",

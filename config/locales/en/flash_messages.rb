@@ -154,10 +154,6 @@
           success: "Purchase order has been successfully deleted.",
           error: "We encountered a problem deleting purchase order. Please try again."
         },
-        cancel: {
-          success: "Purchase order has been successfully cancelled.",
-          error: "We encountered a problem cancelling purchase order. Please try again."
-        },
         submit: {
           success: "Purchase order has been successfully submitted to the supplier for approval.",
           error: "We encountered a problem submitting purchase order. Please try again."
@@ -175,10 +171,6 @@
         destroy: {
           success: "Purchase order item has been successfully deleted.",
           error: "We encountered a problem deleting the purchase order item. Please try again."
-        },
-        cancel: {
-          success: "Purchase order item has been successfully cancelled.",
-          error: "We encountered a problem cancelling the purchase order item. Please try again."
         },
       },
       color_schemes: {
