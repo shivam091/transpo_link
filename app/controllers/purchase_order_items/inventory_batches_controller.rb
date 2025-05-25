@@ -37,9 +37,14 @@ class PurchaseOrderItems::InventoryBatchesController < ApplicationController
   def inventory_batch_params
     params.require(:inventory_batch).permit(
       :batch_number,
-      :expiration_date,
+      :lot_number,
       :quantity,
-      :unit_id
+      :unit_id,
+      :manufactured_at,
+      :expiration_date,
+      :received_at,
+      :location,
+      :notes
     ).merge(source: @purchase_order_item)
   end
 

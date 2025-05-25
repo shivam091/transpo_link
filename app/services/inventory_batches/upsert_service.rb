@@ -6,6 +6,7 @@ class InventoryBatches::UpsertService < ApplicationService
   def initialize(inventory, inventory_batch_attributes)
     @inventory = inventory
     @inventory_batch_attributes = inventory_batch_attributes.dup.tap do |attrs|
+      attrs[:lot_number] = attrs[:lot_number].presence
       attrs[:expiration_date] = attrs[:expiration_date].presence
     end
   end
@@ -19,8 +20,8 @@ class InventoryBatches::UpsertService < ApplicationService
   attr_reader :inventory, :inventory_batch_attributes
 
   def create_or_merge_inventory_batch
-    inventory_batch = inventory.inventory_batches.by_batch_number_and_expiry(
-      *inventory_batch_attributes.values_at(:batch_number, :expiration_date)
+    inventory_batch = inventory.inventory_batches.by_batch_lot_and_expiry(
+      *inventory_batch_attributes.values_at(:batch_number, :lot_number, :expiration_date)
     ).first
 
     if inventory_batch

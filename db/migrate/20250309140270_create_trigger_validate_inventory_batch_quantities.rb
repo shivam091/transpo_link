@@ -2,7 +2,7 @@
 # -*- frozen_string_literal: true -*-
 # -*- warn_indent: true -*-
 
-class AddRestockedAndUsedQuantityTriggersToInventoryBatchStocks < ActiveRecord::Migration[8.0]
+class CreateTriggerValidateInventoryBatchQuantities < ActiveRecord::Migration[8.0]
   def change
     reversible do |migrate|
       migrate.up do
