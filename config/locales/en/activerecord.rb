@@ -336,6 +336,13 @@
           note: "Delivery note",
           reference_document: "Reference document",
         },
+        stock_adjustment: {
+          unit_id: "Adjustment unit",
+          adjustment_reason: "Adjustment reason",
+          adjusted_quantity: "Adjusted quantity",
+          note: "Note",
+          adjusted_at: "Adjusted at",
+        }
       },
       errors: {
         format: "%{attribute} %{message}",
@@ -554,6 +561,13 @@
               }
             }
           },
+          stock_adjustment: {
+            attributes: {
+              adjustment_reason: {
+                inclusion: "'%{value}' is not a valid adjustment reason",
+              },
+            }
+          }
         },
         messages: {
           label_already_exists_at_group_level: "already exists at group level for %{group}. Please choose another one.",

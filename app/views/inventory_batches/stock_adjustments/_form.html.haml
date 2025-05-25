@@ -1,0 +1,29 @@
+= pretty_form_with model: [@inventory_batch, @stock_adjustment], class: "row g-2" do |form|
+  %p
+    = t(".help_text")
+  %em
+    = t(".audit_note")
+  .col-12
+    = form.label :adjustment_reason, class: "form-label required"
+    = form.select :adjustment_reason, options_for_select(enum_options_for_select(StockAdjustment, :adjustment_reasons), form.object.adjustment_reason),
+      {include_blank: t(".select_adjustment_reason")}, {}
+    = help_text(t(".adjustment_reason_help_text"))
+  .col-12
+    = form.label :adjusted_quantity, class: "form-label required"
+    = form.number_field :adjusted_quantity, step: 0.01
+    = help_text(t(".adjusted_quantity_help_text"))
+  .col-12
+    = form.label :unit_id, class: "form-label required"
+    = form.measurement_unit_select :unit_id, category: @inventory_batch.unit_category, include_blank: t(".select_unit")
+    = help_text(t(".unit_id_help_text"))
+  .col-12
+    = form.label :note, class: "form-label"
+    = form.text_area :note, rows: 2
+    = help_text(t(".note_help_text"))
+  .modal-actions
+    = button_tag type: :submit, class: "btn btn-primary", data: {turbo_submits_with: button_text(:processing)} do
+      = sprite_icon("check")
+      = button_text(:confirm_adjustment)
+    = button_tag type: :button, class: "btn btn-secondary", data: {action: "click->remote-modal#hide"} do
+      = sprite_icon("times")
+      = button_text(:cancel)

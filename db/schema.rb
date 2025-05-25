@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_21_100219) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_22_161111) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_catalog.plpgsql"
@@ -29,6 +29,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_21_100219) do
   create_enum "purchase_order_item_statuses", ["pending", "ordered", "partially_delivered", "delivered", "cancelled"]
   create_enum "purchase_order_statuses", ["draft", "submitted", "approved", "shipped", "partially_delivered", "fully_delivered", "cancelled", "rejected", "closed", "on_hold"]
   create_enum "shipping_methods", ["AIR", "SEA", "ROAD", "RAIL", "COURIER", "POSTAL", "MULTIMODAL", "DRONE", "BIKE", "HAND_CARRY", "IN_PERSON"]
+  create_enum "stock_adjustment_reasons", ["stock_count_discrepancy", "damaged_goods", "expired_stock", "theft_or_loss", "sample_issued", "administrative_correction", "misplaced_then_found", "overstock_correction", "shrinkage", "pallet_breakage", "found_during_audit", "cycle_count_adjustment", "donated", "disposal", "used_internally"]
   create_enum "tax_types", ["exclusive", "inclusive"]
   create_enum "tracking_methods", ["fifo", "lifo", "average_cost"]
   create_enum "unit_categories", ["count", "length", "weight", "area", "volume"]
@@ -193,23 +194,29 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_21_100219) do
     t.check_constraint "previous_quantity IS NOT NULL", name: "check_inventory_batch_audit_logs_previous_quantity_presence"
   end
 
-  create_table "inventory_batch_stocks", primary_key: "inventory_batch_id", id: :uuid, default: nil, force: :cascade do |t|
-    t.decimal "ordered_quantity", precision: 12, scale: 2, default: "0.0"
-    t.decimal "reserved_quantity", precision: 12, scale: 2, default: "0.0"
-    t.decimal "damaged_quantity", precision: 12, scale: 2, default: "0.0"
-    t.decimal "returned_quantity", precision: 12, scale: 2, default: "0.0"
-    t.decimal "restocked_quantity", precision: 12, scale: 2, default: "0.0"
-    t.decimal "restockable_quantity", precision: 12, scale: 2, default: "0.0"
-    t.decimal "available_quantity", precision: 12, scale: 2, default: "0.0"
-    t.virtual "used_quantity", type: :decimal, precision: 12, scale: 2, as: "(((ordered_quantity + reserved_quantity) + damaged_quantity) + returned_quantity)", stored: true
-    t.enum "status", enum_type: "inventory_batch_stock_statuses"
-    t.boolean "is_locked", default: false
+  create_table "inventory_batch_stocks", primary_key: "inventory_batch_id", id: { type: :uuid, comment: "Reference to the inventory_batch this stock record belongs to (1:1)", default: nil }, force: :cascade do |t|
+    t.enum "status", comment: "Status of this batch stock (e.g. available, reserved, exhausted)", enum_type: "inventory_batch_stock_statuses"
+    t.boolean "is_locked", default: false, comment: "Flag to manually or programmatically lock the batch from further changes"
+    t.decimal "ordered_quantity", precision: 12, scale: 2, default: "0.0", comment: "Quantity already ordered by customers from this batch"
+    t.decimal "reserved_quantity", precision: 12, scale: 2, default: "0.0", comment: "Quantity reserved (e.g. for pending orders, QA hold, internal use)"
+    t.decimal "damaged_quantity", precision: 12, scale: 2, default: "0.0", comment: "Quantity marked as damaged and unusable"
+    t.decimal "returned_quantity", precision: 12, scale: 2, default: "0.0", comment: "Quantity returned by customers and deducted from usable stock"
+    t.decimal "restocked_quantity", precision: 12, scale: 2, default: "0.0", comment: "Quantity that has already been restocked (either fully or partially)"
+    t.decimal "restockable_quantity", precision: 12, scale: 2, default: "0.0", comment: "Quantity remaining in the batch that can still be restocked (batch.quantity - restocked_quantity)"
+    t.decimal "available_quantity", precision: 12, scale: 2, default: "0.0", comment: "Remaining quantity available to allocate or use from the batch (batch.quantity - used_quantity)"
+    t.decimal "adjusted_quantity", precision: 12, scale: 2, default: "0.0", comment: "Quantity that has been adjusted through manual or system-triggered stock adjustments. This includes changes due to discrepancies, damage, audits, or administrative actions."
+    t.decimal "allocated_quantity", precision: 12, scale: 2, default: "0.0", comment: "Quantity allocated from this batch for specific internal operations (e.g. production, kitting, internal transfers). This is distinct from customer orders and reserved quantities."
+    t.virtual "used_quantity", type: :decimal, precision: 12, scale: 2, comment: "Sum of all non-available usages (ordered + reserved + damaged + returned + adjusted + allocated)", as: "(((((ordered_quantity + reserved_quantity) + damaged_quantity) + returned_quantity) + adjusted_quantity) + allocated_quantity)", stored: true
     t.timestamptz "created_at", null: false
     t.timestamptz "updated_at", null: false
     t.index ["inventory_batch_id"], name: "index_inventory_batch_stocks_on_inventory_batch_id", unique: true
     t.index ["is_locked"], name: "index_inventory_batch_stocks_on_is_locked"
     t.index ["status", "is_locked"], name: "index_inventory_batch_stocks_on_status_and_is_locked"
     t.index ["status"], name: "index_inventory_batch_stocks_on_status"
+    t.check_constraint "adjusted_quantity >= 0.0", name: "check_inventory_batch_stocks_adjusted_quantity_non_negative"
+    t.check_constraint "adjusted_quantity IS NOT NULL", name: "check_inventory_batch_stocks_adjusted_quantity_presence"
+    t.check_constraint "allocated_quantity >= 0.0", name: "check_inventory_batch_stocks_allocated_quantity_non_negative"
+    t.check_constraint "allocated_quantity IS NOT NULL", name: "check_inventory_batch_stocks_allocated_quantity_presence"
     t.check_constraint "available_quantity >= 0.0", name: "check_inventory_batch_stocks_available_quantity_non_negative"
     t.check_constraint "available_quantity IS NOT NULL", name: "check_inventory_batch_stocks_available_quantity_presence"
     t.check_constraint "damaged_quantity >= 0.0", name: "check_inventory_batch_stocks_damaged_quantity_non_negative"
@@ -523,7 +530,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_21_100219) do
     t.index ["supplier_id"], name: "index_purchase_orders_on_supplier_id"
     t.index ["warehouse_id"], name: "index_purchase_orders_on_warehouse_id"
     t.check_constraint "char_length(notes) <= 1000", name: "check_purchase_orders_notes_length"
-    t.check_constraint "status = ANY (ARRAY['approved'::purchase_order_statuses, 'cancelled'::purchase_order_statuses, 'closed'::purchase_order_statuses, 'draft'::purchase_order_statuses, 'fully_delivered'::purchase_order_statuses, 'on_hold'::purchase_order_statuses, 'partially_delivered'::purchase_order_statuses, 'rejected'::purchase_order_statuses, 'shipped'::purchase_order_statuses, 'submitted'::purchase_order_statuses])", name: "check_purchase_orders_status_in_enum_values"
+    t.check_constraint "status = ANY (ARRAY['draft'::purchase_order_statuses, 'submitted'::purchase_order_statuses, 'approved'::purchase_order_statuses, 'shipped'::purchase_order_statuses, 'partially_delivered'::purchase_order_statuses, 'fully_delivered'::purchase_order_statuses, 'cancelled'::purchase_order_statuses, 'rejected'::purchase_order_statuses, 'closed'::purchase_order_statuses, 'on_hold'::purchase_order_statuses])", name: "check_purchase_orders_status_in_enum_values"
     t.check_constraint "status IS NOT NULL", name: "check_purchase_orders_status_presence"
   end
 
@@ -584,6 +591,33 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_21_100219) do
     t.index ["name"], name: "index_roles_on_name", unique: true
     t.check_constraint "char_length(name::text) <= 55 AND char_length(name::text) >= 2", name: "check_roles_name_length"
     t.check_constraint "name IS NOT NULL AND name::text <> ''::text", name: "check_roles_name_presence"
+  end
+
+  create_table "stock_adjustments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "inventory_batch_id", null: false
+    t.string "source_type"
+    t.uuid "source_id"
+    t.uuid "user_id", null: false
+    t.uuid "unit_id", null: false
+    t.decimal "adjusted_quantity", precision: 12, scale: 2
+    t.enum "adjustment_reason", enum_type: "stock_adjustment_reasons"
+    t.text "note"
+    t.timestamptz "adjusted_at", default: -> { "CURRENT_TIMESTAMP" }
+    t.timestamptz "created_at", null: false
+    t.timestamptz "updated_at", null: false
+    t.index ["adjusted_at"], name: "index_stock_adjustments_on_adjusted_at"
+    t.index ["adjustment_reason"], name: "index_stock_adjustments_on_adjustment_reason"
+    t.index ["inventory_batch_id"], name: "index_stock_adjustments_on_inventory_batch_id"
+    t.index ["source_type", "source_id"], name: "index_stock_adjustments_on_source"
+    t.index ["unit_id"], name: "index_stock_adjustments_on_unit_id"
+    t.index ["user_id"], name: "index_stock_adjustments_on_user_id"
+    t.check_constraint "adjusted_at <= CURRENT_TIMESTAMP", name: "check_stock_adjustments_adjusted_at_not_in_future"
+    t.check_constraint "adjusted_at IS NOT NULL", name: "check_stock_adjustments_adjusted_at_presence"
+    t.check_constraint "adjusted_quantity > 0::numeric", name: "check_stock_adjustments_adjusted_quantity_positive"
+    t.check_constraint "adjusted_quantity IS NOT NULL", name: "check_stock_adjustments_adjusted_quantity_presence"
+    t.check_constraint "adjustment_reason = ANY (ARRAY['stock_count_discrepancy'::stock_adjustment_reasons, 'damaged_goods'::stock_adjustment_reasons, 'expired_stock'::stock_adjustment_reasons, 'theft_or_loss'::stock_adjustment_reasons, 'sample_issued'::stock_adjustment_reasons, 'administrative_correction'::stock_adjustment_reasons, 'misplaced_then_found'::stock_adjustment_reasons, 'overstock_correction'::stock_adjustment_reasons, 'shrinkage'::stock_adjustment_reasons, 'pallet_breakage'::stock_adjustment_reasons, 'found_during_audit'::stock_adjustment_reasons, 'cycle_count_adjustment'::stock_adjustment_reasons, 'donated'::stock_adjustment_reasons, 'disposal'::stock_adjustment_reasons, 'used_internally'::stock_adjustment_reasons])", name: "check_stock_adjustments_adjustment_reason_in_enum_values"
+    t.check_constraint "adjustment_reason IS NOT NULL", name: "check_stock_adjustments_adjustment_reason_presence"
+    t.check_constraint "note IS NULL OR char_length(note) <= 1000", name: "check_stock_adjustments_note_length"
   end
 
   create_table "stocks", primary_key: "inventory_id", id: :uuid, default: nil, force: :cascade do |t|
@@ -818,6 +852,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_21_100219) do
   add_foreign_key "purchase_orders", "warehouses", name: "fk_purchase_orders_warehouse_id_on_warehouses", on_delete: :restrict
   add_foreign_key "replenishments", "inventories", name: "fk_replenishments_inventory_id_on_inventories", on_delete: :cascade
   add_foreign_key "request_logs", "users", name: "fk_request_logs_user_id_on_users", on_delete: :nullify
+  add_foreign_key "stock_adjustments", "inventory_batches", name: "fk_stock_adjustments_inventory_batch_id_on_inventory_batches", on_delete: :cascade
+  add_foreign_key "stock_adjustments", "units", name: "fk_stock_adjustments_unit_id_on_units", on_delete: :restrict
+  add_foreign_key "stock_adjustments", "users", name: "fk_stock_adjustments_user_id_on_user", on_delete: :nullify
   add_foreign_key "stocks", "inventories", name: "fk_stocks_inventory_id_on_inventories", on_delete: :cascade
   add_foreign_key "unit_conversions", "units", column: "source_unit_id", name: "fk_unit_conversions_source_unit_id_on_units", on_delete: :restrict
   add_foreign_key "unit_conversions", "units", column: "target_unit_id", name: "fk_unit_conversions_target_unit_id_on_units", on_delete: :restrict

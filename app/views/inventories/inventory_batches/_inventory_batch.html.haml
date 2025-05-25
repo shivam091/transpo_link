@@ -15,6 +15,11 @@
     = link_to "javascript:void(0)", class: "text-reset", data: {bs_toggle: "dropdown"}, aria: {expanded: false} do
       = sprite_icon("ellipsis-vertical")
     %ul.dropdown-menu
+      %li
+        = link_to new_inventory_batch_stock_adjustment_path(inventory_batch), class: "dropdown-item",
+          data: {turbo_frame: :remote_modal} do
+          = sprite_icon("adjust")
+          = button_text(:adjust_stock)
       - if authorized_for?(:inventories, :restock) && inventory_batch.restockable_quantity > 0.0
         %li
           = link_to new_inventory_batch_inventory_restock_path(inventory_batch), class: "dropdown-item",

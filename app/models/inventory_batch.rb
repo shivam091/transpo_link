@@ -73,6 +73,7 @@ class InventoryBatch < ApplicationRecord
   has_one :stock, class_name: "InventoryBatch::Stock", inverse_of: :inventory_batch, dependent: :destroy
 
   has_many :restocks, class_name: "Inventory::Restock", inverse_of: :inventory_batch, dependent: :destroy
+  has_many :stock_adjustments, inverse_of: :inventory_batch, dependent: :destroy
 
   before_validation :auto_fill_cost_and_currency
   before_create :convert_to_inventory_unit
@@ -80,12 +81,12 @@ class InventoryBatch < ApplicationRecord
   after_create :create_stock
 
   with_options prefix: true do |d|
-    d.delegate :symbol, to: :unit
+    d.delegate :symbol, :category, to: :unit
   end
 
-  delegate :ordered_quantity, :reserved_quantity, :damaged_quantity,
-           :returned_quantity, :restocked_quantity, :restockable_quantity,
-           :available_quantity, :used_quantity,
+  delegate :ordered_quantity, :reserved_quantity, :damaged_quantity, :returned_quantity,
+           :restocked_quantity, :restockable_quantity, :available_quantity, :adjusted_quantity,
+           :allocated_quantity, :used_quantity,
            to: :stock
 
   scope :by_batch_lot_and_expiry, ->(batch_number, lot_number, expiration_date) do

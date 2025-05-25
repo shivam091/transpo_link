@@ -39,6 +39,9 @@
       confirm_restock: "Confirm restock",
       confirm_approval: "Confirm approval",
       confirm_rejection: "Confirm rejection",
+      adjust_stock: "Adjust stock",
+      confirm_adjustment: "Confirm adjustment",
+      processing: "Processing...",
     },
   }
 }
