@@ -13,7 +13,8 @@ RSpec.describe PurchaseOrders::Rejection::CreateService, type: :service do
 
   describe ".call" do
     context "when provided attributes are valid" do
-      let(:rejection_attributes) { attributes_for(:purchase_order_rejection) }
+      let(:user) { create(:supplier) }
+      let(:rejection_attributes) { attributes_for(:purchase_order_rejection, user_id: user.id) }
 
       include_examples "creates a record", PurchaseOrder::Rejection
       include_examples "returns a success response"

@@ -12,6 +12,7 @@ RSpec.describe PurchaseOrder::Rejection, type: :model do
   describe "attributes" do
     it { is_expected.to have_db_column(:id).of_type(:uuid) }
     it { is_expected.to have_db_column(:purchase_order_id).of_type(:uuid).with_options(null: false) }
+    it { is_expected.to have_db_column(:user_id).of_type(:uuid).with_options(null: false) }
     it { is_expected.to have_db_column(:reason).of_type(:enum) }
     it { is_expected.to have_db_column(:suggested_alternatives).of_type(:text) }
     it { is_expected.to have_db_column(:note).of_type(:text) }
@@ -21,11 +22,13 @@ RSpec.describe PurchaseOrder::Rejection, type: :model do
 
   describe "indexes" do
     it { is_expected.to have_db_index(:purchase_order_id) }
+    it { is_expected.to have_db_index(:user_id) }
     it { is_expected.to have_db_index(:reason) }
   end
 
   describe "foreign keys" do
     it { is_expected.to have_foreign_key(:purchase_order_id).with_name(:fk_po_rejections_purchase_order_id_on_purchase_orders).on_delete(:cascade) }
+    it { is_expected.to have_foreign_key(:user_id).with_name(:fk_po_rejections_user_id_on_users).on_delete(:nullify) }
   end
 
   describe "check constraints" do

@@ -59,6 +59,9 @@ class User < ApplicationRecord
   has_many :purchase_order_approvals, class_name: "PurchaseOrder::Approval", inverse_of: :user, dependent: :nullify
   has_many :approved_purchase_orders, through: :purchase_order_approvals, source: :purchase_order
 
+  has_many :purchase_order_rejections, class_name: "PurchaseOrder::Rejection", inverse_of: :user, dependent: :nullify
+  has_many :rejected_purchase_orders, through: :purchase_order_rejections, source: :purchase_order
+
   has_many :po_item_deliveries, class_name: "PurchaseOrderItem::Delivery", inverse_of: :user, dependent: :nullify
   has_many :delivered_po_items,
            -> { distinct },

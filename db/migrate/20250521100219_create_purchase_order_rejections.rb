@@ -16,6 +16,15 @@ class CreatePurchaseOrderRejections < ActiveRecord::Migration[8.0]
                    },
                    null: false,
                    index: {using: :btree}
+      t.references :user,
+                   type: :uuid,
+                   foreign_key: {
+                     to_table: :users,
+                     name: :fk_po_rejections_user_id_on_users,
+                     on_delete: :nullify
+                   },
+                   null: false,
+                   index: {using: :btree}
       t.enum :reason, enum_type: :po_rejection_reasons, index: {using: :btree}
       t.text :suggested_alternatives
       t.text :note
