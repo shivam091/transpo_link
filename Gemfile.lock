@@ -5,7 +5,7 @@ GEM
       faraday (~> 2.0)
       json (~> 2.1)
       lru_redux (~> 1.1)
-    aasm (5.5.0)
+    aasm (5.5.1)
       concurrent-ruby (~> 1.0)
     actioncable (8.0.2)
       actionpack (= 8.0.2)
