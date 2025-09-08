@@ -100,7 +100,7 @@ group :development, :test do
   gem "database_cleaner", "~> 2.1"
 
   # Fixtures replacement with a straightforward definition syntax.
-  gem "factory_bot_rails", "~> 6.4"
+  gem "factory_bot_rails", "~> 6.5"
 
   # Code coverage analysis tool for Ruby.
   gem "simplecov", require: false
